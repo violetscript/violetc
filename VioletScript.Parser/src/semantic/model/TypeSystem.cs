@@ -7,8 +7,19 @@ using VioletScript.Parser.Semantic.Logic;
 
 public static class DefaultValue {
     public static Symbol Obtain(Symbol type) {
-        if (type.IncludesUndefined) return type.ModelCore.Factory.UndefinedConstantValue(type);
-        if (type.IncludesNull) return type.ModelCore.Factory.NullConstantValue(type);
+        var mc = type.ModelCore;
+        var f = mc.Factory;
+        if (type.IncludesUndefined) return f.UndefinedConstantValue(type);
+        if (type.IncludesNull) return f.NullConstantValue(type);
+        if (type == mc.StringType) return f.StringConstantValue("", type);
+        if (type == mc.BooleanType) return f.BooleanConstantValue(false, type);
+        if (type == mc.NumberType) return f.NumberConstantValue(0, type);
+        if (type == mc.DecimalType) return f.DecimalConstantValue(0, type);
+        if (type == mc.ByteType) return f.ByteConstantValue(0, type);
+        if (type == mc.ShortType) return f.ShortConstantValue(0, type);
+        if (type == mc.IntType) return f.IntConstantValue(0, type);
+        if (type == mc.LongType) return f.LongConstantValue(0, type);
+        if (type == mc.BigIntType) return f.BigIntConstantValue(0, type);
         return null;
     }
 }
