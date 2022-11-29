@@ -268,11 +268,17 @@ public class TypeBinaryExpression : Expression {
     public Operator Operator;
     public Expression Left;
     public TypeExpression Right;
+    /// <summary>
+    /// Non-null if this node was originated from an expression like
+    /// <c>x is y:C</c>.
+    /// </summary>
+    public Identifier BindsTo;
 
-    public TypeBinaryExpression(Operator op, Expression l, TypeExpression r) : base() {
+    public TypeBinaryExpression(Operator op, Expression l, TypeExpression r, Identifier bindsTo) : base() {
         Operator = op;
         Left = l;
         Right = r;
+        BindsTo = bindsTo;
     }
 }
 

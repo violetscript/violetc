@@ -1053,15 +1053,22 @@ internal class ParserBackend {
                 NextToken();
                 var strict = Consume(TToken.ExclamationMark);
                 if (!strict) Consume(TToken.QuestionMark);
-                r = FinishExp(new Ast.TypeBinaryExpression(strict ? Operator.AsStrict : Operator.As, r, ParseTypeExpression()));
+                r = FinishExp(new Ast.TypeBinaryExpression(strict ? Operator.AsStrict : Operator.As, r, ParseTypeExpression(), null));
             } else if (Token.IsKeyword("instanceof") && minPrecedence.ValueOf() <= OperatorPrecedence.Relational.ValueOf()) {
                 PushLocation(r.Span.Value);
                 NextToken();
-                r = FinishExp(new Ast.TypeBinaryExpression(Operator.Instanceof, r, ParseTypeExpression()));
+                r = FinishExp(new Ast.TypeBinaryExpression(Operator.Instanceof, r, ParseTypeExpression(), null));
             } else if (Token.IsKeyword("is") && minPrecedence.ValueOf() <= OperatorPrecedence.Relational.ValueOf()) {
                 PushLocation(r.Span.Value);
                 NextToken();
-                r = FinishExp(new Ast.TypeBinaryExpression(Operator.Is, r, ParseTypeExpression()));
+                var isOpRight = ParseTypeExpression();
+                Ast.Identifier isOpBindsTo = null;
+                if (isOpRight is Ast.TypedTypeExpression tte && (tte.Base is Ast.IdentifierTypeExpression)) {
+                    isOpBindsTo = new Ast.Identifier(((Ast.IdentifierTypeExpression) tte.Base).Name);
+                    isOpBindsTo.Span = tte.Base.Span;
+                    isOpRight = tte.Type;
+                }
+                r = FinishExp(new Ast.TypeBinaryExpression(Operator.Is, r, isOpRight, isOpBindsTo));
             } else if (Token.Type == TToken.Assign && minPrecedence.ValueOf() <= OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction.ValueOf()) {
                 PushLocation(r.Span.Value);
                 NextToken();
