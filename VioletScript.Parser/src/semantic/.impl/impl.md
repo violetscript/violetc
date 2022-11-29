@@ -1,0 +1,118 @@
+# Implementation
+
+## Progress track
+
+- [ ] Logic
+  - [ ] Indexing
+  - [ ] InterfaceImpl
+  - [ ] MethodOverride
+  - [ ] NullUnwrapping
+    - [ ] Unwrap `null`
+    - [ ] Unwrap `undefined`
+  - [ ] PropertyResolution
+  - [ ] TypeConversions
+    - [x] ConversionFromTo
+    - [ ] ConvertImplicit
+      - [x] User implicit
+      - [ ] To number type with wider range
+      - [ ] Non-union to compatible union
+      - [ ] Union to compatible union
+      - [ ] From record to record with equivalent field set
+      - [ ] From any
+      - [ ] To any
+      - [ ] To covariant typ
+    - [ ] ConvertExplicit
+      - [ ] ConvertImplicit
+      - [ ] User explicit
+      - [ ] To out of union with `null`
+      - [ ] To out of union with `undefined`
+      - [ ] To out of union with `undefined` and `null`
+      - [ ] To contravariant type
+      - [ ] To covariant `Array`
+      - [ ] To contravariant `Array`
+      - [ ] Between numeric types
+      - [ ] From string to enum
+      - [ ] From number to enum
+- [ ] Model
+  - [x] ModelCore
+    - [x] Reference to top-level package
+    - [x] Built-ins
+    - [x] Factory instance
+    - [x] Operation for interning structural/instantiated types (including unions and nullable types)
+      - [x] `InternRecordType`
+      - [x] `InternUniontype`
+      - [x] `InternTupleType`
+      - [x] `InternFunctionType`
+      - [x] `InternInstantiatedVariableSlot`
+      - [x] `InternInstantiatedVirtualSlot`
+      - [x] `InternInstantiatedMethodSlot`
+  - [x] Visibility
+  - [x] Factory
+  - [x] InstancePropertiesHierarchy
+  - [x] StaticPropertiesHierarchy
+  - [x] NameAndTypePair
+  - [ ] Issues
+    - [x] AmbiguousReferenceIssue
+    - [ ] CannotOverrideGenericMethodIssue
+  - [x] Alias
+  - [x] TypeSystem
+    - [x] DefaultValue (not a symbol)
+    - [x] TypeRelationship (not a symbol)
+    - [x] TypeReplacement (not a symbol)
+    - [x] Delegate
+    - [x] ?Type
+    - [x] AnyType
+    - [x] UndefinedType
+    - [x] NullType
+    - [x] ClassType
+    - [x] EnumType
+    - [x] InterfaceType
+    - [x] FunctionType
+    - [x] TupleType
+    - [x] RecordType
+    - [x] UnionType
+    - [x] InstantiatedType
+    - [x] TypeParameter
+  - [x] Namespace
+    - [x] Package
+  - [x] NamespaceSet
+  - [x] VariableSlot
+    - [x] Normal
+    - [x] Instantiated
+  - [x] VirtualSlot
+    - [x] Normal
+    - [x] Instantiated
+  - [x] MethodSlot
+    - [x] MethodSlotFlags
+    - [x] NormalMethodSlot
+    - [x] InstantiationOfParameterizedMethodSlot
+    - [x] InstantiatedMethodSlot
+  - [x] Value
+    - [x] ?Value
+    - [x] ConstantValue
+    - [x] TypeAsValue
+    - [x] NamespaceAsValue
+    - [x] NamespaceSetAsValue
+    - [x] ThisValue
+    - [x] TypeStaticThisValue
+    - [x] ReferenceValue
+    - [x] DynamicReferenceValue
+    - [x] IndexValue
+    - [x] DynamicIndexValue
+    - [x] ConversionValue
+    - [x] FunctionExpValue
+  - [x] Frame
+
+## Numeric types
+
+To support additional numeric types:
+
+- Introduce a built-in class in `ModelCore`
+- Add to numeric type set of `ModelCore`
+- If it is an integer type, add to integer type set of `ModelCore`
+- Introduce a `ConstantValue` subtype
+- Resolve default constant value in `TypeSystem.DefaultValue`
+- Provide conversions between other numeric types at `TypeConversions` logic
+- Provide a correspoding `Factory` method
+- Provide corresponding helpers in `EnumConstHelpers`
+- Provide corresponding helpers in `NumConstHelpers`
