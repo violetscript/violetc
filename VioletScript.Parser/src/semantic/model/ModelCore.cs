@@ -173,7 +173,7 @@ public sealed class ModelCore {
         this.GeneratorType = DefineGlobalBuiltinClass("Generator", true);
         this.GeneratorType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
 
-        this.ClassType = DefineGlobalBuiltinClass("Class", true);
+        this.ClassType = DefineGlobalBuiltinClass("Class", false);
         this.ByteArrayType = DefineGlobalBuiltinClass("ByteArray", false);
         this.RegExpType = DefineGlobalBuiltinClass("RegExp", true);
         this.BoxedType = DefineGlobalBuiltinClass("Boxed", true);
