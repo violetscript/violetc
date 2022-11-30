@@ -897,7 +897,7 @@ internal class ParserBackend {
         }
         MarkLocation();
         var id = FinishExp(new Ast.Identifier(ExpectIdentifier()));
-        while (Consume(TToken.Colon)) {
+        while (Consume(TToken.Colon) || Consume(TToken.Dot)) {
             PushLocation(id.Span.Value);
             id = (Ast.Expression) FinishNode(new Ast.MemberExpression(id, ParseIdentifier()));
         }
@@ -937,7 +937,7 @@ internal class ParserBackend {
                 }
             }
             ExpectIdentifier();
-            while (Consume(TToken.Colon)) {
+            while (Consume(TToken.Colon) || Consume(TToken.Dot)) {
                 ExpectIdentifier();
             }
             ExpectOperator(Operator.Gt);
