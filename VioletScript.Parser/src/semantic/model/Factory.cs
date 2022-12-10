@@ -139,6 +139,20 @@ public sealed class Factory {
         return r;
     }
 
+    public Symbol Value(Symbol type) {
+        Symbol r = new Value();
+        r.StaticType = type;
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
+    public Symbol NullUnwrappedValue(Symbol type) {
+        Symbol r = new NullUnwrappedValue();
+        r.StaticType = type;
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
     public Symbol UndefinedConstantValue(Symbol type = null) {
         Symbol r = new UndefinedConstantValue();
         r.StaticType = type ?? ModelCore.UndefinedType;

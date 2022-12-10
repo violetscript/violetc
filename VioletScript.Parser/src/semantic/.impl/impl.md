@@ -6,9 +6,7 @@
   - [ ] Indexing
   - [ ] InterfaceImpl
   - [ ] MethodOverride
-  - [ ] NullUnwrapping
-    - [ ] Unwrap `null`
-    - [ ] Unwrap `undefined`
+  - [x] NullUnwrapping
   - [ ] PropertyResolution
   - [x] TypeConversions
 - [ ] Model

@@ -308,3 +308,6 @@ public class ConversionValue : Value {
 
 public class FunctionExpValue : Value {
 }
+
+public class NullUnwrappedValue : Value {
+}
