@@ -18,6 +18,7 @@ public enum ConversionFromTo {
     ToOutOfUnionWithNull,
     ToOutOfUnionWithUndefined,
     ToOutOfUnionWithUndefinedAndNull,
+    ToUnionMember,
     ToContravariantType,
     ToCovariantArray,
     ToContravariantArray,
@@ -114,7 +115,18 @@ public static class TypeConversions {
             return f.ConversionValue(value, toType, ConversionFromTo.ToUserImplicit);
         }
         if (mc.IsNumericType(fromType) && mc.IsNumericType(toType)) {
-            //
+            if (fromType == mc.NumberType) {
+                if (toType == mc.DecimalType) return f.ConversionValue(value, toType, ConversionFromTo.ToNumTypeWithWiderRange);
+            } else if (fromType == mc.ByteType) {
+                if (toType == mc.NumberType || toType == mc.DecimalType || toType == mc.ShortType || toType == mc.IntType || toType == mc.LongType || toType == mc.BigIntType) return f.ConversionValue(value, toType, ConversionFromTo.ToNumTypeWithWiderRange);
+            } else if (fromType == mc.ShortType) {
+                if (toType == mc.NumberType || toType == mc.DecimalType || toType == mc.IntType || toType == mc.LongType || toType == mc.BigIntType) return f.ConversionValue(value, toType, ConversionFromTo.ToNumTypeWithWiderRange);
+            } else if (fromType == mc.IntType) {
+                if (toType == mc.NumberType || toType == mc.DecimalType || toType == mc.LongType || toType == mc.BigIntType) return f.ConversionValue(value, toType, ConversionFromTo.ToNumTypeWithWiderRange);
+            } else if (fromType == mc.LongType) {
+                if (toType == mc.BigIntType) return f.ConversionValue(value, toType, ConversionFromTo.ToNumTypeWithWiderRange);
+            }
+            return null;
         }
         return null;
     }

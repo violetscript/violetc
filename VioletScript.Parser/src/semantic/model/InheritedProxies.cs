@@ -16,27 +16,21 @@ public static class InheritedProxies {
     }
 
     public static Symbol FindImplicitConversion(Symbol type, Symbol convertsTo) {
-        while (type != null) {
-            if (type.Delegate != null) {
-                var c = type.Delegate.ImplicitConversionProxies.ContainsKey(convertsTo) ? type.Delegate.ImplicitConversionProxies[convertsTo] : null;
-                if (c != null) {
-                    return c;
-                }
+        if (convertsTo.Delegate != null) {
+            var c = convertsTo.Delegate.ImplicitConversionProxies.ContainsKey(type) ? convertsTo.Delegate.ImplicitConversionProxies[type] : null;
+            if (c != null) {
+                return c;
             }
-            type = type.SuperType;
         }
         return null;
     }
 
     public static Symbol FindExplicitConversion(Symbol type, Symbol convertsTo) {
-        while (type != null) {
-            if (type.Delegate != null) {
-                var c = type.Delegate.ExplicitConversionProxies.ContainsKey(convertsTo) ? type.Delegate.ExplicitConversionProxies[convertsTo] : null;
-                if (c != null) {
-                    return c;
-                }
+        if (convertsTo.Delegate != null) {
+            var c = convertsTo.Delegate.ExplicitConversionProxies.ContainsKey(type) ? convertsTo.Delegate.ExplicitConversionProxies[type] : null;
+            if (c != null) {
+                return c;
             }
-            type = type.SuperType;
         }
         return null;
     }
