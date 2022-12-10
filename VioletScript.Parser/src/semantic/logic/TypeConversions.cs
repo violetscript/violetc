@@ -15,9 +15,6 @@ public enum ConversionFromTo {
     ToAny,
     ToCovariantType,
     ToUserExplicit,
-    ToOutOfUnionWithNull,
-    ToOutOfUnionWithUndefined,
-    ToOutOfUnionWithUndefinedAndNull,
     ToUnionMember,
     ToContravariantType,
     ToCovariantArray,
@@ -167,7 +164,7 @@ public static class TypeConversions {
                 return f.ConversionValue(value, toType, ConversionFromTo.FromRecordToEqvRecord);
             }
         }
-        if (fromType.SuperTypes.Contains(toType)) {
+        if (fromType.IsSubtypeOf(toType)) {
             return f.ConversionValue(value, toType, ConversionFromTo.ToCovariantType);
         }
         return null;
@@ -187,6 +184,35 @@ public static class TypeConversions {
 
         if (InheritedProxies.FindExplicitConversion(fromType, toType) != null) {
             return f.ConversionValue(value, toType, ConversionFromTo.ToUserExplicit);
+        }
+        if (fromType is UnionType) {
+            if (fromType.UnionMemberTypes.Contains(toType)) {
+                return f.ConversionValue(value, toType, ConversionFromTo.ToUnionMember);
+            }
+            return null;
+        }
+        if (toType.IsSubtypeOf(fromType)) {
+            return f.ConversionValue(value, toType, ConversionFromTo.ToContravariantType);
+        }
+        if (fromType.IsInstantiationOf(mc.ArrayType) && toType.IsInstantiationOf(mc.ArrayType)) {
+            if (fromType.ArgumentTypes[0].IsSubtypeOf(toType.ArgumentTypes[0])) {
+                return f.ConversionValue(value, toType, ConversionFromTo.ToCovariantArray);
+            }
+            if (toType.ArgumentTypes[0].IsSubtypeOf(fromType.ArgumentTypes[0])) {
+                return f.ConversionValue(value, toType, ConversionFromTo.ToContravariantArray);
+            }
+            return null;
+        }
+        if (mc.IsNumericType(fromType) && mc.IsNumericType(toType)) {
+            return f.ConversionValue(value, toType, ConversionFromTo.BetweenNumericTypes);
+        }
+        if (toType is EnumType) {
+            if (fromType == mc.StringType) {
+                return f.ConversionValue(value, toType, ConversionFromTo.FromStringToEnum);
+            }
+            if (fromType == toType.NumericType) {
+                return f.ConversionValue(value, toType, ConversionFromTo.FromNumberToEnum);
+            }
         }
 
         return null;

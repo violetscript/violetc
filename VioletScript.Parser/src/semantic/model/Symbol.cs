@@ -473,4 +473,8 @@ public class Symbol {
     public virtual Dictionary<Symbol, Symbol> ExplicitConversionProxies {
         get => new Dictionary<Symbol, Symbol>{};
     }
+
+    public bool IsInstantiationOf(Symbol parameterized) {
+        return OriginalDefinition == parameterized;
+    }
 }
