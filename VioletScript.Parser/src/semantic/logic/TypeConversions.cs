@@ -111,6 +111,12 @@ public static class TypeConversions {
         }
         var mc = value.ModelCore;
         var f = mc.Factory;
+        if (fromType == mc.AnyType) {
+            return f.ConversionValue(value, toType, ConversionFromTo.FromAny);
+        }
+        if (toType == mc.AnyType) {
+            return f.ConversionValue(value, toType, ConversionFromTo.ToAny);
+        }
         if (InheritedProxies.FindImplicitConversion(fromType, toType) != null) {
             return f.ConversionValue(value, toType, ConversionFromTo.ToUserImplicit);
         }
@@ -128,6 +134,42 @@ public static class TypeConversions {
             }
             return null;
         }
+        if (toType is UnionType) {
+            if (!(fromType is UnionType) && toType.UnionMemberTypes.Contains(fromType)) {
+                return f.ConversionValue(value, toType, ConversionFromTo.NonUnionToCompatUnion);
+            }
+            if (fromType is UnionType) {
+                var compat = true;
+                var targetMembers = toType.UnionMemberTypes;
+                foreach (var m in fromType.UnionMemberTypes) {
+                    if (!targetMembers.Contains(m)) {
+                        compat = false;
+                        break;
+                    }
+                }
+                if (compat) {
+                    return f.ConversionValue(value, toType, ConversionFromTo.UnionToCompatUnion);
+                }
+            }
+            return null;
+        }
+        if (fromType is RecordType && toType is RecordType) {
+            var compat = true;
+            var inputFields = fromType.RecordTypeFields;
+            var targetFields = toType.RecordTypeFields;
+            foreach (var field in targetFields) {
+                if (!inputFields.Contains(field)) {
+                    compat = false;
+                    break;
+                }
+            }
+            if (compat) {
+                return f.ConversionValue(value, toType, ConversionFromTo.FromRecordToEqvRecord);
+            }
+        }
+        if (fromType.SuperTypes.Contains(toType)) {
+            return f.ConversionValue(value, toType, ConversionFromTo.ToCovariantType);
+        }
         return null;
     }
 
@@ -142,7 +184,11 @@ public static class TypeConversions {
         }
         var mc = value.ModelCore;
         var f = mc.Factory;
-        //
+
+        if (InheritedProxies.FindExplicitConversion(fromType, toType) != null) {
+            return f.ConversionValue(value, toType, ConversionFromTo.ToUserExplicit);
+        }
+
         return null;
     }
 }
