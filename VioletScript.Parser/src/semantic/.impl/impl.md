@@ -5,6 +5,7 @@
 - [ ] Logic
   - [ ] Indexing
   - [ ] InterfaceImpl
+  - [ ] LexicalReferenceResolution
   - [ ] MethodOverride
   - [x] NullUnwrapping
   - [ ] PropertyResolution
