@@ -9,22 +9,60 @@ public static class PropertyResolution {
         var mc = @base.ModelCore;
         var f = mc.Factory;
         if (@base is Frame) {
-            //
+            Symbol r = @base.Properties[name];
+            if (r == null && @base is ActivationFrame && @base.ActivationThisOrThisAsStaticType != null) {
+                r = PropertyResolution.Resolve(@base.ActivationThisOrThisAsStaticType, name);
+                if (r != null) return r;
+            }
+            if (@base is ClassFrame || @base is EnumFrame || @base is InterfaceFrame) {
+                r = PropertyResolution.Resolve(@base.TypeFromFrame, name);
+                if (r != null) return r;
+            }
+            if (@base is NamespaceFrame) {
+                r = PropertyResolution.Resolve(@base.NamespaceFromFrame, name);
+                if (r != null) return r;
+            }
+            if (@base is PackageFrame) {
+                r = @base.PackageFromFrame.Properties[name];
+                if (r != null) return f.ReferenceValueFromNamespace(@base.PackageFromFrame, r);
+            }
+            Symbol r2 = null;
+            foreach (var openNS in @base.OpenNamespaces) {
+                r2 = openNS.Properties[name];
+                if (r2 != null) {
+                    if (r != null) return f.AmbiguousReferenceIssue(name);
+                    r = f.ReferenceValueFromNamespace(openNS, r2);
+                }
+            }
+            if (r == null) {
+                r = @base.ParentFrame != null ? PropertyResolution.Resolve(@base.ParentFrame, name) : null;
+            }
+            if (r == null) {
+                r = mc.GlobalPackage.GetSubpackage(name);
+            }
+            return r;
         } else if (@base is Type) {
             foreach (var (name2, prop, definedByType) in StaticPropertiesHierarchy.Iterate(@base)) {
                 if (name == name2) {
                     return f.ReferenceValueFromType(@base, prop, definedByType);
                 }
             }
+            return null;
         } else if (@base is Value) {
             foreach (var (name2, prop, definedByType) in InstancePropertiesHierarchy.Iterate(@base.StaticType)) {
                 if (name == name2) {
                     return f.ReferenceValue(@base, prop, definedByType);
                 }
             }
+            return null;
         } else if (@base is Namespace) {
             var r = @base.Properties[name];
             if (r != null) return f.ReferenceValueFromNamespace(@base, r);
+            if (@base is Package) {
+                r = @base.GetSubpackage(name);
+                if (r != null) return r;
+            }
+            return null;
         } else if (@base is NamespaceSet) {
             foreach (var ns in @base.NamespaceSetItems) {
                 var r = ns.Properties[name];

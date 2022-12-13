@@ -478,7 +478,7 @@ public class Symbol {
         return OriginalDefinition == parameterized;
     }
 
-    public virtual Symbol ActivationThisSlot {
+    public virtual Symbol ActivationThisOrThisAsStaticType {
         get => null;
         set {}
     }

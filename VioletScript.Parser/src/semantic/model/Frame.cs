@@ -31,11 +31,11 @@ public class Frame : Symbol {
 
 public class ActivationFrame : Frame {
     private Dictionary<Symbol, bool> m_ExtendedLifeVariables = null;
-    private Symbol m_ActivationThisSlot = null;
+    private Symbol m_ActivationThisOrThisAsStaticType = null;
 
-    public override Symbol ActivationThisSlot {
-        get => m_ActivationThisSlot;
-        set => m_ActivationThisSlot = value;
+    public override Symbol ActivationThisOrThisAsStaticType {
+        get => m_ActivationThisOrThisAsStaticType;
+        set => m_ActivationThisOrThisAsStaticType = value;
     }
 
     public override bool VariableHasExtendedLife(Symbol slot) {

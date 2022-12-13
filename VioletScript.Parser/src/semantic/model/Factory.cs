@@ -265,13 +265,6 @@ public sealed class Factory {
         return r;
     }
 
-    public Symbol TypeStaticThisValue(Symbol type) {
-        Symbol r = new TypeStaticThisValue(type);
-        r.StaticType = ModelCore.ClassType;
-        r.ModelCore = ModelCore;
-        return r;
-    }
-
     public Symbol ReferenceValueFromNamespace(Symbol @base, Symbol property) {
         if ((property is Type) || (property is Namespace) || (property is NamespaceSet) || (property is Alias)) {
             return property;

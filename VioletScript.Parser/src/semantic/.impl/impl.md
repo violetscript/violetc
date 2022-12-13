@@ -7,7 +7,7 @@
   - [ ] InterfaceImpl
   - [ ] MethodOverride
   - [x] NullUnwrapping
-  - [ ] PropertyResolution
+  - [x] PropertyResolution
   - [x] TypeConversions
 - [ ] Model
   - [x] ModelCore

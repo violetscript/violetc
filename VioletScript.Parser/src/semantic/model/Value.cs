@@ -184,18 +184,6 @@ public class ThisValue : Value {
     }
 }
 
-public class TypeStaticThisValue : Value {
-    private Symbol m_Type;
-
-    public TypeStaticThisValue(Symbol type) {
-        m_Type = type;
-    }
-
-    public override Symbol TypeFromTypeStaticThis {
-        get => m_Type;
-    }
-}
-
 public class ReferenceValueFromNamespace : Value {
     private Symbol m_Base;
     private Symbol m_Property;
