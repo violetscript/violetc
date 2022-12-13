@@ -31,6 +31,12 @@ public class Frame : Symbol {
 
 public class ActivationFrame : Frame {
     private Dictionary<Symbol, bool> m_ExtendedLifeVariables = null;
+    private Symbol m_ActivationThisSlot = null;
+
+    public override Symbol ActivationThisSlot {
+        get => m_ActivationThisSlot;
+        set => m_ActivationThisSlot = value;
+    }
 
     public override bool VariableHasExtendedLife(Symbol slot) {
         return m_ExtendedLifeVariables.ContainsKey(slot);

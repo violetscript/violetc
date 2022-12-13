@@ -477,4 +477,9 @@ public class Symbol {
     public bool IsInstantiationOf(Symbol parameterized) {
         return OriginalDefinition == parameterized;
     }
+
+    public virtual Symbol ActivationThisSlot {
+        get => null;
+        set {}
+    }
 }

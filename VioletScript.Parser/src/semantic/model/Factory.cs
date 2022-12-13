@@ -272,6 +272,36 @@ public sealed class Factory {
         return r;
     }
 
+    public Symbol ReferenceValueFromNamespace(Symbol @base, Symbol property) {
+        if ((property is Type) || (property is Namespace) || (property is NamespaceSet) || (property is Alias)) {
+            return property;
+        }
+        Symbol r = new ReferenceValueFromNamespace(@base, property);
+        r.StaticType = property.StaticType;
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
+    public Symbol ReferenceValueFromType(Symbol @base, Symbol property, Symbol definedByType) {
+        if ((property is Type) || (property is Namespace) || (property is NamespaceSet) || (property is Alias)) {
+            return property;
+        }
+        Symbol r = new ReferenceValueFromType(@base, property, definedByType);
+        r.StaticType = property.StaticType;
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
+    public Symbol ReferenceValueFromFrame(Symbol @base, Symbol property) {
+        if ((property is Type) || (property is Namespace) || (property is NamespaceSet) || (property is Alias)) {
+            return property;
+        }
+        Symbol r = new ReferenceValueFromFrame(@base, property);
+        r.StaticType = property.StaticType;
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
     public Symbol ReferenceValue(Symbol @base, Symbol property, Symbol propertyDefinedByType) {
         if ((property is Type) || (property is Namespace) || (property is NamespaceSet) || (property is Alias)) {
             return property;

@@ -196,6 +196,90 @@ public class TypeStaticThisValue : Value {
     }
 }
 
+public class ReferenceValueFromNamespace : Value {
+    private Symbol m_Base;
+    private Symbol m_Property;
+
+    public ReferenceValueFromNamespace(Symbol @base, Symbol property) {
+        m_Base = @base;
+        m_Property = property;
+    }
+
+    public override Symbol Base {
+        get => m_Base;
+    }
+
+    public override Symbol Property {
+        get => m_Property;
+    }
+
+    public override bool ReadOnly {
+        get => m_Property.ReadOnly;
+    }
+
+    public override bool WriteOnly {
+        get => m_Property.WriteOnly;
+    }
+}
+
+public class ReferenceValueFromType : Value {
+    private Symbol m_Base;
+    private Symbol m_Property;
+    private Symbol m_DefinedByType;
+
+    public ReferenceValueFromType(Symbol @base, Symbol property, Symbol definedByType) {
+        m_Base = @base;
+        m_Property = property;
+        m_DefinedByType = definedByType;
+    }
+
+    public override Symbol Base {
+        get => m_Base;
+    }
+
+    public override Symbol Property {
+        get => m_Property;
+    }
+
+    public override Symbol PropertyDefinedByType {
+        get => m_DefinedByType;
+    }
+
+    public override bool ReadOnly {
+        get => m_Property.ReadOnly;
+    }
+
+    public override bool WriteOnly {
+        get => m_Property.WriteOnly;
+    }
+}
+
+public class ReferenceValueFromFrame : Value {
+    private Symbol m_Base;
+    private Symbol m_Property;
+
+    public ReferenceValueFromFrame(Symbol @base, Symbol property) {
+        m_Base = @base;
+        m_Property = property;
+    }
+
+    public override Symbol Base {
+        get => m_Base;
+    }
+
+    public override Symbol Property {
+        get => m_Property;
+    }
+
+    public override bool ReadOnly {
+        get => m_Property.ReadOnly;
+    }
+
+    public override bool WriteOnly {
+        get => m_Property.WriteOnly;
+    }
+}
+
 public class ReferenceValue : Value {
     private Symbol m_Base;
     private Symbol m_Property;
