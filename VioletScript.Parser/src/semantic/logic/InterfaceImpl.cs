@@ -8,3 +8,5 @@ using VioletScript.Parser.Semantic.Model;
 /// Logic for implementing interfaces.
 /// It is possible to implement generic methods.
 /// </summary>
+public static class InterfaceImpl {
+}

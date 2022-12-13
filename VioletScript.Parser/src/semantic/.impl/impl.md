@@ -9,7 +9,7 @@
   - [x] NullUnwrapping
   - [x] PropertyResolution
   - [x] TypeConversions
-- [ ] Model
+- [x] Model
   - [x] ModelCore
     - [x] Reference to top-level package
     - [x] Built-ins
