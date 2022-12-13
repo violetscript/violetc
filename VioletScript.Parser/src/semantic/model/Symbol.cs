@@ -478,6 +478,10 @@ public class Symbol {
         return OriginalDefinition == parameterized;
     }
 
+    /// <summary>
+    /// For a static type's method, returns a type symbol.
+    /// For an instance method, returns a <c>ThisValue</c> symbol.
+    /// </summary>
     public virtual Symbol ActivationThisOrThisAsStaticType {
         get => null;
         set {}
