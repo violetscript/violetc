@@ -284,6 +284,9 @@ public sealed class ModelCore {
     }
 
     public Symbol InternUnionType(Symbol[] members) {
+        if (members.Count() == 1) {
+            return members[0];
+        }
         var members_Spread = new List<Symbol>{};
         foreach (var m_0 in members) {
             if (m_0 is AnyType) {
@@ -299,6 +302,9 @@ public sealed class ModelCore {
         }
         members = members_Spread.ToArray();
         var n = members.Count();
+        if (n == 1) {
+            return members[0];
+        }
         if (!m_InternedUnionTypesByMCount.ContainsKey(n)) {
             m_InternedUnionTypesByMCount[n] = new List<Symbol>{};
         }
