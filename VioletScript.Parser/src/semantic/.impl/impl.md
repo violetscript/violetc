@@ -5,7 +5,7 @@
 - [ ] Logic
   - [ ] Indexing
   - [ ] InterfaceImpl
-  - [ ] MethodOverride
+  - [x] MethodOverride
   - [x] NullUnwrapping
   - [x] PropertyResolution
   - [x] TypeConversions
@@ -27,9 +27,7 @@
   - [x] InstancePropertiesHierarchy
   - [x] StaticPropertiesHierarchy
   - [x] NameAndTypePair
-  - [ ] Issues
-    - [x] AmbiguousReferenceIssue
-    - [ ] CannotOverrideGenericMethodIssue
+  - [x] Issues
   - [x] Alias
   - [x] TypeSystem
     - [x] DefaultValue (not a symbol)

@@ -18,6 +18,24 @@ public sealed class Factory {
         return r;
     }
 
+    public Symbol CannotOverrideGenericMethodIssue(string name) {
+        Symbol r = new CannotOverrideGenericMethodIssue(name);
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
+    public Symbol MustOverrideAMethodIssue(string name) {
+        Symbol r = new MustOverrideAMethodIssue(name);
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
+    public Symbol IncompatibleOverrideSignatureIssue(string name, Symbol expectedSignature) {
+        Symbol r = new IncompatibleOverrideSignatureIssue(name, expectedSignature);
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
     public Symbol Alias(string name, Symbol to) {
         Symbol r = new Alias(name, to);
         r.ModelCore = ModelCore;

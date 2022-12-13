@@ -486,4 +486,12 @@ public class Symbol {
         get => null;
         set {}
     }
+
+    public Symbol ResolveProperty(string name) {
+        return PropertyResolution.Resolve(this, name);
+    }
+
+    public virtual Symbol ExpectedSignature {
+        get => null;
+    }
 }
