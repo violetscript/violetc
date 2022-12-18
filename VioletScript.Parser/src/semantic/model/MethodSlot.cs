@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using VioletScript.Parser.Operator;
 using VioletScript.Parser.Semantic.Logic;
 
+[Flags]
 public enum MethodSlotFlags {
     UsesYield,
     UsesAwait,
