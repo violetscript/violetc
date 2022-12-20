@@ -498,4 +498,74 @@ public class Symbol {
     public virtual bool TypeStructurallyEquals(Symbol other) {
         return false;
     }
+
+    public bool PropertyIsVisibleTo(Symbol frame) {
+        if (Visibility == Visibility.Public) {
+            return true;
+        }
+        if (Visibility == Visibility.Internal) {
+            Symbol ownerPackage = null;
+            Symbol p = ParentDefinition;
+            while (p != null) {
+                if (p is Package) {
+                    ownerPackage = p;
+                    break;
+                }
+                p = p.ParentDefinition;
+            }
+            if (ownerPackage == null) {
+                return true;
+            }
+            while (frame != null) {
+                if (frame is PackageFrame && frame.PackageFromFrame == ownerPackage) {
+                    return true;
+                }
+                frame = frame.ParentFrame;
+            }
+            return false;
+        }
+        if (Visibility == Visibility.Private) {
+            Symbol ownerType = null;
+            Symbol p = ParentDefinition;
+            while (p != null) {
+                if (p is Type) {
+                    ownerType = p;
+                    break;
+                }
+                p = p.ParentDefinition;
+            }
+            if (ownerType == null) {
+                return false;
+            }
+            while (frame != null) {
+                if (frame.TypeFromFrame == ownerType) {
+                    return true;
+                }
+                frame = frame.ParentFrame;
+            }
+            return false;
+        }
+        if (Visibility == Visibility.Protected) {
+            Symbol ownerType = null;
+            Symbol p = ParentDefinition;
+            while (p != null) {
+                if (p is Type) {
+                    ownerType = p;
+                    break;
+                }
+                p = p.ParentDefinition;
+            }
+            if (ownerType == null) {
+                return false;
+            }
+            while (frame != null) {
+                if (frame.TypeFromFrame != null && (frame.TypeFromFrame == ownerType || frame.TypeFromFrame.IsSubtypeOf(ownerType))) {
+                    return true;
+                }
+                frame = frame.ParentFrame;
+            }
+            return false;
+        }
+        return true;
+    }
 }
