@@ -74,9 +74,54 @@ public static class InterfaceImpl {
                     handleRequirementMustBeMethod(name);
                     return;
                 }
-                // don't forget generics
-                ...
+                if (reqProp.TypeParameters != null) {
+                    // implement type-parameterized method
+                    if (implProp.TypeParameters != null || !TypeParameterSequenceEquals(reqProp.TypeParameters, implProp.TypeParameters)) {
+                        handleRequirementGenericsDontMatch(name);
+                        return;
+                    }
+                    var reqSubProp = reqProp.StaticType.ReplaceTypes(reqProp.TypeParameters, implProp.TypeParameters);
+                    if (!reqSubProp.StaticType.TypeStructurallyEquals(implProp.StaticType)) {
+                        handleWrongMethodSignature(name, reqSubProp.StaticType);
+                    }
+                } else if (implProp.TypeParameters != null) {
+                    handleRequirementGenericsDontMatch(name);
+                } else {
+                    if (!reqProp.StaticType.TypeStructurallyEquals(implProp.StaticType)) {
+                        handleWrongMethodSignature(name, reqProp.StaticType);
+                    }
+                }
             }
         }
+    }
+
+    private static bool TypeParameterSequenceEquals(Symbol[] a, Symbol[] b) {
+        var c = a.Count();
+        if (b.Count() != c) {
+            return false;
+        }
+        for (int i = 0; i != c; ++i) {
+            var pa = a[i];
+            var pb = b[i];
+            var itrfcsA = pa.ImplementsInterfaces;
+            var itrfcsB = pb.ImplementsInterfaces;
+            var itrfcsCount = itrfcsA.Count();
+            if (itrfcsCount != itrfcsB.Count()) {
+                return false;
+            }
+            for (int j = 0; j != itrfcsCount; ++j) {
+                if (!itrfcsA[j].TypeStructurallyEquals(itrfcsB[j])) {
+                    return false;
+                }
+            }
+            if (pa.SuperType != null) {
+                if (pb.SuperType == null || !pa.SuperType.TypeStructurallyEquals(pb.SuperType)) {
+                    return false;
+                }
+            } else if (pb.SuperType != null) {
+                return false;
+            }
+        }
+        return true;
     }
 }
