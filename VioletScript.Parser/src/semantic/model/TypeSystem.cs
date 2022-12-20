@@ -757,7 +757,18 @@ public class RecordType : Type {
             return false;
         }
         var other = (RecordType) otherAbstract;
-        ...
+        var c = m_Fields.Count();
+        if (other.m_Fields.Count() != c) {
+            return false;
+        }
+        for (int i = 0; i != c; ++i) {
+            var fieldX = m_Fields[i];
+            var fieldY = other.m_Fields[i];
+            if (fieldX.Name != fieldY.Name || !fieldX.Type.TypeStructurallyEquals(fieldY.Type)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
@@ -808,7 +819,20 @@ public class UnionType : Type {
     }
 
     public override bool TypeStructurallyEquals(Symbol otherAbstract) {
-        ...
+        if (!(otherAbstract is UnionType)) {
+            return false;
+        }
+        var other = (UnionType) otherAbstract;
+        var c = m_Types.Count();
+        if (other.m_Types.Count() != c) {
+            return false;
+        }
+        for (int i = 0; i != c; ++i) {
+            if (!m_Types[i].TypeStructurallyEquals(other.m_Types[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
@@ -928,7 +952,23 @@ public class InstantiatedType : Type {
     }
 
     public override bool TypeStructurallyEquals(Symbol otherAbstract) {
-        ...
+        if (!(otherAbstract is InstantiatedType)) {
+            return false;
+        }
+        var other = (InstantiatedType) otherAbstract;
+        if (!m_Origin.TypeStructurallyEquals(other.m_Origin)) {
+            return false;
+        }
+        var c = m_ArgumentsList.Count();
+        if (other.m_ArgumentsList.Count() != c) {
+            return false;
+        }
+        for (int i = 0; i != c; ++i) {
+            if (!m_ArgumentsList[i].TypeStructurallyEquals(other.m_ArgumentsList[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
