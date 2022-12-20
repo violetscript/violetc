@@ -1,5 +1,6 @@
 namespace VioletScript.Parser.Verifier;
 
+using System.Collections.Generic;
 using VioletScript.Parser.Operator;
 using VioletScript.Parser.Problem;
 using VioletScript.Parser.Semantic.Logic;
