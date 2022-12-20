@@ -93,6 +93,24 @@ public static class InstancePropertiesHierarchy {
     }
 }
 
+public static class SingleInheritanceInstancePropertiesHierarchy {
+    public static IEnumerable<(string Name, Symbol Symbol, Symbol DefinedByType)> Iterate(Symbol type) {
+        var types = new List<Symbol>{};
+        while (type != null) {
+            types.Add(type);
+            type = type.SuperType;
+        }
+        foreach (var type2 in types) {
+            if (type2.Delegate == null) {
+                continue;
+            }
+            foreach (var (name3, type3) in type2.Delegate.Properties) {
+                yield return (name3, type3, type2);
+            }
+        }
+    }
+}
+
 /// <summary>
 /// Provides iterator for static properties from a class.
 /// </summary>

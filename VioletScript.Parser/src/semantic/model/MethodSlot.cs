@@ -11,6 +11,7 @@ public enum MethodSlotFlags {
     Override,
     Final,
     Native,
+    OptionalInterfaceMethod,
 }
 
 public class MethodSlot : Symbol {
