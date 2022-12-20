@@ -56,7 +56,7 @@ public static class InterfaceImpl {
                     if (reqProp.Getter != null && (reqProp.Getter.MethodFlags & MethodSlotFlags.OptionalInterfaceMethod) == 0) {
                         handleMissingGetter(name);
                     }
-                } else if (reqProp.Getter != null && reqProp.Getter.StaticType != implProp.Getter.StaticType) {
+                } else if (reqProp.Getter != null && !reqProp.Getter.StaticType.TypeStructurallyEquals(implProp.Getter.StaticType)) {
                     handleWrongGetterSignature(name, reqProp.Getter.StaticType);
                 }
 
@@ -65,7 +65,7 @@ public static class InterfaceImpl {
                     if (reqProp.Setter != null && (reqProp.Setter.MethodFlags & MethodSlotFlags.OptionalInterfaceMethod) == 0) {
                         handleMissingSetter(name);
                     }
-                } else if (reqProp.Setter != null && reqProp.Setter.StaticType != implProp.Setter.StaticType) {
+                } else if (reqProp.Setter != null && !reqProp.Setter.StaticType.TypeStructurallyEquals(implProp.Setter.StaticType)) {
                     handleWrongSetterSignature(name, reqProp.Setter.StaticType);
                 }
             } else {
@@ -74,6 +74,7 @@ public static class InterfaceImpl {
                     handleRequirementMustBeMethod(name);
                     return;
                 }
+                // don't forget generics
                 ...
             }
         }

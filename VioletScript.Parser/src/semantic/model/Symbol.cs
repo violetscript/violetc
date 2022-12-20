@@ -494,4 +494,8 @@ public class Symbol {
     public virtual Symbol ExpectedSignature {
         get => null;
     }
+
+    public virtual bool TypeStructurallyEquals(Symbol other) {
+        return false;
+    }
 }
