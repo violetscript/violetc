@@ -294,9 +294,11 @@ public sealed class ModelCore {
             }
             if (m_0 is UnionType) {
                 foreach (var nestedM in m_0.UnionMemberTypes) {
-                    members_Spread.Add(nestedM);
+                    if (!members_Spread.Contains(nestedM)) {
+                        members_Spread.Add(nestedM);
+                    }
                 }
-            } else {
+            } else if (!members_Spread.Contains(m_0)) {
                 members_Spread.Add(m_0);
             }
         }
