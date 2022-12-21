@@ -11,7 +11,7 @@ using Ast = VioletScript.Parser.Ast;
 using ProblemVars = Dictionary<string, object>;
 
 public partial class Verifier {
-    public Symbol VerifyTypeExp(Ast.TypeExpression exp) {
+    public Symbol VerifyTypeExp(Ast.TypeExpression exp, bool isBase = false) {
         if (exp is Ast.IdentifierTypeExpression id) {
             var r = m_Frame.ResolveProperty(id.Name);
             if (r == null) {
@@ -24,7 +24,11 @@ public partial class Verifier {
                 if (!r.PropertyIsVisibleTo(m_Frame)) {
                     ...
                 }
-                ...
+                if (!isBase && !(r is Type)) {
+                    ...
+                    return m_ModelCore.Factory.Value(m_ModelCore.AnyType);
+                }
+                return r;
             }
         }
         //
