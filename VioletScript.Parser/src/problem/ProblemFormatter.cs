@@ -13,7 +13,7 @@ public interface IProblemFormatter {
     string Format(Problem p) {
         var msg = FormatArguments(p);
         msg = msg.Substring(0, 1).ToUpper() + msg.Substring(1);
-        var file = p.Span.Script.FilePath;
+        var file = new System.Uri(p.Span.Script.FilePath).AbsoluteUri;
         var line = p.Span.FirstLine.ToString();
         var column = (p.Span.FirstColumn + 1).ToString();
         var k = p.KindString;
@@ -105,6 +105,9 @@ public static class DefaultProblemFormatterStatics {
         [31] = "",
         [32] = "Illegal break statement",
         [33] = "Illegal continue statement: no surrounding iteration statement",
+
+        // verifier-only messages
+        [128] = "Undefined property '$name'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

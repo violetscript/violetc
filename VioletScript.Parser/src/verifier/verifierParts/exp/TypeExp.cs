@@ -15,11 +15,16 @@ public partial class Verifier {
         if (exp is Ast.IdentifierTypeExpression id) {
             var r = m_Frame.ResolveProperty(id.Name);
             if (r == null) {
-                //
+                VerifyError(exp.Span.Value.Script, 128, exp.Span.Value, new ProblemVars { ["name"] = id.Name });
+                return m_ModelCore.Factory.Value(m_ModelCore.AnyType);
             } else if (r is AmbiguousReferenceIssue) {
-                //
+                ...
+                return m_ModelCore.Factory.Value(m_ModelCore.AnyType);
             } else {
-                //
+                if (!r.PropertyIsVisibleTo(m_Frame)) {
+                    ...
+                }
+                ...
             }
         }
         //
