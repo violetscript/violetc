@@ -8,5 +8,7 @@ using VioletScript.Parser.Semantic.Model;
 using VioletScript.Parser.Source;
 using Ast = VioletScript.Parser.Ast;
 
+using ProblemVars = Dictionary<string, object>;
+
 public partial class Verifier {
 }

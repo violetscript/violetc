@@ -8,5 +8,14 @@ using VioletScript.Parser.Semantic.Model;
 using VioletScript.Parser.Source;
 using Ast = VioletScript.Parser.Ast;
 
+using ProblemVars = Dictionary<string, object>;
+
 public partial class Verifier {
+    public Symbol VerifyTypeExp(Ast.TypeExpression exp) {
+        if (exp is Ast.IdentifierTypeExpression id) {
+            //
+        }
+        //
+        throw new Exception("Uncovered type expression");
+    }
 }
