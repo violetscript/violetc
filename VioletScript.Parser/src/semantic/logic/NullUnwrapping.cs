@@ -14,6 +14,10 @@ public static class NullUnwrapping {
         if (i != -1) r.RemoveAt(i);
         i = r.IndexOf(mc.UndefinedType);
         if (i != -1) r.RemoveAt(i);
+        // if empty, return an empty tuple.
+        if (r.Count == 0) {
+            return mc.Factory.NullUnwrappedValue(mc.Factory.TupleType(new Symbol[] {}));;
+        }
         return mc.Factory.NullUnwrappedValue(mc.Factory.UnionType(r.ToArray()));
     }
 }
