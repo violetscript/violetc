@@ -412,6 +412,10 @@ public class Symbol {
         get => null;
     }
 
+    /// <summary>
+    /// For reference values of frame as base object,
+    /// this returns the same frame.
+    /// </summary>
     public virtual Symbol PropertyDefinedByType {
         get => null;
     }

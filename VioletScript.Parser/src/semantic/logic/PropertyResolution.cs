@@ -10,6 +10,10 @@ public static class PropertyResolution {
         var f = mc.Factory;
         if (@base is Frame) {
             Symbol r = @base.Properties[name];
+            if (r is VariableSlot || r is VirtualSlot || r is MethodSlot) {
+                var parentOrBaseFrame = r.ParentDefinition ?? @base;
+                r = f.ReferenceValue(parentOrBaseFrame, r, parentOrBaseFrame);
+            }
             Symbol r2 = null;
             if (r == null && @base is ActivationFrame && @base.ActivationThisOrThisAsStaticType != null) {
                 r = PropertyResolution.Resolve(@base.ActivationThisOrThisAsStaticType, name);

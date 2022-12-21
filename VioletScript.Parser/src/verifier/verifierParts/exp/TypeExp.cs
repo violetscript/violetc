@@ -13,7 +13,14 @@ using ProblemVars = Dictionary<string, object>;
 public partial class Verifier {
     public Symbol VerifyTypeExp(Ast.TypeExpression exp) {
         if (exp is Ast.IdentifierTypeExpression id) {
-            //
+            var r = m_Frame.ResolveProperty(id.Name);
+            if (r == null) {
+                //
+            } else if (r is AmbiguousReferenceIssue) {
+                //
+            } else {
+                //
+            }
         }
         //
         throw new Exception("Uncovered type expression");
