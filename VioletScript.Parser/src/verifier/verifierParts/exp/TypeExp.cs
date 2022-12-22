@@ -28,6 +28,11 @@ public partial class Verifier {
                     ...
                     return m_ModelCore.Factory.Value(m_ModelCore.AnyType);
                 }
+                // generic type
+                if (!isBase && r.TypeParameters != null) {
+                    ...
+                    return m_ModelCore.Factory.Value(m_ModelCore.AnyType);
+                }
                 return r;
             }
         }
