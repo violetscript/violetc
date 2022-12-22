@@ -20,6 +20,7 @@ public static class DefaultValue {
         if (type == mc.IntType) return f.IntConstantValue(0, type);
         if (type == mc.LongType) return f.LongConstantValue(0, type);
         if (type == mc.BigIntType) return f.BigIntConstantValue(0, type);
+        if (type is EnumType && type.IsFlagsEnum) return EnumConstHelpers.Empty(type);
         return null;
     }
 }
