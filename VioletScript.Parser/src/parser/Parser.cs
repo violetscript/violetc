@@ -305,11 +305,7 @@ internal class ParserBackend {
             var returnType = Consume(TToken.Colon) ? ParseTypeExpression() : null;
             r = (Ast.TypeExpression) FinishNode(new Ast.FunctionTypeExpression(@params, optParams, restParam, returnType));
         } else if (Consume(TToken.LSquare)) {
-            if (Consume(TToken.Ellipsis)) {
-                var itemType = ParseTypeExpression();
-                Expect(TToken.RSquare);
-                r = (Ast.TypeExpression) FinishNode(new Ast.ArrayTypeExpression(itemType));
-            } else if (Consume(TToken.RSquare)) {
+            if (Consume(TToken.RSquare)) {
                 r = (Ast.TypeExpression) FinishNode(new Ast.TupleTypeExpression(new List<Ast.TypeExpression>{}));
             } else {
                 var fst = ParseTypeExpression();
