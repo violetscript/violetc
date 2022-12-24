@@ -345,8 +345,8 @@ public sealed class Factory {
     }
 
     public Symbol ConversionValue(Symbol @base, Symbol targetConversionType, ConversionFromTo fromTo, bool isOptional = false) {
-        Symbol r = new ConversionValue(@base, fromTo, isOptional);
-        r.StaticType = targetConversionType;
+        Symbol r = new ConversionValue(@base, fromTo, isOptional, targetConversionType);
+        r.StaticType = isOptional ? targetConversionType.ToNullableType() : targetConversionType;
         r.ModelCore = ModelCore;
         return r;
     }

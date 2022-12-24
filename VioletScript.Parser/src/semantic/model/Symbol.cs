@@ -416,6 +416,10 @@ public class Symbol {
         get => null;
     }
 
+    public virtual Symbol ConversionTargetType {
+        get => null;
+    }
+
     public virtual bool ConversionIsOptional {
         get => false;
     }

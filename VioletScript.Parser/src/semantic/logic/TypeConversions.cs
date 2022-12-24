@@ -183,16 +183,16 @@ public static class TypeConversions {
         var f = mc.Factory;
 
         if (InheritedProxies.FindExplicitConversion(fromType, toType) != null) {
-            return f.ConversionValue(value, isOptional ? toType.ToNullableType(): toType, ConversionFromTo.ToUserExplicit, isOptional);
+            return f.ConversionValue(value, toType, ConversionFromTo.ToUserExplicit, isOptional);
         }
         if (fromType is UnionType) {
             if (fromType.UnionMemberTypes.Contains(toType)) {
-                return f.ConversionValue(value, isOptional ? toType.ToNullableType(): toType, ConversionFromTo.ToUnionMember, isOptional);
+                return f.ConversionValue(value, toType, ConversionFromTo.ToUnionMember, isOptional);
             }
             return null;
         }
         if (toType.IsSubtypeOf(fromType)) {
-            return f.ConversionValue(value, isOptional ? toType.ToNullableType(): toType, ConversionFromTo.ToContravariantType, isOptional);
+            return f.ConversionValue(value, toType, ConversionFromTo.ToContravariantType, isOptional);
         }
         if (fromType.IsInstantiationOf(mc.ArrayType) && toType.IsInstantiationOf(mc.ArrayType)) {
             if (fromType.ArgumentTypes[0].IsSubtypeOf(toType.ArgumentTypes[0])) {
@@ -208,10 +208,10 @@ public static class TypeConversions {
         }
         if (toType is EnumType) {
             if (fromType == mc.StringType) {
-                return f.ConversionValue(value, isOptional ? toType.ToNullableType(): toType, ConversionFromTo.FromStringToEnum, isOptional);
+                return f.ConversionValue(value, toType, ConversionFromTo.FromStringToEnum, isOptional);
             }
             if (fromType == toType.NumericType) {
-                return f.ConversionValue(value, isOptional ? toType.ToNullableType(): toType, ConversionFromTo.FromNumberToEnum, isOptional);
+                return f.ConversionValue(value, toType, ConversionFromTo.FromNumberToEnum, isOptional);
             }
         }
 

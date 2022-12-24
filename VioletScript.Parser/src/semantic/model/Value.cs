@@ -364,15 +364,21 @@ public class ConversionValue : Value {
     private Symbol m_Base;
     private ConversionFromTo m_FromTo;
     private bool m_Opt;
+    private Symbol m_Target;
 
-    public ConversionValue(Symbol @base, ConversionFromTo fromTo, bool opt) {
+    public ConversionValue(Symbol @base, ConversionFromTo fromTo, bool opt, Symbol targetType) {
         m_Base = @base;
         m_FromTo = fromTo;
         m_Opt = opt;
+        m_Target = targetType;
     }
 
     public override Symbol Base {
         get => m_Base;
+    }
+
+    public override Symbol ConversionTargetType {
+        get => m_Target;
     }
 
     public override bool ConversionIsOptional {
