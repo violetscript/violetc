@@ -344,8 +344,8 @@ public sealed class Factory {
         return r;
     }
 
-    public Symbol ConversionValue(Symbol @base, Symbol targetConversionType, ConversionFromTo fromTo) {
-        Symbol r = new ConversionValue(@base, fromTo);
+    public Symbol ConversionValue(Symbol @base, Symbol targetConversionType, ConversionFromTo fromTo, bool isOptional = false) {
+        Symbol r = new ConversionValue(@base, fromTo, isOptional);
         r.StaticType = targetConversionType;
         r.ModelCore = ModelCore;
         return r;

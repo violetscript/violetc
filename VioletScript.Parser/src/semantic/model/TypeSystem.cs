@@ -145,6 +145,10 @@ public class Type : Symbol {
     public override bool IsSubtypeOf(Symbol other) {
         return TypeRelationship.IsSubtypeOf(this, other);
     }
+
+    public override Symbol ToNullableType() {
+        return this.ModelCore.Factory.UnionType(new Symbol[]{this.ModelCore.NullType, this});
+    }
 }
 
 public class AnyType : Type {

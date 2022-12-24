@@ -416,8 +416,12 @@ public class Symbol {
         get => null;
     }
 
+    public virtual bool ConversionIsOptional {
+        get => false;
+    }
+
     public virtual ConversionFromTo ConversionFromTo {
-        get => ConversionFromTo.ToNumTypeWithWiderRange;
+        get => VioletScript.Parser.Semantic.Logic.ConversionFromTo.ToNumTypeWithWiderRange;
     }
 
     public virtual List<Symbol> OpenNamespaces {
@@ -567,5 +571,9 @@ public class Symbol {
             return false;
         }
         return true;
+    }
+
+    public virtual Symbol ToNullableType() {
+        return this;
     }
 }

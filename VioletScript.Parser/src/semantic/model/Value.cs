@@ -363,14 +363,20 @@ public class DynamicIndexValue : Value {
 public class ConversionValue : Value {
     private Symbol m_Base;
     private ConversionFromTo m_FromTo;
+    private bool m_Opt;
 
-    public ConversionValue(Symbol @base, ConversionFromTo fromTo) {
+    public ConversionValue(Symbol @base, ConversionFromTo fromTo, bool opt) {
         m_Base = @base;
         m_FromTo = fromTo;
+        m_Opt = opt;
     }
 
     public override Symbol Base {
         get => m_Base;
+    }
+
+    public override bool ConversionIsOptional {
+        get => m_Opt;
     }
 
     public override ConversionFromTo ConversionFromTo {
