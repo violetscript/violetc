@@ -107,7 +107,7 @@ public static class DefaultProblemFormatterStatics {
         [33] = "Illegal continue statement: no surrounding iteration statement",
 
         // verifier-only messages
-        [128] = "Undefined property '$name'",
+        [128] = "'$name' is undefined",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

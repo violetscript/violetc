@@ -32,7 +32,6 @@ public partial class Verifier {
                 // generic type
                 if (!isBase && r.TypeParameters != null) {
                     ...
-                    return m_ModelCore.Factory.Value(m_ModelCore.AnyType);
                 }
                 return r;
             }
