@@ -24,6 +24,7 @@ public partial class Verifier {
                 if (!r.PropertyIsVisibleTo(m_Frame)) {
                     ...
                 }
+                r = r is Alias ? r.AliasToSymbol : r;
                 if (!isBase && !(r is Type)) {
                     ...
                     return m_ModelCore.Factory.Value(m_ModelCore.AnyType);
