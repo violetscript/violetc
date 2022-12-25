@@ -815,9 +815,12 @@ public class Generics : Node {
 
 public class GenericTypeParameter : Node {
     public Identifier Id;
+    /// <summary>Optional type annotation following the identifier.</summary>
+    public TypeExpression DefaultIsBound;
 
-    public GenericTypeParameter(Identifier id) : base() {
+    public GenericTypeParameter(Identifier id, TypeExpression defaultIsBound) : base() {
         Id = id;
+        DefaultIsBound = defaultIsBound;
     }
 }
 

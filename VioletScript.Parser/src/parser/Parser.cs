@@ -1153,7 +1153,8 @@ internal class ParserBackend {
         do {
             MarkLocation();
             var id = ParseIdentifier();
-            @params.Add((Ast.GenericTypeParameter) FinishNode(new Ast.GenericTypeParameter(id)));
+            var isBound = Consume(TToken.Colon) ? ParseTypeExpression() : null;
+            @params.Add((Ast.GenericTypeParameter) FinishNode(new Ast.GenericTypeParameter(id, isBound)));
         } while (Consume(TToken.Comma));
         ExpectGT();
         return (Ast.Generics) FinishNode(new Ast.Generics(@params));
