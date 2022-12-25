@@ -421,6 +421,12 @@ public class EnumType : Type {
         Delegate.Properties.Set("toString", toStringMethod);
 
         if (m_IsFlags) {
+            // all
+            var allProp = ModelCore.Factory.VirtualSlot("all", this);
+            allProp.Visibility = Visibility.Public;
+            allProp.Getter = ModelCore.Factory.MethodSlot("", ModelCore.Factory.FunctionType(null, null, null, this), MethodSlotFlags.Native);
+            this.Properties.Set("all", allProp);
+
             // + operation
             var proxyAddMethod = ModelCore.Factory.MethodSlot("", ModelCore.Factory.FunctionType(new[]{new NameAndTypePair("a", this), new NameAndTypePair("b", this)}, null, null, this), MethodSlotFlags.Native);
             Delegate.Proxies[Operator.Add] = proxyAddMethod;
