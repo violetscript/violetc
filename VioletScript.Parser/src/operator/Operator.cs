@@ -118,15 +118,15 @@ public sealed class Operator {
     public int ProxyNumberOfParameters {
         get {
             if (this == Operator.ProxyToGetIndex
-            || this == Operator.ProxyToDeleteIndex
-            || this == Operator.ProxyToConvertImplicit
-            || this == Operator.ProxyToConvertExplicit
-            || this == Operator.In)
+            ||  this == Operator.ProxyToDeleteIndex
+            ||  this == Operator.ProxyToConvertImplicit
+            ||  this == Operator.ProxyToConvertExplicit
+            ||  this == Operator.In)
             {
                 return 1;
             }
             if (this == Operator.ProxyToIterateKeys
-            || this == Operator.ProxyToIterateValues)
+            ||  this == Operator.ProxyToIterateValues)
             {
                 return 0;
             }

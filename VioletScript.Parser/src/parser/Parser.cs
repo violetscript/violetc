@@ -1751,6 +1751,12 @@ internal class ParserBackend {
             case "positive": return Operator.Positive;
             case "negate": return Operator.Negate;
             case "bitNot": return Operator.BitwiseNot;
+            case "equals": return Operator.Equals;
+            case "notEquals": return Operator.NotEquals;
+            case "lt": return Operator.Lt;
+            case "gt": return Operator.Gt;
+            case "le": return Operator.Le;
+            case "ge": return Operator.Ge;
             case "add": return Operator.Add;
             case "subtract": return Operator.Subtract;
             case "multiply": return Operator.Multiply;
