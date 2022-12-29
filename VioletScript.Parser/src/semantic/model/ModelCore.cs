@@ -183,6 +183,9 @@ public sealed class ModelCore {
 
         this.IDisposableType = DefineGlobalBuiltinInterface("IDisposable");
 
+        // global
+        this.GlobalPackage.Properties.Set("global", GlobalPackage);
+
         // undefined
         var undefinedConstant = Factory.VariableSlot("undefined", true, UndefinedType);
         undefinedConstant.InitValue = Factory.UndefinedConstantValue(UndefinedType);
