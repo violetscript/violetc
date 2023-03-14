@@ -12,4 +12,7 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
+    public void VerifyVariableBinding(Ast.VariableBinding binding)
+    {
+    }
 }
