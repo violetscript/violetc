@@ -13,7 +13,7 @@ public interface IDiagnosticFormatter {
     string Format(Diagnostic p) {
         var msg = FormatArguments(p);
         msg = msg.Substring(0, 1).ToUpper() + msg.Substring(1);
-        var file = new System.Uri(p.Span.Script.FilePath).AbsoluteUri;
+        var file = new System.Uri("file://" + p.Span.Script.FilePath).AbsoluteUri;
         var line = p.Span.FirstLine.ToString();
         var column = (p.Span.FirstColumn + 1).ToString();
         var k = p.KindString;
@@ -24,7 +24,7 @@ public interface IDiagnosticFormatter {
     string FormatArguments(Diagnostic p) {
         var regex = new Regex(@"\$(\$|[a-z0-9_\-]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         return regex.Replace(ResolveId(p.Id), delegate(Match m) {
-            var s = m.Captures[1].ToString();
+            var s = m.Captures[0].ToString().Substring(1);
             if (s == "$") {
                 return "$";
             }
