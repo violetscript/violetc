@@ -159,6 +159,9 @@ public class DestructuringPattern : Node {
     }
 }
 
+/// <summary>
+/// Either a binding or assignment pattern.
+/// </summary>
 public class BindPattern : DestructuringPattern {
     private string m_Name;
 
