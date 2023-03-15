@@ -205,6 +205,11 @@ public class RecordDestructuringPatternField : Node {
     /// </summary>
     public Symbol SemanticProperty;
 
+    /// <summary>
+    /// For an assignment pattern, indicates a reference value from a lexical frame.
+    /// </summary>
+    public Symbol SemanticFrameAssignedReference = null;
+
     public RecordDestructuringPatternField(Expression key, DestructuringPattern subpattern) : base() {
         Key = key;
         Subpattern = subpattern;

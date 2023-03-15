@@ -25,6 +25,33 @@ public partial class Verifier
                 VerifyError(pattern.Span.Value.Script, 140, pattern.Span.Value, new DiagnosticArguments { ["i"] = type, ["a"] = annotatedType });
             }
         }
-        doFooBarQuxFooBarBaz();
+        if (type == m_ModelCore.AnyType)
+        {
+            VerifyAssignmentRecordDestructuringPatternForAny(pattern, type);
+        }
+        else if (type.IsInstantiationOf(m_ModelCore.MapType))
+        {
+            VerifyAssignmentRecordDestructuringPatternForMap(pattern, type);
+        }
+        else
+        {
+            VerifyAssignmentRecordDestructuringPatternForCompileTime(pattern, type);
+        }
+    }
+
+    private void VerifyAssignmentRecordDestructuringPatternForAny(Ast.RecordDestructuringPattern pattern, Symbol type)
+    {
+        foreach (var field in pattern.Fields)
+        {
+            if (field.Subpattern == null)
+            {
+                // ...
+            }
+            else
+            {
+                VerifyExp(field.Key);
+                VerifyAssignmentDestructuringPattern(field.Subpattern, m_ModelCore.AnyType);
+            }
+        }
     }
 }

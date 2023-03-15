@@ -26,41 +26,48 @@ public partial class Verifier
             }
         }
 
-        var r = m_Frame.ResolveProperty(pattern.Name);
+        pattern.SemanticFrameAssignedReference = AssignmentRecordDestructuringLexicalRef(pattern.Name, pattern.Span.Value);
+    }
+
+    private Symbol AssignmentRecordDestructuringLexicalRef(string name, Span nameSpan)
+    {
+        var r = m_Frame.ResolveProperty(name);
         if (r == null)
         {
             // VerifyError: undefined reference
-            VerifyError(pattern.Span.Value.Script, 128, pattern.Span.Value, new DiagnosticArguments { ["name"] = pattern.Name });
+            VerifyError(null, 128, nameSpan, new DiagnosticArguments { ["name"] = name });
         }
         else if (r is AmbiguousReferenceIssue)
         {
             // VerifyError: ambiguous reference
-            VerifyError(pattern.Span.Value.Script, 129, pattern.Span.Value, new DiagnosticArguments { ["name"] = pattern.Name });
+            VerifyError(null, 129, nameSpan, new DiagnosticArguments { ["name"] = name });
         }
         // must be a lexical reference
         else if (!(r is ReferenceValueFromFrame))
         {
-            VerifyError(pattern.Span.Value.Script, 148, pattern.Span.Value, new DiagnosticArguments { ["name"] = pattern.Name });
+            VerifyError(null, 148, nameSpan, new DiagnosticArguments { ["name"] = name });
         }
         // read-only
         else if (r.ReadOnly)
         {
-            VerifyError(pattern.Span.Value.Script, 147, pattern.Span.Value, new DiagnosticArguments { ["name"] = pattern.Name });
+            VerifyError(null, 147, nameSpan, new DiagnosticArguments { ["name"] = name });
         }
         else
         {
             if (!r.PropertyIsVisibleTo(m_Frame))
             {
                 // VerifyError: accessing private property
-                VerifyError(pattern.Span.Value.Script, 130, pattern.Span.Value, new DiagnosticArguments { ["name"] = pattern.Name });
+                VerifyError(null, 130, nameSpan, new DiagnosticArguments { ["name"] = name });
             }
-            pattern.SemanticFrameAssignedReference = r;
 
             // extend variable life
             if (r.Base.FindActivation() != m_Frame.FindActivation())
             {
                 r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
             }
+
+            return r;
         }
+        return null;
     }
 }
