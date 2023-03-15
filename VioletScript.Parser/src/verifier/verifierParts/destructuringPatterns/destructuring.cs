@@ -65,6 +65,7 @@ public partial class Verifier
             if (type == null)
             {
                 VerifyError(pattern.Span.Value.Script, 138, pattern.Span.Value, new DiagnosticArguments { ["name"] = pattern.Name });
+                type = m_ModelCore.AnyType;
             }
         }
         // inferred type and type annotation must be the same
