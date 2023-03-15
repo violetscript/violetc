@@ -161,7 +161,7 @@ public partial class Verifier
             }
             else
             {
-                Limit(field.Key, keyType);
+                LimitExpType(field.Key, keyType);
                 if (field.Subpattern != null)
                 {
                     VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, undefinedOrValueType);
@@ -246,6 +246,7 @@ public partial class Verifier
             // VerifyError: key is not an identifier
             else
             {
+                VerifyExp(field.Key);
                 VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
                 if (field.Subpattern != null)
                 {
