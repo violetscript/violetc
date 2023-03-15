@@ -17,7 +17,7 @@ public partial class Verifier
         var output = m_Frame.Properties;
         foreach (var binding in svd.Bindings)
         {
-            VerifyVariableBinding(binding, svd.ReadOnly, output);
+            VerifyVariableBinding(binding, svd.ReadOnly, output, Visibility.Public);
         }
     }
 }

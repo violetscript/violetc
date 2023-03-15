@@ -19,7 +19,8 @@ public partial class Verifier
     (
         Ast.VariableBinding binding,
         bool readOnly,
-        Properties output
+        Properties output,
+        Visibility visibility
     )
     {
         if (binding.SemanticVerified)
@@ -36,11 +37,11 @@ public partial class Verifier
                 VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
             }
             init = VerifyExp(binding.Init);
-            VerifyDestructuringPattern(binding.Pattern, readOnly, output, init.StaticType);
+            VerifyDestructuringPattern(binding.Pattern, readOnly, output, visibility, init.StaticType);
         }
         else
         {
-            VerifyDestructuringPattern(binding.Pattern, readOnly, output);
+            VerifyDestructuringPattern(binding.Pattern, readOnly, output, visibility);
             if (binding.Init != null)
             {
                 LimitExpType(binding.Init, binding.Pattern.SemanticProperty.StaticType);
