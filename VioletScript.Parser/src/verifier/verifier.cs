@@ -56,12 +56,14 @@ public partial class Verifier
 
     private Diagnostic VerifyError(Script script, int id, Span span, DiagnosticArguments args = null)
     {
+        script ??= span.Script;
         m_Valid = false;
         return script.CollectDiagnostic(Diagnostic.VerifyError(id, span, args));
     }
 
     private Diagnostic Warn(Script script, int id, Span span, DiagnosticArguments args = null)
     {
+        script ??= span.Script;
         return script.CollectDiagnostic(Diagnostic.Warning(id, span, args));
     }
 }
