@@ -51,6 +51,14 @@ public partial class Verifier
         {
             VerifyRecordDestructuringPatternForAny(pattern, readOnly, output, visibility);
         }
+        else if (type.IsInstantiationOf(m_ModelCore.MapType))
+        {
+            VerifyRecordDestructuringPatternForMap(pattern, readOnly, output, visibility, type);
+        }
+        else
+        {
+            VerifyRecordDestructuringPatternForCompileTime(pattern, readOnly, output, visibility, type);
+        }
     }
 
     private void VerifyRecordDestructuringPatternForAny
@@ -65,7 +73,31 @@ public partial class Verifier
         {
             if (field.Key is Ast.StringLiteral key)
             {
-                verifyRecordFieldHere();
+                if (field.Subpattern == null)
+                {
+                    Symbol newDefinition = null;
+                    var previousDefinition = output[key.Value];
+                    if (previousDefinition != null)
+                    {
+                        // VerifyError: duplicate definition
+                        newDefinition = previousDefinition;
+                        if (!m_Options.AllowDuplicates)
+                        {
+                            VerifyError(key.Span.Value.Script, 139, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
+                        }
+                    }
+                    else
+                    {
+                        newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, m_ModelCore.AnyType);
+                        newDefinition.Visibility = visibility;
+                        output[pattern.Name] = newDefinition;
+                    }
+                    field.SemanticProperty = newDefinition;
+                }
+                else
+                {
+                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, m_ModelCore.AnyType);
+                }
             }
             // VerifyError: key is not an identifier
             else
@@ -77,5 +109,34 @@ public partial class Verifier
                 }
             }
         }
+    }
+
+    private void VerifyRecordDestructuringPatternForMap
+    (
+        Ast.RecordDestructuringPattern pattern,
+        bool readOnly,
+        Properties output,
+        Visibility visibility,
+        Symbol mapType
+    )
+    {
+        Symbol keyType = mapType.ArgumentTypes[0];
+        Symbol valueType = mapType.ArgumentTypes[1];
+        // accessing keys should produce `v:undefined|V`
+        Symbol undefinedOrValueType = m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, valueType});
+
+        fooBarQuxFooBarQuxFooBar();
+    }
+
+    private void VerifyRecordDestructuringPatternForCompileTime
+    (
+        Ast.RecordDestructuringPattern pattern,
+        bool readOnly,
+        Properties output,
+        Visibility visibility,
+        Symbol type
+    )
+    {
+        fooBarQuxFooBarQuxFooBar();
     }
 }
