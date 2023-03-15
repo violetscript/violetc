@@ -99,14 +99,17 @@ public partial class Verifier
                     VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, m_ModelCore.AnyType);
                 }
             }
-            // VerifyError: key is not an identifier
             else
             {
-                VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
                 VerifyExp(field.Key);
                 if (field.Subpattern != null)
                 {
                     VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, m_ModelCore.AnyType);
+                }
+                else
+                {
+                    // VerifyError: key is not an identifier
+                    VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
                 }
             }
         }
@@ -156,13 +159,17 @@ public partial class Verifier
                     VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, undefinedOrValueType);
                 }
             }
-            // VerifyError: key is not an identifier
             else
             {
-                VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
+                Limit(field.Key, keyType);
                 if (field.Subpattern != null)
                 {
                     VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, undefinedOrValueType);
+                }
+                else
+                {
+                    // VerifyError: key is not an identifier
+                    VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
                 }
             }
         }

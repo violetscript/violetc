@@ -112,7 +112,7 @@ public sealed class ModelCore {
     /// <summary>
     /// Built-in object.
     /// </summary>
-    public Symbol INodeContainerType = null;
+    public Symbol IMarkupContainerType = null;
     /// <summary>
     /// Built-in object.
     /// </summary>
@@ -178,8 +178,8 @@ public sealed class ModelCore {
         this.RegExpType = DefineGlobalBuiltinClass("RegExp", true);
         this.BoxedType = DefineGlobalBuiltinClass("Boxed", true);
 
-        this.INodeContainerType = DefineGlobalBuiltinInterface("INodeContainer");
-        this.INodeContainerType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
+        this.IMarkupContainerType = DefineGlobalBuiltinInterface("IMarkupContainer");
+        this.IMarkupContainerType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
 
         this.IDisposableType = DefineGlobalBuiltinInterface("IDisposable");
 
