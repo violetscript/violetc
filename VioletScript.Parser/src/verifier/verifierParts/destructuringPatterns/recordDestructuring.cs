@@ -103,6 +103,7 @@ public partial class Verifier
             else
             {
                 VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
+                VerifyExp(field.Key);
                 if (field.Subpattern != null)
                 {
                     VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, m_ModelCore.AnyType);
