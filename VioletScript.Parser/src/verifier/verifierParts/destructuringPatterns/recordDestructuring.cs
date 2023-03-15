@@ -224,7 +224,7 @@ public partial class Verifier
                     }
                     else
                     {
-                        newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, m_ModelCore.AnyType);
+                        newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, fieldType);
                         newDefinition.Visibility = visibility;
                         output[pattern.Name] = newDefinition;
                     }
@@ -232,7 +232,7 @@ public partial class Verifier
                 }
                 else
                 {
-                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, m_ModelCore.AnyType);
+                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, fieldType);
                 }
             }
             // VerifyError: key is not an identifier
