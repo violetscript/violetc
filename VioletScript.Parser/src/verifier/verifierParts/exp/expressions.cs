@@ -19,6 +19,18 @@ public partial class Verifier
         bool instantiatingGeneric = false
     )
     {
+        if (exp.SemanticExpResolved)
+        {
+            return exp.SemanticSymbol;
+        }
+        if (!exp.SemanticConstantExpResolved)
+        {
+            var r = VerifyConstantExp(exp, false, expectedType, instantiatingGeneric);
+            if (r !=  null)
+            {
+                return r;
+            }
+        }
         //
     }
 }

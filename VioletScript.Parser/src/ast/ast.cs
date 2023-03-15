@@ -247,6 +247,15 @@ public class VariableBinding : Node {
 }
 
 public class Expression : Node {
+    public Symbol SemanticSymbol = null;
+    /// <summary>
+    /// Internally used by the verifier.
+    /// </summary>
+    public bool SemanticExpResolved = false;
+    /// <summary>
+    /// Internally used by the verifier.
+    /// </summary>
+    public bool SemanticConstantExpResolved = false;
 }
 
 public class Identifier : Expression {
