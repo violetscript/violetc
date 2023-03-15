@@ -590,4 +590,9 @@ public class Symbol {
     public virtual Symbol ToNonNullableType() {
         return this;
     }
+
+    public Symbol FindActivation()
+    {
+        return this is ActivationFrame ? this : this.ParentFrame?.FindActivation();
+    }
 }

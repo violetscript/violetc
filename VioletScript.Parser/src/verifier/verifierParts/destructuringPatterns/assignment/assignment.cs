@@ -55,6 +55,12 @@ public partial class Verifier
                 VerifyError(pattern.Span.Value.Script, 130, pattern.Span.Value, new DiagnosticArguments { ["name"] = pattern.Name });
             }
             pattern.SemanticFrameAssignedReference = r;
+
+            // extend variable life
+            if (r.Base.FindActivation() != m_Frame.FindActivation())
+            {
+                r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
+            }
         }
     }
 }
