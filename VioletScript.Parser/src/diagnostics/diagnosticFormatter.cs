@@ -13,7 +13,12 @@ public interface IDiagnosticFormatter {
     string Format(Diagnostic p) {
         var msg = FormatArguments(p);
         msg = msg.Substring(0, 1).ToUpper() + msg.Substring(1);
-        var file = new System.Uri("file://" + p.Span.Script.FilePath).AbsoluteUri;
+        String file = p.Span.Script.FilePath;
+        if (file.StartsWith("/"))
+        {
+            file = file.Substring(1);
+        }
+        file = new System.Uri("file://" + file).AbsoluteUri;
         if (file.EndsWith('/'))
         {
             file = file.Substring(0, file.Count() - 1);
