@@ -23,13 +23,11 @@ public partial class Verifier
         {
             return exp.SemanticSymbol;
         }
-        if (!exp.SemanticConstantExpResolved)
+        var r = VerifyConstantExp(exp, false, expectedType, instantiatingGeneric);
+        if (r != null)
         {
-            var r = VerifyConstantExp(exp, false, expectedType, instantiatingGeneric);
-            if (r !=  null)
-            {
-                return r;
-            }
+            exp.SemanticExpResolved = true;
+            return r;
         }
         throw new Exception("Unimplemented expression");
     }
