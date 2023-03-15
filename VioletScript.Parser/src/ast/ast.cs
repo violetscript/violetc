@@ -152,6 +152,10 @@ public class ParensTypeExpression : TypeExpression {
 public class DestructuringPattern : Node {
     public TypeExpression Type;
 
+    /// <summary>
+    /// For a binding, indicates a variable slot.
+    /// For an assignment, <c>SemanticProperty</c> is null.
+    /// </summary>
     public Symbol SemanticProperty = null;
 
     public DestructuringPattern(TypeExpression type) : base() {
@@ -164,6 +168,11 @@ public class DestructuringPattern : Node {
 /// </summary>
 public class BindPattern : DestructuringPattern {
     private string m_Name;
+
+    /// <summary>
+    /// For an assignment pattern, indicates a reference value from a lexical frame.
+    /// </summary>
+    public Symbol SemanticFrameAssignedReference = null;
 
     public BindPattern(string name, TypeExpression type) : base(type) {
         m_Name = name;
