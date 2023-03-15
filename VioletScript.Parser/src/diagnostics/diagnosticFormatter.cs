@@ -14,6 +14,10 @@ public interface IDiagnosticFormatter {
         var msg = FormatArguments(p);
         msg = msg.Substring(0, 1).ToUpper() + msg.Substring(1);
         var file = new System.Uri("file://" + p.Span.Script.FilePath).AbsoluteUri;
+        if (file.EndsWith('/'))
+        {
+            file = file.Substring(0, file.Count() - 1);
+        }
         var line = p.Span.FirstLine.ToString();
         var column = (p.Span.FirstColumn + 1).ToString();
         var k = p.KindString;
@@ -117,6 +121,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [135] = "Wrong number of arguments: expected $expectedN, got $gotN",
         [136] = "Argument type must be a subtype of $t",
         [137] = "Typed type expression must not be used here",
+        [138] = "Binding must have type annotation",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

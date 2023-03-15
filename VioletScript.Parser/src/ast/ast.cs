@@ -152,6 +152,8 @@ public class ParensTypeExpression : TypeExpression {
 public class DestructuringPattern : Node {
     public TypeExpression Type;
 
+    public Symbol SemanticProperty = null;
+
     public DestructuringPattern(TypeExpression type) : base() {
         Type = type;
     }
@@ -209,6 +211,8 @@ public class VariableBinding : Node {
     public DestructuringPattern Pattern;
     /// <summary>Optional initializer.</summary>
     public Expression Init;
+
+    public bool SemanticVerified = false;
 
     public VariableBinding(DestructuringPattern pattern, Expression init) : base() {
         Pattern = pattern;
