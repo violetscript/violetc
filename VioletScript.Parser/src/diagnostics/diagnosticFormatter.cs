@@ -134,6 +134,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [143] = "Tuple destructuring pattern must not have a rest element",
         [144] = "Rest element must be last element",
         [145] = "Record pattern key must be an identifier",
+        [146] = "'$name' is a generic function, therefore must be argumented"
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

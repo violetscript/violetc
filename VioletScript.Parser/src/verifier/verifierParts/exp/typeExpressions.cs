@@ -155,7 +155,7 @@ public partial class Verifier
             if (r == null)
             {
                 // VerifyError: undefined reference
-                VerifyError(exp.Span.Value.Script, 128, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+                VerifyError(memberTe.Id.Span.Value.Script, 128, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
                 exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.AnyType);
                 return exp.SemanticSymbol;
             }
@@ -170,14 +170,14 @@ public partial class Verifier
                 if (!isBase && !(r is Type))
                 {
                     // VerifyError: not a type constant
-                    VerifyError(exp.Span.Value.Script, 131, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+                    VerifyError(memberTe.Id.Span.Value.Script, 131, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
                     exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.AnyType);
                     return exp.SemanticSymbol;
                 }
                 // VerifyError: unargumented generic type
                 if (!isBase && r.TypeParameters != null)
                 {
-                    VerifyError(exp.Span.Value.Script, 132, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+                    VerifyError(memberTe.Id.Span.Value.Script, 132, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
                     exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.AnyType);
                     return exp.SemanticSymbol;
                 }

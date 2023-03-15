@@ -208,6 +208,10 @@ public class ReferenceValueFromNamespace : Value {
     public override bool WriteOnly {
         get => m_Property.WriteOnly;
     }
+
+    public override bool PropertyIsVisibleTo(Symbol frame) {
+        return m_Property.PropertyIsVisibleTo(frame);
+    }
 }
 
 public class ReferenceValueFromType : Value {
@@ -240,6 +244,10 @@ public class ReferenceValueFromType : Value {
     public override bool WriteOnly {
         get => m_Property.WriteOnly;
     }
+
+    public override bool PropertyIsVisibleTo(Symbol frame) {
+        return m_Property.PropertyIsVisibleTo(frame);
+    }
 }
 
 public class ReferenceValueFromFrame : Value {
@@ -265,6 +273,10 @@ public class ReferenceValueFromFrame : Value {
 
     public override bool WriteOnly {
         get => m_Property.WriteOnly;
+    }
+
+    public override bool PropertyIsVisibleTo(Symbol frame) {
+        return m_Property.PropertyIsVisibleTo(frame);
     }
 }
 
@@ -297,6 +309,10 @@ public class ReferenceValue : Value {
 
     public override bool WriteOnly {
         get => m_Property.WriteOnly;
+    }
+
+    public override bool PropertyIsVisibleTo(Symbol frame) {
+        return m_Property.PropertyIsVisibleTo(frame);
     }
 }
 

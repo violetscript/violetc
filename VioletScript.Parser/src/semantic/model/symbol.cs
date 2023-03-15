@@ -513,7 +513,7 @@ public class Symbol {
         return false;
     }
 
-    public bool PropertyIsVisibleTo(Symbol frame) {
+    public virtual bool PropertyIsVisibleTo(Symbol frame) {
         if (Visibility == Visibility.Public) {
             return true;
         }
