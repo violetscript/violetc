@@ -129,6 +129,10 @@ public static class DefaultDiagnosticFormatterStatics {
         [138] = "Binding must have type annotation",
         [139] = "Duplicate definition for '$name'",
         [140] = "Inferred type and type annotation must match: $i is not equals to $a",
+        [141] = "Cannot apply array destructuring to type '$t'",
+        [142] = "Tuple destructuring cannot have more than $limit elements",
+        [143] = "Tuple destructuring pattern must not have a rest element",
+        [144] = "Rest element must be last element",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

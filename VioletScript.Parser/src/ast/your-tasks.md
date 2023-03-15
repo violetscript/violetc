@@ -24,7 +24,7 @@ Use this document for tracking nodes to visit.
 - [ ] Destructuring patterns
   - [ ] Bind
   - [ ] Array
-  - [ ] Object
+  - [ ] Record
 - [ ] Expressions
   - [ ] Identifier
     - Possibly typed

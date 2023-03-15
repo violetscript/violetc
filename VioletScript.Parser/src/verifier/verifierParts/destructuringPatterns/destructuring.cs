@@ -13,11 +13,10 @@ using DiagnosticArguments = Dictionary<string, object>;
 public partial class Verifier
 {
     // verify a destructuring pattern; ensure:
-    // - it is a non-duplicate property if it is a bind pattern.
     // - if there is both a type annotation and an inferred type, ensure they are equals.
     // - if there is no type annotation and no inferred type, throw a VerifyError.
     //
-    // subpatterns always need an `inferredType` argument.
+    // nested patterns always need an `inferredType` argument.
     //
     public void VerifyDestructuringPattern
     (
