@@ -40,8 +40,8 @@ Use this document for tracking nodes to visit.
   - [ ] Function
   - [ ] Object initializer
   - [ ] Array initializer
-  - [ ] Node initializer
-  - [ ] Node list initializer
+  - [ ] Markup initializer
+  - [ ] Markup list initializer
   - [ ] Member
     - [ ] Possibly `?.x`
   - [ ] Index

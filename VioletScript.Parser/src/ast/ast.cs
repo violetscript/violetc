@@ -389,16 +389,16 @@ public class ArrayInitializer : Expression {
     }
 }
 
-public class NodeListInitializer : Expression {
+public class MarkupListInitializer : Expression {
     /// <summary>List of <c>Expression</c> and <c>Spread</c> with curly brackets.</summary>
     public List<Expression> Children;
 
-    public NodeListInitializer(List<Expression> children) : base() {
+    public MarkupListInitializer(List<Expression> children) : base() {
         Children = children;
     }
 }
 
-public class NodeInitializer : Expression {
+public class MarkupInitializer : Expression {
     /// <summary>
     /// Member expression or identifier.
     /// </summary>
@@ -407,7 +407,7 @@ public class NodeInitializer : Expression {
     /// <summary>Null if node is empty. Contains child node initializers and <c>Spread</c> with curly brackets.</summary>
     public List<Expression> Children;
 
-    public NodeInitializer(Expression id, List<NodeAttribute> attributes, List<Expression> children) : base() {
+    public MarkupInitializer(Expression id, List<NodeAttribute> attributes, List<Expression> children) : base() {
         Id = id;
         Attributes = attributes;
         Children = children;

@@ -704,7 +704,7 @@ internal class ParserBackend {
         } else if (ConsumeKeyword("new")) {
             return ParseNewExpression();
         } else if (Token.IsOperator(Operator.Lt)) {
-            return ParseNodeInitializer(true);
+            return ParseMarkupInitializer(true);
         }
         return null;
     }
@@ -872,7 +872,7 @@ internal class ParserBackend {
         return FinishExp(new Ast.FunctionExpression(null, common));
     }
 
-    private Ast.Expression ParseNodeInitializer(bool root = false) {
+    private Ast.Expression ParseMarkupInitializer(bool root = false) {
         MarkLocation();
         ExpectOperator(Operator.Lt);
         if (root && ConsumeOperator(Operator.Gt)) {
@@ -885,11 +885,11 @@ internal class ParserBackend {
                     Expect(TToken.RCurly);
                     children2.Add(FinishExp(new Ast.Spread(expr)));
                 } else {
-                    children2.Add(FinishExp(ParseNodeInitializer()));
+                    children2.Add(FinishExp(ParseMarkupInitializer()));
                 }
             }
             ExpectOperator(Operator.Gt);
-            return FinishExp(new Ast.NodeListInitializer(children2));
+            return FinishExp(new Ast.MarkupListInitializer(children2));
         }
         MarkLocation();
         var id = FinishExp(new Ast.Identifier(ExpectIdentifier()));
@@ -929,7 +929,7 @@ internal class ParserBackend {
                     Expect(TToken.RCurly);
                     children.Add(FinishExp(new Ast.Spread(expr2)));
                 } else {
-                    children.Add(ParseNodeInitializer());
+                    children.Add(ParseMarkupInitializer());
                 }
             }
             ExpectIdentifier();
@@ -938,7 +938,7 @@ internal class ParserBackend {
             }
             ExpectOperator(Operator.Gt);
         }
-        return FinishExp(new Ast.NodeInitializer(id, attribs, children));
+        return FinishExp(new Ast.MarkupInitializer(id, attribs, children));
     }
 
     private static Dictionary<Operator, OperatorFilter> m_UnaryOperatorFiltersByOperator = null;
