@@ -127,6 +127,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [136] = "Argument type must be a subtype of $t",
         [137] = "Typed type expression must not be used here",
         [138] = "Binding must have type annotation",
+        [139] = "Duplicate definition for '$name'",
+        [140] = "Inferred type and type annotation must match: $i is not equals to $a",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

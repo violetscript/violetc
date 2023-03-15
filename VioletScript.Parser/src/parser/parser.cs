@@ -516,7 +516,7 @@ internal class ParserBackend {
     private Ast.DestructuringPattern OptConvertExpressionIntoDestructuringPattern(Ast.Expression e) {
         if (e is Ast.Identifier e_asId) {
             PushLocation(e_asId.Span.Value);
-            return (Ast.DestructuringPattern) FinishNode(new Ast.NonDestructuringPattern(e_asId.Name, e_asId.Type), e_asId.Span.Value);
+            return (Ast.DestructuringPattern) FinishNode(new Ast.BindPattern(e_asId.Name, e_asId.Type), e_asId.Span.Value);
         } else if (e is Ast.ArrayInitializer e_asAi) {
             PushLocation(e_asAi.Span.Value);
             var items = new List<Ast.Node>{};
@@ -1601,7 +1601,7 @@ internal class ParserBackend {
             bindings.Add(binding);
 
             // enum constant restrictions
-            if (context is EnumContext && !isStatic && (!(binding.Pattern is Ast.NonDestructuringPattern) || binding.Pattern.Type != null)) {
+            if (context is EnumContext && !isStatic && (!(binding.Pattern is Ast.BindPattern) || binding.Pattern.Type != null)) {
                 VerifyError(15, binding.Span.Value);
             }
         } while (Consume(TToken.Comma));

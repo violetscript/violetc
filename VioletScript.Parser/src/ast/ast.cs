@@ -159,10 +159,10 @@ public class DestructuringPattern : Node {
     }
 }
 
-public class NonDestructuringPattern : DestructuringPattern {
+public class BindPattern : DestructuringPattern {
     private string m_Name;
 
-    public NonDestructuringPattern(string name, TypeExpression type) : base(type) {
+    public BindPattern(string name, TypeExpression type) : base(type) {
         m_Name = name;
     }
 
@@ -513,7 +513,7 @@ public class GenericInstantiationExpression : Expression {
 public class AssignmentExpression : Expression {
     /// <summary>
     /// Left, either a <c>Expression</c> or <c>DestructuringPattern</c>.
-    /// This is never a <c>NonDestructuringPattern</c> node.
+    /// This is never a <c>BindPattern</c> node.
     /// </summary>
     public Node Left;
     /// <summary>

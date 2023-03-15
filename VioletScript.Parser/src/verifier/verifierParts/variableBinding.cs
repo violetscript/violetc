@@ -30,6 +30,7 @@ public partial class Verifier
         // variable type must be inferred from the initializer.
         if (binding.Pattern.Type == null)
         {
+            // VerifyError
             if (binding.Init == null)
             {
                 VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});

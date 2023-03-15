@@ -22,7 +22,7 @@ Use this document for tracking nodes to visit.
 - [ ] Variable binding
 - [ ] Simple variable declaration
 - [ ] Destructuring patterns
-  - [ ] Non-destructuring
+  - [ ] Bind
   - [ ] Array
   - [ ] Object
 - [ ] Expressions
