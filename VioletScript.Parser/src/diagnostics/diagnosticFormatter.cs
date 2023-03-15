@@ -133,6 +133,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [142] = "Tuple destructuring cannot have more than $limit elements",
         [143] = "Tuple destructuring pattern must not have a rest element",
         [144] = "Rest element must be last element",
+        [145] = "Record pattern key must be an identifier",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

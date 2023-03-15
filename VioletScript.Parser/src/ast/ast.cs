@@ -180,9 +180,18 @@ public class RecordDestructuringPattern : DestructuringPattern {
 }
 
 public class RecordDestructuringPatternField : Node {
+    /// <summary>
+    /// Key. For variable bindings, this is only allowed to be
+    /// a string literal.
+    /// </summary>
     public Expression Key;
     /// <summary>Optional pattern.</summary>
     public DestructuringPattern Subpattern;
+
+    /// <summary>
+    /// Semantic property. This is null if there is a subpattern.
+    /// </summary>
+    public Symbol SemanticProperty;
 
     public RecordDestructuringPatternField(Expression key, DestructuringPattern subpattern) : base() {
         Key = key;
