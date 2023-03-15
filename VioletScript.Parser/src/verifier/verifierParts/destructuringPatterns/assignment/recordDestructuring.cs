@@ -22,7 +22,7 @@ public partial class Verifier
             // inferred type and type annotation must be the same
             if (annotatedType != type)
             {
-                VerifyError(pattern.Span.Value.Script, 140, pattern.Span.Value, new DiagnosticArguments { ["i"] = type, ["a"] = annotatedType });
+                VerifyError(null, 140, pattern.Span.Value, new DiagnosticArguments { ["i"] = type, ["a"] = annotatedType });
             }
         }
         if (type == m_ModelCore.AnyType)
@@ -47,13 +47,13 @@ public partial class Verifier
             {
                 if (field.Key is Ast.StringLiteral key)
                 {
-                    field.SemanticFrameAssignedReference = AssignmentRecordDestructuringLexicalRef(key.Name, field.Span.Value);
+                    field.SemanticFrameAssignedReference = AssignmentRecordDestructuringLexicalRef(key.Value, field.Span.Value);
                     // assigning any to a property of any type
                 }
                 // key must be an identifier
                 else
                 {
-                    VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
+                    VerifyError(null, 145, field.Key.Span.Value, new DiagnosticArguments {});
                     VerifyExp(field.Key);
                 }
             }
@@ -78,7 +78,7 @@ public partial class Verifier
             {
                 if (field.Key is Ast.StringLiteral key)
                 {
-                    field.SemanticFrameAssignedReference = AssignmentRecordDestructuringLexicalRef(key.Name, field.Span.Value);
+                    field.SemanticFrameAssignedReference = AssignmentRecordDestructuringLexicalRef(key.Value, field.Span.Value);
                     // ensure the lexical reference has the correct type
                     if (field.SemanticFrameAssignedReference != null && field.SemanticFrameAssignedReference.StaticType != undefinedOrValueType)
                     {
