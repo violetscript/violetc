@@ -39,10 +39,10 @@ public partial class Verifier
         }
         else
         {
-            VerifyDestructuringPattern(binding.Pattern, readOnly, output, init.StaticType);
+            VerifyDestructuringPattern(binding.Pattern, readOnly, output);
             if (binding.Init != null)
             {
-                LimitExpressionType(binding.Init, binding.Pattern.SemanticProperty.StaticType);
+                LimitExpType(binding.Init, binding.Pattern.SemanticProperty.StaticType);
             }
         }
 
