@@ -137,7 +137,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [146] = "'$name' is a generic function, therefore must be argumented",
         [147] = "Assigning read-only property '$name'",
         [148] = "Destructuring assignment target must be lexical",
-        [149] = "Target must be of type '$e'",
+        [149] = "Target reference must be of type '$e'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
