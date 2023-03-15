@@ -31,6 +31,6 @@ public partial class Verifier
                 return r;
             }
         }
-        //
+        throw new Exception("Unimplemented expression");
     }
 }

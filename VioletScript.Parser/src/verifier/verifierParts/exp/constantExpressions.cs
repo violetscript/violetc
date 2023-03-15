@@ -12,4 +12,17 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
+    public Symbol VerifyConstantExp
+    (
+        Ast.Expression exp,
+        bool faillible,
+        Symbol expectedType = null,
+        bool instantiatingGeneric = false
+    )
+    {
+        if (exp.SemanticConstantExpResolved)
+        {
+            return exp.SemanticSymbol;
+        }
+    }
 }

@@ -63,6 +63,13 @@ public partial class Verifier
                     exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.AnyType);
                     return exp.SemanticSymbol;
                 }
+
+                // extend variable life
+                if (r is ReferenceValueFromFrame && r.Base.FindActivation() != m_Frame.FindActivation())
+                {
+                    r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
+                }
+
                 exp.SemanticSymbol = r;
                 return r;
             }
