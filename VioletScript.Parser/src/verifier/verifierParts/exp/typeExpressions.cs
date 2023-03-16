@@ -14,7 +14,7 @@ public partial class Verifier
 {
     public Symbol VerifyTypeExp(Ast.TypeExpression exp, bool isBase = false)
     {
-        if (exp.SemanticSymbol != null)
+        if (exp.SemanticResolved)
         {
             return exp.SemanticSymbol;
         }
@@ -31,14 +31,16 @@ public partial class Verifier
             {
                 // VerifyError: undefined reference
                 VerifyError(exp.Span.Value.Script, 128, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
-                exp.SemanticSymbol = m_ModelCore.AnyType;
+                exp.SemanticSymbol = null;
+                exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
             }
             else if (r is AmbiguousReferenceIssue)
             {
                 // VerifyError: ambiguous reference
                 VerifyError(exp.Span.Value.Script, 129, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
-                exp.SemanticSymbol = m_ModelCore.AnyType;
+                exp.SemanticSymbol = null;
+                exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
             }
             else
@@ -53,14 +55,16 @@ public partial class Verifier
                 {
                     // VerifyError: not a type constant
                     VerifyError(exp.Span.Value.Script, 131, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
-                    exp.SemanticSymbol = m_ModelCore.AnyType;
+                    exp.SemanticSymbol = null;
+                    exp.SemanticResolved = true;
                     return exp.SemanticSymbol;
                 }
                 // VerifyError: unargumented generic type
                 if (!isBase && r.TypeParameters != null)
                 {
                     VerifyError(exp.Span.Value.Script, 132, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
-                    exp.SemanticSymbol = m_ModelCore.AnyType;
+                    exp.SemanticSymbol = null;
+                    exp.SemanticResolved = true;
                     return exp.SemanticSymbol;
                 }
 
@@ -71,22 +75,26 @@ public partial class Verifier
                 }
 
                 exp.SemanticSymbol = r;
+                exp.SemanticResolved = true;
                 return r;
             }
         } // IdentifierTypeExpression
         else if (exp is Ast.AnyTypeExpression)
         {
             exp.SemanticSymbol = m_ModelCore.AnyType;
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.VoidTypeExpression || exp is Ast.UndefinedTypeExpression)
         {
             exp.SemanticSymbol = m_ModelCore.UndefinedType;
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.NullTypeExpression)
         {
             exp.SemanticSymbol = m_ModelCore.NullType;
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.FunctionTypeExpression fte)
@@ -100,7 +108,7 @@ public partial class Verifier
                 @params = new List<NameAndTypePair>();
                 foreach (var paramId in fte.Params)
                 {
-                    @params.Add(new NameAndTypePair(paramId.Name, VerifyTypeExp(paramId.Type)));
+                    @params.Add(new NameAndTypePair(paramId.Name, VerifyTypeExp(paramId.Type) ?? m_ModelCore.AnyType));
                 }
             }
             if (fte.OptParams != null)
@@ -108,46 +116,52 @@ public partial class Verifier
                 optParams = new List<NameAndTypePair>();
                 foreach (var paramId in fte.OptParams)
                 {
-                    optParams.Add(new NameAndTypePair(paramId.Name, VerifyTypeExp(paramId.Type)));
+                    optParams.Add(new NameAndTypePair(paramId.Name, VerifyTypeExp(paramId.Type) ?? m_ModelCore.AnyType));
                 }
             }
             if (fte.RestParam != null)
             {
-                restParam = new NameAndTypePair(fte.RestParam.Name, VerifyTypeExp(fte.RestParam.Type));
+                restParam = new NameAndTypePair(fte.RestParam.Name, VerifyTypeExp(fte.RestParam.Type) ?? m_ModelCore.AnyType);
             }
-            returnType = fte.ReturnType != null ? VerifyTypeExp(fte.ReturnType) : m_ModelCore.AnyType;
+            returnType = fte.ReturnType != null ? (VerifyTypeExp(fte.ReturnType) ?? m_ModelCore.AnyType) : m_ModelCore.AnyType;
             exp.SemanticSymbol = m_ModelCore.InternFunctionType(@params?.ToArray(), optParams?.ToArray(), restParam, returnType);
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         } // FunctionTypeExpression
         else if (exp is Ast.ArrayTypeExpression arrayTe)
         {
-            exp.SemanticSymbol = m_ModelCore.InternInstantiatedType(m_ModelCore.ArrayType, new Symbol[]{VerifyTypeExp(arrayTe.ItemType)});
+            exp.SemanticSymbol = m_ModelCore.InternInstantiatedType(m_ModelCore.ArrayType, new Symbol[]{VerifyTypeExp(arrayTe.ItemType) ?? m_ModelCore.AnyType});
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.TupleTypeExpression tupleTe)
         {
-            var items = tupleTe.ItemTypes.Select(te => VerifyTypeExp(te)).ToArray();
+            var items = tupleTe.ItemTypes.Select(te => VerifyTypeExp(te) ?? m_ModelCore.AnyType).ToArray();
             exp.SemanticSymbol = m_ModelCore.InternTupleType(items);
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.RecordTypeExpression recordTe)
         {
             var fields = recordTe.Fields.Select(field =>
             {
-                return new NameAndTypePair(field.Name, VerifyTypeExp(field.Type));
+                return new NameAndTypePair(field.Name, VerifyTypeExp(field.Type) ?? m_ModelCore.AnyType);
             }).ToArray();
             exp.SemanticSymbol = m_ModelCore.InternRecordType(fields);
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.ParensTypeExpression parensTe)
         {
-            exp.SemanticSymbol = VerifyTypeExp(parensTe.Base);
+            exp.SemanticSymbol = VerifyTypeExp(parensTe.Base) ?? m_ModelCore.AnyType;
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.UnionTypeExpression unionTe)
         {
-            var items = unionTe.Types.Select(te => VerifyTypeExp(te)).ToArray();
+            var items = unionTe.Types.Select(te => VerifyTypeExp(te) ?? m_ModelCore.AnyType).ToArray();
             exp.SemanticSymbol = m_ModelCore.InternUnionType(items);
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         // verify member; ensure
@@ -160,7 +174,8 @@ public partial class Verifier
             var @base = VerifyTypeExp(memberTe.Base, true);
             if (@base == null)
             {
-                exp.SemanticSymbol = m_ModelCore.AnyType;
+                exp.SemanticSymbol = null;
+                exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
             }
             var r = @base.ResolveProperty(memberTe.Id.Name);
@@ -168,7 +183,8 @@ public partial class Verifier
             {
                 // VerifyError: undefined reference
                 VerifyError(memberTe.Id.Span.Value.Script, 128, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
-                exp.SemanticSymbol = m_ModelCore.AnyType;
+                exp.SemanticSymbol = null;
+                exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
             }
             else
@@ -183,17 +199,20 @@ public partial class Verifier
                 {
                     // VerifyError: not a type constant
                     VerifyError(memberTe.Id.Span.Value.Script, 131, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
-                    exp.SemanticSymbol = m_ModelCore.AnyType;
+                    exp.SemanticSymbol = null;
+                    exp.SemanticResolved = true;
                     return exp.SemanticSymbol;
                 }
                 // VerifyError: unargumented generic type
                 if (!isBase && r.TypeParameters != null)
                 {
                     VerifyError(memberTe.Id.Span.Value.Script, 132, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
-                    exp.SemanticSymbol = m_ModelCore.AnyType;
+                    exp.SemanticSymbol = null;
+                    exp.SemanticResolved = true;
                     return exp.SemanticSymbol;
                 }
                 exp.SemanticSymbol = r;
+                exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
             }
         } // MemberTypeExpression
@@ -204,6 +223,12 @@ public partial class Verifier
         else if (exp is Ast.GenericInstantiationTypeExpression giTe)
         {
             var @base = VerifyTypeExp(giTe.Base, true);
+            if (@base == null)
+            {
+                exp.SemanticSymbol = null;
+                exp.SemanticResolved = true;
+                return exp.SemanticSymbol;
+            }
             if (!(@base is Type) || @base.TypeParameters == null)
             {
                 // VerifyError: base is not a generic type
@@ -216,20 +241,37 @@ public partial class Verifier
                 {
                     VerifyError(exp.Span.Value.Script, 134, giTe.Base.Span.Value, new DiagnosticArguments {});
                 }
-                exp.SemanticSymbol = m_ModelCore.AnyType;
+                exp.SemanticSymbol = null;
+                exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
             }
-            exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, giTe.ArgumentsList) ?? m_ModelCore.AnyType;
+            exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, giTe.ArgumentsList);
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         } // GenericInstantiationTypeExpression
         else if (exp is Ast.NullableTypeExpression nullableTe)
         {
-            exp.SemanticSymbol = VerifyTypeExp(nullableTe.Base).ToNullableType();
+            var @base = VerifyTypeExp(nullableTe.Base);
+            if (@base == null)
+            {
+                exp.SemanticSymbol = null;
+                exp.SemanticResolved = true;
+                return exp.SemanticSymbol;
+            }
+            exp.SemanticSymbol = @base.ToNullableType();
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.NonNullableTypeExpression nonNullableTe)
         {
-            exp.SemanticSymbol = VerifyTypeExp(nonNullableTe.Base).ToNonNullableType();
+            var @base = VerifyTypeExp(nonNullableTe.Base);
+            if (@base == null)
+            {
+                exp.SemanticSymbol = null;
+                exp.SemanticResolved = true;
+                return exp.SemanticSymbol;
+            }
+            exp.SemanticSymbol = @base.ToNonNullableType();
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.TypedTypeExpression typedTe)
@@ -237,6 +279,7 @@ public partial class Verifier
             VerifyError(exp.Span.Value.Script, 137, exp.Span.Value, new DiagnosticArguments {});
             VerifyTypeExp(typedTe.Base);
             exp.SemanticSymbol = VerifyTypeExp(typedTe.Type);
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         throw new Exception("Uncovered type expression");

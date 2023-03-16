@@ -15,6 +15,7 @@ public class Node {
 }
 
 public class TypeExpression : Node {
+    public bool SemanticResolved = false;
     public Symbol SemanticSymbol = null;
 }
 

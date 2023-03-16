@@ -18,7 +18,7 @@ public partial class Verifier
         Symbol annotatedType = null;
         if (pattern.Type != null)
         {
-            annotatedType = VerifyTypeExp(pattern.Type);
+            annotatedType = VerifyTypeExp(pattern.Type) ?? m_ModelCore.AnyType;
             // inferred type and type annotation must be the same
             if (annotatedType != type)
             {

@@ -29,7 +29,7 @@ public partial class Verifier
         Symbol type = null;
         if (pattern.Type != null)
         {
-            type = VerifyTypeExp(pattern.Type);
+            type = VerifyTypeExp(pattern.Type) ?? m_ModelCore.AnyType;
         }
         if (type == null)
         {
