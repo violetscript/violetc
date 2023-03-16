@@ -219,7 +219,7 @@ public partial class Verifier
                 exp.SemanticSymbol = m_ModelCore.AnyType;
                 return exp.SemanticSymbol;
             }
-            exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, giTe.ArgumentsList);
+            exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, giTe.ArgumentsList) ?? m_ModelCore.AnyType;
             return exp.SemanticSymbol;
         } // GenericInstantiationTypeExpression
         else if (exp is Ast.NullableTypeExpression nullableTe)

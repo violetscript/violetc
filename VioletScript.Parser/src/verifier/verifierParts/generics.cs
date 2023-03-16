@@ -26,7 +26,7 @@ public partial class Verifier
         if (giTeArguments.Count() != typeParameters.Count())
         {
             VerifyError(null, 135, wholeSpan, new DiagnosticArguments { ["expectedN"] = typeParameters.Count(), ["gotN"] = giTeArguments.Count() });
-            return m_ModelCore.Factory.Value(m_ModelCore.AnyType);
+            return null;
         }
         var arguments = giTeArguments.Select(te => VerifyTypeExp(te)).ToArray();
         for (int i = 0; i < arguments.Count(); ++i)
