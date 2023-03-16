@@ -28,7 +28,19 @@ public partial class Verifier
             VerifyError(null, 135, wholeSpan, new DiagnosticArguments { ["expectedN"] = typeParameters.Count(), ["gotN"] = giTeArguments.Count() });
             return null;
         }
-        var arguments = giTeArguments.Select(te => VerifyTypeExp(te) ?? m_ModelCore.AnyType).ToArray();
+        var structurallyInvalid = false;
+        var arguments = giTeArguments.Select(te =>
+        {
+            var r = VerifyTypeExp(te);
+            structurallyInvalid = structurallyInvalid || r == null;
+            return r ?? m_ModelCore.AnyType;
+        }).ToArray();
+
+        if (structurallyInvalid)
+        {
+            return null;
+        }
+
         for (int i = 0; i < arguments.Count(); ++i)
         {
             var argument = arguments[i];

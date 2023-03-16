@@ -103,12 +103,16 @@ public partial class Verifier
             List<NameAndTypePair> optParams = null;
             NameAndTypePair? restParam = null;
             Symbol returnType = null;
+            Symbol p = null;
+            bool structurallyInvalid = false;
             if (fte.Params != null)
             {
                 @params = new List<NameAndTypePair>();
                 foreach (var paramId in fte.Params)
                 {
-                    @params.Add(new NameAndTypePair(paramId.Name, VerifyTypeExp(paramId.Type) ?? m_ModelCore.AnyType));
+                    p = VerifyTypeExp(paramId.Type);
+                    structurallyInvalid = structurallyInvalid || p == null;
+                    @params.Add(new NameAndTypePair(paramId.Name, p ?? m_ModelCore.AnyType));
                 }
             }
             if (fte.OptParams != null)
@@ -116,51 +120,76 @@ public partial class Verifier
                 optParams = new List<NameAndTypePair>();
                 foreach (var paramId in fte.OptParams)
                 {
-                    optParams.Add(new NameAndTypePair(paramId.Name, VerifyTypeExp(paramId.Type) ?? m_ModelCore.AnyType));
+                    p = VerifyTypeExp(paramId.Type);
+                    structurallyInvalid = structurallyInvalid || p == null;
+                    optParams.Add(new NameAndTypePair(paramId.Name, p ?? m_ModelCore.AnyType));
                 }
             }
             if (fte.RestParam != null)
             {
-                restParam = new NameAndTypePair(fte.RestParam.Name, VerifyTypeExp(fte.RestParam.Type) ?? m_ModelCore.AnyType);
+                p = VerifyTypeExp(fte.RestParam.Type);
+                structurallyInvalid = structurallyInvalid || p == null;
+                restParam = new NameAndTypePair(fte.RestParam.Name, p ?? m_ModelCore.AnyType);
             }
-            returnType = fte.ReturnType != null ? (VerifyTypeExp(fte.ReturnType) ?? m_ModelCore.AnyType) : m_ModelCore.AnyType;
-            exp.SemanticSymbol = m_ModelCore.InternFunctionType(@params?.ToArray(), optParams?.ToArray(), restParam, returnType);
+            returnType = fte.ReturnType != null ? VerifyTypeExp(fte.ReturnType) : m_ModelCore.AnyType;
+            if (returnType == null)
+            {
+                structurallyInvalid = true;
+                returnType = m_ModelCore.AnyType;
+            }
+            exp.SemanticSymbol = structurallyInvalid ? null : m_ModelCore.InternFunctionType(@params?.ToArray(), optParams?.ToArray(), restParam, returnType);
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         } // FunctionTypeExpression
         else if (exp is Ast.ArrayTypeExpression arrayTe)
         {
-            exp.SemanticSymbol = m_ModelCore.InternInstantiatedType(m_ModelCore.ArrayType, new Symbol[]{VerifyTypeExp(arrayTe.ItemType) ?? m_ModelCore.AnyType});
+            var itemType = VerifyTypeExp(arrayTe.ItemType);
+            exp.SemanticSymbol = itemType == null ? null : m_ModelCore.InternInstantiatedType(m_ModelCore.ArrayType, new Symbol[]{itemType});
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.TupleTypeExpression tupleTe)
         {
-            var items = tupleTe.ItemTypes.Select(te => VerifyTypeExp(te) ?? m_ModelCore.AnyType).ToArray();
-            exp.SemanticSymbol = m_ModelCore.InternTupleType(items);
+            var structurallyInvalid = false;
+            var items = tupleTe.ItemTypes.Select(te =>
+            {
+                var r = VerifyTypeExp(te);
+                structurallyInvalid = structurallyInvalid || r == null;
+                return r ?? m_ModelCore.AnyType;
+            }).ToArray();
+            exp.SemanticSymbol = structurallyInvalid ? null : m_ModelCore.InternTupleType(items);
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.RecordTypeExpression recordTe)
         {
+            var structurallyInvalid = false;
             var fields = recordTe.Fields.Select(field =>
             {
-                return new NameAndTypePair(field.Name, VerifyTypeExp(field.Type) ?? m_ModelCore.AnyType);
+                var fieldType = VerifyTypeExp(field.Type);
+                structurallyInvalid = structurallyInvalid || fieldType == null;
+                return new NameAndTypePair(field.Name, fieldType ?? m_ModelCore.AnyType);
             }).ToArray();
-            exp.SemanticSymbol = m_ModelCore.InternRecordType(fields);
+            exp.SemanticSymbol = structurallyInvalid ? null : m_ModelCore.InternRecordType(fields);
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.ParensTypeExpression parensTe)
         {
-            exp.SemanticSymbol = VerifyTypeExp(parensTe.Base) ?? m_ModelCore.AnyType;
+            exp.SemanticSymbol = VerifyTypeExp(parensTe.Base);
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.UnionTypeExpression unionTe)
         {
-            var items = unionTe.Types.Select(te => VerifyTypeExp(te) ?? m_ModelCore.AnyType).ToArray();
-            exp.SemanticSymbol = m_ModelCore.InternUnionType(items);
+            var structurallyInvalid = false;
+            var items = unionTe.Types.Select(te =>
+            {
+                var r = VerifyTypeExp(te);
+                structurallyInvalid = structurallyInvalid || r == null;
+                return r ?? m_ModelCore.AnyType;
+            }).ToArray();
+            exp.SemanticSymbol = structurallyInvalid ? null : m_ModelCore.InternUnionType(items);
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
@@ -251,26 +280,13 @@ public partial class Verifier
         } // GenericInstantiationTypeExpression
         else if (exp is Ast.NullableTypeExpression nullableTe)
         {
-            var @base = VerifyTypeExp(nullableTe.Base);
-            if (@base == null)
-            {
-                exp.SemanticSymbol = null;
-                exp.SemanticResolved = true;
-                return exp.SemanticSymbol;
-            }
-            exp.SemanticSymbol = @base.ToNullableType();
+            exp.SemanticSymbol = VerifyTypeExp(nullableTe.Base)?.ToNullableType();
+            exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
         else if (exp is Ast.NonNullableTypeExpression nonNullableTe)
         {
-            var @base = VerifyTypeExp(nonNullableTe.Base);
-            if (@base == null)
-            {
-                exp.SemanticSymbol = null;
-                exp.SemanticResolved = true;
-                return exp.SemanticSymbol;
-            }
-            exp.SemanticSymbol = @base.ToNonNullableType();
+            exp.SemanticSymbol = VerifyTypeExp(nonNullableTe.Base)?.ToNonNullableType();
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
