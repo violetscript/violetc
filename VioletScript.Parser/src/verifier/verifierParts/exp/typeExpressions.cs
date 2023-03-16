@@ -214,36 +214,7 @@ public partial class Verifier
                 exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.AnyType);
                 return exp.SemanticSymbol;
             }
-            // VerifyError: wrong number of arguments
-            if (giTe.ArgumentsList.Count() != @base.TypeParameters.Count())
-            {
-                VerifyError(exp.Span.Value.Script, 135, exp.Span.Value, new DiagnosticArguments { ["expectedN"] = @base.TypeParameters.Count(), ["gotN"] = giTe.ArgumentsList.Count() });
-                exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.AnyType);
-                return exp.SemanticSymbol;
-            }
-            var arguments = giTe.ArgumentsList.Select(te => VerifyTypeExp(te)).ToArray();
-            for (int i = 0; i < arguments.Count(); ++i)
-            {
-                var argument = arguments[i];
-                var argumentExp = giTe.ArgumentsList[i];
-                foreach (var @param in @base.TypeParameters)
-                {
-                    foreach (var constraintItrfc in @param.ImplementsInterfaces)
-                    {
-                        // VerifyError: missing interface constraint
-                        if (!argument.IsSubtypeOf(constraintItrfc))
-                        {
-                            VerifyError(exp.Span.Value.Script, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = constraintItrfc });
-                        }
-                    }
-                    // VerifyError: missing class constraint
-                    if (argument.SuperType != null && !argument.IsSubtypeOf(@param.SuperType))
-                    {
-                        VerifyError(exp.Span.Value.Script, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = @param.SuperType });
-                    }
-                }
-            }
-            exp.SemanticSymbol = m_ModelCore.InternInstantiatedType(@base, arguments);
+            exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, giTe.ArgumentsList);
             return exp.SemanticSymbol;
         } // GenericInstantiationTypeExpression
         else if (exp is Ast.NullableTypeExpression nullableTe)
