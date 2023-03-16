@@ -44,6 +44,7 @@ public partial class Verifier
         {
             VerifyError(pattern.Span.Value.Script, 140, pattern.Span.Value, new DiagnosticArguments { ["i"] = inferredType, ["a"] = type });
         }
+        type ??= m_ModelCore.AnyType;
 
         pattern.SemanticProperty = m_ModelCore.Factory.VariableSlot("", readOnly, type);
 

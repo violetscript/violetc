@@ -37,7 +37,7 @@ public partial class Verifier
                 VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
             }
             init = VerifyExp(binding.Init);
-            VerifyDestructuringPattern(binding.Pattern, readOnly, output, visibility, init.StaticType);
+            VerifyDestructuringPattern(binding.Pattern, readOnly, output, visibility, init != null ? init.StaticType : m_ModelCore.AnyType);
         }
         else
         {

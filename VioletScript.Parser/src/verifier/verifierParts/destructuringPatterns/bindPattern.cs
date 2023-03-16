@@ -45,6 +45,9 @@ public partial class Verifier
         {
             VerifyError(pattern.Span.Value.Script, 140, pattern.Span.Value, new DiagnosticArguments { ["i"] = inferredType, ["a"] = type });
         }
+
+        type ??= m_ModelCore.AnyType;
+
         var previousDefinition = output[pattern.Name];
         if (previousDefinition != null)
         {
