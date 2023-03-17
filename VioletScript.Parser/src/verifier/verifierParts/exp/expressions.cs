@@ -216,7 +216,7 @@ public partial class Verifier
         memb.SemanticThrowawayNonNullBase = throwawayNonNullBase;
 
         var r = throwawayNonNullBase.ResolveProperty(memb.Id.Name);
-        memb.SemanticUnprocessedSymbol = r;
+        memb.SemanticOptNonNullUnifiedSymbol = r;
 
         if (r == null)
         {

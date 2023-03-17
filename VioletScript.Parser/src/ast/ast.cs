@@ -430,7 +430,8 @@ public class NodeAttribute : Node {
 /// Member expression. If the base object is a package, then the member may be a subpackage. 
 /// <para>
 /// If the member access is optional (using <c>?.</c> syntax),
-/// the member result type unifies with either null or undefined.
+/// the member result type unifies with either null or undefined or both, and the <c>SemanticThrowawayNonNullBase</c>
+/// and <c>SemanticOptNonNullUnifiedSymbol</c> properties of this node are assigned to some symbol.
 /// If the base includes undefined but not null, the result unifies with undefined as <c>undefined|R</c>.
 /// If the base includes null but not undefined, the result unifies with null as <c>null|R</c>.
 /// If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined|null|R</c>.
@@ -452,7 +453,7 @@ public class MemberExpression : Expression {
     /// If this is an optional member, this stores
     /// the resolved symbol without unifying it to null or undefined types.
     /// </summary>
-    public Symbol SemanticUnprocessedSymbol = null;
+    public Symbol SemanticOptNonNullUnifiedSymbol = null;
 
     public MemberExpression(Expression @base, Identifier id, bool optional = false) : base() {
         Base = @base;
