@@ -68,6 +68,10 @@ public partial class Verifier
         {
             return VerifyConstantNumericLiteral(numericLiteral);
         }
+        else if (exp is Ast.ConditionalExpression condExp)
+        {
+            return VerifyConstantCondExp(condExp, faillible, expectedType);
+        }
         else
         {
             if (faillible)
@@ -1638,4 +1642,8 @@ public partial class Verifier
         exp.SemanticConstantExpResolved = true;
         return exp.SemanticSymbol;
     } // number literal
+
+    private Symbol VerifyConstantCondExp(Ast.ConditionalExpression exp, bool faillible, Symbol expectedType)
+    {
+    } // conditional expression
 }
