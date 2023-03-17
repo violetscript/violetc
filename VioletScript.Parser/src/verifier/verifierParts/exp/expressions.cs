@@ -41,6 +41,10 @@ public partial class Verifier
         {
             return VerifyImportMeta(importMeta);
         }
+        else if (exp is Ast.EmbedExpression embedExp)
+        {
+            return VerifyEmbedExp(embedExp, expectedType);
+        }
         throw new Exception("Unimplemented expression");
     } // VerifyExp
 
@@ -284,4 +288,38 @@ public partial class Verifier
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // import meta
+
+    private Symbol VerifyEmbedExp(Ast.EmbedExpression exp, Symbol expectedType)
+    {
+        Symbol type = null;
+        if (exp.Type != null)
+        {
+            type = VerifyTypeExp(exp.Type);
+            if (type == null || !(type == m_ModelCore.StringType || type == m_ModelCore.ByteArrayType))
+            {
+                if (type != null)
+                {
+                    VerifyError(null, 171, exp.Span.Value, new DiagnosticArguments { ["t"] = type });
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+        }
+        else
+        {
+            type = expectedType == m_ModelCore.ByteArrayType
+                || expectedType == m_ModelCore.StringType ? expectedType : null;
+            if (type == null)
+            {
+                VerifyError(null, 172, exp.Span.Value, new DiagnosticArguments {});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+        }
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(type);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // embed
 }

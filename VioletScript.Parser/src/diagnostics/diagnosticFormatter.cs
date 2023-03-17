@@ -159,6 +159,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [168] = "Incompatible types: expected '$expected', got '$got'",
         [169] = "Optional member base must be a value",
         [170] = "Type '$t' does not include null nor undefined",
+        [171] = "Cannot embed resource as type '$t'",
+        [172] = "Embed expression has no type to infer from",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
