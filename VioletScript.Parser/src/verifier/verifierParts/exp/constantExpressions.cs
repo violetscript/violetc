@@ -1243,7 +1243,7 @@ public partial class Verifier
             exp.SemanticConstantExpResolved = true;
             return exp.SemanticSymbol;
         }
-    }
+    }  // binary expression
 
     // verification for compile-time "in" operator.
     // works for flags enumeration only, currently.
@@ -1282,7 +1282,7 @@ public partial class Verifier
         exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(inc);
         exp.SemanticConstantExpResolved = true;
         return exp.SemanticSymbol;
-    } // binary expression
+    } // binary "in" expression
 
     // implicitly converts NaN, +Infinity and -Infinity to numeric types other
     // than Number.
