@@ -52,6 +52,22 @@ public partial class Verifier
         {
             return VerifyConstantArrayInitializer(arrInitializer, faillible, expectedType);
         }
+        else if (exp is Ast.StringLiteral stringLiteral)
+        {
+            return VerifyConstantStringLiteral(stringLiteral, faillible, expectedType);
+        }
+        else if (exp is Ast.NullLiteral nullLiteral)
+        {
+            return VerifyConstantNullLiteral(nullLiteral, expectedType);
+        }
+        else if (exp is Ast.BooleanLiteral booleanLiteral)
+        {
+            return VerifyConstantBooleanLiteral(booleanLiteral);
+        }
+        else if (exp is Ast.NumericLiteral numericLiteral)
+        {
+            return VerifyConstantNumericLiteral(numericLiteral);
+        }
         else
         {
             if (faillible)
@@ -83,7 +99,7 @@ public partial class Verifier
             }
         }
         else {
-            initType = expectedType != null && expectedType.IsFlagsEnum ? expectedType : null;
+            initType = expectedType is EnumType && expectedType.IsFlagsEnum ? expectedType : null;
             if (initType == null)
             {
                 if (faillible)
@@ -188,7 +204,7 @@ public partial class Verifier
             }
         }
         else {
-            initType = expectedType != null && expectedType.IsFlagsEnum ? expectedType : null;
+            initType = expectedType is EnumType && expectedType.IsFlagsEnum ? expectedType : null;
             if (initType == null)
             {
                 if (faillible)
@@ -1291,6 +1307,10 @@ public partial class Verifier
         if (r is NumberConstantValue && double.IsNaN(r.NumberValue) || !double.IsFinite(r.NumberValue) && expectedType != null && expectedType.ToNonNullableType() != m_ModelCore.NumberType && m_ModelCore.IsNumericType(expectedType.ToNonNullableType()))
         {
             var nonNullableType = expectedType.ToNonNullableType();
+            if (nonNullableType == m_ModelCore.NumberType)
+            {
+                return m_ModelCore.Factory.NumberConstantValue(r.NumberValue, expectedType);
+            }
             if (nonNullableType == m_ModelCore.DecimalType)
             {
                 return m_ModelCore.Factory.DecimalConstantValue((decimal) r.NumberValue, expectedType);
@@ -1529,4 +1549,93 @@ public partial class Verifier
         exp.SemanticConstantExpResolved = true;
         return exp.SemanticSymbol;
     } // default expression
+
+    private Symbol VerifyConstantStringLiteral
+    (
+        Ast.StringLiteral exp,
+        bool faillible,
+        Symbol expectedType
+    )
+    {
+        var enumType = expectedType is EnumType ? expectedType : null;
+        if (enumType != null)
+        {
+            object matchingVariant = enumType.EnumGetVariantNumberByString(exp.Value);
+            if (matchingVariant == null)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 164, exp.Span.Value, new DiagnosticArguments {["et"] = enumType, ["name"] = exp.Value});
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            exp.SemanticSymbol = m_ModelCore.Factory.EnumConstantValue(matchingVariant, enumType);
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        exp.SemanticSymbol = m_ModelCore.Factory.StringConstantValue(exp.Value);
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
+    } // string literal
+
+    private Symbol VerifyConstantNullLiteral(Ast.NullLiteral exp, Symbol expectedType)
+    {
+        exp.SemanticSymbol = m_ModelCore.Factory.NullConstantValue(expectedType != null && expectedType.IncludesNull ? expectedType : m_ModelCore.NullType);
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
+    } // null literal
+
+    private Symbol VerifyConstantBooleanLiteral(Ast.BooleanLiteral exp)
+    {
+        exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(exp.Value);
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
+    } // boolean literal
+
+    private Symbol VerifyConstantNumericLiteral(Ast.NumericLiteral exp, Symbol expectedType)
+    {
+        var r = m_ModelCore.Factory.NumberConstantValue(exp.Value, m_ModelCore.NumberType);
+        r = ImplicitNaNOrInfToOtherNumericType(r, expectedType);
+
+        // adapt to expected type
+        if (expectedType != null && r.StaticType != expectedType && m_ModelCore.IsNumericType(expectedType.ToNonNullableType()))
+        {
+            var nonNullableType = expectedType.ToNonNullableType();
+
+            if (nonNullableType == m_ModelCore.NumberType)
+            {
+                r = m_ModelCore.Factory.NumberConstantValue(exp.Value, expectedType);
+            }
+            else if (nonNullableType == m_ModelCore.DecimalType)
+            {
+                r = m_ModelCore.Factory.DecimalConstantValue((decimal) exp.Value, expectedType);
+            }
+            else if (nonNullableType == m_ModelCore.ByteType)
+            {
+                r = m_ModelCore.Factory.ByteConstantValue((byte) exp.Value, expectedType);
+            }
+            else if (nonNullableType == m_ModelCore.ShortType)
+            {
+                r = m_ModelCore.Factory.ShortConstantValue((short) exp.Value, expectedType);
+            }
+            else if (nonNullableType == m_ModelCore.IntType)
+            {
+                r = m_ModelCore.Factory.IntConstantValue((int) exp.Value, expectedType);
+            }
+            else if (nonNullableType == m_ModelCore.LongType)
+            {
+                r = m_ModelCore.Factory.LongConstantValue((long) exp.Value, expectedType);
+            }
+            else if (nonNullableType == m_ModelCore.BigIntType)
+            {
+                r = m_ModelCore.Factory.BigIntConstantValue((System.Numerics.BigInteger) exp.Value, expectedType);
+            }
+        }
+
+        exp.SemanticSymbol = r;
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
+    } // number literal
 }
