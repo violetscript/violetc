@@ -7,6 +7,9 @@ using VioletScript.Parser.Semantic.Logic;
 
 public static class EnumConstHelpers
 {
+    /// <summary>
+    /// Combines two flags values.
+    /// </summary>
     public static object IncludeFlags(object one, object other)
     {
         if (one is double doubleV)
@@ -40,6 +43,9 @@ public static class EnumConstHelpers
         throw new Exception("Unimplemented");
     }
 
+    /// <summary>
+    /// Determines if a flags value is empty.
+    /// </summary>
     public static bool HasZeroFlags(object v)
     {
         if (v is double doubleV)
@@ -73,6 +79,9 @@ public static class EnumConstHelpers
         throw new Exception("Unimplemented");
     }
 
+    /// <summary>
+    /// Determines if two enumeration values are equals.
+    /// </summary>
     public static bool ValuesEquals(object one, object other)
     {
         if (one is double doubleV)

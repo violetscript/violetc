@@ -147,6 +147,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [156] = "Left operand must not be undefined or null",
         [157] = "A compile-time binary expression must have constant operand values",
         [158] = "A compile-time binary expression must have non-mixed operand values",
+        [159] = "Type '$t' has no default value",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

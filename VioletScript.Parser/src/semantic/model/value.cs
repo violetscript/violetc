@@ -23,6 +23,12 @@ public class UndefinedConstantValue : ConstantValue {
 public class NullConstantValue : ConstantValue {
 }
 
+/// <summary>
+/// Used to indicate the default value of a type parameter.
+/// </summary>
+public class TypeParameterConstantValue : ConstantValue {
+}
+
 public class StringConstantValue : ConstantValue {
     private string m_V;
 

@@ -185,6 +185,13 @@ public sealed class Factory {
         return r;
     }
 
+    public Symbol TypeParameterConstantValue(Symbol type) {
+        Symbol r = new TypeParameterConstantValue();
+        r.StaticType = type;
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
     public Symbol StringConstantValue(string value, Symbol type = null) {
         Symbol r = new StringConstantValue(value);
         r.StaticType = type ?? ModelCore.StringType;

@@ -234,6 +234,24 @@ public partial class Verifier
         {
             return VerifyConstantBinaryExp(binaryExp, faillible, expectedType);
         } // BinaryExpression
+        else if (exp is Ast.DefaultExpression defaultExp)
+        {
+            var t = VerifyTypeExp(defaultExp.Type);
+            if (t == null)
+            {
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            var defaultValue = t.DefaultValue;
+            if (defaultValue == null && faillible)
+            {
+                VerifyError(null, 159, exp.Span.Value, new DiagnosticArguments {["t"] = t});
+            }
+            exp.SemanticSymbol = defaultValue;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
         else
         {
             if (faillible)
