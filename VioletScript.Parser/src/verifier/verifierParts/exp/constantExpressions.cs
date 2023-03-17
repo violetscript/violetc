@@ -251,7 +251,11 @@ public partial class Verifier
             exp.SemanticSymbol = defaultValue;
             exp.SemanticConstantExpResolved = true;
             return exp.SemanticSymbol;
-        }
+        } // DefaultExpression
+        else if (exp is Ast.ObjectInitializer objInitialiser)
+        {
+            //
+        } // ObjectInitializer
         else
         {
             if (faillible)
