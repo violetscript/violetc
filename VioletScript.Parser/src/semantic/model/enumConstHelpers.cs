@@ -5,7 +5,41 @@ using System.Numerics;
 using VioletScript.Parser.Operator;
 using VioletScript.Parser.Semantic.Logic;
 
-public static class EnumConstHelpers {
+public static class EnumConstHelpers
+{
+    public static bool HasZeroFlags(object v)
+    {
+        if (v is double doubleV)
+        {
+            return doubleV == 0;
+        }
+        if (v is decimal decimalV)
+        {
+            return decimalV == 0;
+        }
+        if (v is int intV)
+        {
+            return intV == 0;
+        }
+        if (v is byte byteV)
+        {
+            return byteV == 0;
+        }
+        if (v is short shortV)
+        {
+            return shortV == 0;
+        }
+        if (v is double longV)
+        {
+            return longV == 0;
+        }
+        if (v is BigInteger bigIntV)
+        {
+            return bigIntV == 0;
+        }
+        return false;
+    }
+
     public static Symbol Empty(Symbol type) {
         var modelCore = type.ModelCore;
         var factory = modelCore.Factory;

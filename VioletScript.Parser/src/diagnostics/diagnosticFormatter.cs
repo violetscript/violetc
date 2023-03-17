@@ -141,6 +141,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [150] = "Expression not supported as a compile-time expression",
         [151] = "'$name' is not a compile-time constant",
         [152] = "Identifier must not be typed here",
+        [153] = "Operation not supported as a compile-time expression: $op",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

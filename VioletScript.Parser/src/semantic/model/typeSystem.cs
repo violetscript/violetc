@@ -5,11 +5,19 @@ using System.Linq;
 using VioletScript.Parser.Operator;
 using VioletScript.Parser.Semantic.Logic;
 
-public static class DefaultValue {
-    public static Symbol Obtain(Symbol type) {
+public static class DefaultValue
+{
+    public static Symbol Obtain(Symbol type)
+    {
         var mc = type.ModelCore;
         var f = mc.Factory;
-        if (type.IncludesUndefined) return f.UndefinedConstantValue(type);
+
+        // undefined is preferred over null
+        if (type.IncludesUndefined)
+        {
+            return f.UndefinedConstantValue(type);
+        }
+
         if (type.IncludesNull) return f.NullConstantValue(type);
         if (type == mc.StringType) return f.StringConstantValue("", type);
         if (type == mc.BooleanType) return f.BooleanConstantValue(false, type);

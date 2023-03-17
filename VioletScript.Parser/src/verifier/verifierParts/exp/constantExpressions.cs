@@ -195,11 +195,122 @@ public partial class Verifier
                 return r;
             }
         } // MemberExpression
+        else if (exp is Ast.UnaryExpression unaryExp)
+        {
+            return VerifyConstantUnaryExp(unaryExp, faillible, expectedType);
+        } // UnaryExpression
         else
         {
             if (faillible)
             {
                 VerifyError(null, 150, exp.Span.Value, new DiagnosticArguments {});
+            }
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+    }
+
+    private Symbol VerifyConstantUnaryExp
+    (
+        Ast.UnaryExpression exp,
+        bool faillible,
+        Symbol expectedType = null
+    )
+    {
+        var operand = VerifyConstantExp(exp.Operand, faillible, expectedType);
+        if (operand == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        // logical not (!)
+        if (exp.Operator == Operator.LogicalNot)
+        {
+            if (operand is Type || operand is Namespace)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(false);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is UndefinedConstantValue || operand is NullConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(true);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is BooleanConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(!operand.BooleanValue);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is NumberConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(double.IsNaN(operand.NumberValue) || operand.NumberValue == 0);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is DecimalConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(operand.DecimalValue == 0);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is ByteConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(operand.ByteValue == 0);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is ShortConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(operand.ShortValue == 0);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is IntConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(operand.IntValue == 0);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is LongConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(operand.LongValue == 0);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is BigIntConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(operand.BigIntValue == 0);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is StringConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(operand.StringValue.Count() == 0);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else
+            {
+                if (!(operand is EnumConstantValue))
+                {
+                    throw new Exception("Unimplemented constant logical not");
+                }
+                exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(EnumConstHelpers.HasZeroFlags(operand.EnumConstValue));
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+        }
+        else
+        {
+            if (faillible)
+            {
+                VerifyError(null, 153, exp.Span.Value, new DiagnosticArguments {["op"] = exp.Operator});
             }
             exp.SemanticSymbol = null;
             exp.SemanticConstantExpResolved = true;
