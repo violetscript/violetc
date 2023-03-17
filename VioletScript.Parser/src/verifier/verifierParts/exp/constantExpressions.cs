@@ -471,5 +471,38 @@ public partial class Verifier
     // works for flags enumeration only, currently.
     private Symbol VerifyConstantInBinaryExp(Ast.BinaryExpression exp, bool faillible)
     {
+        var @base = VerifyConstantExp(exp.Right, faillible);
+        if (@base == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        if (!(@base is EnumConstantValue && @base.StaticType.ToNonNullableType().IsFlagsEnum))
+        {
+            if (faillible)
+            {
+                VerifyError(null, 155, exp.Span.Value, new DiagnosticArguments {});
+            }
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        Symbol flagsType = @base.StaticType.ToNonNullableType();
+        Symbol k = LimitConstantExpType(exp.Left, flagsType, faillible);
+        if (k == null || !(k is EnumConstantValue))
+        {
+            if (!(k is EnumConstantValue) && faillible)
+            {
+                VerifyError(null, 156, exp.Span.Value, new DiagnosticArguments {});
+            }
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var inc = EnumConstHelpers.Includes(flagsType.NumericType, @base.EnumConstValue, k.EnumConstValue);
+        exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(inc);
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
     }
 }

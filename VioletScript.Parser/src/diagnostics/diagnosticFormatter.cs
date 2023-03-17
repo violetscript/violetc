@@ -143,6 +143,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [152] = "Identifier must not be typed here",
         [153] = "Operation not supported as a compile-time expression: $op",
         [154] = "Operand must be numeric",
+        [155] = "Compile-time \"in\" operation is only supported for flags",
+        [156] = "Left operand must not be undefined or null",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
