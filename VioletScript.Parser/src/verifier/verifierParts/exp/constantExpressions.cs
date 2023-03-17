@@ -819,75 +819,75 @@ public partial class Verifier
                 return exp.SemanticSymbol;
             }
         } // DecimalConstantValue
-        else if (left is XConstantValue && right is XConstantValue)
+        else if (left is ByteConstantValue && right is ByteConstantValue)
         {
             if (exp.Operator == Operator.Add)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue + right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue + right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.Subtract)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue - right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue - right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.Multiply)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue * right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue * right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.Divide)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue / right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue / right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.Remainder)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue % right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue % right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.BitwiseAnd)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue & right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue & right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.BitwiseXor)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue ^ right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue ^ right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.BitwiseOr)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue | right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue | right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.LeftShift)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue << right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue << right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.RightShift)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue >> right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue >> right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.UnsignedRightShift)
             {
-                return m_ModelCore.Factory.XConstantValue(left.XValue >>> right.XValue, expectedType);
+                return m_ModelCore.Factory.ByteConstantValue((byte) (left.ByteValue >>> right.ByteValue), expectedType);
             }
             else if (exp.Operator == Operator.Equals || exp.Operator == Operator.StrictEquals)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(left.XValue == right.XValue);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ByteValue == right.ByteValue);
             }
             else if (exp.Operator == Operator.NotEquals || exp.Operator == Operator.StrictNotEquals)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(left.XValue != right.XValue);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ByteValue != right.ByteValue);
             }
             else if (exp.Operator == Operator.Lt)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(left.XValue < right.XValue);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ByteValue < right.ByteValue);
             }
             else if (exp.Operator == Operator.Gt)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(left.XValue > right.XValue);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ByteValue > right.ByteValue);
             }
             else if (exp.Operator == Operator.Le)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(left.XValue <= right.XValue);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ByteValue <= right.ByteValue);
             }
             else if (exp.Operator == Operator.Ge)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(left.XValue >= right.XValue);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ByteValue >= right.ByteValue);
             }
             else
             {
@@ -899,92 +899,76 @@ public partial class Verifier
                 exp.SemanticConstantExpResolved = true;
                 return exp.SemanticSymbol;
             }
-        } // XConstantValue
-        else if (left is XConstantValue && right is XConstantValue)
+        } // ByteConstantValue
+        else if (left is ShortConstantValue && right is ShortConstantValue)
         {
             if (exp.Operator == Operator.Add)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue + right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.Subtract)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue - right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.Multiply)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue * right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.Divide)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue / right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.Remainder)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Pow)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalAnd)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalXor)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalOr)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue % right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.BitwiseAnd)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue & right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.BitwiseXor)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue ^ right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.BitwiseOr)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue | right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.LeftShift)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue << right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.RightShift)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue >> right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.UnsignedRightShift)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.ShortConstantValue((short) (left.ShortValue >>> right.ShortValue), expectedType);
             }
             else if (exp.Operator == Operator.Equals || exp.Operator == Operator.StrictEquals)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ShortValue == right.ShortValue);
             }
             else if (exp.Operator == Operator.NotEquals || exp.Operator == Operator.StrictNotEquals)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ShortValue != right.ShortValue);
             }
             else if (exp.Operator == Operator.Lt)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ShortValue < right.ShortValue);
             }
             else if (exp.Operator == Operator.Gt)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ShortValue > right.ShortValue);
             }
             else if (exp.Operator == Operator.Le)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ShortValue <= right.ShortValue);
             }
             else if (exp.Operator == Operator.Ge)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.ShortValue >= right.ShortValue);
             }
             else
             {
@@ -996,100 +980,76 @@ public partial class Verifier
                 exp.SemanticConstantExpResolved = true;
                 return exp.SemanticSymbol;
             }
-        } // XConstantValue
-        else if (left is XConstantValue && right is XConstantValue)
+        } // ShortConstantValue
+        else if (left is IntConstantValue && right is IntConstantValue)
         {
             if (exp.Operator == Operator.Add)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue + right.IntValue, expectedType);
             }
             else if (exp.Operator == Operator.Subtract)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue - right.IntValue, expectedType);
             }
             else if (exp.Operator == Operator.Multiply)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue * right.IntValue, expectedType);
             }
             else if (exp.Operator == Operator.Divide)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue / right.IntValue, expectedType);
             }
             else if (exp.Operator == Operator.Remainder)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Pow)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalAnd)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalXor)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalOr)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue % right.IntValue, expectedType);
             }
             else if (exp.Operator == Operator.BitwiseAnd)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue & right.IntValue, expectedType);
             }
             else if (exp.Operator == Operator.BitwiseXor)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue ^ right.IntValue, expectedType);
             }
             else if (exp.Operator == Operator.BitwiseOr)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue | right.IntValue, expectedType);
             }
             else if (exp.Operator == Operator.LeftShift)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue << right.IntValue, expectedType);
             }
             else if (exp.Operator == Operator.RightShift)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue >> right.IntValue, expectedType);
             }
             else if (exp.Operator == Operator.UnsignedRightShift)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.IntConstantValue(left.IntValue >>> right.IntValue, expectedType);
             }
-            else if (exp.Operator == Operator.Equals)
+            else if (exp.Operator == Operator.Equals || exp.Operator == Operator.StrictEquals)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.IntValue == right.IntValue);
             }
-            else if (exp.Operator == Operator.NotEquals)
+            else if (exp.Operator == Operator.NotEquals || exp.Operator == Operator.StrictNotEquals)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictNotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.IntValue != right.IntValue);
             }
             else if (exp.Operator == Operator.Lt)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.IntValue < right.IntValue);
             }
             else if (exp.Operator == Operator.Gt)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.IntValue > right.IntValue);
             }
             else if (exp.Operator == Operator.Le)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.IntValue <= right.IntValue);
             }
             else if (exp.Operator == Operator.Ge)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.IntValue >= right.IntValue);
             }
             else
             {
@@ -1101,100 +1061,64 @@ public partial class Verifier
                 exp.SemanticConstantExpResolved = true;
                 return exp.SemanticSymbol;
             }
-        } // XConstantValue
-        else if (left is XConstantValue && right is XConstantValue)
+        } // IntConstantValue
+        else if (left is LongConstantValue && right is LongConstantValue)
         {
             if (exp.Operator == Operator.Add)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.LongConstantValue(left.LongValue + right.LongValue, expectedType);
             }
             else if (exp.Operator == Operator.Subtract)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.LongConstantValue(left.LongValue - right.LongValue, expectedType);
             }
             else if (exp.Operator == Operator.Multiply)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.LongConstantValue(left.LongValue * right.LongValue, expectedType);
             }
             else if (exp.Operator == Operator.Divide)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.LongConstantValue(left.LongValue / right.LongValue, expectedType);
             }
             else if (exp.Operator == Operator.Remainder)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Pow)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalAnd)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalXor)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalOr)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.LongConstantValue(left.LongValue % right.LongValue, expectedType);
             }
             else if (exp.Operator == Operator.BitwiseAnd)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.LongConstantValue(left.LongValue & right.LongValue, expectedType);
             }
             else if (exp.Operator == Operator.BitwiseXor)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.LongConstantValue(left.LongValue ^ right.LongValue, expectedType);
             }
             else if (exp.Operator == Operator.BitwiseOr)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.LongConstantValue(left.LongValue | right.LongValue, expectedType);
             }
-            else if (exp.Operator == Operator.LeftShift)
+            else if (exp.Operator == Operator.Equals || exp.Operator == Operator.StrictEquals)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BooleanConstantValue(left.LongValue == right.LongValue);
             }
-            else if (exp.Operator == Operator.RightShift)
+            else if (exp.Operator == Operator.NotEquals || exp.Operator == Operator.StrictNotEquals)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.UnsignedRightShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Equals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.NotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictNotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.LongValue != right.LongValue);
             }
             else if (exp.Operator == Operator.Lt)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.LongValue < right.LongValue);
             }
             else if (exp.Operator == Operator.Gt)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.LongValue > right.LongValue);
             }
             else if (exp.Operator == Operator.Le)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.LongValue <= right.LongValue);
             }
             else if (exp.Operator == Operator.Ge)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.LongValue >= right.LongValue);
             }
             else
             {
@@ -1206,100 +1130,64 @@ public partial class Verifier
                 exp.SemanticConstantExpResolved = true;
                 return exp.SemanticSymbol;
             }
-        } // XConstantValue
-        else if (left is XConstantValue && right is XConstantValue)
+        } // LongConstantValue
+        else if (left is BigIntConstantValue && right is BigIntConstantValue)
         {
             if (exp.Operator == Operator.Add)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BigIntConstantValue(left.BigIntValue + right.BigIntValue, expectedType);
             }
             else if (exp.Operator == Operator.Subtract)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BigIntConstantValue(left.BigIntValue - right.BigIntValue, expectedType);
             }
             else if (exp.Operator == Operator.Multiply)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BigIntConstantValue(left.BigIntValue * right.BigIntValue, expectedType);
             }
             else if (exp.Operator == Operator.Divide)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BigIntConstantValue(left.BigIntValue / right.BigIntValue, expectedType);
             }
             else if (exp.Operator == Operator.Remainder)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Pow)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalAnd)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalXor)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalOr)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BigIntConstantValue(left.BigIntValue % right.BigIntValue, expectedType);
             }
             else if (exp.Operator == Operator.BitwiseAnd)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BigIntConstantValue(left.BigIntValue & right.BigIntValue, expectedType);
             }
             else if (exp.Operator == Operator.BitwiseXor)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BigIntConstantValue(left.BigIntValue ^ right.BigIntValue, expectedType);
             }
             else if (exp.Operator == Operator.BitwiseOr)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BigIntConstantValue(left.BigIntValue | right.BigIntValue, expectedType);
             }
-            else if (exp.Operator == Operator.LeftShift)
+            else if (exp.Operator == Operator.Equals || exp.Operator == Operator.StrictEquals)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BooleanConstantValue(left.BigIntValue == right.BigIntValue);
             }
-            else if (exp.Operator == Operator.RightShift)
+            else if (exp.Operator == Operator.NotEquals || exp.Operator == Operator.StrictNotEquals)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.UnsignedRightShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Equals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.NotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictNotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.BigIntValue != right.BigIntValue);
             }
             else if (exp.Operator == Operator.Lt)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.BigIntValue < right.BigIntValue);
             }
             else if (exp.Operator == Operator.Gt)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.BigIntValue > right.BigIntValue);
             }
             else if (exp.Operator == Operator.Le)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.BigIntValue <= right.BigIntValue);
             }
             else if (exp.Operator == Operator.Ge)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.BigIntValue >= right.BigIntValue);
             }
             else
             {
@@ -1311,100 +1199,20 @@ public partial class Verifier
                 exp.SemanticConstantExpResolved = true;
                 return exp.SemanticSymbol;
             }
-        } // XConstantValue
-        else if (left is XConstantValue && right is XConstantValue)
+        } // BigIntConstantValue
+        else if (left is EnumConstantValue && right is EnumConstantValue && left.StaticType == right.StaticType && left.StaticType.IsFlagsEnum)
         {
             if (exp.Operator == Operator.Add)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.EnumConstantValue(EnumConstHelpers.IncludeFlags(left.EnumConstValue, right.EnumConstValue), expectedType);
             }
-            else if (exp.Operator == Operator.Subtract)
+            else if (exp.Operator == Operator.Equals || exp.Operator == Operator.StrictEquals)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
+                return m_ModelCore.Factory.BooleanConstantValue(left.EnumConstValue == right.EnumConstValue);
             }
-            else if (exp.Operator == Operator.Multiply)
+            else if (exp.Operator == Operator.NotEquals || exp.Operator == Operator.StrictNotEquals)
             {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Divide)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Remainder)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Pow)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalAnd)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalXor)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalOr)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.BitwiseAnd)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.BitwiseXor)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.BitwiseOr)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LeftShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.RightShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.UnsignedRightShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Equals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.NotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictNotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Lt)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Gt)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Le)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Ge)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
+                return m_ModelCore.Factory.BooleanConstantValue(left.EnumConstValue != right.EnumConstValue);
             }
             else
             {
@@ -1416,217 +1224,7 @@ public partial class Verifier
                 exp.SemanticConstantExpResolved = true;
                 return exp.SemanticSymbol;
             }
-        } // XConstantValue
-        else if (left is XConstantValue && right is XConstantValue)
-        {
-            if (exp.Operator == Operator.Add)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Subtract)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Multiply)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Divide)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Remainder)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Pow)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalAnd)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalXor)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalOr)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.BitwiseAnd)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.BitwiseXor)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.BitwiseOr)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LeftShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.RightShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.UnsignedRightShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Equals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.NotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictNotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Lt)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Gt)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Le)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Ge)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else
-            {
-                if (faillible)
-                {
-                    VerifyError(null, 153, exp.Span.Value, new DiagnosticArguments {["op"] = exp.Operator});
-                }
-                exp.SemanticSymbol = null;
-                exp.SemanticConstantExpResolved = true;
-                return exp.SemanticSymbol;
-            }
-        } // XConstantValue
-        else if (left is XConstantValue && right is XConstantValue)
-        {
-            if (exp.Operator == Operator.Add)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Subtract)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Multiply)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Divide)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Remainder)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Pow)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalAnd)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalXor)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LogicalOr)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.BitwiseAnd)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.BitwiseXor)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.BitwiseOr)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.LeftShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.RightShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.UnsignedRightShift)
-            {
-                return m_ModelCore.Factory.XConstantValue(x, expectedType);
-            }
-            else if (exp.Operator == Operator.Equals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.NotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.StrictNotEquals)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Lt)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Gt)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Le)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else if (exp.Operator == Operator.Ge)
-            {
-                return m_ModelCore.Factory.BooleanConstantValue(x);
-            }
-            else
-            {
-                if (faillible)
-                {
-                    VerifyError(null, 153, exp.Span.Value, new DiagnosticArguments {["op"] = exp.Operator});
-                }
-                exp.SemanticSymbol = null;
-                exp.SemanticConstantExpResolved = true;
-                return exp.SemanticSymbol;
-            }
-        } // XConstantValue
+        } // EnumConstantValue
         else
         {
             if (faillible)

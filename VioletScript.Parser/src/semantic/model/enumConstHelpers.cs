@@ -7,6 +7,39 @@ using VioletScript.Parser.Semantic.Logic;
 
 public static class EnumConstHelpers
 {
+    public static object IncludeFlags(object one, object other)
+    {
+        if (one is double doubleV)
+        {
+            return (double) (((int) doubleV) | ((int) ((double) other)));
+        }
+        if (one is decimal decimalV)
+        {
+            return (decimal) (((int) decimalV) | ((int) ((decimal) other)));
+        }
+        if (one is int intV)
+        {
+            return intV | ((int) other);
+        }
+        if (one is byte byteV)
+        {
+            return (byte) (byteV | ((byte) other));
+        }
+        if (one is short shortV)
+        {
+            return (short) (shortV | ((short) other));
+        }
+        if (one is long longV)
+        {
+            return longV | ((long) other);
+        }
+        if (one is BigInteger bigIntV)
+        {
+            return bigIntV | ((BigInteger) other);
+        }
+        throw new Exception("Unimplemented");
+    }
+
     public static bool HasZeroFlags(object v)
     {
         if (v is double doubleV)
@@ -29,7 +62,7 @@ public static class EnumConstHelpers
         {
             return shortV == 0;
         }
-        if (v is double longV)
+        if (v is long longV)
         {
             return longV == 0;
         }
@@ -37,7 +70,7 @@ public static class EnumConstHelpers
         {
             return bigIntV == 0;
         }
-        return false;
+        throw new Exception("Unimplemented");
     }
 
     public static Symbol Empty(Symbol type) {
