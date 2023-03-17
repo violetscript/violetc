@@ -73,6 +73,39 @@ public static class EnumConstHelpers
         throw new Exception("Unimplemented");
     }
 
+    public static bool ValuesEquals(object one, object other)
+    {
+        if (one is double doubleV)
+        {
+            return doubleV == ((double) other);
+        }
+        if (one is decimal decimalV)
+        {
+            return decimalV == ((decimal) other);
+        }
+        if (one is int intV)
+        {
+            return intV == ((int) other);
+        }
+        if (one is byte byteV)
+        {
+            return byteV == ((byte) other);
+        }
+        if (one is short shortV)
+        {
+            return shortV == ((short) other);
+        }
+        if (one is long longV)
+        {
+            return longV == ((long) other);
+        }
+        if (one is BigInteger bigIntV)
+        {
+            return bigIntV == ((BigInteger) other);
+        }
+        throw new Exception("Unimplemented");
+    }
+
     public static Symbol Empty(Symbol type) {
         var modelCore = type.ModelCore;
         var factory = modelCore.Factory;

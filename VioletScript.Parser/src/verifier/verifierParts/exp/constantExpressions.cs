@@ -1208,11 +1208,11 @@ public partial class Verifier
             }
             else if (exp.Operator == Operator.Equals || exp.Operator == Operator.StrictEquals)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(left.EnumConstValue == right.EnumConstValue);
+                return m_ModelCore.Factory.BooleanConstantValue(EnumConstHelpers.ValuesEquals(left.EnumConstValue, right.EnumConstValue));
             }
             else if (exp.Operator == Operator.NotEquals || exp.Operator == Operator.StrictNotEquals)
             {
-                return m_ModelCore.Factory.BooleanConstantValue(left.EnumConstValue != right.EnumConstValue);
+                return m_ModelCore.Factory.BooleanConstantValue(!EnumConstHelpers.ValuesEquals(left.EnumConstValue, right.EnumConstValue));
             }
             else
             {
