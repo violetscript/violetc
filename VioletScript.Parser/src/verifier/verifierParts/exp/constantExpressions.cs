@@ -461,5 +461,15 @@ public partial class Verifier
         Symbol expectedType = null
     )
     {
+        if (exp.Operator == Operator.In)
+        {
+            return VerifyConstantInBinaryExp(exp, faillible);
+        }
+    }
+
+    // verification for compile-time "in" operator.
+    // works for flags enumeration only, currently.
+    private Symbol VerifyConstantInBinaryExp(Ast.BinaryExpression exp, bool faillible)
+    {
     }
 }
