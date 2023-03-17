@@ -26,9 +26,9 @@ public partial class Verifier
         }
         if (exp is Ast.Identifier id)
         {
-            return VerifyConstantIdExp(id, faillible, expectedType, instantiatingGeneric);
+            return VerifyConstantLexicalReference(id, faillible, expectedType, instantiatingGeneric);
         }
-        if (exp is Ast.MemberExpression memb && !memb.Optional)
+        else if (exp is Ast.MemberExpression memb && !memb.Optional)
         {
             return VerifyConstantMemberExp(memb, faillible, expectedType, instantiatingGeneric);
         }
@@ -1351,18 +1351,18 @@ public partial class Verifier
         return r;
     } // ImplicitNaNOrInfToOtherNumericType
 
-    // verifies identifier; ensure
+    // verifies lexical reference; ensure
     // - it is not undefined.
     // - it is not an ambiguous reference.
     // - it is lexically visible.
     // - if it is a non-argumented generic type or function, throw a VerifyError.
     // - it is a compile-time value.
-    private Symbol VerifyConstantIdExp
+    private Symbol VerifyConstantLexicalReference
     (
         Ast.Identifier id,
         bool faillible,
-        Symbol expectedType = null,
-        bool instantiatingGeneric = false
+        Symbol expectedType,
+        bool instantiatingGeneric
     )
     {
         var exp = id;
@@ -1450,7 +1450,7 @@ public partial class Verifier
             exp.SemanticConstantExpResolved = true;
             return r;
         }
-    } // identifier
+    } // lexical reference
 
     // verifies member; ensure
     // - it is not undefined.
@@ -1649,7 +1649,7 @@ public partial class Verifier
         exp.SemanticSymbol = r;
         exp.SemanticConstantExpResolved = true;
         return exp.SemanticSymbol;
-    } // number literal
+    } // numeric literal
 
     private Symbol VerifyConstantCondExp(Ast.ConditionalExpression exp, bool faillible, Symbol expectedType)
     {
@@ -1730,7 +1730,7 @@ public partial class Verifier
         }
         exp.SemanticSymbol = conversion;
         return exp.SemanticSymbol;
-    }
+    } // LimitConstantExpType
 
     private Symbol LimitStrictConstantExpType
     (
@@ -1767,5 +1767,5 @@ public partial class Verifier
         }
         exp.SemanticSymbol = null;
         return exp.SemanticSymbol;
-    }
+    } // LimitStrictConstantExpType
 }

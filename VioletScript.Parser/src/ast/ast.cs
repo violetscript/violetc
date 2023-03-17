@@ -428,11 +428,31 @@ public class NodeAttribute : Node {
 
 /// <summary>
 /// Member expression. If the base object is a package, then the member may be a subpackage. 
+/// <para>
+/// If the member access is optional (using <c>?.</c> syntax),
+/// the member result type unifies with either null or undefined.
+/// If the base includes undefined but not null, the result unifies with undefined as <c>undefined|R</c>.
+/// If the base includes null but not undefined, the result unifies with null as <c>null|R</c>.
+/// If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined|null|R</c>.
+/// </para>
 /// </summary>
 public class MemberExpression : Expression {
     public Expression Base;
     public Identifier Id;
     public bool Optional;
+
+    /// <summary>
+    /// If this is an optional member, this stores
+    /// a throw-away non-null value corresponding to the base value;
+    /// that is, it is a value of type <c>Base.SemanticExpResolved.ToNonNullableType()</c>.
+    /// </summary>
+    public Symbol SemanticThrowawayNonNullBase = null;
+
+    /// <summary>
+    /// If this is an optional member, this stores
+    /// the resolved symbol without unifying it to null or undefined types.
+    /// </summary>
+    public Symbol SemanticUnprocessedSymbol = null;
 
     public MemberExpression(Expression @base, Identifier id, bool optional = false) : base() {
         Base = @base;

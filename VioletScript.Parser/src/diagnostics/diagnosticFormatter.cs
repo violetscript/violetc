@@ -157,6 +157,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [166] = "Compile-time array element must be a string literal",
         [167] = "Compile-time constant must be a value",
         [168] = "Incompatible types: expected '$expected', got '$got'",
+        [169] = "Optional member base must be a value",
+        [170] = "Type '$t' does not include null nor undefined",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
