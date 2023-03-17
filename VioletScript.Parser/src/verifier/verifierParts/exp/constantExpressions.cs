@@ -199,6 +199,10 @@ public partial class Verifier
         {
             return VerifyConstantUnaryExp(unaryExp, faillible, expectedType);
         } // UnaryExpression
+        else if (exp is Ast.BinaryExpression binaryExp)
+        {
+            return VerifyConstantBinaryExp(binaryExp, faillible, expectedType);
+        } // BinaryExpression
         else
         {
             if (faillible)
@@ -305,7 +309,139 @@ public partial class Verifier
                 exp.SemanticConstantExpResolved = true;
                 return exp.SemanticSymbol;
             }
-        }
+        } // logical not
+        else if (exp.Operator == Operator.Positive)
+        {
+            if (operand is NumberConstantValue || operand is DecimalConstantValue
+            ||  operand is ByteConstantValue || operand is ShortConstantValue
+            ||  operand is IntConstantValue || operand is LongConstantValue
+            ||  operand is BigIntConstantValue)
+            {
+                exp.SemanticSymbol = operand;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 154, exp.Span.Value, new DiagnosticArguments {});
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+        } // positive
+        else if (exp.Operator == Operator.Negate)
+        {
+            if (operand is NumberConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.NumberConstantValue(-operand.NumberValue, operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is DecimalConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.DecimalConstantValue(-operand.DecimalValue, operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is ByteConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.ByteConstantValue((byte) (-operand.ByteValue), operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is ShortConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.ShortConstantValue((short) (-operand.ShortValue), operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is IntConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.IntConstantValue(-operand.IntValue, operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is LongConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.LongConstantValue(-operand.LongValue, operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is BigIntConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BigIntConstantValue(-operand.BigIntValue, operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 154, exp.Span.Value, new DiagnosticArguments {});
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+        } // negate
+        else if (exp.Operator == Operator.BitwiseNot)
+        {
+            if (operand is NumberConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.NumberConstantValue((double) (~((int) operand.NumberValue)), operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is DecimalConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.DecimalConstantValue((decimal) (~((int) operand.DecimalValue)), operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is ByteConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.ByteConstantValue((byte) (~operand.ByteValue), operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is ShortConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.ShortConstantValue((short) (~operand.ShortValue), operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is IntConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.IntConstantValue(~operand.IntValue, operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is LongConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.LongConstantValue(~operand.LongValue, operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else if (operand is BigIntConstantValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.BigIntConstantValue(~operand.BigIntValue, operand.StaticType);
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            else
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 154, exp.Span.Value, new DiagnosticArguments {});
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+        } // bitwise not
         else
         {
             if (faillible)
@@ -316,5 +452,14 @@ public partial class Verifier
             exp.SemanticConstantExpResolved = true;
             return exp.SemanticSymbol;
         }
+    }
+
+    private Symbol VerifyConstantBinaryExp
+    (
+        Ast.BinaryExpression exp,
+        bool faillible,
+        Symbol expectedType = null
+    )
+    {
     }
 }
