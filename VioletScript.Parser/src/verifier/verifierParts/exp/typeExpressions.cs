@@ -30,7 +30,7 @@ public partial class Verifier
             if (r == null)
             {
                 // VerifyError: undefined reference
-                VerifyError(exp.Span.Value.Script, 128, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                VerifyError(null, 128, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
                 exp.SemanticSymbol = null;
                 exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
@@ -38,7 +38,7 @@ public partial class Verifier
             else if (r is AmbiguousReferenceIssue)
             {
                 // VerifyError: ambiguous reference
-                VerifyError(exp.Span.Value.Script, 129, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                VerifyError(null, 129, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
                 exp.SemanticSymbol = null;
                 exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
@@ -48,13 +48,13 @@ public partial class Verifier
                 if (!r.PropertyIsVisibleTo(m_Frame))
                 {
                     // VerifyError: accessing private property
-                    VerifyError(exp.Span.Value.Script, 130, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                    VerifyError(null, 130, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
                 }
                 r = r is Alias ? r.AliasToSymbol : r;
                 if (!isBase && !(r is Type))
                 {
                     // VerifyError: not a type constant
-                    VerifyError(exp.Span.Value.Script, 131, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                    VerifyError(null, 131, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
                     exp.SemanticSymbol = null;
                     exp.SemanticResolved = true;
                     return exp.SemanticSymbol;
@@ -62,7 +62,7 @@ public partial class Verifier
                 // VerifyError: unargumented generic type
                 if (!isBase && r.TypeParameters != null)
                 {
-                    VerifyError(exp.Span.Value.Script, 132, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                    VerifyError(null, 132, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
                     exp.SemanticSymbol = null;
                     exp.SemanticResolved = true;
                     return exp.SemanticSymbol;

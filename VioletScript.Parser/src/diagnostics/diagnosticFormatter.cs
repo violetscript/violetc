@@ -120,7 +120,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [129] = "Ambiguous reference to '$name'",
         [130] = "'$name' is private",
         [131] = "'$name' is not a type constant",
-        [132] = "'$name' is a generic type, therefore must be argumented",
+        [132] = "'$name' is a generic type or function, therefore must be argumented",
         [133] = "'$t' is not a generic type",
         [134] = "Expression is not a type constant",
         [135] = "Wrong number of arguments: expected $expectedN, got $gotN",
@@ -138,6 +138,9 @@ public static class DefaultDiagnosticFormatterStatics {
         [147] = "Assigning read-only property '$name'",
         [148] = "Destructuring assignment target must be lexical",
         [149] = "Target reference must be of type '$e'",
+        [150] = "Expression not supported as a compile-time expression",
+        [151] = "'$name' is not a compile-time constant",
+        [152] = "Identifier must not be typed here",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
