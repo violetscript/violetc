@@ -12,7 +12,7 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    public Symbol VerifyConstantExp
+    private Symbol VerifyConstantExp
     (
         Ast.Expression exp,
         bool faillible,
@@ -1693,4 +1693,79 @@ public partial class Verifier
         exp.SemanticConstantExpResolved = true;
         return exp.SemanticSymbol;
     } // list expression
+
+    private Symbol LimitConstantExpType
+    (
+        Ast.Expression exp,
+        Symbol expectedType,
+        bool faillible = true
+    )
+    {
+        if (exp.SemanticConstantExpResolved)
+        {
+            return exp.SemanticSymbol;
+        }
+        var r = VerifyConstantExp(exp, faillible, expectedType);
+        if (r == null)
+        {
+            return null;
+        }
+        if (!(r is ConstantValue))
+        {
+            if (faillible)
+            {
+                VerifyError(null, 167, exp.Span.Value, new DiagnosticArguments {});
+            }
+            exp.SemanticSymbol = null;
+            return null;
+        }
+        if (r.StaticType == expectedType)
+        {
+            return r;
+        }
+        var conversion = TypeConversions.ConvertConstant(r, expectedType);
+        if (conversion == null && faillible)
+        {
+            VerifyError(null, 168, exp.Span.Value, new DiagnosticArguments {["expected"] = expectedType, ["got"] = r.StaticType});
+        }
+        exp.SemanticSymbol = conversion;
+        return exp.SemanticSymbol;
+    }
+
+    private Symbol LimitStrictConstantExpType
+    (
+        Ast.Expression exp,
+        Symbol expectedType,
+        bool faillible = true
+    )
+    {
+        if (exp.SemanticConstantExpResolved)
+        {
+            return exp.SemanticSymbol;
+        }
+        var r = VerifyConstantExp(exp, faillible, null);
+        if (r == null)
+        {
+            return null;
+        }
+        if (!(r is ConstantValue))
+        {
+            if (faillible)
+            {
+                VerifyError(null, 167, exp.Span.Value, new DiagnosticArguments {});
+            }
+            exp.SemanticSymbol = null;
+            return null;
+        }
+        if (r.StaticType == expectedType)
+        {
+            return r;
+        }
+        if (faillible)
+        {
+            VerifyError(null, 168, exp.Span.Value, new DiagnosticArguments {["expected"] = expectedType, ["got"] = r.StaticType});
+        }
+        exp.SemanticSymbol = null;
+        return exp.SemanticSymbol;
+    }
 }

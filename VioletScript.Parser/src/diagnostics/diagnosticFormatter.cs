@@ -155,6 +155,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [164] = "'$et' has no variant named '$name'",
         [165] = "Shorthand field not allowed at compile-time object initializer",
         [166] = "Compile-time array element must be a string literal",
+        [167] = "Compile-time constant must be a value",
+        [168] = "Incompatible types: expected '$expected', got '$got'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
