@@ -90,7 +90,7 @@ public partial class Verifier
             exp.SemanticConstantExpResolved = true;
             return exp.SemanticSymbol;
         }
-    }
+    } // VerifyConstantExp
 
     private Symbol VerifyConstantObjectInitializer
     (

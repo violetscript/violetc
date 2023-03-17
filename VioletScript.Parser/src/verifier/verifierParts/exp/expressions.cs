@@ -37,8 +37,12 @@ public partial class Verifier
         {
             return VerifyMemberExp(memb, expectedType, instantiatingGeneric);
         }
+        else if (exp is Ast.ImportMetaExpression importMeta)
+        {
+            return VerifyImportMeta(importMeta);
+        }
         throw new Exception("Unimplemented expression");
-    }
+    } // VerifyExp
 
     // verifies lexical reference; ensure
     // - it is not undefined.
@@ -270,4 +274,14 @@ public partial class Verifier
             return exp.SemanticSymbol;
         }
     } // member expression (?.)
+
+    private Symbol VerifyImportMeta(Ast.ImportMetaExpression exp)
+    {
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.InternRecordType(new NameAndTypePair[]
+        {
+            new NameAndTypePair("url", m_ModelCore.StringType),
+        }));
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // import meta
 }
