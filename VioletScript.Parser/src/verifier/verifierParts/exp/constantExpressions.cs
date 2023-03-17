@@ -110,6 +110,37 @@ public partial class Verifier
                     VerifyTypeExp(id.Type);
                 }
 
+                // implicitly convert NaN, +Infinity and -Infinity to numeric types other
+                // than Number.
+                if (r is NumberConstantValue && double.IsNaN(r.NumberValue) || !double.IsFinite(r.NumberValue) && expectedType != null && expectedType.ToNonNullableType() != m_ModelCore.NumberType && m_ModelCore.IsNumericType(expectedType.ToNonNullableType()))
+                {
+                    var nonNullableType = expectedType.ToNonNullableType();
+                    if (nonNullableType == m_ModelCore.DecimalType)
+                    {
+                        return m_ModelCore.Factory.DecimalConstantValue((decimal) r.NumberValue, expectedType);
+                    }
+                    if (nonNullableType == m_ModelCore.ByteType)
+                    {
+                        return m_ModelCore.Factory.ByteConstantValue(double.IsNaN(r.NumberValue) ? ((byte) 0) : r.NumberValue == double.PositiveInfinity ? byte.MaxValue: byte.MinValue, expectedType);
+                    }
+                    if (nonNullableType == m_ModelCore.ShortType)
+                    {
+                        return m_ModelCore.Factory.ShortConstantValue(double.IsNaN(r.NumberValue) ? (short) (0) : r.NumberValue == double.PositiveInfinity ? short.MaxValue : short.MinValue, expectedType);
+                    }
+                    if (nonNullableType == m_ModelCore.IntType)
+                    {
+                        return m_ModelCore.Factory.IntConstantValue(double.IsNaN(r.NumberValue) ? 0 : r.NumberValue == double.PositiveInfinity ? int.MaxValue : int.MinValue, expectedType);
+                    }
+                    if (nonNullableType == m_ModelCore.LongType)
+                    {
+                        return m_ModelCore.Factory.LongConstantValue(double.IsNaN(r.NumberValue) ? 0 : r.NumberValue == double.PositiveInfinity ? long.MaxValue : long.MinValue, expectedType);
+                    }
+                    if (nonNullableType == m_ModelCore.BigIntType && double.IsNaN(r.NumberValue))
+                    {
+                        return m_ModelCore.Factory.BigIntConstantValue(0, expectedType);
+                    }
+                }
+
                 exp.SemanticSymbol = r;
                 exp.SemanticConstantExpResolved = true;
                 return r;
@@ -465,6 +496,15 @@ public partial class Verifier
         {
             return VerifyConstantInBinaryExp(exp, faillible);
         }
+        var left = VerifyConstantExp(exp.Left, faillible, expectedType);
+        if (left == null)
+        {
+            VerifyConstantExp(exp.Right, faillible);
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var right = VerifyConstantExp(exp.Right, faillible, exp.Operator == Operator.StrictEquals || exp.Operator == Operator.StrictNotEquals ? null : left.StaticType);
     }
 
     // verification for compile-time "in" operator.
