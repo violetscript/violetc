@@ -505,6 +505,22 @@ public partial class Verifier
             return exp.SemanticSymbol;
         }
         var right = VerifyConstantExp(exp.Right, faillible, exp.Operator == Operator.StrictEquals || exp.Operator == Operator.StrictNotEquals ? null : left.StaticType);
+        if (right == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        if (!(left is ConstantValue && right is ConstantValue))
+        {
+            if (faillible)
+            {
+                VerifyError(null, 157, exp.Span.Value, new DiagnosticArguments {});
+            }
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
     }
 
     // verification for compile-time "in" operator.

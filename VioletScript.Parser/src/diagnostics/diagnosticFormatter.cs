@@ -145,6 +145,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [154] = "Operand must be numeric",
         [155] = "Compile-time \"in\" operation is only supported for flags",
         [156] = "Left operand must not be undefined or null",
+        [157] = "A compile-time binary expression must have constant operand values",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
