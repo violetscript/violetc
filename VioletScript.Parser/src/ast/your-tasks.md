@@ -32,7 +32,7 @@ Use this document for tracking nodes to visit.
   - [ ] Embed
   - [ ] Unary
     - [ ] Non-null
-    - [ ] Post-incremenet
+    - [ ] Post-increment
     - [ ] Post-decrement
   - [ ] Binary
   - [ ] Type binary (`as is instanceof`)
