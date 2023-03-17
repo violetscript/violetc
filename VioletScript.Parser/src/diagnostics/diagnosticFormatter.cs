@@ -151,6 +151,9 @@ public static class DefaultDiagnosticFormatterStatics {
         [160] = "No inferred type for object initializer",
         [161] = "Compile-time object initializer can only be used with flags type",
         [162] = "Spread cannot appear in compile-time object initializer",
+        [163] = "Compile-time object field key must be an identifier or string literal",
+        [164] = "'$et' has no variant named '$name'",
+        [165] = "Shorthand field not allowed at compile-time object initializer",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

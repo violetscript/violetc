@@ -254,61 +254,7 @@ public partial class Verifier
         } // DefaultExpression
         else if (exp is Ast.ObjectInitializer objInitialiser)
         {
-            Symbol initType = null;
-            if (objInitialiser.Type != null)
-            {
-                initType = VerifyTypeExp(objInitialiser.Type);
-                if (initType == null)
-                {
-                    exp.SemanticSymbol = null;
-                    exp.SemanticConstantExpResolved = true;
-                    return exp.SemanticSymbol;
-                }
-            }
-            else {
-                initType = expectedType != null && expectedType.IsFlagsEnum ? expectedType : null;
-                if (initType == null)
-                {
-                    if (faillible)
-                    {
-                        VerifyError(null, 160, exp.Span.Value, new DiagnosticArguments {});
-                    }
-                    exp.SemanticSymbol = null;
-                    exp.SemanticConstantExpResolved = true;
-                    return exp.SemanticSymbol;
-                }
-            }
-            if (!initType.IsFlagsEnum)
-            {
-                if (faillible)
-                {
-                    VerifyError(null, 161, exp.Span.Value, new DiagnosticArguments {});
-                }
-                exp.SemanticSymbol = null;
-                exp.SemanticConstantExpResolved = true;
-                return exp.SemanticSymbol;
-            }
-            bool validated = true;
-            object resultFlags = EnumConstHelpers.Zero(initType.NumericType);
-            foreach (var fieldOrSpread in objInitialiser.Fields)
-            {
-                if (fieldOrSpread is Ast.Spread spread)
-                {
-                    if (faillible)
-                    {
-                        VerifyError(null, 162, spread.Span.Value, new DiagnosticArguments {});
-                    }
-                    VerifyConstantExp(spread.Expression, faillible);
-                    validated = false;
-                }
-                else
-                {
-                    doFooQuxBarFooBaz();
-                }
-            }
-            exp.SemanticSymbol = validated ? m_ModelCore.Factory.EnumConstantValue(resultFlags, initType) : null;
-            exp.SemanticConstantExpResolved = true;
-            return exp.SemanticSymbol;
+            return VerifyConstantObjectInitializer(objInitialiser, faillible, expectedType);
         } // ObjectInitializer
         else
         {
@@ -320,6 +266,111 @@ public partial class Verifier
             exp.SemanticConstantExpResolved = true;
             return exp.SemanticSymbol;
         }
+    }
+
+    private Symbol VerifyConstantObjectInitializer
+    (
+        Ast.ObjectInitializer exp,
+        bool faillible,
+        Symbol expectedType
+    )
+    {
+        Symbol initType = null;
+        if (exp.Type != null)
+        {
+            initType = VerifyTypeExp(exp.Type);
+            if (initType == null)
+            {
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+        }
+        else {
+            initType = expectedType != null && expectedType.IsFlagsEnum ? expectedType : null;
+            if (initType == null)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 160, exp.Span.Value, new DiagnosticArguments {});
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+        }
+        if (!initType.IsFlagsEnum)
+        {
+            if (faillible)
+            {
+                VerifyError(null, 161, exp.Span.Value, new DiagnosticArguments {});
+            }
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        bool validated = true;
+        object resultFlags = EnumConstHelpers.Zero(initType.NumericType);
+        foreach (var fieldOrSpread in exp.Fields)
+        {
+            if (fieldOrSpread is Ast.Spread spread)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 162, spread.Span.Value, new DiagnosticArguments {});
+                }
+                VerifyConstantExp(spread.Expression, faillible);
+                validated = false;
+                continue;
+            }
+            var field = (Ast.ObjectField) fieldOrSpread;
+            if (!(field.Key is Ast.StringLiteral))
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 163, field.Key.Span.Value, new DiagnosticArguments {});
+                }
+                validated = false;
+                continue;
+            }
+            var fieldName = ((Ast.StringLiteral) field.Key).Value;
+            var matchingVariant = initType.EnumGetVariantNumberByString(fieldName);
+            if (matchingVariant == null)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 164, field.Key.Span.Value, new DiagnosticArguments {["et"] = initType, ["name"] = fieldName});
+                }
+                validated = false;
+                continue;
+            }
+            if (field.Value == null)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 165, field.Key.Span.Value, new DiagnosticArguments {});
+                }
+                validated = false;
+                continue;
+            }
+            var v = LimitConstantExpType(field.Value, m_ModelCore.BooleanType, faillible);
+            if (v == null)
+            {
+                validated = false;
+                continue;
+            }
+            if (!(v is BooleanConstantValue))
+            {
+                throw new Exception("Internal verify error");
+            }
+            if (v.BooleanValue)
+            {
+                resultFlags = EnumConstHelpers.IncludeFlags(resultFlags, matchingVariant);
+            }
+        }
+        exp.SemanticSymbol = validated ? m_ModelCore.Factory.EnumConstantValue(resultFlags, initType) : null;
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
     }
 
     private Symbol VerifyConstantUnaryExp
