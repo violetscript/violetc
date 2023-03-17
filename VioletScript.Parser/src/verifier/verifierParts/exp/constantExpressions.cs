@@ -254,7 +254,61 @@ public partial class Verifier
         } // DefaultExpression
         else if (exp is Ast.ObjectInitializer objInitialiser)
         {
-            //
+            Symbol initType = null;
+            if (objInitialiser.Type != null)
+            {
+                initType = VerifyTypeExp(objInitialiser.Type);
+                if (initType == null)
+                {
+                    exp.SemanticSymbol = null;
+                    exp.SemanticConstantExpResolved = true;
+                    return exp.SemanticSymbol;
+                }
+            }
+            else {
+                initType = expectedType != null && expectedType.IsFlagsEnum ? expectedType : null;
+                if (initType == null)
+                {
+                    if (faillible)
+                    {
+                        VerifyError(null, 160, exp.Span.Value, new DiagnosticArguments {});
+                    }
+                    exp.SemanticSymbol = null;
+                    exp.SemanticConstantExpResolved = true;
+                    return exp.SemanticSymbol;
+                }
+            }
+            if (!initType.IsFlagsEnum)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 161, exp.Span.Value, new DiagnosticArguments {});
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            bool validated = true;
+            object resultFlags = EnumConstHelpers.Zero(initType.NumericType);
+            foreach (var fieldOrSpread in objInitialiser.Fields)
+            {
+                if (fieldOrSpread is Ast.Spread spread)
+                {
+                    if (faillible)
+                    {
+                        VerifyError(null, 162, spread.Span.Value, new DiagnosticArguments {});
+                    }
+                    VerifyConstantExp(spread.Expression, faillible);
+                    validated = false;
+                }
+                else
+                {
+                    doFooQuxBarFooBaz();
+                }
+            }
+            exp.SemanticSymbol = validated ? m_ModelCore.Factory.EnumConstantValue(resultFlags, initType) : null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
         } // ObjectInitializer
         else
         {

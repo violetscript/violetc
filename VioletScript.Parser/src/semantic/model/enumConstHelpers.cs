@@ -122,14 +122,26 @@ public static class EnumConstHelpers
     }
 
     public static object Zero(Symbol type) {
+        if (type is EnumType)
+        {
+            type = type.NumericType;
+        }
         return FromDouble(type, 0);
     }
 
     public static object One(Symbol type) {
+        if (type is EnumType)
+        {
+            type = type.NumericType;
+        }
         return FromDouble(type, 1);
     }
 
     public static object FromDouble(Symbol type, double value) {
+        if (type is EnumType)
+        {
+            type = type.NumericType;
+        }
         var modelCore = type.ModelCore;
         if (type == modelCore.NumberType) return value;
         if (type == modelCore.DecimalType) return (decimal) value;
@@ -142,6 +154,10 @@ public static class EnumConstHelpers
     }
 
     public static object MultiplyPer2(Symbol type, object @base) {
+        if (type is EnumType)
+        {
+            type = type.NumericType;
+        }
         var modelCore = type.ModelCore;
         if (type == modelCore.NumberType) return ((double) @base) * ((double) 2);
         if (type == modelCore.DecimalType) return ((decimal) @base) * ((decimal) 2);
@@ -154,6 +170,10 @@ public static class EnumConstHelpers
     }
 
     public static object Increment(Symbol type, object @base) {
+        if (type is EnumType)
+        {
+            type = type.NumericType;
+        }
         var modelCore = type.ModelCore;
         if (type == modelCore.NumberType) return ((double) @base) + ((double) 1);
         if (type == modelCore.DecimalType) return ((decimal) @base) + ((decimal) 1);
@@ -166,6 +186,10 @@ public static class EnumConstHelpers
     }
 
     public static bool Includes(Symbol type, object @base, object flag) {
+        if (type is EnumType)
+        {
+            type = type.NumericType;
+        }
         var modelCore = type.ModelCore;
         if (type == modelCore.NumberType) return (((int) @base) & ((int) flag)) != 0;
         if (type == modelCore.DecimalType) return (((int) @base) & ((int) flag)) != 0;
