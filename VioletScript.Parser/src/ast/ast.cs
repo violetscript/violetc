@@ -914,13 +914,11 @@ public class ImportStatement : Statement {
     public Identifier Alias;
     public string[] ImportName;
     public bool Wildcard;
-    public bool Recursive;
 
-    public ImportStatement(Identifier alias, string[] importName, bool wildcard, bool recursive) : base() {
+    public ImportStatement(Identifier alias, string[] importName, bool wildcard) : base() {
         Alias = alias;
         ImportName = importName;
         Wildcard = wildcard;
-        Recursive = recursive;
     }
 }
 

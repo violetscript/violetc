@@ -2086,7 +2086,6 @@ internal class ParserBackend {
         Ast.Identifier alias = null;
         var importName = new List<string>{};
         bool wildcard = false;
-        bool recursive = false;
         if (Token.Type == TToken.Dot) {
             importName.Add(id.Name);
         } else {
@@ -2099,13 +2098,10 @@ internal class ParserBackend {
             if (ConsumeOperator(Operator.Multiply)) {
                 wildcard = true;
                 break;
-            } else if (ConsumeOperator(Operator.Pow)) {
-                recursive = true;
-                break;
             } else importName.Add(ParseIdentifier(true).Name);
         }
         var semicolonInserted = ParseSemicolon();
-        return (FinishStatement(new Ast.ImportStatement(alias, importName.ToArray(), wildcard, recursive)), semicolonInserted);
+        return (FinishStatement(new Ast.ImportStatement(alias, importName.ToArray(), wildcard)), semicolonInserted);
     }
 
     private Ast.Identifier ParseIdentifier(bool keyword = false) {

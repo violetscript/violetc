@@ -66,11 +66,19 @@ public partial class Verifier
         }
         else if (exp is Ast.NumericLiteral numericLiteral)
         {
-            return VerifyConstantNumericLiteral(numericLiteral);
+            return VerifyConstantNumericLiteral(numericLiteral, expectedType);
         }
         else if (exp is Ast.ConditionalExpression condExp)
         {
             return VerifyConstantCondExp(condExp, faillible, expectedType);
+        }
+        else if (exp is Ast.ParensExpression parenExp)
+        {
+            return VerifyConstantParenExp(parenExp, faillible, expectedType, instantiatingGeneric);
+        }
+        else if (exp is Ast.ListExpression listExp)
+        {
+            return VerifyConstantListExp(listExp, faillible, expectedType);
         }
         else
         {
@@ -1645,5 +1653,44 @@ public partial class Verifier
 
     private Symbol VerifyConstantCondExp(Ast.ConditionalExpression exp, bool faillible, Symbol expectedType)
     {
+        // for non-constant conditionals, the test is not limited to a Boolean.
+        var test = LimitConstantExpType(exp.Test, m_ModelCore.BooleanType, faillible);
+        if (test == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        if (!(test is BooleanConstantValue))
+        {
+            throw new Exception("Internal verify error");
+        }
+        var consequent = VerifyConstantExp(exp.Consequent, faillible, expectedType);
+        var alternative = VerifyConstantExp(exp.Alternative, faillible, expectedType);
+
+        exp.SemanticSymbol = test.BooleanValue ? consequent : alternative;
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
     } // conditional expression
+
+    private Symbol VerifyConstantParenExp(Ast.ParensExpression exp, bool faillible, Symbol expectedType, bool instantiatingGeneric)
+    {
+        exp.SemanticSymbol = VerifyConstantExp(exp.Expression, faillible, expectedType, instantiatingGeneric);
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
+    } // parentheses expression
+
+    private Symbol VerifyConstantListExp(Ast.ListExpression exp, bool faillible, Symbol expectedType)
+    {
+        Symbol r = null;
+        bool valid = true;
+        foreach (var subExpr in exp.Expressions)
+        {
+            r = VerifyConstantExp(subExpr, faillible, expectedType);
+            valid = valid && r != null;
+        }
+        exp.SemanticSymbol = valid ? r : null;
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
+    } // list expression
 }
