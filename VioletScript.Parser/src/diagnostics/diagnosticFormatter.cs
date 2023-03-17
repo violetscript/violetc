@@ -148,12 +148,13 @@ public static class DefaultDiagnosticFormatterStatics {
         [157] = "A compile-time binary expression must have constant operand values",
         [158] = "A compile-time binary expression must have non-mixed operand values",
         [159] = "Type '$t' has no default value",
-        [160] = "No inferred type for object initializer",
-        [161] = "Compile-time object initializer can only be used with flags type",
-        [162] = "Spread cannot appear in compile-time object initializer",
+        [160] = "No inferred type for object or array initializer",
+        [161] = "Compile-time object or array initializer can only be used with flags type",
+        [162] = "Spread cannot appear in compile-time object or array initializer",
         [163] = "Compile-time object field key must be an identifier or string literal",
         [164] = "'$et' has no variant named '$name'",
         [165] = "Shorthand field not allowed at compile-time object initializer",
+        [166] = "Compile-time array element must be a string literal",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

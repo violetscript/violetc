@@ -24,238 +24,34 @@ public partial class Verifier
         {
             return exp.SemanticSymbol;
         }
-        // verify identifier; ensure
-        // - it is not undefined.
-        // - it is not an ambiguous reference.
-        // - it is lexically visible.
-        // - if it is a non-argumented generic type or function, throw a VerifyError.
-        // - it is a compile-time value.
         if (exp is Ast.Identifier id)
         {
-            var r = m_Frame.ResolveProperty(id.Name);
-            if (r == null)
-            {
-                // VerifyError: undefined reference
-                if (faillible)
-                {
-                    VerifyError(null, 128, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
-                }
-                exp.SemanticSymbol = null;
-                exp.SemanticConstantExpResolved = true;
-                return exp.SemanticSymbol;
-            }
-            else if (r is AmbiguousReferenceIssue)
-            {
-                // VerifyError: ambiguous reference
-                if (faillible)
-                {
-                    VerifyError(null, 129, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
-                }
-                exp.SemanticSymbol = null;
-                exp.SemanticConstantExpResolved = true;
-                return exp.SemanticSymbol;
-            }
-            else
-            {
-                if (!r.PropertyIsVisibleTo(m_Frame))
-                {
-                    // VerifyError: accessing private property
-                    if (faillible)
-                    {
-                        VerifyError(null, 130, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
-                    }
-                    exp.SemanticSymbol = null;
-                    exp.SemanticConstantExpResolved = true;
-                    return exp.SemanticSymbol;
-                }
-                r = r is Alias ? r.AliasToSymbol : r;
-                // VerifyError: unargumented generic type or function
-                if (!instantiatingGeneric && r.TypeParameters != null)
-                {
-                    if (faillible)
-                    {
-                        VerifyError(null, 132, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
-                    }
-                    exp.SemanticSymbol = null;
-                    exp.SemanticConstantExpResolved = true;
-                    return exp.SemanticSymbol;
-                }
-
-                // extend variable life
-                if (r is ReferenceValueFromFrame && r.Base.FindActivation() != m_Frame.FindActivation())
-                {
-                    r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
-                }
-
-                // use initial constant value if any.
-                if ((r is ReferenceValue || r is ReferenceValueFromNamespace || r is ReferenceValueFromType) && r.Property.InitValue is ConstantValue)
-                {
-                    r = r.Property.InitValue;
-                }
-
-                if  (!(r is Type || r is ConstantValue || r is Namespace))
-                {
-                    if (faillible)
-                    {
-                        VerifyError(null, 151, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
-                    }
-                    exp.SemanticSymbol = null;
-                    exp.SemanticConstantExpResolved = true;
-                    return exp.SemanticSymbol;
-                }
-
-                if (id.Type != null)
-                {
-                    VerifyError(null, 152, exp.Span.Value, new DiagnosticArguments {});
-                    VerifyTypeExp(id.Type);
-                }
-
-                // implicitly convert NaN, +Infinity and -Infinity to numeric types other
-                // than Number.
-                if (r is NumberConstantValue && double.IsNaN(r.NumberValue) || !double.IsFinite(r.NumberValue) && expectedType != null && expectedType.ToNonNullableType() != m_ModelCore.NumberType && m_ModelCore.IsNumericType(expectedType.ToNonNullableType()))
-                {
-                    var nonNullableType = expectedType.ToNonNullableType();
-                    if (nonNullableType == m_ModelCore.DecimalType)
-                    {
-                        return m_ModelCore.Factory.DecimalConstantValue((decimal) r.NumberValue, expectedType);
-                    }
-                    if (nonNullableType == m_ModelCore.ByteType)
-                    {
-                        return m_ModelCore.Factory.ByteConstantValue(double.IsNaN(r.NumberValue) ? ((byte) 0) : r.NumberValue == double.PositiveInfinity ? byte.MaxValue: byte.MinValue, expectedType);
-                    }
-                    if (nonNullableType == m_ModelCore.ShortType)
-                    {
-                        return m_ModelCore.Factory.ShortConstantValue(double.IsNaN(r.NumberValue) ? (short) (0) : r.NumberValue == double.PositiveInfinity ? short.MaxValue : short.MinValue, expectedType);
-                    }
-                    if (nonNullableType == m_ModelCore.IntType)
-                    {
-                        return m_ModelCore.Factory.IntConstantValue(double.IsNaN(r.NumberValue) ? 0 : r.NumberValue == double.PositiveInfinity ? int.MaxValue : int.MinValue, expectedType);
-                    }
-                    if (nonNullableType == m_ModelCore.LongType)
-                    {
-                        return m_ModelCore.Factory.LongConstantValue(double.IsNaN(r.NumberValue) ? 0 : r.NumberValue == double.PositiveInfinity ? long.MaxValue : long.MinValue, expectedType);
-                    }
-                    if (nonNullableType == m_ModelCore.BigIntType && double.IsNaN(r.NumberValue))
-                    {
-                        return m_ModelCore.Factory.BigIntConstantValue(0, expectedType);
-                    }
-                }
-
-                exp.SemanticSymbol = r;
-                exp.SemanticConstantExpResolved = true;
-                return r;
-            }
-        } // Identifier
-        // verify member; ensure
-        // - it is not undefined.
-        // - it is lexically visible.
-        // - if it is a non-argumented generic type or function, throw a VerifyError.
-        // - it is a compile-time value.
+            return VerifyConstantIdExp(id, faillible, expectedType, instantiatingGeneric);
+        }
         if (exp is Ast.MemberExpression memb && !memb.Optional)
         {
-            var @base = VerifyConstantExp(memb.Base, faillible, null, false);
-            if (@base == null)
-            {
-                exp.SemanticSymbol = null;
-                exp.SemanticConstantExpResolved = true;
-                return exp.SemanticSymbol;
-            }
-            var r = @base.ResolveProperty(memb.Id.Name);
-            if (r == null)
-            {
-                // VerifyError: undefined reference
-                if (faillible)
-                {
-                    VerifyError(null, 128, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
-                }
-                exp.SemanticSymbol = null;
-                exp.SemanticConstantExpResolved = true;
-                return exp.SemanticSymbol;
-            }
-            else
-            {
-                if (!r.PropertyIsVisibleTo(m_Frame))
-                {
-                    // VerifyError: accessing private property
-                    if (faillible)
-                    {
-                        VerifyError(null, 130, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
-                    }
-                    exp.SemanticSymbol = null;
-                    exp.SemanticConstantExpResolved = true;
-                    return exp.SemanticSymbol;
-                }
-                r = r is Alias ? r.AliasToSymbol : r;
-                // VerifyError: unargumented generic type or function
-                if (!instantiatingGeneric && r.TypeParameters != null)
-                {
-                    if (faillible)
-                    {
-                        VerifyError(null, 132, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
-                    }
-                    exp.SemanticSymbol = null;
-                    exp.SemanticConstantExpResolved = true;
-                    return exp.SemanticSymbol;
-                }
-
-                // extend variable life
-                if (r is ReferenceValueFromFrame && r.Base.FindActivation() != m_Frame.FindActivation())
-                {
-                    r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
-                }
-
-                // use initial constant value if any.
-                if ((r is ReferenceValue || r is ReferenceValueFromNamespace || r is ReferenceValueFromType) && r.Property.InitValue is ConstantValue)
-                {
-                    r = r.Property.InitValue;
-                }
-
-                if  (!(r is Type || r is ConstantValue || r is Namespace))
-                {
-                    if (faillible)
-                    {
-                        VerifyError(null, 151, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
-                    }
-                    exp.SemanticSymbol = null;
-                    exp.SemanticConstantExpResolved = true;
-                    return exp.SemanticSymbol;
-                }
-
-                exp.SemanticSymbol = r;
-                exp.SemanticConstantExpResolved = true;
-                return r;
-            }
-        } // MemberExpression
+            return VerifyConstantMemberExp(memb, faillible, expectedType, instantiatingGeneric);
+        }
         else if (exp is Ast.UnaryExpression unaryExp)
         {
             return VerifyConstantUnaryExp(unaryExp, faillible, expectedType);
-        } // UnaryExpression
+        }
         else if (exp is Ast.BinaryExpression binaryExp)
         {
             return VerifyConstantBinaryExp(binaryExp, faillible, expectedType);
-        } // BinaryExpression
+        }
         else if (exp is Ast.DefaultExpression defaultExp)
         {
-            var t = VerifyTypeExp(defaultExp.Type);
-            if (t == null)
-            {
-                exp.SemanticSymbol = null;
-                exp.SemanticConstantExpResolved = true;
-                return exp.SemanticSymbol;
-            }
-            var defaultValue = t.DefaultValue;
-            if (defaultValue == null && faillible)
-            {
-                VerifyError(null, 159, exp.Span.Value, new DiagnosticArguments {["t"] = t});
-            }
-            exp.SemanticSymbol = defaultValue;
-            exp.SemanticConstantExpResolved = true;
-            return exp.SemanticSymbol;
-        } // DefaultExpression
+            return VerifyConstDefaultExp(defaultExp, faillible);
+        }
         else if (exp is Ast.ObjectInitializer objInitialiser)
         {
             return VerifyConstantObjectInitializer(objInitialiser, faillible, expectedType);
-        } // ObjectInitializer
+        }
+        else if (exp is Ast.ArrayInitializer arrInitializer)
+        {
+            return VerifyConstantArrayInitializer(arrInitializer, faillible, expectedType);
+        }
         else
         {
             if (faillible)
@@ -371,7 +167,92 @@ public partial class Verifier
         exp.SemanticSymbol = validated ? m_ModelCore.Factory.EnumConstantValue(resultFlags, initType) : null;
         exp.SemanticConstantExpResolved = true;
         return exp.SemanticSymbol;
-    }
+    } // object initializer
+
+    private Symbol VerifyConstantArrayInitializer
+    (
+        Ast.ArrayInitializer exp,
+        bool faillible,
+        Symbol expectedType
+    )
+    {
+        Symbol initType = null;
+        if (exp.Type != null)
+        {
+            initType = VerifyTypeExp(exp.Type);
+            if (initType == null)
+            {
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+        }
+        else {
+            initType = expectedType != null && expectedType.IsFlagsEnum ? expectedType : null;
+            if (initType == null)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 160, exp.Span.Value, new DiagnosticArguments {});
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+        }
+        if (!initType.IsFlagsEnum)
+        {
+            if (faillible)
+            {
+                VerifyError(null, 161, exp.Span.Value, new DiagnosticArguments {});
+            }
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        bool validated = true;
+        object resultFlags = EnumConstHelpers.Zero(initType.NumericType);
+        foreach (var holeOrSpreadOrItem in exp.Items)
+        {
+            if (holeOrSpreadOrItem == null)
+            {
+                continue;
+            }
+            if (holeOrSpreadOrItem is Ast.Spread spread)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 162, spread.Span.Value, new DiagnosticArguments {});
+                }
+                validated = false;
+                continue;
+            }
+            if (!(holeOrSpreadOrItem is Ast.StringLiteral))
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 166, holeOrSpreadOrItem.Span.Value, new DiagnosticArguments {});
+                }
+                validated = false;
+                continue;
+            }
+            var variantName = ((Ast.StringLiteral) holeOrSpreadOrItem).Value;
+            var matchingVariant = initType.EnumGetVariantNumberByString(variantName);
+            if (matchingVariant == null)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 164, holeOrSpreadOrItem.Span.Value, new DiagnosticArguments {["et"] = initType, ["name"] = variantName});
+                }
+                validated = false;
+                continue;
+            }
+            resultFlags = EnumConstHelpers.IncludeFlags(resultFlags, matchingVariant);
+        }
+        exp.SemanticSymbol = validated ? m_ModelCore.Factory.EnumConstantValue(resultFlags, initType) : null;
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
+    } // array initialiser
 
     private Symbol VerifyConstantUnaryExp
     (
@@ -610,7 +491,7 @@ public partial class Verifier
             exp.SemanticConstantExpResolved = true;
             return exp.SemanticSymbol;
         }
-    }
+    } // unary expression
 
     private Symbol VerifyConstantBinaryExp
     (
@@ -1401,5 +1282,251 @@ public partial class Verifier
         exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(inc);
         exp.SemanticConstantExpResolved = true;
         return exp.SemanticSymbol;
-    }
+    } // binary expression
+
+    // implicitly converts NaN, +Infinity and -Infinity to numeric types other
+    // than Number.
+    private Symbol ImplicitNaNOrInfToOtherNumericType(Symbol r, Symbol expectedType)
+    {
+        if (r is NumberConstantValue && double.IsNaN(r.NumberValue) || !double.IsFinite(r.NumberValue) && expectedType != null && expectedType.ToNonNullableType() != m_ModelCore.NumberType && m_ModelCore.IsNumericType(expectedType.ToNonNullableType()))
+        {
+            var nonNullableType = expectedType.ToNonNullableType();
+            if (nonNullableType == m_ModelCore.DecimalType)
+            {
+                return m_ModelCore.Factory.DecimalConstantValue((decimal) r.NumberValue, expectedType);
+            }
+            if (nonNullableType == m_ModelCore.ByteType)
+            {
+                return m_ModelCore.Factory.ByteConstantValue(double.IsNaN(r.NumberValue) ? ((byte) 0) : r.NumberValue == double.PositiveInfinity ? byte.MaxValue: byte.MinValue, expectedType);
+            }
+            if (nonNullableType == m_ModelCore.ShortType)
+            {
+                return m_ModelCore.Factory.ShortConstantValue(double.IsNaN(r.NumberValue) ? (short) (0) : r.NumberValue == double.PositiveInfinity ? short.MaxValue : short.MinValue, expectedType);
+            }
+            if (nonNullableType == m_ModelCore.IntType)
+            {
+                return m_ModelCore.Factory.IntConstantValue(double.IsNaN(r.NumberValue) ? 0 : r.NumberValue == double.PositiveInfinity ? int.MaxValue : int.MinValue, expectedType);
+            }
+            if (nonNullableType == m_ModelCore.LongType)
+            {
+                return m_ModelCore.Factory.LongConstantValue(double.IsNaN(r.NumberValue) ? 0 : r.NumberValue == double.PositiveInfinity ? long.MaxValue : long.MinValue, expectedType);
+            }
+            if (nonNullableType == m_ModelCore.BigIntType && double.IsNaN(r.NumberValue))
+            {
+                return m_ModelCore.Factory.BigIntConstantValue(0, expectedType);
+            }
+        }
+        return r;
+    } // ImplicitNaNOrInfToOtherNumericType
+
+    // verifies identifier; ensure
+    // - it is not undefined.
+    // - it is not an ambiguous reference.
+    // - it is lexically visible.
+    // - if it is a non-argumented generic type or function, throw a VerifyError.
+    // - it is a compile-time value.
+    private Symbol VerifyConstantIdExp
+    (
+        Ast.Identifier id,
+        bool faillible,
+        Symbol expectedType = null,
+        bool instantiatingGeneric = false
+    )
+    {
+        var exp = id;
+        var r = m_Frame.ResolveProperty(id.Name);
+        if (r == null)
+        {
+            // VerifyError: undefined reference
+            if (faillible)
+            {
+                VerifyError(null, 128, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+            }
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        else if (r is AmbiguousReferenceIssue)
+        {
+            // VerifyError: ambiguous reference
+            if (faillible)
+            {
+                VerifyError(null, 129, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+            }
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        else
+        {
+            if (!r.PropertyIsVisibleTo(m_Frame))
+            {
+                // VerifyError: accessing private property
+                if (faillible)
+                {
+                    VerifyError(null, 130, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            r = r is Alias ? r.AliasToSymbol : r;
+            // VerifyError: unargumented generic type or function
+            if (!instantiatingGeneric && r.TypeParameters != null)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 132, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+
+            // extend variable life
+            if (r is ReferenceValueFromFrame && r.Base.FindActivation() != m_Frame.FindActivation())
+            {
+                r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
+            }
+
+            // use initial constant value if any.
+            if ((r is ReferenceValue || r is ReferenceValueFromNamespace || r is ReferenceValueFromType) && r.Property.InitValue is ConstantValue)
+            {
+                r = r.Property.InitValue;
+            }
+
+            if  (!(r is Type || r is ConstantValue || r is Namespace))
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 151, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+
+            if (id.Type != null)
+            {
+                VerifyError(null, 152, exp.Span.Value, new DiagnosticArguments {});
+                VerifyTypeExp(id.Type);
+            }
+
+            r = ImplicitNaNOrInfToOtherNumericType(r, expectedType);
+
+            exp.SemanticSymbol = r;
+            exp.SemanticConstantExpResolved = true;
+            return r;
+        }
+    } // identifier
+
+    // verifies member; ensure
+    // - it is not undefined.
+    // - it is lexically visible.
+    // - if it is a non-argumented generic type or function, throw a VerifyError.
+    // - it is a compile-time value.
+    private Symbol VerifyConstantMemberExp
+    (
+        Ast.MemberExpression memb,
+        bool faillible,
+        Symbol expectedType = null,
+        bool instantiatingGeneric = false
+    )
+    {
+        Ast.Expression exp = memb;
+        var @base = VerifyConstantExp(memb.Base, faillible, null, false);
+        if (@base == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var r = @base.ResolveProperty(memb.Id.Name);
+        if (r == null)
+        {
+            // VerifyError: undefined reference
+            if (faillible)
+            {
+                VerifyError(null, 128, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
+            }
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        else
+        {
+            if (!r.PropertyIsVisibleTo(m_Frame))
+            {
+                // VerifyError: accessing private property
+                if (faillible)
+                {
+                    VerifyError(null, 130, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            r = r is Alias ? r.AliasToSymbol : r;
+            // VerifyError: unargumented generic type or function
+            if (!instantiatingGeneric && r.TypeParameters != null)
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 132, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+
+            // extend variable life
+            if (r is ReferenceValueFromFrame && r.Base.FindActivation() != m_Frame.FindActivation())
+            {
+                r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
+            }
+
+            // use initial constant value if any.
+            if ((r is ReferenceValue || r is ReferenceValueFromNamespace || r is ReferenceValueFromType) && r.Property.InitValue is ConstantValue)
+            {
+                r = r.Property.InitValue;
+            }
+
+            if  (!(r is Type || r is ConstantValue || r is Namespace))
+            {
+                if (faillible)
+                {
+                    VerifyError(null, 151, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+
+            r = ImplicitNaNOrInfToOtherNumericType(r, expectedType);
+
+            exp.SemanticSymbol = r;
+            exp.SemanticConstantExpResolved = true;
+            return r;
+        }
+    } // member expression
+
+    private Symbol VerifyConstDefaultExp(Ast.DefaultExpression defaultExp, bool faillible)
+    {
+        var exp = defaultExp;
+        var t = VerifyTypeExp(defaultExp.Type);
+        if (t == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticConstantExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var defaultValue = t.DefaultValue;
+        if (defaultValue == null && faillible)
+        {
+            VerifyError(null, 159, exp.Span.Value, new DiagnosticArguments {["t"] = t});
+        }
+        exp.SemanticSymbol = defaultValue;
+        exp.SemanticConstantExpResolved = true;
+        return exp.SemanticSymbol;
+    } // default expression
 }
