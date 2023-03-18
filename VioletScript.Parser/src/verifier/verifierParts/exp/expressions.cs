@@ -370,6 +370,16 @@ public partial class Verifier
             return exp.SemanticSymbol;
         }
 
+        if (exp.Operator == Operator.Delete)
+        {
+            // - ensure the operand is a brackets operator.
+            // - ensure the operand type has a delete proxy.
+            fooBarQuxBaz();
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
         throw new Exception("Unimplemented");
     } // unary expression
 
