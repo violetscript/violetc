@@ -36,7 +36,7 @@ public partial class Verifier
 
     private Symbol CurrentFunction
     {
-        get => m_FunctionStack.Count != 0 ? m_FunctionStack.Peek() : null;
+        get => m_FunctionStack.Count() != 0 ? m_FunctionStack.Peek() : null;
     }
 
     public bool AllProgramsAreValid

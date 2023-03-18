@@ -333,7 +333,22 @@ public partial class Verifier
 
     private Symbol VerifyUnaryExp(Ast.UnaryExpression exp, Symbol expectedType)
     {
-        Symbol operand = VerifyExpAsValue(exp.Operand, expectedType);
+        Symbol operand = null;
+
+        if (exp.Operator == Operator.Yield)
+        {
+            var generatorType = CurrentFunction.StaticType.FunctionReturnType;
+            if (!generatorType.IsInstantiationOf(m_ModelCore.GeneratorType))
+            {
+                throw new Exception("Internal verify error");
+            }
+            operand = LimitExpType(exp.Operand, generatorType.ArgumentTypes[0]);
+            exp.SemanticSymbol = m_ModelCore.Factory.UndefinedConstantValue();
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        operand = VerifyExpAsValue(exp.Operand, expectedType);
         if (operand == null)
         {
             exp.SemanticSymbol = null;
