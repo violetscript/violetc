@@ -58,6 +58,10 @@ public partial class Verifier
         {
             r = VerifyTypeBinaryExp(tBinaryExp);
         }
+        else if (exp is Ast.DefaultExpression defaultExp)
+        {
+            r = VerifyDefaultExp(defaultExp);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -759,4 +763,23 @@ public partial class Verifier
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // binary expression ("instanceof"/"is")
+
+    private Symbol VerifyDefaultExp(Ast.DefaultExpression exp)
+    {
+        var t = VerifyTypeExp(exp.Type);
+        if (t == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var defaultValue = t.DefaultValue;
+        if (defaultValue == null)
+        {
+            VerifyError(null, 159, exp.Span.Value, new DiagnosticArguments {["t"] = t});
+        }
+        exp.SemanticSymbol = defaultValue;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // default expression
 }
