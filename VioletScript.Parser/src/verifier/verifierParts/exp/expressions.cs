@@ -77,6 +77,84 @@ public partial class Verifier
         return exp.SemanticSymbol;
     } // VerifyExp
 
+    private Symbol VerifyExpAsValue
+    (
+        Ast.Expression exp,
+        Symbol expectedType = null,
+        bool instantiatingGeneric = false,
+        bool writting = false
+    )
+    {
+        if (exp.SemanticExpResolved)
+        {
+            return exp.SemanticSymbol;
+        }
+        var r = VerifyExp(exp, expectedType, instantiatingGeneric, writting);
+        if (r == null)
+        {
+            return null;
+        }
+        if (!(r is Value))
+        {
+            VerifyError(null, 180, exp.Span.Value, new DiagnosticArguments {});
+            exp.SemanticSymbol = null;
+            return null;
+        }
+        return r;
+    } // VerifyExpAsValue
+
+    private Symbol LimitExpType
+    (
+        Ast.Expression exp,
+        Symbol expectedType
+    )
+    {
+        if (exp.SemanticExpResolved)
+        {
+            return exp.SemanticSymbol;
+        }
+        var r = VerifyExpAsValue(exp, expectedType);
+        if (r == null)
+        {
+            return null;
+        }
+        if (r.StaticType == expectedType)
+        {
+            return r;
+        }
+        var conversion = TypeConversions.ConvertImplicit(r, expectedType);
+        if (conversion == null)
+        {
+            VerifyError(null, 168, exp.Span.Value, new DiagnosticArguments {["expected"] = expectedType, ["got"] = r.StaticType});
+        }
+        exp.SemanticSymbol = conversion;
+        return exp.SemanticSymbol;
+    } // LimitExpType
+
+    private Symbol LimitStrictExpType
+    (
+        Ast.Expression exp,
+        Symbol expectedType
+    )
+    {
+        if (exp.SemanticExpResolved)
+        {
+            return exp.SemanticSymbol;
+        }
+        var r = VerifyExpAsValue(exp, expectedType);
+        if (r == null)
+        {
+            return null;
+        }
+        if (r.StaticType == expectedType)
+        {
+            return r;
+        }
+        VerifyError(null, 168, exp.Span.Value, new DiagnosticArguments {["expected"] = expectedType, ["got"] = r.StaticType});
+        exp.SemanticSymbol = null;
+        return exp.SemanticSymbol;
+    } // LimitStrictExpType
+
     // verifies lexical reference; ensure
     // - it is not undefined.
     // - it is not an ambiguous reference.
@@ -406,7 +484,7 @@ public partial class Verifier
                 exp.SemanticExpResolved = true;
                 return exp.SemanticSymbol;
             }
-            if (InheritedProxies.Find(operand.Base.StaticType, Operator.ProxyToSetIndex) == null)
+            if (InheritedProxies.Find(operand.Base.StaticType, Operator.ProxyToDeleteIndex) == null)
             {
                 VerifyError(null, 177, exp.Span.Value, new DiagnosticArguments {["t"] = operand.Base.StaticType});
                 exp.SemanticSymbol = null;

@@ -168,6 +168,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [177] = "Delete operator not supported on object of type '$t'",
         [178] = "Type '$t' does not support operator '$op'",
         [179] = "Type '$t' is not a numeric type",
+        [180] = "Expression must produce a value",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
