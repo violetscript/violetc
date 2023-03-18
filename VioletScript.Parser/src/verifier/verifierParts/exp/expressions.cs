@@ -330,6 +330,13 @@ public partial class Verifier
     private Symbol VerifyUnaryExp(Ast.UnaryExpression exp, Symbol expectedType)
     {
         Symbol operand = VerifyExp(exp.Operand, expectedType);
+        if (operand == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
         if (exp.Operator == Operator.Await)
         {
         }
