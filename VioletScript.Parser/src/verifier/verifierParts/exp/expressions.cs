@@ -495,6 +495,10 @@ public partial class Verifier
         {
             return Logical_VerifyBinaryExp(exp, expectedType);
         }
+        if (exp.Operator == Operator.NullCoalescing)
+        {
+            return NullCoalescing_VerifyBinaryExp(exp, expectedType);
+        }
     } // binary expression
 
     private Symbol In_VerifyBinaryExp(Ast.BinaryExpression exp, Symbol expectedType)
@@ -567,4 +571,21 @@ public partial class Verifier
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // binary expression (logical and, xor or or)
+
+    private Symbol NullCoalescing_VerifyBinaryExp(Ast.BinaryExpression exp, Symbol expectedType)
+    {
+        var left = VerifyExpAsValue(exp.Left, expectedType);
+        if (left == null)
+        {
+            VerifyExpAsValue(exp.Right);
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var leftNonNullType = left.StaticType.ToNonNullableType();
+        LimitExpType(exp.Right, leftNonNullType);
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(leftNonNullType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // binary expression (null coalescing)
 }

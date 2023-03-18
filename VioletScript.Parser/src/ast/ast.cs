@@ -294,6 +294,22 @@ public class UnaryExpression : Expression {
     }
 }
 
+/// <summary>
+/// Binary expression.
+/// </summary>
+/// <remarks>
+/// <p>Null-coalescing:</p>
+///
+/// <list type="bullet">
+/// <item>For null-coalescing, the expression resolves to a value of type
+/// <c>leftHandSide.StaticType.ToNonNullableType()</c>.
+/// The right-hand side is limited to be of type
+/// <c>leftHandSide.StaticType.ToNonNullableType()</c>.
+/// </item>
+/// </list>
+///
+/// </remarks>
+///
 public class BinaryExpression : Expression {
     public Operator Operator;
     public Expression Left;
@@ -428,15 +444,19 @@ public class NodeAttribute : Node {
 
 /// <summary>
 /// Member expression. If the base object is a package, then the member may be a subpackage. 
-/// <para>
-/// If the member access is optional (using <c>?.</c> syntax),
-/// the member result type unifies with either null or undefined or both, and the <c>SemanticThrowawayNonNullBase</c>
-/// and <c>SemanticOptNonNullUnifiedSymbol</c> properties of this node are assigned to some symbol.
-/// If the base includes undefined but not null, the result unifies with undefined as <c>undefined|R</c>.
-/// If the base includes null but not undefined, the result unifies with null as <c>null|R</c>.
-/// If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined|null|R</c>.
-/// </para>
 /// </summary>
+/// <remarks>
+/// <para>Optional member access:</para>
+///
+/// <list type="bullet">
+/// <item>If the member access is optional (using <c>?.</c> syntax),
+/// the member result type unifies with either null or undefined or both, and the <c>SemanticThrowawayNonNullBase</c>
+/// and <c>SemanticOptNonNullUnifiedSymbol</c> properties of this node are assigned to some symbol.</item>
+/// <item>If the base includes undefined but not null, the result unifies with undefined as <c>undefined|R</c>.</item>
+/// <item>If the base includes null but not undefined, the result unifies with null as <c>null|R</c>.</item>
+/// <item>If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined|null|R</c>.</item>
+/// </list>
+/// </remarks>
 public class MemberExpression : Expression {
     public Expression Base;
     public Identifier Id;
