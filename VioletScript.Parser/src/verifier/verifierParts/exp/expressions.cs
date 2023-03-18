@@ -12,7 +12,7 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    public Symbol VerifyExp
+    private Symbol VerifyExp
     (
         Ast.Expression exp,
         Symbol expectedType = null,

@@ -12,7 +12,7 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    public Symbol VerifyTypeExp(Ast.TypeExpression exp, bool isBase = false)
+    private Symbol VerifyTypeExp(Ast.TypeExpression exp, bool isBase = false)
     {
         if (exp.SemanticResolved)
         {
