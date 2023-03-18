@@ -16,7 +16,8 @@ public partial class Verifier
     (
         Ast.Expression exp,
         Symbol expectedType = null,
-        bool instantiatingGeneric = false
+        bool instantiatingGeneric = false,
+        bool writting = false
     )
     {
         if (exp.SemanticExpResolved)
@@ -31,29 +32,47 @@ public partial class Verifier
         }
         if (exp is Ast.Identifier id)
         {
-            return VerifyLexicalReference(id, expectedType, instantiatingGeneric);
+            r = VerifyLexicalReference(id, expectedType, instantiatingGeneric);
         }
         else if (exp is Ast.MemberExpression memb)
         {
-            return VerifyMemberExp(memb, expectedType, instantiatingGeneric);
+            r = VerifyMemberExp(memb, expectedType, instantiatingGeneric);
         }
         else if (exp is Ast.ImportMetaExpression importMeta)
         {
-            return VerifyImportMeta(importMeta);
+            r = VerifyImportMeta(importMeta);
         }
         else if (exp is Ast.EmbedExpression embedExp)
         {
-            return VerifyEmbedExp(embedExp, expectedType);
+            r = VerifyEmbedExp(embedExp, expectedType);
         }
         else if (exp is Ast.UnaryExpression unaryExp)
         {
-            return VerifyUnaryExp(unaryExp, expectedType);
+            r = VerifyUnaryExp(unaryExp, expectedType);
         }
         else if (exp is Ast.BinaryExpression binaryExp)
         {
-            return VerifyBinaryExp(binaryExp, expectedType);
+            r = VerifyBinaryExp(binaryExp, expectedType);
         }
-        throw new Exception("Unimplemented expression");
+        else
+        {
+            throw new Exception("Unimplemented expression");
+        }
+
+        if (writting && r.ReadOnly)
+        {
+            VerifyError(null, 175, exp.Span.Value, new DiagnosticArguments {});
+            exp.SemanticSymbol = null;
+            return null;
+        }
+        else if (!writting && r.WriteOnly)
+        {
+            VerifyError(null, 174, exp.Span.Value, new DiagnosticArguments {});
+            exp.SemanticSymbol = null;
+            return null;
+        }
+
+        return r;
     } // VerifyExp
 
     // verifies lexical reference; ensure

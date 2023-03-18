@@ -162,6 +162,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [171] = "Cannot embed resource as type '$t'",
         [172] = "Embed expression has no type to infer from",
         [173] = "Value must be a Promise",
+        [174] = "Reference is write-only",
+        [175] = "Reference is read-only",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
