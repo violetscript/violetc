@@ -45,6 +45,10 @@ public partial class Verifier
         {
             return VerifyEmbedExp(embedExp, expectedType);
         }
+        else if (exp is Ast.UnaryExpression unaryExp)
+        {
+            return VerifyUnaryExp(unaryExp, expectedType);
+        }
         throw new Exception("Unimplemented expression");
     } // VerifyExp
 
@@ -321,5 +325,13 @@ public partial class Verifier
         exp.SemanticSymbol = m_ModelCore.Factory.Value(type);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
-    } // embed
+    } // embed expression
+
+    private Symbol VerifyUnaryExp(Ast.UnaryExpression exp, Symbol expectedType)
+    {
+        Symbol operand = VerifyExp(exp.Operand, expectedType);
+        if (exp.Operator == Operator.Await)
+        {
+        }
+    } // unary expression
 }
