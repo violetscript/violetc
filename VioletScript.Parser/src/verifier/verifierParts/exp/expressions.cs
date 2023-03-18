@@ -477,5 +477,13 @@ public partial class Verifier
 
     private Symbol VerifyBinaryExp(Ast.BinaryExpression exp, Symbol expectedType)
     {
+        if (exp.Operator == Operator.In)
+        {
+            return In_VerifyBinaryExp(exp, expectedType);
+        }
     } // binary expression
+
+    private Symbol In_VerifyBinaryExp(Ast.BinaryExpression exp, Symbol expectedType)
+    {
+    } // binary expression ("in")
 }

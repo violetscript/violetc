@@ -530,7 +530,7 @@ public partial class Verifier
     {
         if (exp.Operator == Operator.In)
         {
-            return VerifyConstantInBinaryExp(exp, faillible);
+            return In_VerifyConstantBinaryExp(exp, faillible);
         }
         var left = VerifyConstantExp(exp.Left, faillible, expectedType);
         if (left == null)
@@ -1275,7 +1275,7 @@ public partial class Verifier
 
     // verification for compile-time "in" operator.
     // works for flags enumeration only, currently.
-    private Symbol VerifyConstantInBinaryExp(Ast.BinaryExpression exp, bool faillible)
+    private Symbol In_VerifyConstantBinaryExp(Ast.BinaryExpression exp, bool faillible)
     {
         var @base = VerifyConstantExp(exp.Right, faillible);
         if (@base == null)
@@ -1310,7 +1310,7 @@ public partial class Verifier
         exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(inc);
         exp.SemanticConstantExpResolved = true;
         return exp.SemanticSymbol;
-    } // binary "in" expression
+    } // binary expression ("in")
 
     // implicitly converts NaN, +Infinity and -Infinity to numeric types other
     // than Number.
