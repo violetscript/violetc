@@ -54,6 +54,10 @@ public partial class Verifier
         {
             r = VerifyBinaryExp(binaryExp, expectedType);
         }
+        else if (exp is Ast.TypeBinaryExpression tBinaryExp)
+        {
+            r = VerifyTypeBinaryExp(tBinaryExp);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -499,6 +503,7 @@ public partial class Verifier
         {
             return NullCoalescing_VerifyBinaryExp(exp, expectedType);
         }
+        return ProxySupported_VerifyBinaryExp(exp, expectedType);
     } // binary expression
 
     private Symbol In_VerifyBinaryExp(Ast.BinaryExpression exp, Symbol expectedType)
@@ -518,7 +523,7 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
-        LimitExpType(exp.Left, proxy.FunctionRequiredParameters[0]);
+        LimitExpType(exp.Left, proxy.FunctionRequiredParameters[0].Type);
         exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
@@ -588,4 +593,34 @@ public partial class Verifier
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // binary expression (null coalescing)
+
+    private Symbol ProxySupported_VerifyBinaryExp(Ast.BinaryExpression exp, Symbol expectedType)
+    {
+        var left = VerifyExpAsValue(exp.Left, expectedType);
+        if (left == null)
+        {
+            VerifyExpAsValue(exp.Right);
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var proxy = InheritedProxies.Find(left.StaticType, exp.Operator);
+        if (proxy == null)
+        {
+            VerifyError(null, 178, exp.Span.Value, new DiagnosticArguments {["t"] = left.StaticType, ["op"] = Operator.In});
+            VerifyExpAsValue(exp.Right);
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        LimitExpType(exp.Right, proxy.FunctionRequiredParameters[1].Type);
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(proxy.FunctionReturnType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // binary expression (proxy-supported)
+
+    private Symbol VerifyTypeBinaryExp(Ast.TypeBinaryExpression exp)
+    {
+        //
+    } // binary expression (as/instanceof/is)
 }
