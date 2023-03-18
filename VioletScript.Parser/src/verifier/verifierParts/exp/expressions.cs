@@ -727,11 +727,22 @@ public partial class Verifier
     private Symbol As_VerifyTypeBinaryExp(Ast.TypeBinaryExpression exp, Symbol left, Symbol right)
     {
         var strict = exp.Operator == Operator.AsStrict;
-        doFooQuxBarBaz();
+        var conversion = TypeConversions.ConvertExplicit(left, right, !strict);
+        if (conversion == null)
+        {
+            VerifyError(null, 168, exp.Span.Value, new DiagnosticArguments {["expected"] = right, ["got"] = left.StaticType});
+        }
+        exp.SemanticSymbol = conversion;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
     } // binary expression ("as")
 
     private Symbol Is_VerifyTypeBinaryExp(Ast.TypeBinaryExpression exp, Symbol left, Symbol right)
     {
+        if (exp.BindsTo != null)
+        {
+            VerifyError(null, 184, exp.BindsTo.Span.Value, new DiagnosticArguments {});
+        }
         if (right == m_ModelCore.AnyType)
         {
             Warn(null, 182, exp.Span.Value, new DiagnosticArguments {});
@@ -744,7 +755,7 @@ public partial class Verifier
         {
             Warn(null, 181, exp.Span.Value, new DiagnosticArguments {["right"] = right});
         }
-        exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType;
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // binary expression ("instanceof"/"is")

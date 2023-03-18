@@ -1705,18 +1705,9 @@ public partial class Verifier
         {
             return exp.SemanticSymbol;
         }
-        var r = VerifyConstantExp(exp, faillible, expectedType);
+        var r = VerifyConstantExpAsValue(exp, faillible, expectedType);
         if (r == null)
         {
-            return null;
-        }
-        if (!(r is ConstantValue))
-        {
-            if (faillible)
-            {
-                VerifyError(null, 167, exp.Span.Value, new DiagnosticArguments {});
-            }
-            exp.SemanticSymbol = null;
             return null;
         }
         if (r.StaticType == expectedType)
@@ -1743,18 +1734,9 @@ public partial class Verifier
         {
             return exp.SemanticSymbol;
         }
-        var r = VerifyConstantExp(exp, faillible, null);
+        var r = VerifyConstantExpAsValue(exp, faillible, null);
         if (r == null)
         {
-            return null;
-        }
-        if (!(r is ConstantValue))
-        {
-            if (faillible)
-            {
-                VerifyError(null, 167, exp.Span.Value, new DiagnosticArguments {});
-            }
-            exp.SemanticSymbol = null;
             return null;
         }
         if (r.StaticType == expectedType)
@@ -1768,4 +1750,32 @@ public partial class Verifier
         exp.SemanticSymbol = null;
         return exp.SemanticSymbol;
     } // LimitStrictConstantExpType
+
+    private Symbol VerifyConstantExpAsValue
+    (
+        Ast.Expression exp,
+        bool faillible,
+        Symbol expectedType = null
+    )
+    {
+        if (exp.SemanticConstantExpResolved)
+        {
+            return exp.SemanticSymbol;
+        }
+        var r = VerifyConstantExp(exp, faillible, expectedType);
+        if (r == null)
+        {
+            return null;
+        }
+        if (!(r is Value))
+        {
+            if (faillible)
+            {
+                VerifyError(null, 167, exp.Span.Value, new DiagnosticArguments {});
+            }
+            exp.SemanticSymbol = null;
+            return null;
+        }
+        return r;
+    } // VerifyConstantExpAsValue
 }
