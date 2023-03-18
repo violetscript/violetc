@@ -481,9 +481,90 @@ public partial class Verifier
         {
             return In_VerifyBinaryExp(exp, expectedType);
         }
+        if (exp.Operator == Operator.Equals || exp.Operator == Operator.NotEquals)
+        {
+            return Eq_VerifyBinaryExp(exp);
+        }
+        if (exp.Operator == Operator.StrictEquals || exp.Operator == Operator.StrictNotEquals)
+        {
+            return StrictEq_VerifyBinaryExp(exp);
+        }
+        if (exp.Operator == Operator.LogicalAnd
+        ||  exp.Operator == Operator.LogicalXor
+        ||  exp.Operator == Operator.LogicalOr)
+        {
+            return Logical_VerifyBinaryExp(exp, expectedType);
+        }
     } // binary expression
 
     private Symbol In_VerifyBinaryExp(Ast.BinaryExpression exp, Symbol expectedType)
     {
+        var @base = VerifyExpAsValue(exp.Right);
+        if (@base == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var proxy = InheritedProxies.Find(@base.StaticType, Operator.In);
+        if (proxy == null)
+        {
+            VerifyError(null, 178, exp.Span.Value, new DiagnosticArguments {["t"] = @base.StaticType, ["op"] = Operator.In});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        LimitExpType(exp.Left, proxy.FunctionRequiredParameters[0]);
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
     } // binary expression ("in")
+
+    private Symbol Eq_VerifyBinaryExp(Ast.BinaryExpression exp)
+    {
+        var left = VerifyExpAsValue(exp.Left);
+        if (left == null)
+        {
+            VerifyExpAsValue(exp.Right);
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        LimitExpType(exp.Right, left.StaticType);
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // binary expression (equals or not equals)
+
+    private Symbol StrictEq_VerifyBinaryExp(Ast.BinaryExpression exp)
+    {
+        var left = VerifyExpAsValue(exp.Left);
+        if (left == null)
+        {
+            VerifyExpAsValue(exp.Right);
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        LimitStrictExpType(exp.Right, left.StaticType);
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // binary expression (strict equals or not equals)
+
+    private Symbol Logical_VerifyBinaryExp(Ast.BinaryExpression exp, Symbol expectedType)
+    {
+        var left = VerifyExpAsValue(exp.Left, expectedType);
+        if (left == null)
+        {
+            VerifyExpAsValue(exp.Right);
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        LimitExpType(exp.Right, left.StaticType);
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(left.StaticType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // binary expression (logical and, xor or or)
 }
