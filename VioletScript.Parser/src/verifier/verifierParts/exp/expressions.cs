@@ -63,16 +63,14 @@ public partial class Verifier
         {
             VerifyError(null, 175, exp.Span.Value, new DiagnosticArguments {});
             exp.SemanticSymbol = null;
-            return null;
         }
         else if (!writting && r.WriteOnly)
         {
             VerifyError(null, 174, exp.Span.Value, new DiagnosticArguments {});
             exp.SemanticSymbol = null;
-            return null;
         }
 
-        return r;
+        return exp.SemanticSymbol;
     } // VerifyExp
 
     // verifies lexical reference; ensure
@@ -391,9 +389,43 @@ public partial class Verifier
 
         if (exp.Operator == Operator.Delete)
         {
-            // - ensure the operand is a brackets operator.
+            // - ensure the operand is a brackets operation.
             // - ensure the operand type has a delete proxy.
-            fooBarQuxBaz();
+            if (!(operand is IndexValue))
+            {
+                VerifyError(null, 176, exp.Operand.Span.Value, new DiagnosticArguments {});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            if (InheritedProxies.Find(operand.Base.StaticType, Operator.ProxyToSetIndex) == null)
+            {
+                VerifyError(null, 177, exp.Span.Value, new DiagnosticArguments {["t"] = operand.Base.StaticType});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        if (exp.Operator == Operator.Typeof)
+        {
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.StringType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        if (exp.Operator == Operator.Void)
+        {
+            exp.SemanticSymbol = m_ModelCore.Factory.UndefinedConstantValue();
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        if (exp.Operator == Operator.LogicalNot)
+        {
             exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;

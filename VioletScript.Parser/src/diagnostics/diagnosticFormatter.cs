@@ -164,6 +164,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [173] = "Value must be a Promise",
         [174] = "Reference is write-only",
         [175] = "Reference is read-only",
+        [176] = "Delete operand must be a brackets operation",
+        [177] = "Delete operator not supported on object of type '$t'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
