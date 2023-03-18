@@ -699,6 +699,53 @@ public partial class Verifier
 
     private Symbol VerifyTypeBinaryExp(Ast.TypeBinaryExpression exp)
     {
-        //
-    } // binary expression (as/instanceof/is)
+        var left = VerifyExpAsValue(exp.Left);
+        if (left == null)
+        {
+            VerifyTypeExp(exp.Right);
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var right = VerifyTypeExp(exp.Right);
+        if (right == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        if (exp.Operator == Operator.As || exp.Operator == Operator.AsStrict)
+        {
+            return As_VerifyTypeBinaryExp(exp, left, right);
+        }
+        else
+        {
+            return Is_VerifyTypeBinaryExp(exp, left, right);
+        }
+    } // binary expression ("as"/"instanceof"/"is")
+
+    private Symbol As_VerifyTypeBinaryExp(Ast.TypeBinaryExpression exp, Symbol left, Symbol right)
+    {
+        var strict = exp.Operator == Operator.AsStrict;
+        doFooQuxBarBaz();
+    } // binary expression ("as")
+
+    private Symbol Is_VerifyTypeBinaryExp(Ast.TypeBinaryExpression exp, Symbol left, Symbol right)
+    {
+        if (right == m_ModelCore.AnyType)
+        {
+            Warn(null, 182, exp.Span.Value, new DiagnosticArguments {});
+        }
+        else if (right == left.StaticType)
+        {
+            Warn(null, 183, exp.Span.Value, new DiagnosticArguments {["right"] = right});
+        }
+        else if (!right.IsSubtypeOf(left.StaticType))
+        {
+            Warn(null, 181, exp.Span.Value, new DiagnosticArguments {["right"] = right});
+        }
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // binary expression ("instanceof"/"is")
 }

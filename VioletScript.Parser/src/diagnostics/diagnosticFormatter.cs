@@ -169,6 +169,9 @@ public static class DefaultDiagnosticFormatterStatics {
         [178] = "Type '$t' does not support operator '$op'",
         [179] = "Type '$t' is not a numeric type",
         [180] = "Expression must produce a value",
+        [181] = "Left-hand side is never of type '$right'",
+        [182] = "Left-hand side is always of type *",
+        [183] = "Left-hand side is already of type '$right'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
