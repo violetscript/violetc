@@ -48,7 +48,7 @@ public partial class Verifier
         }
         else if (exp is Ast.UnaryExpression unaryExp)
         {
-            r = VerifyUnaryExp(unaryExp, expectedType);
+            r = VerifyUnaryExp(unaryExp, expectedType, writting);
         }
         else if (exp is Ast.BinaryExpression binaryExp)
         {
@@ -348,7 +348,7 @@ public partial class Verifier
         return exp.SemanticSymbol;
     } // embed expression
 
-    private Symbol VerifyUnaryExp(Ast.UnaryExpression exp, Symbol expectedType)
+    private Symbol VerifyUnaryExp(Ast.UnaryExpression exp, Symbol expectedType, bool writting)
     {
         Symbol operand = null;
 
@@ -365,7 +365,11 @@ public partial class Verifier
             return exp.SemanticSymbol;
         }
 
-        operand = VerifyExpAsValue(exp.Operand, expectedType);
+        bool isIncrementOrDecrementOperator =
+            exp.Operator == Operator.PreIncrement || exp.Operator == Operator.PreDecrement
+        ||  exp.Operator == Operator.PostIncrement || exp.Operator == Operator.PostDecrement;
+
+        operand = VerifyExpAsValue(exp.Operand, expectedType, false, exp.Operator == Operator.NonNull ? writting : isIncrementOrDecrementOperator);
         if (operand == null)
         {
             exp.SemanticSymbol = null;
@@ -427,6 +431,43 @@ public partial class Verifier
         if (exp.Operator == Operator.LogicalNot)
         {
             exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        if (exp.Operator == Operator.Positive
+        ||  exp.Operator == Operator.Negate
+        ||  exp.Operator == Operator.BitwiseNot)
+        {
+            var proxy = InheritedProxies.Find(operand.StaticType, exp.Operator);
+            if (proxy == null)
+            {
+                // unsupported operator
+                VerifyError(null, 178, exp.Span.Value, new DiagnosticArguments {["t"] = operand.StaticType, ["op"] = exp.Operator});
+            }
+            exp.SemanticSymbol = proxy == null ? null : m_ModelCore.Factory.Value(proxy.StaticType.FunctionReturnType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        if (exp.Operator == Operator.NonNull)
+        {
+            if (!(operand.StaticType.IncludesNull || operand.StaticType.IncludesUndefined))
+            {
+                VerifyError(null, 170, exp.Span.Value, new DiagnosticArguments {["t"] = operand.StaticType});
+            }
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(operand.StaticType.ToNonNullableType());
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        if (isIncrementOrDecrementOperator)
+        {
+            if (!m_ModelCore.IsNumericType(operand.StaticType))
+            {
+                VerifyError(null, 179, exp.Span.Value, new DiagnosticArguments {["t"] = operand.StaticType});
+            }
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(operand.StaticType);
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
