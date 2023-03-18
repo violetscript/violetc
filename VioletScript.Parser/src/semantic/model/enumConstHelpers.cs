@@ -122,22 +122,15 @@ public static class EnumConstHelpers
     }
 
     public static object Zero(Symbol type) {
-        if (type is EnumType)
-        {
-            type = type.NumericType;
-        }
         return FromDouble(type, 0);
     }
 
     public static object One(Symbol type) {
-        if (type is EnumType)
-        {
-            type = type.NumericType;
-        }
         return FromDouble(type, 1);
     }
 
     public static object FromDouble(Symbol type, double value) {
+        type = type.ToNonNullableType();
         if (type is EnumType)
         {
             type = type.NumericType;
@@ -154,6 +147,7 @@ public static class EnumConstHelpers
     }
 
     public static object MultiplyPer2(Symbol type, object @base) {
+        type = type.ToNonNullableType();
         if (type is EnumType)
         {
             type = type.NumericType;
@@ -170,6 +164,7 @@ public static class EnumConstHelpers
     }
 
     public static object Increment(Symbol type, object @base) {
+        type = type.ToNonNullableType();
         if (type is EnumType)
         {
             type = type.NumericType;
@@ -186,6 +181,7 @@ public static class EnumConstHelpers
     }
 
     public static bool Includes(Symbol type, object @base, object flag) {
+        type = type.ToNonNullableType();
         if (type is EnumType)
         {
             type = type.NumericType;
