@@ -49,6 +49,10 @@ public partial class Verifier
         {
             return VerifyUnaryExp(unaryExp, expectedType);
         }
+        else if (exp is Ast.BinaryExpression binaryExp)
+        {
+            return VerifyBinaryExp(binaryExp, expectedType);
+        }
         throw new Exception("Unimplemented expression");
     } // VerifyExp
 
@@ -329,7 +333,7 @@ public partial class Verifier
 
     private Symbol VerifyUnaryExp(Ast.UnaryExpression exp, Symbol expectedType)
     {
-        Symbol operand = VerifyExp(exp.Operand, expectedType);
+        Symbol operand = VerifyExpAsValue(exp.Operand, expectedType);
         if (operand == null)
         {
             exp.SemanticSymbol = null;
@@ -339,6 +343,22 @@ public partial class Verifier
 
         if (exp.Operator == Operator.Await)
         {
+            if (!operand.StaticType.IsInstantiationOf(m_ModelCore.PromiseType))
+            {
+                VerifyError(null, 173, exp.Operand.Span.Value, new DiagnosticArguments {});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(operand.StaticType.ArgumentTypes[0]);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
         }
+
+        throw new Exception("Unimplemented");
     } // unary expression
+
+    private Symbol VerifyBinaryExp(Ast.BinaryExpression exp, Symbol expectedType)
+    {
+    } // binary expression
 }

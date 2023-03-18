@@ -161,6 +161,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [170] = "Type '$t' does not include null nor undefined",
         [171] = "Cannot embed resource as type '$t'",
         [172] = "Embed expression has no type to infer from",
+        [173] = "Value must be a Promise",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
