@@ -62,6 +62,10 @@ public partial class Verifier
         {
             r = VerifyDefaultExp(defaultExp);
         }
+        else if (exp is Ast.FunctionExpression fnExp)
+        {
+            r = VerifyFunctionExp(fnExp, expectedType);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -782,4 +786,15 @@ public partial class Verifier
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // default expression
+
+    private Symbol VerifyFunctionExp(Ast.FunctionExpression exp, Symbol expectedType)
+    {
+        Symbol inferType = null;
+        if (expectedType is UnionType)
+        {
+            var functionTypes = expectedType.UnionMemberTypes.Where(t => t is FunctionType);
+            inferType = functionTypes.FirstOrDefault();
+        }
+        inferType = inferType ?? (expectedType is FunctionType ? expectedType : null);
+    }
 }
