@@ -31,12 +31,12 @@ public partial class Verifier
     private ModelCore m_ModelCore = new ModelCore();
     private VerifierOptions m_Options = new VerifierOptions();
     private Symbol m_Frame = null;
-    private Stack<Symbol> m_FunctionStack = new Stack<Symbol>();
+    private Stack<Symbol> m_MethodSlotStack = new Stack<Symbol>();
     private bool m_Valid = true;
 
-    private Symbol CurrentFunction
+    private Symbol CurrentMethodSlot
     {
-        get => m_FunctionStack.Count() != 0 ? m_FunctionStack.Peek() : null;
+        get => m_MethodSlotStack.Count() != 0 ? m_MethodSlotStack.Peek() : null;
     }
 
     public bool AllProgramsAreValid

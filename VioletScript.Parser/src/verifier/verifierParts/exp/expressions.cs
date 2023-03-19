@@ -444,7 +444,7 @@ public partial class Verifier
 
         if (exp.Operator == Operator.Yield)
         {
-            var generatorType = CurrentFunction.StaticType.FunctionReturnType;
+            var generatorType = CurrentMethodSlot.StaticType.FunctionReturnType;
             if (!generatorType.IsInstantiationOf(m_ModelCore.GeneratorType))
             {
                 throw new Exception("Internal verify error");
@@ -813,13 +813,34 @@ public partial class Verifier
             activation.Properties[exp.Id.Name] = variable;
         }
 
-        EnterFrame(activation);
-        m_FunctionStack.Push(fooBarQuxBaz());
+        Symbol methodSlot = m_ModelCore.Factory.MethodSlot("", null,
+                (exp.Common.UsesAwait ? MethodSlotFlags.UsesAwait : 0)
+            |   (exp.Common.UsesYield ? MethodSlotFlags.UsesYield : 0));
 
+        bool valid = true;
+        Symbol resultType = null;
+
+        // resolve common before pushing to method slot stack,
+        // since its type is unknown.
         fooBarQuxBaz();
 
-        m_FunctionStack.Pop();
+        // if identifier was defined, assign its static type.
+        if (exp.Id != null)
+        {
+            fooBarQuxBaz();
+        }
+
+        EnterFrame(activation);
+        m_MethodSlotStack.Push(methodSlot);
+
+        // resolve body.
+        fooBarQuxBaz();
+
+        m_MethodSlotStack.Pop();
         ExitFrame();
 
+        exp.SemanticSymbol = m_ModelCore.Factory.FunctionExpValue(resultType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
     } // function expression
 }
