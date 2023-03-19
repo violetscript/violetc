@@ -1013,12 +1013,7 @@ public partial class Verifier
         // make sure 'type' can be initialised
         if (type is UnionType)
         {
-            var types = type.UnionMemberTypes.Where(t =>
-                    t.IsInstantiationOf(m_ModelCore.MapType)
-                ||  t.IsFlagsEnum
-                ||  t is RecordType
-                || (t is ClassType && !t.DontInit));
-            type = types.FirstOrDefault();
+            type = type.UnionMemberTypes.Where(t => t.TypeCanUseObjectInitializer).FirstOrDefault();
         }
 
         if (type == null)
@@ -1027,12 +1022,7 @@ public partial class Verifier
             VerifyError(null, 186, exp.Span.Value, new DiagnosticArguments {});
             type = m_ModelCore.AnyType;
         }
-        else if
-        (!(    type.IsInstantiationOf(m_ModelCore.MapType)
-            || type.IsFlagsEnum
-            || type is RecordType
-            ||(type is ClassType && !type.DontInit)
-        ))
+        else if (!type.TypeCanUseObjectInitializer)
         {
             // VerifyError: cannot initialise type
             VerifyError(null, 187, exp.Span.Value, new DiagnosticArguments {["t"] = type});

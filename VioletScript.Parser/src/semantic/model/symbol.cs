@@ -600,4 +600,12 @@ public class Symbol {
     {
         return this is ActivationFrame ? this : this.ParentFrame?.FindActivation();
     }
+
+    public bool TypeCanUseObjectInitializer
+    {
+        get =>  this.IsInstantiationOf(this.ModelCore.MapType)
+            ||  this.IsFlagsEnum
+            ||  this is RecordType
+            || (this is ClassType && !this.DontInit);
+    }
 }
