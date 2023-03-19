@@ -59,11 +59,10 @@ public partial class Verifier
     // verify a variable binding for a
     // function required parameter; ensure:
     // - destructuring pattern is valid.
-    private void FuncRequiredParam_VerifyVariableBinding
+    private void FRequiredParam_VerifyVariableBinding
     (
         Ast.VariableBinding binding,
         Properties output,
-        Visibility visibility,
         Symbol inferType
     )
     {
@@ -78,11 +77,11 @@ public partial class Verifier
             {
                 VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
             }
-            VerifyDestructuringPattern(binding.Pattern, false, output, visibility, inferType ?? m_ModelCore.AnyType);
+            VerifyDestructuringPattern(binding.Pattern, false, output, Visibility.Public, inferType ?? m_ModelCore.AnyType);
         }
         else
         {
-            VerifyDestructuringPattern(binding.Pattern, false, output, visibility);
+            VerifyDestructuringPattern(binding.Pattern, false, output, Visibility.Public);
         }
 
         binding.SemanticVerified = true;

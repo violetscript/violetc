@@ -834,19 +834,32 @@ public partial class Verifier
             for (int i = 0; i < actualCount; ++i)
             {
                 var binding = common.Params[i];
-                NameAndTypePair? paramInferNameAndType = inferType != null && inferType.FunctionHasRequiredParameters && actualCount <= inferType.FunctionCountOfRequiredParameters ? inferType.FunctionRequiredParameters[i] : null;
-                FuncRequiredParam_VerifyVariableBinding(binding, activation.Properties, Visibility.Public, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
+                NameAndTypePair? paramInferNameAndType = inferType != null && inferType.FunctionHasRequiredParameters && i < inferType.FunctionCountOfRequiredParameters ? inferType.FunctionRequiredParameters[i] : null;
+                FRequiredParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
                 var name = binding.Pattern is Ast.BindPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
                 resultType_params.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
             }
         }
         if (common.OptParams != null)
         {
-            doFooBarQuxBaz();
+            resultType_optParams = new List<NameAndTypePair>();
+            var actualCount = common.OptParams.Count();
+            for (int i = 0; i < actualCount; ++i)
+            {
+                var binding = common.OptParams[i];
+                NameAndTypePair? paramInferNameAndType = inferType != null && inferType.FunctionHasOptParameters && i < inferType.FunctionCountOfOptParameters ? inferType.FunctionOptParameters[i] : null;
+                FOptParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
+                var name = binding.Pattern is Ast.BindPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
+                resultType_optParams.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
+            }
         }
         if (common.RestParam != null)
         {
-            doFooBarQuxBaz();
+            var binding = common.RestParam;
+            NameAndTypePair? paramInferNameAndType = inferType != null ? inferType.FunctionRestParameter : null;
+            FRestParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
+            var name = binding.Pattern is Ast.BindPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
+            resultType_restParam = new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType);
         }
         if (common.ReturnType != null)
         {
@@ -860,6 +873,15 @@ public partial class Verifier
         // if there is an inferred type and parameters were omitted,
         // add them to the resulting type if applicable.
         doFooBarQuxBaz();
+
+        // get result type
+        resultType = m_ModelCore.Factory.FunctionType
+        (
+            resultType_params?.ToArray(),
+            resultType_optParams?.ToArray(),
+            resultType_restParam,
+            resultType_returnType
+        );
 
         // if identifier was defined, assign its static type.
         if (exp.Id != null)
