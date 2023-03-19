@@ -73,6 +73,11 @@ public class Symbol {
         set {}
     }
 
+    public virtual bool DontInit {
+        get => false;
+        set {}
+    }
+
     public virtual Symbol[] ImplementsInterfaces {
         get => new Symbol[]{};
     }

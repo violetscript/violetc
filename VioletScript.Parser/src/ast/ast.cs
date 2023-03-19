@@ -816,6 +816,7 @@ public class FunctionCommon : Node {
 public class ClassDefinition : AnnotatableDefinition {
     public Identifier Id;
     public bool IsValue;
+    public bool DontInit;
     public Generics Generics;
     public TypeExpression ExtendsType;
     public List<TypeExpression> ImplementsList;
@@ -824,6 +825,7 @@ public class ClassDefinition : AnnotatableDefinition {
     public ClassDefinition(
         Identifier id,
         bool isValue,
+        bool dontInit,
         Generics generics,
         TypeExpression extendsType,
         List<TypeExpression> implementsList,
@@ -831,6 +833,7 @@ public class ClassDefinition : AnnotatableDefinition {
     ) : base() {
         Id = id;
         IsValue = isValue;
+        DontInit = dontInit;
         Generics = generics;
         ExtendsType = extendsType;
         ImplementsList = implementsList;

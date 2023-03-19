@@ -996,5 +996,5 @@ public partial class Verifier
     private Symbol VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol expectedType)
     {
         //
-    }
+    } // object initializer
 }

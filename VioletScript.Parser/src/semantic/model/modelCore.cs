@@ -104,11 +104,7 @@ public sealed class ModelCore {
     /// <summary>
     /// Built-in object.
     /// </summary>
-    public Symbol BoxedType = null;
-    /// <summary>
-    /// Built-in object.
-    /// </summary>
-    public Symbol DecoratorPropertyType = null;
+    public Symbol BindingType = null;
     /// <summary>
     /// Built-in object.
     /// </summary>
@@ -140,22 +136,33 @@ public sealed class ModelCore {
         Factory.NullType();
         this.ObjectType = DefineGlobalBuiltinClass("Object", false);
         this.StringType = DefineGlobalBuiltinClass("String", true, true);
+        this.StringType.DontInit = true;
         this.BooleanType = DefineGlobalBuiltinClass("Boolean", true, true);
+        this.BooleanType.DontInit = true;
         this.NumberType = DefineGlobalBuiltinClass("Number", true, true);
+        this.NumberType.DontInit = true;
         this.DecimalType = DefineGlobalBuiltinClass("Decimal", true, true);
+        this.DecimalType.DontInit = true;
         this.ByteType = DefineGlobalBuiltinClass("Byte", true, true);
+        this.ByteType.DontInit = true;
         this.ShortType = DefineGlobalBuiltinClass("Short", true, true);
+        this.ShortType.DontInit = true;
         this.IntType = DefineGlobalBuiltinClass("Int", true, true);
+        this.IntType.DontInit = true;
         this.LongType = DefineGlobalBuiltinClass("Long", true, true);
+        this.LongType.DontInit = true;
         this.BigIntType = DefineGlobalBuiltinClass("BigInt", true, true);
+        this.BigIntType.DontInit = true;
 
         this.IteratorType = DefineGlobalBuiltinInterface("Iterator");
         this.IteratorType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
 
-        this.DecoratorPropertyType = DefineGlobalBuiltinClass("DecoratorProperty", true);
+        this.BindingType = DefineGlobalBuiltinClass("Binding", true);
         this.FunctionType = DefineGlobalBuiltinClass("Function", false);
+        this.FunctionType.DontInit = true;
 
         this.ArrayType = DefineGlobalBuiltinClass("Array", true);
+        this.ArrayType.DontInit = true;
         this.ArrayType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
 
         this.MapType = DefineGlobalBuiltinClass("Map", true);
@@ -163,20 +170,26 @@ public sealed class ModelCore {
             Factory.TypeParameter("K"),
             Factory.TypeParameter("V")
         };
+        this.MapType.DontInit = true;
 
         this.SetType = DefineGlobalBuiltinClass("Set", true);
         this.SetType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
+        this.SetType.DontInit = true;
 
         this.PromiseType = DefineGlobalBuiltinClass("Promise", true);
         this.PromiseType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
+        this.PromiseType.DontInit = true;
 
         this.GeneratorType = DefineGlobalBuiltinClass("Generator", true);
         this.GeneratorType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
+        this.GeneratorType.DontInit = true;
 
         this.ClassType = DefineGlobalBuiltinClass("Class", false);
+        this.ClassType.DontInit = true;
         this.ByteArrayType = DefineGlobalBuiltinClass("ByteArray", true);
+        this.ByteArrayType.DontInit = true;
         this.RegExpType = DefineGlobalBuiltinClass("RegExp", true);
-        this.BoxedType = DefineGlobalBuiltinClass("Boxed", true);
+        this.RegExpType.DontInit = true;
 
         this.IMarkupContainerType = DefineGlobalBuiltinInterface("IMarkupContainer");
         this.IMarkupContainerType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};

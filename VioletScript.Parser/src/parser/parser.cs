@@ -1880,11 +1880,18 @@ internal class ParserBackend {
         PushLocation(startSpan);
         var id = ParseIdentifier();
         bool isValue = false;
+        bool dontInit = false;
         if (attribs.Decorators != null) {
-            var d = attribs.Decorators.Where(e => e is Ast.Identifier d_asId && d_asId.Name == "Value" && d_asId.Type == null);
+            IEnumerable<Ast.Expression> d = null;
+            d = attribs.Decorators.Where(e => e is Ast.Identifier d_asId && d_asId.Name == "Value" && d_asId.Type == null);
             if (d.Count() > 0) {
                 attribs.Decorators.Remove(d.First());
                 isValue = true;
+            }
+            d = attribs.Decorators.Where(e => e is Ast.Identifier d_asId && d_asId.Name == "DontInit" && d_asId.Type == null);
+            if (d.Count() > 0) {
+                attribs.Decorators.Remove(d.First());
+                dontInit = true;
             }
         }
         var generics = ParseOptGenericTypesDeclaration();
@@ -1907,7 +1914,7 @@ internal class ParserBackend {
             }
         }
         var block = ParseBlock(new ClassContext(id.Name));
-        var r = FinishAnnotatableDefinition(new Ast.ClassDefinition(id, isValue, generics, extendsType, implementsList, block), attribs);
+        var r = FinishAnnotatableDefinition(new Ast.ClassDefinition(id, isValue, dontInit, generics, extendsType, implementsList, block), attribs);
 
         if (!(context is PackageContext || context is NamespaceContext || context is TopLevelContext)) {
             VerifyError(16, id.Span.Value);

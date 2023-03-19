@@ -229,6 +229,7 @@ public class ClassType : Type {
     private List<Symbol> m_ImplementsInterfaces = null;
     private bool m_IsFinal;
     private bool m_IsValue;
+    private bool m_DontInit = false;
     private Symbol[] m_TypeParameters = null;
     private Properties m_Properties = new Properties();
     private Symbol m_Delegate = null;
@@ -267,6 +268,18 @@ public class ClassType : Type {
     public override bool IsValueClass {
         get => m_IsValue;
         set => m_IsValue = value;
+    }
+
+    public override bool DontInit {
+        get
+        {
+            if (m_SuperType != null && m_SuperType.DontInit)
+            {
+                return true;
+            }
+            return m_DontInit;
+        }
+        set => m_DontInit = value;
     }
 
     public override Symbol[] ImplementsInterfaces {
@@ -928,6 +941,10 @@ public class InstantiatedType : Type {
 
     public override bool IsValueClass {
         get => m_Origin.IsValueClass;
+    }
+
+    public override bool DontInit {
+        get => m_Origin.DontInit;
     }
 
     public override bool IsFinal {
