@@ -852,6 +852,10 @@ public partial class Verifier
             doFooBarQuxBaz();
         }
 
+        // if there is an inferred type and parameters were omitted,
+        // add them to the resulting type if applicable.
+        doFooBarQuxBaz();
+
         // if identifier was defined, assign its static type.
         if (exp.Id != null)
         {
