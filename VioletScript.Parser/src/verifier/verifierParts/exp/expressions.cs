@@ -853,6 +853,7 @@ public partial class Verifier
                 resultType_optParams.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
             }
         }
+        // type of a rest parameter must be an Array
         if (common.RestParam != null)
         {
             var binding = common.RestParam;
@@ -863,11 +864,22 @@ public partial class Verifier
         }
         if (common.ReturnType != null)
         {
-            doFooBarQuxBaz();
+            resultType_returnType = VerifyTypeExp(common.ReturnType);
+            if (resultType_returnType == null)
+            {
+                valid = false;
+                resultType_returnType = m_ModelCore.AnyType;
+            }
         }
         else
         {
-            doFooBarQuxBaz();
+            resultType_returnType = inferType?.FunctionReturnType ?? m_ModelCore.AnyType;
+        }
+
+        // ignore "throws" clause
+        if (common.ThrowsType != null)
+        {
+            VerifyTypeExp(common.ThrowsType);
         }
 
         // if there is an inferred type and parameters were omitted,
