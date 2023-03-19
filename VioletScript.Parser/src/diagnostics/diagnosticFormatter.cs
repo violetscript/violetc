@@ -174,6 +174,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [183] = "Left-hand side is already of type '$right'",
         [184] = "Binding 'is' operator is not yet implemented",
         [185] = "Rest parameter must be of Array type",
+        [186] = "Object initializer inferred no type",
+        [187] = "Object initializer cannot be used for '$t'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

@@ -297,18 +297,6 @@ public class UnaryExpression : Expression {
 /// <summary>
 /// Binary expression.
 /// </summary>
-/// <remarks>
-/// <p>Null-coalescing:</p>
-///
-/// <list type="bullet">
-/// <item>For null-coalescing, the expression resolves to a value of type
-/// <c>leftHandSide.StaticType.ToNonNullableType()</c>.
-/// The right-hand side is limited to be of type
-/// <c>leftHandSide.StaticType.ToNonNullableType()</c>.
-/// </item>
-/// </list>
-///
-/// </remarks>
 ///
 public class BinaryExpression : Expression {
     public Operator Operator;

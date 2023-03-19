@@ -678,13 +678,8 @@ public partial class Verifier
             return exp.SemanticSymbol;
         }
 
-        // improve null coalescing; currently it's limiting the
-        // right operand to a non-nullable version of the left type.
-        doFooBarQuxBaz();
-
-        var leftNonNullType = left.StaticType.ToNonNullableType();
-        LimitExpType(exp.Right, leftNonNullType);
-        exp.SemanticSymbol = m_ModelCore.Factory.Value(leftNonNullType);
+        LimitExpType(exp.Right, left.StaticType);
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(left.StaticType);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // binary expression (null coalescing)
@@ -1006,14 +1001,44 @@ public partial class Verifier
         Symbol type = null;
         if (exp.Type != null)
         {
-            type = VerifyTypeExp() ?? m_ModelCore.AnyType;
+            type = VerifyTypeExp(exp.Type) ?? m_ModelCore.AnyType;
         }
         if (type == null)
         {
             type = expectedType;
         }
         type ??= expectedType;
+        type = type?.ToNonNullableType();
 
         // make sure 'type' can be initialised
+        if (type is UnionType)
+        {
+            var types = type.UnionMemberTypes.Where(t =>
+                    t.IsInstantiationOf(m_ModelCore.MapType)
+                ||  t.IsFlagsEnum
+                ||  t is RecordType
+                || (t is ClassType && !t.DontInit));
+            type = types.FirstOrDefault();
+        }
+
+        if (type == null)
+        {
+            // VerifyError: no infer type
+            VerifyError(null, 186, exp.Span.Value, new DiagnosticArguments {});
+            type = m_ModelCore.AnyType;
+        }
+        else if
+        (!(    type.IsInstantiationOf(m_ModelCore.MapType)
+            || type.IsFlagsEnum
+            || type is RecordType
+            ||(type is ClassType && !type.DontInit)
+        ))
+        {
+            // VerifyError: cannot initialise type
+            VerifyError(null, 187, exp.Span.Value, new DiagnosticArguments {["t"] = type});
+            type = m_ModelCore.AnyType;
+        }
+
+        doFooBarQuxBaz();
     } // object initializer
 }
