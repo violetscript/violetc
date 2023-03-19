@@ -891,7 +891,7 @@ public partial class Verifier
             : expectedType is FunctionType
             ? 1
             : 0;
-        if (inferType != null && nOfInferFunctionTypes == 1)
+        if (nOfInferFunctionTypes == 1)
         {
             doFooBarQuxBaz();
         }
