@@ -993,6 +993,9 @@ public partial class Verifier
         return RequiredOrOptOrRestParam.SeparateKinds(mixedResultParams);
     } // FunctionExp_AddMissingParameters
 
+    // verifies object initializer.
+    // if it is given the type '*' or no type,
+    // then it returns an Object.
     private Symbol VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol expectedType)
     {
         //
