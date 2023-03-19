@@ -796,8 +796,30 @@ public partial class Verifier
             inferType = functionTypes.FirstOrDefault();
         }
         inferType = inferType ?? (expectedType is FunctionType ? expectedType : null);
+
         Symbol prevActivation = m_Frame.FindActivation();
         Symbol activation = m_ModelCore.Factory.ActivationFrame();
+        exp.Common.SemanticActivation = activation;
+        // inherit "this"
         activation.ActivationThisOrThisAsStaticType = prevActivation?.ActivationThisOrThisAsStaticType;
+
+        // define identifier partially.
+        // the identifier's static type is resolved before
+        // the body of the function is resolved.
+        if (exp.Id != null)
+        {
+            var variable = m_ModelCore.Factory.VariableSlot(exp.Id.Name, true, null);
+            exp.Id.SemanticSymbol = variable;
+            activation.Properties[exp.Id.Name] = variable;
+        }
+
+        EnterFrame(activation);
+        m_FunctionStack.Push(fooBarQuxBaz());
+
+        fooBarQuxBaz();
+
+        m_FunctionStack.Pop();
+        ExitFrame();
+
     } // function expression
 }
