@@ -789,6 +789,7 @@ public partial class Verifier
 
     private Symbol VerifyFunctionExp(Ast.FunctionExpression exp, Symbol expectedType)
     {
+        var common = exp.Common;
         Symbol inferType = null;
         if (expectedType is UnionType)
         {
@@ -799,7 +800,7 @@ public partial class Verifier
 
         Symbol prevActivation = m_Frame.FindActivation();
         Symbol activation = m_ModelCore.Factory.ActivationFrame();
-        exp.Common.SemanticActivation = activation;
+        common.SemanticActivation = activation;
         // inherit "this"
         activation.ActivationThisOrThisAsStaticType = prevActivation?.ActivationThisOrThisAsStaticType;
 
@@ -814,15 +815,42 @@ public partial class Verifier
         }
 
         Symbol methodSlot = m_ModelCore.Factory.MethodSlot("", null,
-                (exp.Common.UsesAwait ? MethodSlotFlags.UsesAwait : 0)
-            |   (exp.Common.UsesYield ? MethodSlotFlags.UsesYield : 0));
+                (common.UsesAwait ? MethodSlotFlags.UsesAwait : 0)
+            |   (common.UsesYield ? MethodSlotFlags.UsesYield : 0));
 
         bool valid = true;
         Symbol resultType = null;
 
         // resolve common before pushing to method slot stack,
         // since its type is unknown.
-        fooBarQuxBaz();
+        List<NameAndTypePair> resultType_params = null;
+        List<NameAndTypePair> resultType_optParams = null;
+        NameAndTypePair? resultType_restParam = null;
+        Symbol resultType_returnType = null;
+        if (common.Params != null)
+        {
+            var actualCount = common.Params.Count();
+            foreach (var binding in common.Params)
+            {
+                doFooBarQuxBaz();
+            }
+        }
+        if (common.OptParams != null)
+        {
+            doFooBarQuxBaz();
+        }
+        if (common.RestParam != null)
+        {
+            doFooBarQuxBaz();
+        }
+        if (common.ReturnType != null)
+        {
+            doFooBarQuxBaz();
+        }
+        else
+        {
+            doFooBarQuxBaz();
+        }
 
         // if identifier was defined, assign its static type.
         if (exp.Id != null)
