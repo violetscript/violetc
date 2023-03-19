@@ -853,7 +853,7 @@ public partial class Verifier
                 resultType_optParams.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
             }
         }
-        // type of a rest parameter must be an Array
+        // type of a rest parameter must be * or an Array
         if (common.RestParam != null)
         {
             var binding = common.RestParam;

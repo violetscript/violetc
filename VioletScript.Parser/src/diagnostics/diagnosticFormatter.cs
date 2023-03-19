@@ -173,6 +173,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [182] = "Left-hand side is always of type *",
         [183] = "Left-hand side is already of type '$right'",
         [184] = "Binding 'is' operator is not yet implemented",
+        [185] = "Rest parameter must be of Array type",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
