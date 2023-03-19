@@ -827,7 +827,7 @@ public partial class Verifier
         // if identifier was defined, assign its static type.
         if (exp.Id != null)
         {
-            fooBarQuxBaz();
+            exp.Id.SemanticSymbol.StaticType = resultType;
         }
 
         EnterFrame(activation);
@@ -839,7 +839,7 @@ public partial class Verifier
         m_MethodSlotStack.Pop();
         ExitFrame();
 
-        exp.SemanticSymbol = m_ModelCore.Factory.FunctionExpValue(resultType);
+        exp.SemanticSymbol = valid ? m_ModelCore.Factory.FunctionExpValue(resultType) : null;
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // function expression
