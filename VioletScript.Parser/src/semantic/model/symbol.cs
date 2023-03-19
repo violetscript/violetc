@@ -608,4 +608,12 @@ public class Symbol {
             ||  this is RecordType
             || (this is ClassType && !this.DontInit);
     }
+
+    public bool TypeCanUseArrayInitializer
+    {
+        get =>  this.IsInstantiationOf(this.ModelCore.ArrayType)
+            ||  this.IsInstantiationOf(this.ModelCore.SetType)
+            ||  this.IsFlagsEnum
+            ||  this is TupleType;
+    }
 }
