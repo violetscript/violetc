@@ -1029,6 +1029,16 @@ public partial class Verifier
             type = m_ModelCore.AnyType;
         }
 
+        // try different initialization methods:
+        // - * (any type)
+        // - Map
+        // - Flags
+        // - Record
+        // - Class
         doFooBarQuxBaz();
+
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(type);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
     } // object initializer
 }
