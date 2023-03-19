@@ -893,7 +893,16 @@ public partial class Verifier
             : 0;
         if (nOfInferFunctionTypes == 1)
         {
-            doFooBarQuxBaz();
+            var r = FunctionExp_AddMissingParameters
+            (
+                resultType_params,
+                resultType_optParams,
+                resultType_restParam,
+                inferType
+            );
+            resultType_params = r.Item1;
+            resultType_optParams = r.Item2;
+            resultType_restParam = r.Item3;
         }
 
         // get result type
@@ -924,4 +933,48 @@ public partial class Verifier
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // function expression
+
+    private
+    (
+        List<NameAndTypePair>,
+        List<NameAndTypePair>,
+        NameAndTypePair?
+    )
+    FunctionExp_AddMissingParameters
+    (
+        List<NameAndTypePair> resultType_params,
+        List<NameAndTypePair> resultType_optParams,
+        NameAndTypePair? resultType_restParam,
+        Symbol inferType
+    )
+    {
+        var mixedResultParams = RequiredOrOptOrRestParam.FromLists
+        (
+            resultType_params,
+            resultType_optParams,
+            resultType_restParam
+        );
+        var mixedInferParams = RequiredOrOptOrRestParam.FromType(inferType);
+        var compatible = mixedResultParams.Count() <= mixedInferParams.Count();
+        if (compatible)
+        {
+            for (int i = 0; i < mixedResultParams.Count(); ++i)
+            {
+                if (mixedResultParams[i].Kind != mixedInferParams[i].Kind)
+                {
+                    compatible = false;
+                    break;
+                }
+            }
+            if (compatible)
+            {
+                for (int i = mixedResultParams.Count(); i < mixedInferParams.Count(); ++i)
+                {
+                    mixedResultParams.Add(mixedInferParams[i]);
+                }
+            }
+        }
+
+        return RequiredOrOptOrRestParam.SeparateKinds(mixedResultParams);
+    } // FunctionExp_AddMissingParameters
 }

@@ -1061,3 +1061,92 @@ public class TypeParameter : Type {
         return this == other;
     }
 }
+
+/// <summary>
+/// Type used for creating a single list mixing
+/// required, optional and rest function parameters.
+/// </summary>
+public struct RequiredOrOptOrRestParam
+{
+    public RequiredOrOptOrRestParamKind Kind;
+    public NameAndTypePair NameAndType;
+
+    public static List<RequiredOrOptOrRestParam> FromType(Symbol type)
+    {
+        return FromLists(type.FunctionRequiredParameters.ToList(), type.FunctionOptParameters.ToList(), type.FunctionRestParameter);
+    }
+
+    public static List<RequiredOrOptOrRestParam> FromLists
+    (
+        List<NameAndTypePair> required,
+        List<NameAndTypePair> optional,
+        NameAndTypePair? rest
+    )
+    {
+        var mixed = new List<RequiredOrOptOrRestParam>();
+        if (required != null)
+        {
+            foreach (var nt in required)
+            {
+                mixed.Add(new RequiredOrOptOrRestParam(RequiredOrOptOrRestParamKind.Required, nt));
+            }
+        }
+        if (optional != null)
+        {
+            foreach (var nt in optional)
+            {
+                mixed.Add(new RequiredOrOptOrRestParam(RequiredOrOptOrRestParamKind.Optional, nt));
+            }
+        }
+        if (rest.HasValue)
+        {
+            mixed.Add(new RequiredOrOptOrRestParam(RequiredOrOptOrRestParamKind.Rest, rest.Value));
+        }
+        return mixed;
+    }
+
+    public static
+    (
+        List<NameAndTypePair>,
+        List<NameAndTypePair>,
+        NameAndTypePair?
+    )
+    SeparateKinds(List<RequiredOrOptOrRestParam> list)
+    {
+        List<NameAndTypePair> rq = null;
+        List<NameAndTypePair> opt = null;
+        NameAndTypePair? rs = null;
+        foreach (var p in list)
+        {
+            if (p.Kind == RequiredOrOptOrRestParamKind.Required)
+            {
+                rq ??= new List<NameAndTypePair>();
+                rq.Add(p.NameAndType);
+            }
+            else if (p.Kind == RequiredOrOptOrRestParamKind.Optional)
+            {
+                opt ??= new List<NameAndTypePair>();
+                opt.Add(p.NameAndType);
+            }
+            else
+            {
+                rs = p.NameAndType;
+                break;
+            }
+        }
+        return (rq, opt, rs);
+    }
+
+    public RequiredOrOptOrRestParam(RequiredOrOptOrRestParamKind kind, NameAndTypePair nameAndType)
+    {
+        this.Kind = kind;
+        this.NameAndType = nameAndType;
+    }
+}
+
+public enum RequiredOrOptOrRestParamKind
+{
+    Required,
+    Optional,
+    Rest,
+}
