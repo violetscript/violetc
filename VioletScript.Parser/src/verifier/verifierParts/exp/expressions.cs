@@ -905,6 +905,17 @@ public partial class Verifier
             resultType_restParam = r.Item3;
         }
 
+        // - if the function uses 'await', automatically wrap its return to Promise.
+        // - if the function uses 'yield', automatically wrap its return to Generator.
+        if (common.UsesAwait && !resultType_returnType.IsInstantiationOf(m_ModelCore.PromiseType))
+        {
+            resultType_returnType = m_ModelCore.Factory.InstantiatedType(m_ModelCore.PromiseType, new Symbol[]{resultType_returnType});
+        }
+        else if (common.UsesYield && !resultType_returnType.IsInstantiationOf(m_ModelCore.GeneratorType))
+        {
+            resultType_returnType = m_ModelCore.Factory.InstantiatedType(m_ModelCore.GeneratorType, new Symbol[]{resultType_returnType});
+        }
+
         // get result type
         resultType = m_ModelCore.Factory.FunctionType
         (
@@ -924,7 +935,7 @@ public partial class Verifier
         m_MethodSlotStack.Push(methodSlot);
 
         // resolve body.
-        fooBarQuxBaz();
+        VerifyFunctionBody(common.Body, methodSlot);
 
         m_MethodSlotStack.Pop();
         ExitFrame();
