@@ -677,6 +677,11 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
+
+        // improve null coalescing; currently it's limiting the
+        // right operand to a non-nullable version of the left type.
+        doFooBarQuxBaz();
+
         var leftNonNullType = left.StaticType.ToNonNullableType();
         LimitExpType(exp.Right, leftNonNullType);
         exp.SemanticSymbol = m_ModelCore.Factory.Value(leftNonNullType);
@@ -998,6 +1003,17 @@ public partial class Verifier
     // then it returns an Object.
     private Symbol VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol expectedType)
     {
-        //
+        Symbol type = null;
+        if (exp.Type != null)
+        {
+            type = VerifyTypeExp() ?? m_ModelCore.AnyType;
+        }
+        if (type == null)
+        {
+            type = expectedType;
+        }
+        type ??= expectedType;
+
+        // make sure 'type' can be initialised
     } // object initializer
 }
