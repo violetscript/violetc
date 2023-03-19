@@ -24,6 +24,11 @@ public sealed class ModelCore {
     /// <summary>
     /// Built-in object.
     /// </summary>
+    /// <remarks>
+    /// The definition for the Object type
+    /// has no <c>DontInit</c> decorator, allowing all subclasses
+    /// to be constructed via an object initialiser by default.
+    /// </remarks>
     public Symbol ObjectType = null;
     /// <summary>
     /// Built-in object.
