@@ -136,9 +136,19 @@ public static class TypeConversions {
                 return f.ConversionValue(value, toType, ConversionFromTo.NonUnionToCompatUnion);
             }
             if (fromType is UnionType) {
+                Symbol u_fromType = fromType;
+                Symbol u_toType = toType;
+                // this condition allows converting union with undefined or null to
+                // compatible union with undefined or null.
+                if ((fromType.IncludesNull || fromType.IncludesUndefined)
+                &&   (toType.IncludesNull  || toType.IncludesUndefined))
+                {
+                    u_fromType = u_fromType.ToNonNullableType();
+                    u_toType = u_toType.ToNonNullableType();
+                }
                 var compat = true;
-                var targetMembers = toType.UnionMemberTypes;
-                foreach (var m in fromType.UnionMemberTypes) {
+                var targetMembers = u_toType.UnionMemberTypes;
+                foreach (var m in u_fromType.UnionMemberTypes) {
                     if (!targetMembers.Contains(m)) {
                         compat = false;
                         break;

@@ -66,4 +66,15 @@ public partial class Verifier
         script ??= span.Script;
         return script.CollectDiagnostic(Diagnostic.Warning(id, span, args));
     }
+
+    private void EnterFrame(Symbol frame)
+    {
+        frame.ParentFrame ??= m_Frame;
+        m_Frame = frame;
+    }
+
+    private void ExitFrame()
+    {
+        m_Frame = m_Frame?.ParentFrame;
+    }
 }
