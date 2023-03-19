@@ -829,10 +829,15 @@ public partial class Verifier
         Symbol resultType_returnType = null;
         if (common.Params != null)
         {
+            resultType_params = new List<NameAndTypePair>();
             var actualCount = common.Params.Count();
-            foreach (var binding in common.Params)
+            for (int i = 0; i < actualCount; ++i)
             {
-                doFooBarQuxBaz();
+                var binding = common.Params[i];
+                NameAndTypePair? paramInferNameAndType = inferType != null && inferType.FunctionHasRequiredParameters && actualCount <= inferType.FunctionCountOfRequiredParameters ? inferType.FunctionRequiredParameters[i] : null;
+                FuncRequiredParam_VerifyVariableBinding(binding, activation.Properties, Visibility.Public, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
+                var name = binding.Pattern is Ast.BindPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
+                resultType_params.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
             }
         }
         if (common.OptParams != null)

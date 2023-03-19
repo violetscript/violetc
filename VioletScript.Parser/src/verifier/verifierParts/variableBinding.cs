@@ -15,7 +15,7 @@ public partial class Verifier
     // verify a variable binding; ensure:
     // - destructuring pattern is valid.
     // - it has an initializer if it is read-only.
-    public void VerifyVariableBinding
+    private void VerifyVariableBinding
     (
         Ast.VariableBinding binding,
         bool readOnly,
@@ -51,6 +51,38 @@ public partial class Verifier
         if (init is ConstantValue && init.StaticType == binding.Pattern.SemanticProperty)
         {
             binding.Pattern.SemanticProperty.InitValue = init;
+        }
+
+        binding.SemanticVerified = true;
+    }
+
+    // verify a variable binding for a
+    // function required parameter; ensure:
+    // - destructuring pattern is valid.
+    private void FuncRequiredParam_VerifyVariableBinding
+    (
+        Ast.VariableBinding binding,
+        Properties output,
+        Visibility visibility,
+        Symbol inferType
+    )
+    {
+        if (binding.SemanticVerified)
+        {
+            return;
+        }
+        if (binding.Pattern.Type == null)
+        {
+            // VerifyError
+            if (inferType == null)
+            {
+                VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
+            }
+            VerifyDestructuringPattern(binding.Pattern, false, output, visibility, inferType ?? m_ModelCore.AnyType);
+        }
+        else
+        {
+            VerifyDestructuringPattern(binding.Pattern, false, output, visibility);
         }
 
         binding.SemanticVerified = true;
