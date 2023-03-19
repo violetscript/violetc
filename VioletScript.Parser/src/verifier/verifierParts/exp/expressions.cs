@@ -796,5 +796,8 @@ public partial class Verifier
             inferType = functionTypes.FirstOrDefault();
         }
         inferType = inferType ?? (expectedType is FunctionType ? expectedType : null);
-    }
+        Symbol prevActivation = m_Frame.FindActivation();
+        Symbol activation = m_ModelCore.Factory.ActivationFrame();
+        activation.ActivationThisOrThisAsStaticType = prevActivation?.ActivationThisOrThisAsStaticType;
+    } // function expression
 }

@@ -790,6 +790,8 @@ public class FunctionCommon : Node {
     public TypeExpression ThrowsType;
     public Node Body;
 
+    public Symbol SemanticActivation = null;
+
     public FunctionCommon(
         bool usesAwait,
         bool usesYield,
