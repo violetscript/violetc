@@ -66,6 +66,10 @@ public partial class Verifier
         {
             r = VerifyFunctionExp(fnExp, expectedType);
         }
+        else if (exp is Ast.ObjectInitializer objInit)
+        {
+            r = VerifyObjectInitialiser(objInit, expectedType);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -988,4 +992,9 @@ public partial class Verifier
 
         return RequiredOrOptOrRestParam.SeparateKinds(mixedResultParams);
     } // FunctionExp_AddMissingParameters
+
+    private Symbol VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol expectedType)
+    {
+        //
+    }
 }
