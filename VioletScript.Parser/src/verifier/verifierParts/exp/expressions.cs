@@ -884,7 +884,17 @@ public partial class Verifier
 
         // if there is an inferred type and parameters were omitted,
         // add them to the resulting type if applicable.
-        doFooBarQuxBaz();
+        // this is done except if the expected type was an union with
+        // more than one function type.
+        int nOfInferFunctionTypes = expectedType is UnionType
+            ? expectedType.UnionMemberTypes.Select(t => t is FunctionType).Count()
+            : expectedType is FunctionType
+            ? 1
+            : 0;
+        if (inferType != null && nOfInferFunctionTypes == 1)
+        {
+            doFooBarQuxBaz();
+        }
 
         // get result type
         resultType = m_ModelCore.Factory.FunctionType
