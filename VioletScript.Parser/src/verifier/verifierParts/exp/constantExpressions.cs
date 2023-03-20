@@ -1767,6 +1767,14 @@ public partial class Verifier
         {
             return null;
         }
+        if (r is Type)
+        {
+            r = m_ModelCore.Factory.TypeAsValue(r);
+        }
+        else if (r is Namespace)
+        {
+            r = m_ModelCore.Factory.NamespaceAsValue(r);
+        }
         if (!(r is Value))
         {
             if (faillible)

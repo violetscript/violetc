@@ -106,6 +106,14 @@ public partial class Verifier
         {
             return null;
         }
+        if (r is Type)
+        {
+            r = m_ModelCore.Factory.TypeAsValue(r);
+        }
+        else if (r is Namespace)
+        {
+            r = m_ModelCore.Factory.NamespaceAsValue(r);
+        }
         if (!(r is Value))
         {
             VerifyError(null, 180, exp.Span.Value, new DiagnosticArguments {});
@@ -1035,10 +1043,56 @@ public partial class Verifier
         // - Flags
         // - Record
         // - Class
-        doFooBarQuxBaz();
+        if (type == m_ModelCore.AnyType)
+        {
+            Any_VerifyObjectInitialiser(exp);
+        }
+        else if (type.IsInstantiationOf(m_ModelCore.MapType))
+        {
+            Map_VerifyObjectInitialiser(exp, type);
+        }
+        else if (type.IsFlagsEnum)
+        {
+            Flags_VerifyObjectInitialiser(exp, type);
+        }
+        else if (type is RecordType)
+        {
+            Record_VerifyObjectInitialiser(exp, type);
+        }
+        else
+        {
+            User_VerifyObjectInitialiser(exp, type);
+        }
 
         exp.SemanticSymbol = m_ModelCore.Factory.Value(type);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // object initializer
+
+    private void Any_VerifyObjectInitialiser(Ast.ObjectInitializer exp)
+    {
+        foreach (var fieldOrSpread in exp.Fields)
+        {
+            if (fieldOrSpread is Ast.Spread spread)
+            {
+                LimitExpType(spread.Expression, m_ModelCore.AnyType);
+                continue;
+            }
+            var field = (Ast.ObjectField) fieldOrSpread;
+            LimitExpType(field.Key, m_ModelCore.AnyType);
+            if (field.Value == null)
+            {
+                VerifyObjectShorthandField(field, m_ModelCore.AnyType);
+            }
+            else
+            {
+                LimitExpType(field.Value, m_ModelCore.AnyType);
+            }
+        }
+    } // object initializer (any)
+
+    private void VerifyObjectShorthandField(Ast.ObjectField field, Symbol expectedType)
+    {
+        var name = ((Ast.StringLiteral) field.Key).Value;
+    } // VerifyObjectShorthandField
 }

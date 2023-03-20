@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using VioletScript.Parser.Operator;
 using VioletScript.Parser.Semantic.Logic;
 
+/// <summary>
+/// Represents a lexical scope.
+/// </summary>
 public class Frame : Symbol {
     private Properties m_Properties = new Properties();
     private List<Symbol> m_OpenNamespaces = new List<Symbol>{};
