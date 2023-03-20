@@ -1801,8 +1801,13 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
+        else if (@base is EnumType)
+        {
+            dooFooBarQuxBaz();
+        }
         else
         {
+            // VerifyError: not callable
             dooFooBarQuxBaz();
         }
     } // call expression
