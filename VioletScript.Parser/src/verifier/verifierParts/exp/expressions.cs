@@ -126,6 +126,10 @@ public partial class Verifier
         {
             r = VerifyListExp(listExp, expectedType);
         }
+        else if (exp is Ast.GenericInstantiationExpression gie)
+        {
+            r = VerifyGenericInstantiationExp(gie);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -2067,4 +2071,33 @@ public partial class Verifier
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // list expression
+
+    private Symbol VerifyGenericInstantiationExp(Ast.GenericInstantiationExpression exp)
+    {
+        var @base = VerifyExp(exp.Base, true);
+        if (@base == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        if (@base is Type && @base.TypeParameters != null)
+        {
+            exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, exp.ArgumentsList);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        else if (@base is Type)
+        {
+            VerifyError(null, 133, exp.Span.Value, new DiagnosticArguments {["t"] = @base});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        // verify parameterized method
+        else
+        {
+            doFooBarQuxBaz();
+        }
+    } // generic instantiation expression
 }
