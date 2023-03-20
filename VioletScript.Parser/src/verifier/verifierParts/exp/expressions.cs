@@ -82,6 +82,10 @@ public partial class Verifier
         {
             r = VerifyMarkupListInitializer(markupListInit, expectedType);
         }
+        else if (exp is Ast.IndexExpression idxExp)
+        {
+            r = VerifyIndexExp(idxExp);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -102,8 +106,6 @@ public partial class Verifier
         {
             VerifyError(null, 199, exp.Span.Value, new DiagnosticArguments {});
             exp.SemanticSymbol = null;
-            exp.SemanticExpResolved = true;
-            return r;
         }
 
         return exp.SemanticSymbol;
@@ -1678,4 +1680,84 @@ public partial class Verifier
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // markup list
+
+    private Symbol VerifyIndexExp(Ast.IndexExpression exp)
+    {
+        if (exp.Optional)
+        {
+            return VerifyOptIndexExp(exp);
+        }
+        var @base = VerifyExp(exp.Base, null);
+        if (@base == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var proxy = InheritedProxies.Find(@base.StaticType, Operator.ProxyToGetIndex);
+        if (proxy == null)
+        {
+            VerifyError(null, 201, exp.Span.Value, new DiagnosticArguments {["t"] = @base.StaticType});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        LimitExpType(exp.Key, proxy.StaticType.FunctionRequiredParameters[0].Type);
+        exp.SemanticSymbol = m_ModelCore.Factory.IndexValue(@base, proxy.StaticType.FunctionReturnType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    }
+
+    private Symbol VerifyOptIndexExp(Ast.IndexExpression exp)
+    {
+        var @base = VerifyExpAsValue(exp.Base, null);
+        if (@base == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        var baseType = @base.StaticType;
+        if (!baseType.IncludesNull && !baseType.IncludesUndefined)
+        {
+            // VerifyError: optional member base must possibly be undefined
+            // or null.
+            VerifyError(null, 170, exp.Base.Span.Value, new DiagnosticArguments {["t"] = baseType});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        var throwawayNonNullBase = m_ModelCore.Factory.Value(baseType.ToNonNullableType());
+        exp.SemanticThrowawayNonNullBase = throwawayNonNullBase;
+
+        var proxy = InheritedProxies.Find(baseType.ToNonNullableType(), Operator.ProxyToGetIndex);
+
+        if (proxy == null)
+        {
+            VerifyError(null, 201, exp.Span.Value, new DiagnosticArguments {["t"] = baseType.ToNonNullableType()});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        LimitExpType(exp.Key, proxy.StaticType.FunctionRequiredParameters[0].Type);
+
+        if (baseType.IncludesNull && !baseType.IncludesUndefined)
+        {
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.NullType, proxy.StaticType.FunctionReturnType}));
+        }
+        else if (!baseType.IncludesNull && baseType.IncludesUndefined)
+        {
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, proxy.StaticType.FunctionReturnType}));
+        }
+        else
+        {
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, m_ModelCore.NullType, proxy.StaticType.FunctionReturnType}));
+        }
+
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    }
 }
