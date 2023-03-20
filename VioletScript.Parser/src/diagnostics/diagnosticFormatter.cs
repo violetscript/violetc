@@ -188,6 +188,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [197] = "Markup attribute without value requires a Boolean property; '$name' is of type '$t'",
         [198] = "Type '$t' has no property '$name'",
         [199] = "Could not resolve expression static type",
+        [200] = "Markup list initializer must apply to an Array type",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

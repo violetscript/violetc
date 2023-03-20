@@ -1457,7 +1457,7 @@ public partial class Verifier
             }
             LimitExpType(itemOrHole, m_ModelCore.AnyType);
         }
-    }
+    } // array initializer (any)
 
     private void Array_VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol type)
     {
@@ -1485,7 +1485,7 @@ public partial class Verifier
             }
             LimitExpType(itemOrHole, elementType);
         }
-    }
+    } // array initializer (Array)
 
     private void Set_VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol type)
     {
@@ -1509,7 +1509,7 @@ public partial class Verifier
             }
             LimitExpType(itemOrHole, elementType);
         }
-    }
+    } // array initializer (Set)
 
     private void Flags_VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol type)
     {
@@ -1526,7 +1526,7 @@ public partial class Verifier
             }
             LimitExpType(itemOrHole, type);
         }
-    }
+    } // array initializer (flags)
 
     private void Tuple_VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol type)
     {
@@ -1550,7 +1550,7 @@ public partial class Verifier
             }
             LimitExpType(itemOrHole, i < type.CountOfTupleElements ? tupleElTypes[i] : m_ModelCore.AnyType);
         }
-    }
+    } // array initializer (tuple)
 
     private Symbol VerifyMarkupInitializer(Ast.MarkupInitializer exp)
     {
@@ -1662,5 +1662,20 @@ public partial class Verifier
 
     private Symbol VerifyMarkupListInitializer(Ast.MarkupListInitializer exp, Symbol type)
     {
-    }
+        if (type == null || !type.IsInstantiationOf(m_ModelCore.ArrayType))
+        {
+            VerifyError(null, 200, exp.Span.Value, new DiagnosticArguments {});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var elementType = type.ArgumentTypes[0];
+        foreach (var c in exp.Children)
+        {
+            LimitExpType(c, elementType);
+        }
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(type);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // markup list
 }
