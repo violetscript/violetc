@@ -462,7 +462,7 @@ public class MemberExpression : Expression {
     /// <summary>
     /// If this is an optional member, this stores
     /// a throw-away non-null value corresponding to the base value;
-    /// that is, it is a value of type <c>Base.SemanticExpResolved.ToNonNullableType()</c>.
+    /// that is, it is a value of type <c>Base.SemanticSymbol.ToNonNullableType()</c>.
     /// </summary>
     public Symbol SemanticThrowawayNonNullBase = null;
 
@@ -479,10 +479,38 @@ public class MemberExpression : Expression {
     }
 }
 
+/// <summary>
+/// Index expression.
+/// </summary>
+/// <remarks>
+/// <para>Optional indexing:</para>
+///
+/// <list type="bullet">
+/// <item>If the index access is optional (using <c>?.[k]</c> syntax),
+/// the result type unifies with either null or undefined or both, and the <c>SemanticThrowawayNonNullBase</c>
+/// and <c>SemanticOptNonNullUnifiedSymbol</c> properties of this node are assigned to some symbol.</item>
+/// <item>If the base includes undefined but not null, the result unifies with undefined as <c>undefined|R</c>.</item>
+/// <item>If the base includes null but not undefined, the result unifies with null as <c>null|R</c>.</item>
+/// <item>If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined|null|R</c>.</item>
+/// </list>
+/// </remarks>
 public class IndexExpression : Expression {
     public Expression Base;
     public Expression Key;
     public bool Optional;
+
+    /// <summary>
+    /// If this is an optional index, this stores
+    /// a throw-away non-null value corresponding to the base value;
+    /// that is, it is a value of type <c>Base.SemanticSymbol.ToNonNullableType()</c>.
+    /// </summary>
+    public Symbol SemanticThrowawayNonNullBase = null;
+
+    /// <summary>
+    /// If this is an optional index, this stores
+    /// the resolved symbol without unifying it to null or undefined types.
+    /// </summary>
+    public Symbol SemanticOptNonNullUnifiedSymbol = null;
 
     public IndexExpression(Expression @base, Expression key, bool optional = false) : base() {
         Base = @base;
