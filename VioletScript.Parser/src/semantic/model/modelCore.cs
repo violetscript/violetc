@@ -139,23 +139,33 @@ public sealed class ModelCore {
         Factory.AnyType();
         Factory.UndefinedType();
         Factory.NullType();
+
         this.ObjectType = DefineGlobalBuiltinClass("Object", false);
+
         this.StringType = DefineGlobalBuiltinClass("String", true, true);
         this.StringType.DontInit = true;
+
         this.BooleanType = DefineGlobalBuiltinClass("Boolean", true, true);
         this.BooleanType.DontInit = true;
+
         this.NumberType = DefineGlobalBuiltinClass("Number", true, true);
         this.NumberType.DontInit = true;
+
         this.DecimalType = DefineGlobalBuiltinClass("Decimal", true, true);
         this.DecimalType.DontInit = true;
+
         this.ByteType = DefineGlobalBuiltinClass("Byte", true, true);
         this.ByteType.DontInit = true;
+
         this.ShortType = DefineGlobalBuiltinClass("Short", true, true);
         this.ShortType.DontInit = true;
+
         this.IntType = DefineGlobalBuiltinClass("Int", true, true);
         this.IntType.DontInit = true;
+
         this.LongType = DefineGlobalBuiltinClass("Long", true, true);
         this.LongType.DontInit = true;
+
         this.BigIntType = DefineGlobalBuiltinClass("BigInt", true, true);
         this.BigIntType.DontInit = true;
 
@@ -163,6 +173,7 @@ public sealed class ModelCore {
         this.IteratorType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
 
         this.BindingType = DefineGlobalBuiltinClass("Binding", true);
+
         this.FunctionType = DefineGlobalBuiltinClass("Function", false);
         this.FunctionType.DontInit = true;
 
@@ -191,8 +202,10 @@ public sealed class ModelCore {
 
         this.ClassType = DefineGlobalBuiltinClass("Class", false);
         this.ClassType.DontInit = true;
+
         this.ByteArrayType = DefineGlobalBuiltinClass("ByteArray", true);
         this.ByteArrayType.DontInit = true;
+
         this.RegExpType = DefineGlobalBuiltinClass("RegExp", true);
         this.RegExpType.DontInit = true;
 
