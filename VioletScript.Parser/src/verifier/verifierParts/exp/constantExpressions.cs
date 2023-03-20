@@ -1479,7 +1479,7 @@ public partial class Verifier
             // VerifyError: undefined reference
             if (faillible)
             {
-                VerifyError(null, 128, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
+                VerifyError(null, 198, memb.Id.Span.Value, new DiagnosticArguments { ["t"] = @base.StaticType, ["name"] = memb.Id.Name });
             }
             exp.SemanticSymbol = null;
             exp.SemanticConstantExpResolved = true;

@@ -279,7 +279,7 @@ public partial class Verifier
         if (r == null)
         {
             // VerifyError: undefined reference
-            VerifyError(null, 128, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
+            VerifyError(null, 198, memb.Id.Span.Value, new DiagnosticArguments { ["t"] = @base.StaticType, ["name"] = memb.Id.Name });
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
@@ -364,7 +364,7 @@ public partial class Verifier
         if (r == null)
         {
             // VerifyError: undefined reference
-            VerifyError(null, 128, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
+            VerifyError(null, 198, memb.Id.Span.Value, new DiagnosticArguments { ["t"] = throwawayNonNullBase.StaticType, ["name"] = memb.Id.Name });
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
@@ -1174,7 +1174,7 @@ public partial class Verifier
             if (!matchingField.HasValue)
             {
                 // VerifyError: undefined property
-                VerifyError(null, 128, field.Key.Span.Value, new DiagnosticArguments {["name"] = fieldName});
+                VerifyError(null, 198, field.Key.Span.Value, new DiagnosticArguments {["t"] = type, ["name"] = fieldName});
                 if (field.Value != null)
                 {
                     VerifyExp(field.Value);
@@ -1255,7 +1255,7 @@ public partial class Verifier
         if (r == null)
         {
             // VerifyError: undefined property
-            VerifyError(null, 128, fieldSpan, new DiagnosticArguments {["name"] = fieldName});
+            VerifyError(null, 198, fieldSpan, new DiagnosticArguments {["t"] = type, ["name"] = fieldName});
             return null;
         }
         if (!r.PropertyIsVisibleTo(m_Frame))
@@ -1575,7 +1575,7 @@ public partial class Verifier
         if (r == null)
         {
             // VerifyError: undefined property
-            VerifyError(null, 128, attr.Id.Span.Value, new DiagnosticArguments {["name"] = attr.Id.Name});
+            VerifyError(null, 198, attr.Id.Span.Value, new DiagnosticArguments {["t"] = markupResult.StaticType, ["name"] = attr.Id.Name});
             return;
         }
         if (!r.PropertyIsVisibleTo(m_Frame))

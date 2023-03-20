@@ -186,6 +186,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [195] = "Field must be a variable",
         [196] = "Property must be either variable or virtual",
         [197] = "Markup attribute without value requires a Boolean property; '$name' is of type '$t'",
+        [198] = "Type '$t' has no property '$name'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
