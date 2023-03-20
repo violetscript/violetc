@@ -606,7 +606,8 @@ public class Symbol {
         get =>  this.IsInstantiationOf(this.ModelCore.MapType)
             ||  this.IsFlagsEnum
             ||  this is RecordType
-            || (this is ClassType && !this.DontInit);
+            || (this is ClassType && !this.DontInit)
+            ||  this is AnyType;
     }
 
     public bool TypeCanUseArrayInitializer
@@ -614,6 +615,7 @@ public class Symbol {
         get =>  this.IsInstantiationOf(this.ModelCore.ArrayType)
             ||  this.IsInstantiationOf(this.ModelCore.SetType)
             ||  this.IsFlagsEnum
-            ||  this is TupleType;
+            ||  this is TupleType
+            ||  this is AnyType;
     }
 }
