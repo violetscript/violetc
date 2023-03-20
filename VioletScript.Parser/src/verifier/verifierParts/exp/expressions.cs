@@ -86,6 +86,10 @@ public partial class Verifier
         {
             r = VerifyIndexExp(idxExp);
         }
+        else if (exp is Ast.CallExpression callExp)
+        {
+            r = VerifyCallExp(callExp);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -1706,7 +1710,7 @@ public partial class Verifier
         exp.SemanticSymbol = m_ModelCore.Factory.IndexValue(@base, proxy.StaticType.FunctionReturnType);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
-    }
+    } // index expression
 
     private Symbol VerifyOptIndexExp(Ast.IndexExpression exp)
     {
@@ -1759,5 +1763,24 @@ public partial class Verifier
 
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
-    }
+    } // index expression (optional)
+
+    private Symbol VerifyCallExp(Ast.CallExpression exp)
+    {
+        if (exp.Optional)
+        {
+            return VerifyOptCallExp(exp);
+        }
+        var @base = VerifyExp(exp.Base, null);
+        if (@base == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        // call expression works as:
+        // - a function call.
+        // - a constructor call, equivalent to 'new' expression.
+        // - an explicit enumeration conversion.
+    } // call expression
 }
