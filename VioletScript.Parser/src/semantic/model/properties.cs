@@ -68,6 +68,10 @@ public sealed class Properties : IEnumerable<(string Name, Symbol Symbol)> {
     }
 }
 
+/// <summary>
+/// Provides iterator for iterating instance properties
+/// in subtype descending order.
+/// </summary>
 public static class InstancePropertiesHierarchy {
     public static IEnumerable<(string Name, Symbol Symbol, Symbol DefinedByType)> Iterate(Symbol type) {
         var types = new List<Symbol>{};

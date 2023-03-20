@@ -1691,7 +1691,7 @@ public partial class Verifier
         {
             return VerifyOptIndexExp(exp);
         }
-        var @base = VerifyExp(exp.Base, null);
+        var @base = VerifyExpAsValue(exp.Base, null);
         if (@base == null)
         {
             exp.SemanticSymbol = null;
@@ -1780,7 +1780,30 @@ public partial class Verifier
         }
         // call expression works as:
         // - a function call.
-        // - a constructor call, equivalent to 'new' expression.
+        // - a class constructor call, equivalent to 'new' expression.
         // - an explicit enumeration conversion.
+        if (@base.StaticType is FunctionType)
+        {
+            VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, @base.StaticType);
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(@base.StaticType.FunctionReturnType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        else if (@base is ClassType)
+        {
+            var constructorDefinition = @base.InheritConstructorDefinition();
+            if (constructorDefinition == null)
+            {
+                throw new Exception("The Object built-in must have a constructor definition");
+            }
+            VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, constructorDefinition.StaticType);
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(@base);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        else
+        {
+            dooFooBarQuxBaz();
+        }
     } // call expression
 }
