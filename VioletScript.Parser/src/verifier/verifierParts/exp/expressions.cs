@@ -2105,7 +2105,22 @@ public partial class Verifier
                 exp.SemanticExpResolved = true;
                 return exp.SemanticSymbol;
             }
-            exp.SemanticSymbol = doFooBarQuxBaz();
+            if (@base is ReferenceValue)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.ReferenceValue(@base.Base, instantiatedMethod, @base.PropertyDefinedByType);
+            }
+            else if (@base is ReferenceValueFromType)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.ReferenceValueFromType(@base.Base, instantiatedMethod, @base.PropertyDefinedByType);
+            }
+            else if (@base is ReferenceValueFromNamespace)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.ReferenceValueFromNamespace(@base.Base, instantiatedMethod);
+            }
+            else
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.ReferenceValueFromFrame(@base.Base, instantiatedMethod);
+            }
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
