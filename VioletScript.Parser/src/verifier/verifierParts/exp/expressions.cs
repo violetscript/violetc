@@ -283,7 +283,7 @@ public partial class Verifier
             }
             r = r is Alias ? r.AliasToSymbol : r;
             // VerifyError: unargumented generic type or function
-            if (!instantiatingGeneric && r.TypeParameters != null)
+            if (!instantiatingGeneric && r.IsGenericTypeOrMethod)
             {
                 VerifyError(null, 132, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
                 exp.SemanticSymbol = null;
@@ -354,7 +354,7 @@ public partial class Verifier
             }
             r = r is Alias ? r.AliasToSymbol : r;
             // VerifyError: unargumented generic type or function
-            if (!instantiatingGeneric && r.TypeParameters != null)
+            if (!instantiatingGeneric && r.IsGenericTypeOrMethod)
             {
                 VerifyError(null, 132, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
                 exp.SemanticSymbol = null;
@@ -439,7 +439,7 @@ public partial class Verifier
             }
             r = r is Alias ? r.AliasToSymbol : r;
             // VerifyError: unargumented generic type or function
-            if (!instantiatingGeneric && r.TypeParameters != null)
+            if (!instantiatingGeneric && r.IsGenericTypeOrMethod)
             {
                 VerifyError(null, 132, memb.Id.Span.Value, new DiagnosticArguments { ["name"] = memb.Id.Name });
                 exp.SemanticSymbol = null;
@@ -1329,7 +1329,7 @@ public partial class Verifier
         }
         r = r is Alias ? r.AliasToSymbol : r;
         // VerifyError: unargumented generic type or function
-        if (r.TypeParameters != null)
+        if (r.IsGenericTypeOrMethod)
         {
             VerifyError(null, 132, fieldSpan, new DiagnosticArguments { ["name"] = fieldName });
             return null;
@@ -1387,7 +1387,7 @@ public partial class Verifier
             r = r is Alias ? r.AliasToSymbol : r;
 
             // VerifyError: unargumented generic type or function
-            if (r.TypeParameters != null)
+            if (r.IsGenericTypeOrMethod)
             {
                 VerifyError(null, 132, field.Span.Value, new DiagnosticArguments { ["name"] = name });
                 return;
@@ -1660,7 +1660,7 @@ public partial class Verifier
         }
         r = r is Alias ? r.AliasToSymbol : r;
         // VerifyError: unargumented generic type or function
-        if (r.TypeParameters != null)
+        if (r.IsGenericTypeOrMethod)
         {
             VerifyError(null, 132, attr.Id.Span.Value, new DiagnosticArguments { ["name"] = attr.Id.Name });
             return;
@@ -2074,14 +2074,14 @@ public partial class Verifier
 
     private Symbol VerifyGenericInstantiationExp(Ast.GenericInstantiationExpression exp)
     {
-        var @base = VerifyExp(exp.Base, true);
+        var @base = VerifyExp(exp.Base, null, true);
         if (@base == null)
         {
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
-        if (@base is Type && @base.TypeParameters != null)
+        if (@base is Type && @base.IsGenericTypeOrMethod)
         {
             exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, exp.ArgumentsList);
             exp.SemanticExpResolved = true;
@@ -2094,7 +2094,11 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
-        // verify parameterized method
+        // verify generic method
+        else if (@base.IsGenericTypeOrMethod)
+        {
+            doFooBarQuxBaz();
+        }
         else
         {
             doFooBarQuxBaz();

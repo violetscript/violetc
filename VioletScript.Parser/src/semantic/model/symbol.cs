@@ -656,4 +656,9 @@ public class Symbol {
         }
         return null;
     }
+
+    public bool IsGenericTypeOrMethod
+    {
+        get => this.Property is MethodSlot ? this.Property.IsGenericTypeOrMethod : this.TypeParameters != null;
+    }
 }
