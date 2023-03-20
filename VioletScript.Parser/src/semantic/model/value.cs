@@ -185,6 +185,11 @@ public class NamespaceSetAsValue : Value {
     }
 }
 
+/// <summary>
+/// Represents an instance of the enclosing class, enumeration or interface.
+/// In a type's static context, the <c>this</c> literal does not produce a <c>ThisValue</c>;
+/// rather it produces a <c>TypeAsValue</c> symbol.
+/// </summary>
 public class ThisValue : Value {
     public ThisValue() {
     }

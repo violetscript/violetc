@@ -2230,10 +2230,18 @@ public partial class Verifier
         exp.SemanticSymbol = r;
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
-    }
+    } // new expression
 
     private Symbol VerifySuperExp(Ast.SuperExpression exp)
     {
-        //
-    }
+        var thisValue = m_Frame.FindActivation()?.ActivationThisOrThisAsStaticType;
+        if (thisValue == null || !(thisValue is ThisValue) || !(thisValue.StaticType is ClassType) || (thisValue.StaticType.SuperType == null))
+        {
+            VerifyError(null, 213, exp.Span.Value, new DiagnosticArguments {});
+            thisValue = null;
+        }
+        exp.SemanticSymbol = thisValue != null ? m_ModelCore.Factory.Value(thisValue.StaticType.SuperType): null;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // super expression
 }
