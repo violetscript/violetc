@@ -1778,6 +1778,7 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
+        Symbol r = null;
         // call expression works as:
         // - a function call.
         // - a class constructor call, equivalent to 'new' expression.
@@ -1785,9 +1786,7 @@ public partial class Verifier
         if (@base.StaticType is FunctionType)
         {
             VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, @base.StaticType);
-            exp.SemanticSymbol = m_ModelCore.Factory.Value(@base.StaticType.FunctionReturnType);
-            exp.SemanticExpResolved = true;
-            return exp.SemanticSymbol;
+            r = m_ModelCore.Factory.Value(@base.StaticType.FunctionReturnType);
         }
         else if (@base is ClassType)
         {
@@ -1797,18 +1796,20 @@ public partial class Verifier
                 throw new Exception("The Object built-in must have a constructor definition");
             }
             VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, constructorDefinition.StaticType);
-            exp.SemanticSymbol = m_ModelCore.Factory.Value(@base);
-            exp.SemanticExpResolved = true;
-            return exp.SemanticSymbol;
+            r = m_ModelCore.Factory.Value(@base);
         }
         else if (@base is EnumType)
         {
-            dooFooBarQuxBaz();
+            doFooBarQuxBaz();
         }
         else
         {
             // VerifyError: not callable
-            dooFooBarQuxBaz();
+            doFooBarQuxBaz();
         }
+
+        exp.SemanticSymbol = r;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
     } // call expression
 }
