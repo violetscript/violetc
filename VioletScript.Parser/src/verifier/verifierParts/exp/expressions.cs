@@ -78,6 +78,10 @@ public partial class Verifier
         {
             r = VerifyMarkupInitializer(markupInit);
         }
+        else if (exp is Ast.MarkupListInitializer markupListInit)
+        {
+            r = VerifyMarkupListInitializer(markupListInit, expectedType);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -405,7 +409,12 @@ public partial class Verifier
 
             exp.SemanticExpResolved = true;
 
-            if (baseType.IncludesNull && !baseType.IncludesUndefined)
+            if (r is Value && r.StaticType == null)
+            {
+                VerifyError(null, 199, memb.Id.Span.Value, new DiagnosticArguments {});
+                exp.SemanticSymbol = null;
+            }
+            else if (baseType.IncludesNull && !baseType.IncludesUndefined)
             {
                 exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.NullType, r.StaticType}));
             }
@@ -1297,6 +1306,11 @@ public partial class Verifier
             VerifyError(null, 195, fieldSpan, new DiagnosticArguments {});
             return null;
         }
+        if (r is Value && r.StaticType == null)
+        {
+            VerifyError(null, 199, fieldSpan, new DiagnosticArguments {});
+            return null;
+        }
         return r;
     } // UserObjectInitializer_VerifyKey
 
@@ -1344,6 +1358,12 @@ public partial class Verifier
             if (!(r is Value))
             {
                 VerifyError(null, 180, field.Span.Value, new DiagnosticArguments {});
+                return;
+            }
+
+            if (r is Value && r.StaticType == null)
+            {
+                VerifyError(null, 199, field.Span.Value, new DiagnosticArguments {});
                 return;
             }
 
@@ -1617,6 +1637,11 @@ public partial class Verifier
             VerifyError(null, 196, attr.Id.Span.Value, new DiagnosticArguments {});
             return;
         }
+        if (r is Value && r.StaticType == null)
+        {
+            VerifyError(null, 199, attr.Id.Span.Value, new DiagnosticArguments {});
+            return;
+        }
         if (r.ReadOnly)
         {
             VerifyError(null, 147, attr.Id.Span.Value, new DiagnosticArguments {["name"] = attr.Id.Name});
@@ -1634,4 +1659,8 @@ public partial class Verifier
             LimitExpType(attr.Value, r.StaticType);
         }
     } // markup attribute
+
+    private Symbol VerifyMarkupListInitializer(Ast.MarkupListInitializer exp, Symbol type)
+    {
+    }
 }
