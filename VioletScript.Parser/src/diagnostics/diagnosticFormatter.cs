@@ -190,6 +190,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [199] = "Could not resolve expression static type",
         [200] = "Markup list initializer must apply to an Array type",
         [201] = "Type '$t' does not support indexing",
+        [202] = "Expected at least $atLeast argument(s)",
+        [203] = "Expected at most $atMost argument(s)",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
