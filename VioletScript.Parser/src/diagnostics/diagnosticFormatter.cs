@@ -176,7 +176,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [185] = "Rest parameter must be of Array type",
         [186] = "Object initializer inferred no type",
         [187] = "Object initializer cannot be used for '$t'",
-        [188] = "Object field for record type must be an identifier or string literal",
+        [188] = "Object field for record or user type must be an identifier or string literal",
         [189] = "Object initializer must initialize the field '$name'",
     };
 

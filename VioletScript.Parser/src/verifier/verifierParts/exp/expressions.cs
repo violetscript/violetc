@@ -1165,6 +1165,7 @@ public partial class Verifier
 
             if (!matchingField.HasValue)
             {
+                // VerifyError: undefined property
                 VerifyError(null, 128, field.Key.Span.Value, new DiagnosticArguments {["name"] = fieldName});
                 if (field.Value != null)
                 {
@@ -1196,7 +1197,74 @@ public partial class Verifier
             }
         }
 
-    } // object initializer (flags)
+    } // object initializer (record)
+
+    private void User_VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol type)
+    {
+        foreach (var fieldOrSpread in exp.Fields)
+        {
+            if (fieldOrSpread is Ast.Spread spread)
+            {
+                LimitExpType(spread.Expression, type);
+                continue;
+            }
+            var field = (Ast.ObjectField) fieldOrSpread;
+            if (!(field.Key is Ast.StringLiteral))
+            {
+                VerifyError(null, 188, field.Key.Span.Value, new DiagnosticArguments {});
+                if (field.Value != null)
+                {
+                    VerifyExp(field.Value);
+                }
+                continue;
+            }
+
+            var fieldName = ((Ast.StringLiteral) field.Key).Value;
+            var matchingProp = UserObjectInitializer_VerifyKey(type, fieldName, field.Key.Span.Value);
+            if (matchingProp == null)
+            {
+                if (field.Value != null)
+                {
+                    VerifyExp(field.Value);
+                }
+                continue;
+            }
+
+            if (field.Value == null)
+            {
+                VerifyObjectShorthandField(field, matchingProp.StaticType);
+            }
+            else
+            {
+                LimitExpType(field.Value, matchingProp.StaticType);
+            }
+        }
+    } // object initializer (user)
+
+    private Symbol UserObjectInitializer_VerifyKey(Symbol type, string fieldName, Span fieldSpan)
+    {
+        var r = type.ResolveProperty(fieldName);
+        if (r == null)
+        {
+            // VerifyError: undefined property
+            VerifyError(null, 128, fieldSpan, new DiagnosticArguments {["name"] = fieldName});
+            return null;
+        }
+        if (!r.PropertyIsVisibleTo(m_Frame))
+        {
+            // VerifyError: accessing private property
+            VerifyError(null, 130, fieldSpan, new DiagnosticArguments { ["name"] = fieldName });
+            return null;
+        }
+        r = r is Alias ? r.AliasToSymbol : r;
+        // VerifyError: unargumented generic type or function
+        if (r.TypeParameters != null)
+        {
+            VerifyError(null, 132, fieldSpan, new DiagnosticArguments { ["name"] = fieldName });
+            return null;
+        }
+        return r;
+    } // UserObjectInitializer_VerifyKey
 
     private void VerifyObjectShorthandField(Ast.ObjectField field, Symbol expectedType)
     {
