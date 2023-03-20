@@ -1091,8 +1091,112 @@ public partial class Verifier
         }
     } // object initializer (any)
 
+    private void Map_VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol type)
+    {
+        var keyType = type.ArgumentTypes[0];
+        var valueType = type.ArgumentTypes[1];
+
+        foreach (var fieldOrSpread in exp.Fields)
+        {
+            if (fieldOrSpread is Ast.Spread spread)
+            {
+                LimitExpType(spread.Expression, type);
+                continue;
+            }
+            var field = (Ast.ObjectField) fieldOrSpread;
+            LimitExpType(field.Key, keyType);
+            if (field.Value == null)
+            {
+                VerifyObjectShorthandField(field, valueType);
+            }
+            else
+            {
+                LimitExpType(field.Value, valueType);
+            }
+        }
+    } // object initializer (Map)
+
+    private void Flags_VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol type)
+    {
+        foreach (var fieldOrSpread in exp.Fields)
+        {
+            if (fieldOrSpread is Ast.Spread spread)
+            {
+                LimitExpType(spread.Expression, type);
+                continue;
+            }
+            var field = (Ast.ObjectField) fieldOrSpread;
+            LimitExpType(field.Key, type);
+            if (field.Value == null)
+            {
+                VerifyObjectShorthandField(field, m_ModelCore.BooleanType);
+            }
+            else
+            {
+                LimitExpType(field.Value, m_ModelCore.BooleanType);
+            }
+        }
+    } // object initializer (flags)
+
     private void VerifyObjectShorthandField(Ast.ObjectField field, Symbol expectedType)
     {
         var name = ((Ast.StringLiteral) field.Key).Value;
+        var r = m_Frame.ResolveProperty(name);
+        if (r == null)
+        {
+            // VerifyError: undefined reference
+            VerifyError(null, 128, field.Span.Value, new DiagnosticArguments { ["name"] = name });
+            return;
+        }
+        else if (r is AmbiguousReferenceIssue)
+        {
+            // VerifyError: ambiguous reference
+            VerifyError(null, 129, field.Span.Value, new DiagnosticArguments { ["name"] = name });
+            return;
+        }
+        else
+        {
+            if (!r.PropertyIsVisibleTo(m_Frame))
+            {
+                // VerifyError: accessing private property
+                VerifyError(null, 130, field.Span.Value, new DiagnosticArguments { ["name"] = name });
+                return;
+            }
+            r = r is Alias ? r.AliasToSymbol : r;
+
+            if (r is Type)
+            {
+                r = m_ModelCore.Factory.TypeAsValue(r);
+            }
+            else if (r is Namespace)
+            {
+                r = m_ModelCore.Factory.NamespaceAsValue(r);
+            }
+            if (!(r is Value))
+            {
+                VerifyError(null, 180, field.Span.Value, new DiagnosticArguments {});
+                return;
+            }
+
+            // VerifyError: unargumented generic type or function
+            if (r.TypeParameters != null)
+            {
+                VerifyError(null, 132, field.Span.Value, new DiagnosticArguments { ["name"] = name });
+                return;
+            }
+
+            // extend variable life
+            if (r is ReferenceValueFromFrame && r.Base.FindActivation() != m_Frame.FindActivation())
+            {
+                r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
+            }
+
+            var conversion = TypeConversions.ConvertImplicit(r, expectedType);
+            if (conversion == null)
+            {
+                VerifyError(null, 168, field.Span.Value, new DiagnosticArguments {["expected"] = expectedType, ["got"] = r.StaticType});
+            }
+            field.SemanticShorthand = conversion;
+        }
     } // VerifyObjectShorthandField
 }

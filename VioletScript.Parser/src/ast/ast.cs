@@ -370,13 +370,13 @@ public class ObjectField : Node {
     public Expression Value;
 
     /// <summary>
-    /// For a shorthand field, holds a reference value from a lexical frame.
+    /// For a shorthand field, holds the assigned value from the lexical reference.
     /// </summary>
     /// <remarks>
     /// The verifier performs implicit conversion when the shorthand reference
     /// is assigned to an object field expecting a slightly different type.
     /// </remarks>
-    public Symbol SemanticShorthandTarget = null;
+    public Symbol SemanticShorthand = null;
 
     public ObjectField(Expression key, Expression value) : base() {
         Key = key;
