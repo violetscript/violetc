@@ -1732,7 +1732,7 @@ public partial class Verifier
         var throwawayNonNullBase = m_ModelCore.Factory.Value(baseType.ToNonNullableType());
         exp.SemanticThrowawayNonNullBase = throwawayNonNullBase;
 
-        var proxy = InheritedProxies.Find(baseType.ToNonNullableType(), Operator.ProxyToGetIndex);
+        var proxy = InheritedProxies.Find(throwawayNonNullBase.StaticType, Operator.ProxyToGetIndex);
 
         if (proxy == null)
         {
