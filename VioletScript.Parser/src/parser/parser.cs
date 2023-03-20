@@ -1110,7 +1110,7 @@ internal class ParserBackend {
                 var exp = ParseExpression();
                 Expect(TToken.RSquare);
                 r = FinishExp(new Ast.IndexExpression(r, exp));
-            } else if (Token.Type == TToken.LParen && minPrecedence.ValueOf() <= OperatorPrecedence.Postfix.ValueOf() && InlineOrAtHigherIndentLine) {
+            } else if (Token.Type == TToken.LParen && minPrecedence.ValueOf() <= OperatorPrecedence.Postfix.ValueOf()) {
                 PushLocation(r.Span.Value);
                 NextToken();
                 var argumentsList = new List<Ast.Expression>{};
