@@ -623,4 +623,25 @@ public class Symbol {
     {
         return null;
     }
+
+    public Symbol InheritConstructorDefinition()
+    {
+        return this.ConstructorDefinition ?? this.SuperType?.InheritConstructorDefinition();
+    }
+
+    /// <summary>
+    /// Determines if a class's constructor has optional parameters only.
+    /// </summary>
+    public bool ClassHasParameterlessConstructor
+    {
+        get
+        {
+            var c = InheritConstructorDefinition();
+            if (c == null)
+            {
+                return true;
+            }
+            return !c.StaticType.FunctionHasRequiredParameters;
+        }
+    }
 }

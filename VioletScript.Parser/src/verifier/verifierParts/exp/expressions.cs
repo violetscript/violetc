@@ -74,6 +74,10 @@ public partial class Verifier
         {
             r = VerifyArrayInitialiser(arrInit, expectedType);
         }
+        else if (exp is Ast.MarkupInitializer markupInit)
+        {
+            r = VerifyMarkupInitializer(markupInit);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -1513,6 +1517,25 @@ public partial class Verifier
                 continue;
             }
             LimitExpType(itemOrHole, i < type.CountOfTupleElements ? tupleElTypes[i] : m_ModelCore.AnyType);
+        }
+    }
+
+    private Symbol VerifyMarkupInitializer(Ast.MarkupInitializer exp)
+    {
+        var type = VerifyExp(exp.Id);
+        if (type == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var initialisable = type is ClassType && type.ClassHasParameterlessConstructor && !type.DontInit;
+        if (!initialisable)
+        {
+            VerifyError(null, 193, exp.Id.Span.Value, new DiagnosticArguments {["t"] = type});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
         }
     }
 }

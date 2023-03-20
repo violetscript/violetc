@@ -181,6 +181,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [190] = "Array initializer cannot be used for '$t'",
         [191] = "Wrong number of tuple elements: expected $expected, got $got",
         [192] = "Spread expression not currently supported in tuple initializer",
+        [193] = "Cannot use markup initializer for type '$t'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
