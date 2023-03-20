@@ -90,6 +90,30 @@ public partial class Verifier
         {
             r = VerifyCallExp(callExp);
         }
+        else if (exp is Ast.ThisLiteral thisLiteral)
+        {
+            r = VerifyThisLiteral(thisLiteral);
+        }
+        else if (exp is Ast.StringLiteral strLiteral)
+        {
+            r = VerifyStringLiteral(strLiteral, expectedType);
+        }
+        else if (exp is Ast.NullLiteral)
+        {
+            throw new Exception("Constant NullLiteral should never fail");
+        }
+        else if (exp is Ast.BooleanLiteral)
+        {
+            throw new Exception("Constant BooleanLiteral should never fail");
+        }
+        else if (exp is Ast.NumericLiteral)
+        {
+            throw new Exception("Constant NumericLiteral should never fail");
+        }
+        else if (exp is Ast.RegExpLiteral reLiteral)
+        {
+            r = VerifyRegExpLiteral(reLiteral);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -1924,4 +1948,45 @@ public partial class Verifier
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // call expression (optional)
+
+    private Symbol VerifyThisLiteral(Ast.ThisLiteral exp)
+    {
+        var thisValue = m_Frame.FindActivation()?.ActivationThisOrThisAsStaticType;
+        if (thisValue == null)
+        {
+            VerifyError(null, 208, exp.Span.Value, new DiagnosticArguments {});
+        }
+        exp.SemanticSymbol = thisValue;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // this literal
+
+    private Symbol VerifyStringLiteral(Ast.StringLiteral exp, Symbol expectedType)
+    {
+        var enumType = expectedType is EnumType ? expectedType : null;
+        if (enumType != null)
+        {
+            object matchingVariant = enumType.EnumGetVariantNumberByString(exp.Value);
+            if (matchingVariant == null)
+            {
+                VerifyError(null, 164, exp.Span.Value, new DiagnosticArguments {["et"] = enumType, ["name"] = exp.Value});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            exp.SemanticSymbol = m_ModelCore.Factory.EnumConstantValue(matchingVariant, enumType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        exp.SemanticSymbol = m_ModelCore.Factory.StringConstantValue(exp.Value);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // string literal
+
+    private Symbol VerifyRegExpLiteral(Ast.RegExpLiteral exp)
+    {
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.RegExpType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // regular expression
 }

@@ -196,6 +196,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [205] = "Cannot convert from type '$from' to '$to'",
         [206] = "Cannot call expression",
         [207] = "Cannot call value of type '$t'",
+        [208] = "Cannot use 'this' literal at this context",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
