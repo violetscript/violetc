@@ -644,4 +644,16 @@ public class Symbol {
             return !c.StaticType.FunctionHasRequiredParameters;
         }
     }
+
+    public Symbol GetIMarkupContainerChildType()
+    {
+        foreach (var itrfc in ImplementsInterfaces)
+        {
+            if (itrfc.IsInstantiationOf(this.ModelCore.IMarkupContainerType))
+            {
+                return itrfc;
+            }
+        }
+        return null;
+    }
 }

@@ -897,7 +897,7 @@ internal class ParserBackend {
             PushLocation(id.Span.Value);
             id = (Ast.Expression) FinishNode(new Ast.MemberExpression(id, ParseIdentifier()));
         }
-        var attribs = new List<Ast.NodeAttribute>{};
+        var attribs = new List<Ast.MarkupAttribute>{};
         while (!Token.IsOperator(Operator.Divide) && !Token.IsOperator(Operator.Gt)) {
             MarkLocation();
             DuplicateLocation();
@@ -912,7 +912,7 @@ internal class ParserBackend {
                     if (value == null) ThrowUnexpected();
                 }
             }
-            var attrib = (Ast.NodeAttribute) FinishNode(new Ast.NodeAttribute(id2, value));
+            var attrib = (Ast.MarkupAttribute) FinishNode(new Ast.MarkupAttribute(id2, value));
             attribs.Add(attrib);
         }
         List<Ast.Expression> children = null;

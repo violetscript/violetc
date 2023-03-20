@@ -182,6 +182,10 @@ public static class DefaultDiagnosticFormatterStatics {
         [191] = "Wrong number of tuple elements: expected $expected, got $got",
         [192] = "Spread expression not currently supported in tuple initializer",
         [193] = "Cannot use markup initializer for type '$t'",
+        [194] = "Markup cannot have children since type '$t' does not implement 'IMarkupContainer'",
+        [195] = "Field must be a variable",
+        [196] = "Property must be either variable or virtual",
+        [197] = "Markup attribute without value requires a Boolean property; '$name' is of type '$t'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

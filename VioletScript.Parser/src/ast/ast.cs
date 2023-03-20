@@ -417,23 +417,23 @@ public class MarkupInitializer : Expression {
     /// Member expression or identifier.
     /// </summary>
     public Expression Id;
-    public List<NodeAttribute> Attributes;
+    public List<MarkupAttribute> Attributes;
     /// <summary>Null if node is empty. Contains child node initializers and <c>Spread</c> with curly brackets.</summary>
     public List<Expression> Children;
 
-    public MarkupInitializer(Expression id, List<NodeAttribute> attributes, List<Expression> children) : base() {
+    public MarkupInitializer(Expression id, List<MarkupAttribute> attributes, List<Expression> children) : base() {
         Id = id;
         Attributes = attributes;
         Children = children;
     }
 }
 
-public class NodeAttribute : Node {
+public class MarkupAttribute : Node {
     public Identifier Id;
     /// <summary>Attribute value. If null, equivalent to <c>attrib={true}</c>.</summary>
     public Expression Value;
 
-    public NodeAttribute(Identifier id, Expression @value) : base() {
+    public MarkupAttribute(Identifier id, Expression @value) : base() {
         Id = id;
         Value = @value;
     }

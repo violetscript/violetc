@@ -1208,6 +1208,7 @@ public partial class Verifier
 
     private void User_VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol type)
     {
+        var anonymousValue = m_ModelCore.Factory.Value(type);
         foreach (var fieldOrSpread in exp.Fields)
         {
             if (fieldOrSpread is Ast.Spread spread)
@@ -1227,7 +1228,7 @@ public partial class Verifier
             }
 
             var fieldName = ((Ast.StringLiteral) field.Key).Value;
-            var matchingProp = UserObjectInitializer_VerifyKey(type, fieldName, field.Key.Span.Value);
+            var matchingProp = UserObjectInitializer_VerifyKey(anonymousValue, type, fieldName, field.Key.Span.Value);
             if (matchingProp == null)
             {
                 if (field.Value != null)
@@ -1248,9 +1249,9 @@ public partial class Verifier
         }
     } // object initializer (user)
 
-    private Symbol UserObjectInitializer_VerifyKey(Symbol type, string fieldName, Span fieldSpan)
+    private Symbol UserObjectInitializer_VerifyKey(Symbol anonymousValue, Symbol type, string fieldName, Span fieldSpan)
     {
-        var r = type.ResolveProperty(fieldName);
+        var r = anonymousValue.ResolveProperty(fieldName);
         if (r == null)
         {
             // VerifyError: undefined property
@@ -1281,6 +1282,11 @@ public partial class Verifier
         if (!(r is Value))
         {
             VerifyError(null, 180, fieldSpan, new DiagnosticArguments {});
+            return null;
+        }
+        if (!(r is ReferenceValue && r.Property is VariableSlot))
+        {
+            VerifyError(null, 195, fieldSpan, new DiagnosticArguments {});
             return null;
         }
         return r;
@@ -1348,9 +1354,7 @@ public partial class Verifier
         }
     } // VerifyObjectShorthandField
 
-    // verifies object initializer.
-    // if it is given the type '*' or no type,
-    // then it returns an Object.
+    // verifies array initializer.
     private Symbol VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol expectedType)
     {
         Symbol type = null;
@@ -1537,5 +1541,89 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
-    }
+        var resultValue = m_ModelCore.Factory.Value(type);
+        foreach (var attr in exp.Attributes)
+        {
+            MarkupInitializer_VerifyAttr(attr, resultValue);
+        }
+        if (exp.Children != null && exp.Children.Count() > 0)
+        {
+            // verify children and ensure IMarkupContainer is implemented.
+            var containerType = type.GetIMarkupContainerChildType();
+            Symbol childType = containerType?.ArgumentTypes[0] ?? m_ModelCore.AnyType;
+            if (containerType == null)
+            {
+                VerifyError(null, 194, exp.Id.Span.Value, new DiagnosticArguments {["t"] = type});
+            }
+            foreach (var child in exp.Children)
+            {
+                // limit child type to IMarkupContainer argument type
+                LimitExpType(child, childType);
+            }
+        }
+        exp.SemanticSymbol = resultValue;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // markup initializer
+
+    // verify a markup attribute. ensure:
+    // - it is writable.
+    // - it is of Boolean type if it omits its value.
+    private void MarkupInitializer_VerifyAttr(Ast.MarkupAttribute attr, Symbol markupResult)
+    {
+        var r = markupResult.ResolveProperty(attr.Id.Name);
+        if (r == null)
+        {
+            // VerifyError: undefined property
+            VerifyError(null, 128, attr.Id.Span.Value, new DiagnosticArguments {["name"] = attr.Id.Name});
+            return;
+        }
+        if (!r.PropertyIsVisibleTo(m_Frame))
+        {
+            // VerifyError: accessing private property
+            VerifyError(null, 130, attr.Id.Span.Value, new DiagnosticArguments { ["name"] = attr.Id.Name });
+            return;
+        }
+        r = r is Alias ? r.AliasToSymbol : r;
+        // VerifyError: unargumented generic type or function
+        if (r.TypeParameters != null)
+        {
+            VerifyError(null, 132, attr.Id.Span.Value, new DiagnosticArguments { ["name"] = attr.Id.Name });
+            return;
+        }
+        if (r is Type)
+        {
+            r = m_ModelCore.Factory.TypeAsValue(r);
+        }
+        else if (r is Namespace)
+        {
+            r = m_ModelCore.Factory.NamespaceAsValue(r);
+        }
+        if (!(r is Value))
+        {
+            VerifyError(null, 180, attr.Id.Span.Value, new DiagnosticArguments {});
+            return;
+        }
+        if (!(r is ReferenceValue && (r.Property is VariableSlot || r.Property is VirtualSlot)))
+        {
+            VerifyError(null, 196, attr.Id.Span.Value, new DiagnosticArguments {});
+            return;
+        }
+        if (r.ReadOnly)
+        {
+            VerifyError(null, 147, attr.Id.Span.Value, new DiagnosticArguments {["name"] = attr.Id.Name});
+        }
+        if (attr.Value == null)
+        {
+            if (r.StaticType != m_ModelCore.BooleanType)
+            {
+                // VerifyError: property type isn't Boolean
+                VerifyError(null, 197, attr.Id.Span.Value, new DiagnosticArguments {["name"] = attr.Id.Name, ["t"] = r.StaticType});
+            }
+        }
+        else
+        {
+            LimitExpType(attr.Value, r.StaticType);
+        }
+    } // markup attribute
 }
