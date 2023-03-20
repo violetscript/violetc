@@ -106,7 +106,7 @@ public partial class Verifier
         {
             return null;
         }
-        if (r is Type)
+        if (r is Type && r.TypeParameters == null)
         {
             r = m_ModelCore.Factory.TypeAsValue(r);
         }
@@ -1196,7 +1196,6 @@ public partial class Verifier
                 VerifyError(null, 189, exp.Span.Value, new DiagnosticArguments {["name"] = fieldDefinition.Name});
             }
         }
-
     } // object initializer (record)
 
     private void User_VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol type)
@@ -1263,6 +1262,19 @@ public partial class Verifier
             VerifyError(null, 132, fieldSpan, new DiagnosticArguments { ["name"] = fieldName });
             return null;
         }
+        if (r is Type)
+        {
+            r = m_ModelCore.Factory.TypeAsValue(r);
+        }
+        else if (r is Namespace)
+        {
+            r = m_ModelCore.Factory.NamespaceAsValue(r);
+        }
+        if (!(r is Value))
+        {
+            VerifyError(null, 180, fieldSpan, new DiagnosticArguments {});
+            return null;
+        }
         return r;
     } // UserObjectInitializer_VerifyKey
 
@@ -1292,6 +1304,13 @@ public partial class Verifier
             }
             r = r is Alias ? r.AliasToSymbol : r;
 
+            // VerifyError: unargumented generic type or function
+            if (r.TypeParameters != null)
+            {
+                VerifyError(null, 132, field.Span.Value, new DiagnosticArguments { ["name"] = name });
+                return;
+            }
+
             if (r is Type)
             {
                 r = m_ModelCore.Factory.TypeAsValue(r);
@@ -1303,13 +1322,6 @@ public partial class Verifier
             if (!(r is Value))
             {
                 VerifyError(null, 180, field.Span.Value, new DiagnosticArguments {});
-                return;
-            }
-
-            // VerifyError: unargumented generic type or function
-            if (r.TypeParameters != null)
-            {
-                VerifyError(null, 132, field.Span.Value, new DiagnosticArguments { ["name"] = name });
                 return;
             }
 
