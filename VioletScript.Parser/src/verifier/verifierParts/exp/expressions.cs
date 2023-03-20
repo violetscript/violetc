@@ -130,6 +130,18 @@ public partial class Verifier
         {
             r = VerifyGenericInstantiationExp(gie);
         }
+        else if (exp is Ast.AssignmentExpression assignExp)
+        {
+            r = VerifyAssignmentExp(assignExp);
+        }
+        else if (exp is Ast.NewExpression newExp)
+        {
+            r = VerifyNewExp(newExp);
+        }
+        else if (exp is Ast.SuperExpression superExp)
+        {
+            r = VerifySuperExp(superExp);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -2133,4 +2145,95 @@ public partial class Verifier
             return exp.SemanticSymbol;
         }
     } // generic instantiation expression
+
+    private Symbol VerifyAssignmentExp(Ast.AssignmentExpression exp)
+    {
+        if (exp.Left is Ast.DestructuringPattern)
+        {
+            return VerifyDestructuringAssignmentExp(exp);
+        }
+        var left = VerifyExpAsValue((Ast.Expression) exp.Left, null, false, true);
+        if (left == null)
+        {
+            VerifyExpAsValue(exp.Right);
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        Symbol right = null;
+        if (exp.Compound == null || exp.Compound == Operator.LogicalAnd || exp.Compound == Operator.LogicalXor || exp.Compound == Operator.LogicalOr)
+        {
+            right = LimitExpType(exp.Right, left.StaticType);
+            exp.SemanticSymbol = right != null ? m_ModelCore.Factory.Value(left.StaticType) : null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        var proxy = InheritedProxies.Find(left.StaticType, exp.Compound);
+        if (proxy == null)
+        {
+            // unsupported operator
+            VerifyError(null, 178, exp.Span.Value, new DiagnosticArguments {["t"] = left.StaticType, ["op"] = exp.Compound});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        LimitExpType(exp.Right, proxy.StaticType.FunctionRequiredParameters[1].Type);
+        exp.SemanticSymbol = proxy == null ? null : m_ModelCore.Factory.Value(proxy.StaticType.FunctionReturnType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // assignment expression
+
+    private Symbol VerifyDestructuringAssignmentExp(Ast.AssignmentExpression exp)
+    {
+        var right = VerifyExpAsValue(exp.Right, null);
+        if (right == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        VerifyAssignmentDestructuringPattern((Ast.DestructuringPattern) exp.Left, right.StaticType);
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(right.StaticType);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // assignment expression (destructuring)
+
+    private Symbol VerifyNewExp(Ast.NewExpression exp)
+    {
+        var @base = VerifyExp(exp.Base);
+        if (@base == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        Symbol r = null;
+        if (@base is ClassType)
+        {
+            var constructorDefinition = @base.InheritConstructorDefinition();
+            if (constructorDefinition == null)
+            {
+                throw new Exception("The Object built-in must have a constructor definition");
+            }
+            VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, constructorDefinition.StaticType);
+            r = m_ModelCore.Factory.Value(@base);
+        }
+        else if (@base is Type)
+        {
+            VerifyError(null, 211, exp.Span.Value, new DiagnosticArguments {["t"] = @base});
+        }
+        else
+        {
+            VerifyError(null, 212, exp.Base.Span.Value, new DiagnosticArguments {});
+        }
+        exp.SemanticSymbol = r;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    }
+
+    private Symbol VerifySuperExp(Ast.SuperExpression exp)
+    {
+        //
+    }
 }
