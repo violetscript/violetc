@@ -179,6 +179,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [188] = "Object field for record or user type must be an identifier or string literal",
         [189] = "Object initializer must initialize the field '$name'",
         [190] = "Array initializer cannot be used for '$t'",
+        [191] = "Wrong number of tuple elements: expected $expected, got $got",
+        [192] = "Spread expression not currently supported in tuple initializer",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

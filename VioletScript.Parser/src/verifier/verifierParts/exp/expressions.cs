@@ -1380,10 +1380,139 @@ public partial class Verifier
             type = m_ModelCore.AnyType;
         }
 
-        doFooBarQuxBaz();
+        if (type == m_ModelCore.AnyType)
+        {
+            Any_VerifyArrayInitialiser(exp);
+        }
+        else if (type.IsInstantiationOf(m_ModelCore.ArrayType))
+        {
+            Array_VerifyArrayInitialiser(exp, type);
+        }
+        else if (type.IsInstantiationOf(m_ModelCore.SetType))
+        {
+            Set_VerifyArrayInitialiser(exp, type);
+        }
+        else if (type.IsFlagsEnum)
+        {
+            Flags_VerifyArrayInitialiser(exp, type);
+        }
+        else
+        {
+            Tuple_VerifyArrayInitialiser(exp, type);
+        }
 
         exp.SemanticSymbol = m_ModelCore.Factory.Value(type);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // array initializer
+
+    private void Any_VerifyArrayInitialiser(Ast.ArrayInitializer exp)
+    {
+        foreach (var itemOrHole in exp.Items)
+        {
+            if (itemOrHole == null)
+            {
+                continue;
+            }
+            if (itemOrHole is Ast.Spread spread)
+            {
+                LimitExpType(spread.Expression, m_ModelCore.AnyType);
+                continue;
+            }
+            LimitExpType(itemOrHole, m_ModelCore.AnyType);
+        }
+    }
+
+    private void Array_VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol type)
+    {
+        var elementType = type.ArgumentTypes[0];
+        Symbol spreadUnionType = null;
+ 
+        foreach (var itemOrHole in exp.Items)
+        {
+            if (itemOrHole == null)
+            {
+                continue;
+            }
+            if (itemOrHole is Ast.Spread spread)
+            {
+                spreadUnionType ??= m_ModelCore.Factory.UnionType(new Symbol[]
+                {
+                    type,
+                    m_ModelCore.Factory.InstantiatedType(m_ModelCore.IteratorType, new Symbol[]
+                    {
+                        elementType,
+                    }),
+                });
+                LimitExpType(spread.Expression, spreadUnionType);
+                continue;
+            }
+            LimitExpType(itemOrHole, elementType);
+        }
+    }
+
+    private void Set_VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol type)
+    {
+        var elementType = type.ArgumentTypes[0];
+        Symbol spreadUnionType = null;
+ 
+        foreach (var itemOrHole in exp.Items)
+        {
+            if (itemOrHole == null)
+            {
+                continue;
+            }
+            if (itemOrHole is Ast.Spread spread)
+            {
+                spreadUnionType ??= m_ModelCore.Factory.InstantiatedType(m_ModelCore.IteratorType, new Symbol[]
+                {
+                    elementType,
+                });
+                LimitExpType(spread.Expression, spreadUnionType);
+                continue;
+            }
+            LimitExpType(itemOrHole, elementType);
+        }
+    }
+
+    private void Flags_VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol type)
+    {
+        foreach (var itemOrHole in exp.Items)
+        {
+            if (itemOrHole == null)
+            {
+                continue;
+            }
+            if (itemOrHole is Ast.Spread spread)
+            {
+                LimitExpType(spread.Expression, type);
+                continue;
+            }
+            LimitExpType(itemOrHole, type);
+        }
+    }
+
+    private void Tuple_VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol type)
+    {
+        var tupleElTypes = type.TupleElementTypes;
+        if (exp.Items.Count() != type.CountOfTupleElements)
+        {
+            VerifyError(null, 191, exp.Span.Value, new DiagnosticArguments { ["expected"] = type.CountOfTupleElements, ["got"] = exp.Items.Count() });
+        }
+        for (int i = 0; i < exp.Items.Count(); ++i)
+        {
+            var itemOrHole = exp.Items[i];
+            if (itemOrHole == null)
+            {
+                continue;
+            }
+            if (itemOrHole is Ast.Spread spread)
+            {
+                VerifyError(null, 192, spread.Span.Value, new DiagnosticArguments {});
+                LimitExpType(spread.Expression, m_ModelCore.AnyType);
+                continue;
+            }
+            LimitExpType(itemOrHole, i < type.CountOfTupleElements ? tupleElTypes[i] : m_ModelCore.AnyType);
+        }
+    }
 }
