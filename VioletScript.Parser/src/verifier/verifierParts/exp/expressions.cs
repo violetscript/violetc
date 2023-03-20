@@ -1883,17 +1883,17 @@ public partial class Verifier
             VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, throwawayNonNullBase.StaticType);
             r = m_ModelCore.Factory.Value(throwawayNonNullBase.StaticType.FunctionReturnType);
         }
-        else if (@base is Value && @base.StaticType == m_ModelCore.FunctionType)
+        else if (throwawayNonNullBase is Value && throwawayNonNullBase.StaticType == m_ModelCore.FunctionType)
         {
             var arrayOfAny = m_ModelCore.Factory.InstantiatedType(m_ModelCore.ArrayType, new Symbol[]{m_ModelCore.AnyType});
             var functionTakingAny = m_ModelCore.Factory.FunctionType(null, null, new NameAndTypePair("_", arrayOfAny), m_ModelCore.AnyType);
             VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, functionTakingAny);
             r = m_ModelCore.Factory.Value(m_ModelCore.AnyType);
         }
-        else if (@base is Value)
+        else if (throwawayNonNullBase is Value)
         {
             // VerifyError: non callable type
-            VerifyError(null, 207, exp.Span.Value, new DiagnosticArguments {["t"] = @base.StaticType});
+            VerifyError(null, 207, exp.Span.Value, new DiagnosticArguments {["t"] = throwawayNonNullBase.StaticType});
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
