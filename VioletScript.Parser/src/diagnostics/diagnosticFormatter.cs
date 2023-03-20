@@ -198,6 +198,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [207] = "Cannot call value of type '$t'",
         [208] = "Cannot use 'this' literal at this context",
         [209] = "Conditional expression types are incompatible: '$c' and '$a'",
+        [210] = "Cannot instantiate item",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

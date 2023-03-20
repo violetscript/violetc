@@ -2097,11 +2097,25 @@ public partial class Verifier
         // verify generic method
         else if (@base.IsGenericTypeOrMethod)
         {
-            doFooBarQuxBaz();
+            var method = @base.Property;
+            var instantiatedMethod = VerifyGenericInstArguments(exp.Span.Value, method, exp.ArgumentsList);
+            if (instantiatedMethod == null)
+            {
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            exp.SemanticSymbol = doFooBarQuxBaz();
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
         }
         else
         {
-            doFooBarQuxBaz();
+            // VerifyError: cannot instantiate item
+            VerifyError(null, 210, exp.Span.Value, new DiagnosticArguments {});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
         }
     } // generic instantiation expression
 }
