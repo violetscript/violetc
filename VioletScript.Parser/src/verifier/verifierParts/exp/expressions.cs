@@ -70,6 +70,10 @@ public partial class Verifier
         {
             r = VerifyObjectInitialiser(objInit, expectedType);
         }
+        else if (exp is Ast.ArrayInitializer arrInit)
+        {
+            r = VerifyArrayInitialiser(arrInit, expectedType);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -1339,4 +1343,47 @@ public partial class Verifier
             field.SemanticShorthand = conversion;
         }
     } // VerifyObjectShorthandField
+
+    // verifies object initializer.
+    // if it is given the type '*' or no type,
+    // then it returns an Object.
+    private Symbol VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol expectedType)
+    {
+        Symbol type = null;
+        if (exp.Type != null)
+        {
+            type = VerifyTypeExp(exp.Type) ?? m_ModelCore.AnyType;
+        }
+        if (type == null)
+        {
+            type = expectedType;
+        }
+        type ??= expectedType;
+        type = type?.ToNonNullableType();
+
+        // make sure 'type' can be initialised
+        if (type is UnionType)
+        {
+            type = type.UnionMemberTypes.Where(t => t.TypeCanUseArrayInitializer).FirstOrDefault();
+        }
+
+        if (type == null)
+        {
+            // VerifyError: no infer type
+            VerifyError(null, 186, exp.Span.Value, new DiagnosticArguments {});
+            type = m_ModelCore.AnyType;
+        }
+        else if (!type.TypeCanUseArrayInitializer)
+        {
+            // VerifyError: cannot initialise type
+            VerifyError(null, 190, exp.Span.Value, new DiagnosticArguments {["t"] = type});
+            type = m_ModelCore.AnyType;
+        }
+
+        doFooBarQuxBaz();
+
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(type);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // array initializer
 }
