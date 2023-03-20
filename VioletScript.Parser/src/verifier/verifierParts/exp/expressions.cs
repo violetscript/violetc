@@ -781,7 +781,7 @@ public partial class Verifier
         var conversion = TypeConversions.ConvertExplicit(left, right, !strict);
         if (conversion == null)
         {
-            VerifyError(null, 168, exp.Span.Value, new DiagnosticArguments {["expected"] = right, ["got"] = left.StaticType});
+            VerifyError(null, 205, exp.Span.Value, new DiagnosticArguments {["from"] = left.StaticType, ["to"] = right});
         }
         exp.SemanticSymbol = conversion;
         exp.SemanticExpResolved = true;
@@ -1800,12 +1800,46 @@ public partial class Verifier
         }
         else if (@base is EnumType)
         {
-            doFooBarQuxBaz();
+            if (exp.ArgumentsList.Count() != 1)
+            {
+                VerifyError(null, 204, exp.Span.Value, new DiagnosticArguments {});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            r = VerifyExpAsValue(exp.ArgumentsList[0], @base);
+            if (r == null)
+            {
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            var conversion = TypeConversions.ConvertExplicit(r, @base, false);
+            if (r == null)
+            {
+                VerifyError(null, 205, exp.Span.Value, new DiagnosticArguments {["from"] = r.StaticType, ["to"] = @base});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            r = conversion;
+        }
+        else if (@base is Value && @base.StaticType == m_ModelCore.FunctionType)
+        {
+            var arrayOfAny = m_ModelCore.Factory.InstantiatedType(m_ModelCore.ArrayType, new Symbol[]{m_ModelCore.AnyType});
+            var functionTakingAny = m_ModelCore.Factory.FunctionType(null, null, new NameAndTypePair("_", arrayOfAny), m_ModelCore.AnyType);
+            VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, functionTakingAny);
+            r = m_ModelCore.Factory.Value(m_ModelCore.AnyType);
+        }
+        else if (@base is Value)
+        {
+            // VerifyError: non callable type
+            VerifyError(null, 207, exp.Span.Value, new DiagnosticArguments {["t"] = @base.StaticType});
         }
         else
         {
             // VerifyError: not callable
-            doFooBarQuxBaz();
+            VerifyError(null, 206, exp.Span.Value, new DiagnosticArguments {});
         }
 
         exp.SemanticSymbol = r;

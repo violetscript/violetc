@@ -192,6 +192,10 @@ public static class DefaultDiagnosticFormatterStatics {
         [201] = "Type '$t' does not support indexing",
         [202] = "Expected at least $atLeast argument(s)",
         [203] = "Expected at most $atMost argument(s)",
+        [204] = "Call over enumeration takes exactly one argument",
+        [205] = "Cannot convert from type '$from' to '$to'",
+        [206] = "Cannot call expression",
+        [207] = "Cannot call value of type '$t'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
