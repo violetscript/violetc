@@ -1444,6 +1444,14 @@ public partial class Verifier
                 VerifyTypeExp(id.Type);
             }
 
+            if (r is Value && r.StaticType == null)
+            {
+                VerifyError(null, 199, exp.Span.Value, new DiagnosticArguments {});
+                exp.SemanticSymbol = null;
+                exp.SemanticConstantExpResolved = true;
+                return r;
+            }
+
             r = ImplicitNaNOrInfToOtherNumericType(r, expectedType);
 
             exp.SemanticSymbol = r;
@@ -1766,14 +1774,6 @@ public partial class Verifier
         if (r == null)
         {
             return null;
-        }
-        if (r is Type)
-        {
-            r = m_ModelCore.Factory.TypeAsValue(r);
-        }
-        else if (r is Namespace)
-        {
-            r = m_ModelCore.Factory.NamespaceAsValue(r);
         }
         if (!(r is Value))
         {

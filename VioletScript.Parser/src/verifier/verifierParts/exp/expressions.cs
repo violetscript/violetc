@@ -94,6 +94,14 @@ public partial class Verifier
             exp.SemanticSymbol = null;
         }
 
+        if (r is Value && r.StaticType == null)
+        {
+            VerifyError(null, 199, exp.Span.Value, new DiagnosticArguments {});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return r;
+        }
+
         return exp.SemanticSymbol;
     } // VerifyExp
 
