@@ -518,6 +518,13 @@ public class CallExpression : Expression {
     public List<Expression> ArgumentsList;
     public bool Optional;
 
+    /// <summary>
+    /// If this is an optional call, this stores
+    /// a throw-away non-null value corresponding to the base value;
+    /// that is, it is a value of type <c>Base.SemanticSymbol.ToNonNullableType()</c>.
+    /// </summary>
+    public Symbol SemanticThrowawayNonNullBase = null;
+
     public CallExpression(Expression @base, List<Expression> argumentsList, bool optional = false) : base() {
         Base = @base;
         ArgumentsList = argumentsList;

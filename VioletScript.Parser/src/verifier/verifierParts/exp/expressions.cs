@@ -1835,15 +1835,93 @@ public partial class Verifier
         {
             // VerifyError: non callable type
             VerifyError(null, 207, exp.Span.Value, new DiagnosticArguments {["t"] = @base.StaticType});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
         }
         else
         {
             // VerifyError: not callable
             VerifyError(null, 206, exp.Span.Value, new DiagnosticArguments {});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
         }
 
         exp.SemanticSymbol = r;
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // call expression
+
+    private Symbol VerifyOptCallExp(Ast.CallExpression exp)
+    {
+        var @base = VerifyExpAsValue(exp.Base, null);
+        if (@base == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        Symbol r = null;
+
+        var baseType = @base.StaticType;
+        if (!baseType.IncludesNull && !baseType.IncludesUndefined)
+        {
+            // VerifyError: optional member base must possibly be undefined
+            // or null.
+            VerifyError(null, 170, exp.Base.Span.Value, new DiagnosticArguments {["t"] = baseType});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        var throwawayNonNullBase = m_ModelCore.Factory.Value(baseType.ToNonNullableType());
+        exp.SemanticThrowawayNonNullBase = throwawayNonNullBase;
+
+        if (throwawayNonNullBase.StaticType is FunctionType)
+        {
+            VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, throwawayNonNullBase.StaticType);
+            r = m_ModelCore.Factory.Value(throwawayNonNullBase.StaticType.FunctionReturnType);
+        }
+        else if (@base is Value && @base.StaticType == m_ModelCore.FunctionType)
+        {
+            var arrayOfAny = m_ModelCore.Factory.InstantiatedType(m_ModelCore.ArrayType, new Symbol[]{m_ModelCore.AnyType});
+            var functionTakingAny = m_ModelCore.Factory.FunctionType(null, null, new NameAndTypePair("_", arrayOfAny), m_ModelCore.AnyType);
+            VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, functionTakingAny);
+            r = m_ModelCore.Factory.Value(m_ModelCore.AnyType);
+        }
+        else if (@base is Value)
+        {
+            // VerifyError: non callable type
+            VerifyError(null, 207, exp.Span.Value, new DiagnosticArguments {["t"] = @base.StaticType});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        else
+        {
+            // VerifyError: not callable
+            VerifyError(null, 206, exp.Span.Value, new DiagnosticArguments {});
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
+        if (baseType.IncludesNull && !baseType.IncludesUndefined)
+        {
+            r = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.NullType, r.StaticType}));
+        }
+        else if (!baseType.IncludesNull && baseType.IncludesUndefined)
+        {
+            r = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, r.StaticType}));
+        }
+        else
+        {
+            r = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, m_ModelCore.NullType, r.StaticType}));
+        }
+
+        exp.SemanticSymbol = r;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // call expression (optional)
 }
