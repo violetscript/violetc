@@ -580,6 +580,17 @@ public class ConditionalExpression : Expression {
     public Expression Consequent;
     public Expression Alternative;
 
+    /// <summary>
+    /// After verification, if non-null, indicates the
+    /// dominant result type is the alternative's type.
+    /// </summary>
+    public Symbol SemanticConseqToAltConv = null;
+    /// <summary>
+    /// After verification, if non-null, indicates the
+    /// dominant result type is the consequent's type.
+    /// </summary>
+    public Symbol SemanticAltToConseqConv = null;
+
     public ConditionalExpression(Expression test, Expression consequent, Expression alternative) : base() {
         Test = test;
         Consequent = consequent;

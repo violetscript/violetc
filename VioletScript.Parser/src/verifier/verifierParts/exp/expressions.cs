@@ -114,6 +114,18 @@ public partial class Verifier
         {
             r = VerifyRegExpLiteral(reLiteral);
         }
+        else if (exp is Ast.ConditionalExpression condExp)
+        {
+            r = VerifyConditionalExp(condExp, expectedType);
+        }
+        else if (exp is Ast.ParensExpression parensExp)
+        {
+            r = VerifyParensExp(parensExp, expectedType, instantiatingGeneric, writting);
+        }
+        else if (exp is Ast.ListExpression listExp)
+        {
+            r = VerifyListExp(listExp, expectedType);
+        }
         else
         {
             throw new Exception("Unimplemented expression");
@@ -1989,4 +2001,70 @@ public partial class Verifier
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // regular expression
+
+    // verifies a conditional expression.
+    // attempts to convert in two different ways:
+    // - either implicitly converts consequent type to alternative type.
+    // - either implicitly converts alternative type to consequent type.
+    // if none of the conversions succeed, throw a VerifyError.
+    private Symbol VerifyConditionalExp(Ast.ConditionalExpression exp, Symbol expectedType)
+    {
+        VerifyExpAsValue(exp.Test);
+        var conseq = VerifyExpAsValue(exp.Consequent, expectedType);
+        if (conseq == null)
+        {
+            VerifyExpAsValue(exp.Alternative);
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var alt = VerifyExpAsValue(exp.Alternative, expectedType);
+        if (alt == null)
+        {
+            exp.SemanticSymbol = null;
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var c2a = TypeConversions.ConvertImplicit(conseq, alt.StaticType);
+        if (c2a != null)
+        {
+            exp.SemanticConseqToAltConv = c2a;
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(alt.StaticType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        var a2c = TypeConversions.ConvertImplicit(alt, conseq.StaticType);
+        if (a2c != null)
+        {
+            exp.SemanticAltToConseqConv = a2c;
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(conseq.StaticType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+        VerifyError(null, 209, exp.Span.Value, new DiagnosticArguments {["c"] = conseq.StaticType, ["a"] = alt.StaticType});
+        exp.SemanticSymbol = null;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // conditional expression
+
+    private Symbol VerifyParensExp(Ast.ParensExpression exp, Symbol expectedType, bool instantiatingGeneric, bool writting)
+    {
+        exp.SemanticSymbol = VerifyExp(exp, expectedType, instantiatingGeneric, writting);
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // parentheses expression
+
+    private Symbol VerifyListExp(Ast.ListExpression exp, Symbol expectedType)
+    {
+        Symbol r = null;
+        bool valid = true;
+        foreach (var subExpr in exp.Expressions)
+        {
+            r = VerifyExp(subExpr, expectedType);
+            valid = valid && r != null;
+        }
+        exp.SemanticSymbol = valid ? r : null;
+        exp.SemanticExpResolved = true;
+        return exp.SemanticSymbol;
+    } // list expression
 }
