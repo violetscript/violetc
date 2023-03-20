@@ -1138,6 +1138,66 @@ public partial class Verifier
         }
     } // object initializer (flags)
 
+    private void Record_VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol type)
+    {
+        var initializedFields = new Dictionary<string, bool>();
+
+        foreach (var fieldOrSpread in exp.Fields)
+        {
+            if (fieldOrSpread is Ast.Spread spread)
+            {
+                LimitExpType(spread.Expression, type);
+                continue;
+            }
+            var field = (Ast.ObjectField) fieldOrSpread;
+            if (!(field.Key is Ast.StringLiteral))
+            {
+                VerifyError(null, 188, field.Key.Span.Value, new DiagnosticArguments {});
+                if (field.Value != null)
+                {
+                    VerifyExp(field.Value);
+                }
+                continue;
+            }
+
+            var fieldName = ((Ast.StringLiteral) field.Key).Value;
+            var matchingField = type.RecordTypeGetField(fieldName);
+
+            if (!matchingField.HasValue)
+            {
+                VerifyError(null, 128, field.Key.Span.Value, new DiagnosticArguments {["name"] = fieldName});
+                if (field.Value != null)
+                {
+                    VerifyExp(field.Value);
+                }
+                continue;
+            }
+
+            initializedFields[fieldName] = true;
+
+            if (field.Value == null)
+            {
+                VerifyObjectShorthandField(field, matchingField.Value.Type);
+            }
+            else
+            {
+                LimitExpType(field.Value, matchingField.Value.Type);
+            }
+        }
+
+        // ensure that all required fields are specified.
+        // a field is optional when it possibly contains undefined.
+        foreach (var fieldDefinition in type.RecordTypeFields)
+        {
+            if (!fieldDefinition.Type.IncludesUndefined
+            && !initializedFields.ContainsKey(fieldDefinition.Name))
+            {
+                VerifyError(null, 189, exp.Span.Value, new DiagnosticArguments {["name"] = fieldDefinition.Name});
+            }
+        }
+
+    } // object initializer (flags)
+
     private void VerifyObjectShorthandField(Ast.ObjectField field, Symbol expectedType)
     {
         var name = ((Ast.StringLiteral) field.Key).Value;

@@ -781,6 +781,18 @@ public class RecordType : Type {
         get => new[]{ModelCore.ObjectType};
     }
 
+    public override NameAndTypePair? RecordTypeGetField(string name)
+    {
+        foreach (var item in m_Fields)
+        {
+            if (item.Name == name)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+
     public override string ToString() {
         return "{" + String.Join(", ", m_Fields.Select(field => field.Name + ":" + field.Type.ToString())) + "}";
     }

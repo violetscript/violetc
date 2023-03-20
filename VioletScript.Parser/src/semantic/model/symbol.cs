@@ -618,4 +618,9 @@ public class Symbol {
             ||  this is TupleType
             ||  this is AnyType;
     }
+
+    public virtual NameAndTypePair? RecordTypeGetField(string name)
+    {
+        return null;
+    }
 }
