@@ -29,6 +29,11 @@ public partial class Verifier
         {
             VerifyVariableDefinition(varDefn);
         }
+        // super statement
+        else if (stmt is Ast.SuperStatement supStmt)
+        {
+            VerifySuperStatement(supStmt);
+        }
         // empty statement
         else if (stmt is Ast.EmptyStatement)
         {
@@ -62,6 +67,16 @@ public partial class Verifier
     private void VerifyVariableDefinition(Ast.VariableDefinition defn)
     {
         // create shadow frame
-        doFooBarQuxBaz();
+        var shadowFrame = m_ModelCore.Factory.Frame();
+        defn.SemanticShadowFrame = shadowFrame;
+        foreach (var binding in defn.Bindings)
+        {
+            VerifyVariableBinding(binding, defn.ReadOnly, shadowFrame.Properties, Visibility.Public);
+        }
     } // variable definition
+
+    private void VerifySuperStatement(Ast.SuperStatement stmt)
+    {
+        doFooBarQuxBaz();
+    } // super statement
 }
