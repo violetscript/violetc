@@ -34,6 +34,11 @@ public partial class Verifier
         {
             VerifySuperStatement(supStmt);
         }
+        // import directive
+        else if (stmt is Ast.ImportStatement importStmt)
+        {
+            VerifyImportDirective(importStmt);
+        }
         // empty statement
         else if (stmt is Ast.EmptyStatement)
         {
@@ -57,7 +62,7 @@ public partial class Verifier
             }
         }
         ExitNFrames(nOfVarShadows);
-    } // statement
+    } // statement sequence
 
     private void VerifyBlock(Ast.Block block)
     {
@@ -80,4 +85,10 @@ public partial class Verifier
         var constructorDefinition = m_Frame.FindClassFrame();
         VerifyFunctionCall(stmt.ArgumentsList, stmt.Span.Value, constructorDefinition.StaticType);
     } // super statement
+
+    private void VerifyImportDirective(Ast.ImportStatement stmt)
+    {
+        var imported = m_ModelCore.GlobalPackage;
+        doFooBarQuxBaz();
+    } // import statatement
 }
