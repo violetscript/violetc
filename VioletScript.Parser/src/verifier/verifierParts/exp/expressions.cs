@@ -293,7 +293,7 @@ public partial class Verifier
                 exp.SemanticExpResolved = true;
                 return exp.SemanticSymbol;
             }
-            r = r is Alias ? r.AliasToSymbol : r;
+            r = r?.EscapeAlias();
             // VerifyError: unargumented generic type or function
             if (!instantiatingGeneric && r.IsGenericTypeOrMethod)
             {
@@ -364,7 +364,7 @@ public partial class Verifier
                 exp.SemanticExpResolved = true;
                 return exp.SemanticSymbol;
             }
-            r = r is Alias ? r.AliasToSymbol : r;
+            r = r?.EscapeAlias();
             // VerifyError: unargumented generic type or function
             if (!instantiatingGeneric && r.IsGenericTypeOrMethod)
             {
@@ -449,7 +449,7 @@ public partial class Verifier
                 exp.SemanticExpResolved = true;
                 return exp.SemanticSymbol;
             }
-            r = r is Alias ? r.AliasToSymbol : r;
+            r = r?.EscapeAlias();
             // VerifyError: unargumented generic type or function
             if (!instantiatingGeneric && r.IsGenericTypeOrMethod)
             {
@@ -1144,7 +1144,7 @@ public partial class Verifier
             VerifyError(null, 130, attr.Id.Span.Value, new DiagnosticArguments { ["name"] = attr.Id.Name });
             return;
         }
-        r = r is Alias ? r.AliasToSymbol : r;
+        r = r?.EscapeAlias();
         // VerifyError: unargumented generic type or function
         if (r.IsGenericTypeOrMethod)
         {

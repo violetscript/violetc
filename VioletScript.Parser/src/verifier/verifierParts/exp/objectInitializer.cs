@@ -267,7 +267,7 @@ public partial class Verifier
             VerifyError(null, 130, fieldSpan, new DiagnosticArguments { ["name"] = fieldName });
             return null;
         }
-        r = r is Alias ? r.AliasToSymbol : r;
+        r = r.EscapeAlias();
         // VerifyError: unargumented generic type or function
         if (r.IsGenericTypeOrMethod)
         {
@@ -324,7 +324,7 @@ public partial class Verifier
                 VerifyError(null, 130, field.Span.Value, new DiagnosticArguments { ["name"] = name });
                 return;
             }
-            r = r is Alias ? r.AliasToSymbol : r;
+            r = r?.EscapeAlias();
 
             // VerifyError: unargumented generic type or function
             if (r.IsGenericTypeOrMethod)

@@ -130,6 +130,34 @@ public partial class Verifier
             VerifyError(null, 217, stmt.Span.Value, new DiagnosticArguments {});
             return;
         }
-        doFooBarQuxBaz();
-    } // import statatement
+
+        if (stmt.Alias == null && stmt.Wildcard)
+        {
+            m_Frame.OpenNamespace(imported);
+        }
+        else if (stmt.Alias != null)
+        {
+            // alias item or package
+            if (m_Frame.Properties.Has(stmt.Alias.Name))
+            {
+                VerifyError(null, 139, stmt.Alias.Span.Value, new DiagnosticArguments {["name"] = stmt.Alias.Name});
+            }
+            else
+            {
+                m_Frame.Properties[stmt.Alias.Name] = imported;
+            }
+        }
+        else
+        {
+            // alias item
+            if (m_Frame.Properties.Has(imported.Name))
+            {
+                VerifyError(null, 139, stmt.Span.Value, new DiagnosticArguments {["name"] = imported.Name});
+            }
+            else
+            {
+                m_Frame.Properties[imported.Name] = imported;
+            }
+        }
+    } // import statement
 }

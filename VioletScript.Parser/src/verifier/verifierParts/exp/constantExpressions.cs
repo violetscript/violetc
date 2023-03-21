@@ -1402,7 +1402,7 @@ public partial class Verifier
                 exp.SemanticConstantExpResolved = true;
                 return exp.SemanticSymbol;
             }
-            r = r is Alias ? r.AliasToSymbol : r;
+            r = r?.EscapeAlias();
             // VerifyError: unargumented generic type or function
             if (!instantiatingGeneric && r.TypeParameters != null)
             {
@@ -1506,7 +1506,7 @@ public partial class Verifier
                 exp.SemanticConstantExpResolved = true;
                 return exp.SemanticSymbol;
             }
-            r = r is Alias ? r.AliasToSymbol : r;
+            r = r?.EscapeAlias();
             // VerifyError: unargumented generic type or function
             if (!instantiatingGeneric && r.TypeParameters != null)
             {

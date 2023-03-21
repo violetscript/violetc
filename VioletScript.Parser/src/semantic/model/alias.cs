@@ -32,4 +32,9 @@ public class Alias : Symbol {
         get => m_Parent;
         set { m_Parent = value; }
     }
+
+    public override Symbol EscapeAlias()
+    {
+        return AliasToSymbol is Alias ? AliasToSymbol.EscapeAlias() : AliasToSymbol;
+    }
 }

@@ -50,7 +50,7 @@ public partial class Verifier
                     // VerifyError: accessing private property
                     VerifyError(null, 130, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
                 }
-                r = r is Alias ? r.AliasToSymbol : r;
+                r = r?.EscapeAlias();
                 if (!isBase && !(r is Type))
                 {
                     // VerifyError: not a type constant
@@ -223,7 +223,7 @@ public partial class Verifier
                     // VerifyError: accessing private property
                     VerifyError(exp.Span.Value.Script, 130, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
                 }
-                r = r is Alias ? r.AliasToSymbol : r;
+                r = r?.EscapeAlias();
                 if (!isBase && !(r is Type))
                 {
                     // VerifyError: not a type constant

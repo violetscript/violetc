@@ -657,4 +657,9 @@ public class Symbol {
     {
         return this is ClassFrame ? this : this.ParentFrame?.FindClassFrame();
     }
+
+    public virtual Symbol EscapeAlias()
+    {
+        return this;
+    }
 }

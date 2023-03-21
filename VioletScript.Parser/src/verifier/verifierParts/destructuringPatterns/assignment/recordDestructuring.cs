@@ -126,7 +126,7 @@ public partial class Verifier
                         // VerifyError: accessing private property
                         VerifyError(key.Span.Value.Script, 130, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
                     }
-                    throwawayProp = throwawayProp is Alias ? throwawayProp.AliasToSymbol : throwawayProp;
+                    throwawayProp = throwawayProp?.EscapeAlias();
                     // VerifyError: unargumented function
                     if (throwawayProp.TypeParameters != null)
                     {
