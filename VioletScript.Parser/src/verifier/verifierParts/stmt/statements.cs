@@ -92,7 +92,7 @@ public partial class Verifier
         bool first = true;
         foreach (var name in stmt.ImportName)
         {
-            // the 'global' identifier may be used to import a property
+            // the 'global' identifier may be used to alias a property
             // from the global package.
             if (first && name == "global")
             {
