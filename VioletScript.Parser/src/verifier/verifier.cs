@@ -77,4 +77,12 @@ public partial class Verifier
     {
         m_Frame = m_Frame?.ParentFrame;
     }
+
+    private void ExitNFrames(int n)
+    {
+        for (int i = 0; i < n; ++i)
+        {
+            ExitFrame();
+        }
+    }
 }

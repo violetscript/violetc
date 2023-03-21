@@ -754,6 +754,12 @@ public class VariableDefinition : AnnotatableDefinition {
     public bool ReadOnly;
     public List<VariableBinding> Bindings;
 
+    /// <summary>
+    /// Indicates a next frame for a variable definition in which its bindings
+    /// can be accessed. This allows shadowing previous bindings.
+    /// </summary>
+    public Symbol SemanticShadowFrame = null;
+
     public VariableDefinition(bool readOnly, List<VariableBinding> bindings) : base() {
         ReadOnly = readOnly;
         Bindings = bindings;

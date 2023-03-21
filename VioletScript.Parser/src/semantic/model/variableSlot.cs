@@ -14,7 +14,6 @@ public class NormalVariableSlot : VariableSlot {
     private Symbol m_InitValue = null;
     private Visibility m_Visibility = Visibility.Internal;
     private Symbol m_Parent = null;
-    private Symbol m_ShadowFrame = null;
 
     public NormalVariableSlot(string name, bool readOnly, Symbol staticType) {
         m_Name = name;
@@ -30,11 +29,6 @@ public class NormalVariableSlot : VariableSlot {
     public override bool ReadOnly {
         get => m_ReadOnly;
         set => m_ReadOnly = value;
-    }
-
-    public override Symbol ShadowFrame {
-        get => m_ShadowFrame;
-        set => m_ShadowFrame = value;
     }
 
     public override Symbol InitValue {

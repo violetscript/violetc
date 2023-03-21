@@ -19,14 +19,19 @@ public partial class Verifier
         {
             VerifyExp(expStmt.Expression);
         }
-        // empty statement
-        else if (stmt is Ast.EmptyStatement)
-        {
-        }
         // block statement
         else if (stmt is Ast.Block block)
         {
             VerifyBlock(block);
+        }
+        // variable definition
+        else if (stmt is Ast.VariableDefinition varDefn)
+        {
+            VerifyVariableDefinition(varDefn);
+        }
+        // empty statement
+        else if (stmt is Ast.EmptyStatement)
+        {
         }
         else
         {
@@ -36,6 +41,23 @@ public partial class Verifier
 
     private void VerifyBlock(Ast.Block block)
     {
-        doFooBarQuxBaz();
+        int nOfVarShadows = 0;
+        foreach (var stmt in block.Statements)
+        {
+            VerifyStatement(stmt);
+            if (stmt is Ast.VariableDefinition varDefn && varDefn.SemanticShadowFrame != null)
+            {
+                EnterFrame(varDefn.SemanticShadowFrame);
+                ++nOfVarShadows;
+            }
+        }
+        ExitNFrames(nOfVarShadows);
     } // block statement
+
+    private void VerifyVariableDefinition(Ast.VariableDefinition defn)
+    {
+        // create shadow frame
+        doFooBarQuxBaz();
+    }
+    // variable definition
 }

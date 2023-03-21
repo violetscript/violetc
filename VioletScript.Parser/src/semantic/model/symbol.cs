@@ -264,15 +264,6 @@ public class Symbol {
         set {}
     }
 
-    /// <summary>
-    /// Indicates a next frame for a variable definition in which its bindings
-    /// can be accessed. This allows shadowing previous bindings.
-    /// </summary>
-    public virtual Symbol ShadowFrame {
-        get => null;
-        set {}
-    }
-
     public virtual Symbol InitValue {
         get => null;
         set {}
