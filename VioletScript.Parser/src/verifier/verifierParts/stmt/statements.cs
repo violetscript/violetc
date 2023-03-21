@@ -14,13 +14,28 @@ public partial class Verifier
 {
     private void VerifyStatement(Ast.Statement stmt)
     {
+        // expression statement
         if (stmt is Ast.ExpressionStatement expStmt)
         {
             VerifyExp(expStmt.Expression);
+        }
+        // empty statement
+        else if (stmt is Ast.EmptyStatement)
+        {
+        }
+        // block statement
+        else if (stmt is Ast.Block block)
+        {
+            VerifyBlock(block);
         }
         else
         {
             throw new Exception("Unimplemented directive or statement");
         }
-    }
+    } // statement
+
+    private void VerifyBlock(Ast.Block block)
+    {
+        doFooBarQuxBaz();
+    } // block statement
 }
