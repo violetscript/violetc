@@ -91,6 +91,10 @@ public partial class Verifier
         {
             VerifyForStatement(forStmt);
         }
+        else if (stmt is Ast.ForInStatement forInStmt)
+        {
+            VerifyForInStatement(forInStmt);
+        }
         else
         {
             throw new Exception("Unimplemented directive or statement");
@@ -320,4 +324,10 @@ public partial class Verifier
         VerifyStatement(stmt.Body);
         ExitFrame();
     } // for statement
+
+    private void VerifyForInStatement(Ast.ForInStatement stmt)
+    {
+        // remember to resolve left operand with writting=true
+        doFooBarQuxBaz();
+    }
 }
