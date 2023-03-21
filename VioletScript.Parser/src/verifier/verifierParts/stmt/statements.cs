@@ -12,4 +12,15 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
+    private void VerifyStatement(Ast.Statement stmt)
+    {
+        if (stmt is Ast.ExpressionStatement expStmt)
+        {
+            VerifyExp(expStmt.Expression);
+        }
+        else
+        {
+            throw new Exception("Unimplemented directive or statement");
+        }
+    }
 }
