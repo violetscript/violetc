@@ -89,8 +89,15 @@ public partial class Verifier
     private void VerifyImportDirective(Ast.ImportStatement stmt)
     {
         var imported = m_ModelCore.GlobalPackage;
+        bool first = true;
         foreach (var name in stmt.ImportName)
         {
+            // the 'global' identifier may be used to import a property
+            // from the global package.
+            if (first && name == "global")
+            {
+                continue;
+            }
             var imported2 = imported.ResolveProperty(name);
             if (imported2 == null)
             {
@@ -105,14 +112,17 @@ public partial class Verifier
                 return;
             }
             imported = imported2;
+            first = false;
         }
         if (stmt.Wildcard && !(imported is Package))
         {
             doFooBarQuxBaz();
+            return;
         }
         else if (!stmt.Wildcard && imported is Package)
         {
             doFooBarQuxBaz();
+            return;
         }
         doFooBarQuxBaz();
     } // import statatement
