@@ -1146,6 +1146,11 @@ public class ForInStatement : Statement {
     public Expression Right;
     public Statement Body;
 
+    /// <summary>
+    /// Frame used by the statement's body.
+    /// </summary>
+    public Symbol SemanticFrame = null;
+
     public ForInStatement(bool iteratesKeys, Node left, Expression right, Statement body) : base() {
         IteratesKeys = iteratesKeys;
         Left = left;
@@ -1200,6 +1205,8 @@ public class SwitchTypeCase : Node {
     public DestructuringPattern Pattern;
     public Block Block;
 
+    public Symbol SemanticFrame = null;
+
     public SwitchTypeCase(DestructuringPattern pattern, Block block) : base() {
         Pattern = pattern;
         Block = block;
@@ -1228,6 +1235,8 @@ public class UseResourceStatement : Statement {
     public List<VariableBinding> Bindings;
     public Block Block;
 
+    public Symbol SemanticFrame = null;
+
     public UseResourceStatement(List<VariableBinding> bindings, Block block) : base() {
         Bindings = bindings;
         Block = block;
@@ -1237,6 +1246,8 @@ public class UseResourceStatement : Statement {
 public class WithStatement : Statement {
     public Expression Object;
     public Statement Body;
+
+    public Symbol SemanticFrame = null;
 
     public WithStatement(Expression @object, Statement body) : base() {
         Object = @object;

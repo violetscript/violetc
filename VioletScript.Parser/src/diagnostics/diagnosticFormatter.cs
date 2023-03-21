@@ -207,6 +207,10 @@ public static class DefaultDiagnosticFormatterStatics {
         [216] = "Import item must be a package",
         [217] = "Import item must not be a package",
         [218] = "Return must not be empty",
+        [219] = "Cannot iterate keys on type '$t'",
+        [220] = "Cannot iterate values on type '$t'",
+        [221] = "Switch discriminant is never of type '$t'",
+        [222] = "Item is not a namespace",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

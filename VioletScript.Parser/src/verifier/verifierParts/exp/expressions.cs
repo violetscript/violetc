@@ -204,14 +204,15 @@ public partial class Verifier
     private Symbol LimitExpType
     (
         Ast.Expression exp,
-        Symbol expectedType
+        Symbol expectedType,
+        bool writting = false
     )
     {
         if (exp.SemanticExpResolved)
         {
             return exp.SemanticSymbol;
         }
-        var r = VerifyExpAsValue(exp, expectedType);
+        var r = VerifyExpAsValue(exp, expectedType, false, writting);
         if (r == null)
         {
             return null;
@@ -232,14 +233,15 @@ public partial class Verifier
     private Symbol LimitStrictExpType
     (
         Ast.Expression exp,
-        Symbol expectedType
+        Symbol expectedType,
+        bool writting = false
     )
     {
         if (exp.SemanticExpResolved)
         {
             return exp.SemanticSymbol;
         }
-        var r = VerifyExpAsValue(exp, expectedType);
+        var r = VerifyExpAsValue(exp, expectedType, false, writting);
         if (r == null)
         {
             return null;
@@ -854,7 +856,7 @@ public partial class Verifier
         {
             Warn(null, 183, exp.Span.Value, new DiagnosticArguments {["right"] = right});
         }
-        else if (!right.IsSubtypeOf(left.StaticType))
+        else if (!right.CanBeASubtypeOf(left.StaticType))
         {
             Warn(null, 181, exp.Span.Value, new DiagnosticArguments {["right"] = right});
         }
@@ -1109,9 +1111,8 @@ public partial class Verifier
         if (exp.Children != null && exp.Children.Count() > 0)
         {
             // verify children and ensure IMarkupContainer is implemented.
-            var containerType = type.GetIMarkupContainerChildType();
-            Symbol childType = containerType?.ArgumentTypes[0] ?? m_ModelCore.AnyType;
-            if (containerType == null)
+            Symbol childType = type.GetIMarkupContainerChildType() ?? m_ModelCore.AnyType;
+            if (childType == null)
             {
                 VerifyError(null, 194, exp.Id.Span.Value, new DiagnosticArguments {["t"] = type});
             }

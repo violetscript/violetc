@@ -642,7 +642,19 @@ public class Symbol {
         {
             if (itrfc.IsInstantiationOf(this.ModelCore.IMarkupContainerType))
             {
-                return itrfc;
+                return itrfc.ArgumentTypes[0];
+            }
+        }
+        return null;
+    }
+
+    public Symbol GetIteratorItemType()
+    {
+        foreach (var itrfc in ImplementsInterfaces)
+        {
+            if (itrfc.IsInstantiationOf(this.ModelCore.IteratorType))
+            {
+                return itrfc.ArgumentTypes[0];
             }
         }
         return null;
@@ -661,5 +673,10 @@ public class Symbol {
     public virtual Symbol EscapeAlias()
     {
         return this;
+    }
+
+    public bool CanBeASubtypeOf(Symbol type)
+    {
+        return !(type is AnyType) && !(this is UnionType) && !this.IsSubtypeOf(type);
     }
 }

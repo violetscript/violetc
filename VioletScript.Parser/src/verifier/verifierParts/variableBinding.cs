@@ -110,8 +110,8 @@ public partial class Verifier
         if (binding.Pattern.Type == null)
         {
             // VerifyError
-            init = VerifyConstantExpAsValue(binding.Init, false);
-            VerifyDestructuringPattern(binding.Pattern, false, output, Visibility.Public, init?.StaticType ?? m_ModelCore.AnyType);
+            init = VerifyConstantExpAsValue(binding.Init, true);
+            VerifyDestructuringPattern(binding.Pattern, false, output, Visibility.Public, init?.StaticType ?? inferType ?? m_ModelCore.AnyType);
         }
         else
         {
