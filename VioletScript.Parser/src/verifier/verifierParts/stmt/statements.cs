@@ -39,10 +39,10 @@ public partial class Verifier
         }
     } // statement
 
-    private void VerifyBlock(Ast.Block block)
+    private void VerifyStatementSeq(List<Ast.Statement> seq)
     {
         int nOfVarShadows = 0;
-        foreach (var stmt in block.Statements)
+        foreach (var stmt in seq)
         {
             VerifyStatement(stmt);
             if (stmt is Ast.VariableDefinition varDefn && varDefn.SemanticShadowFrame != null)
@@ -52,12 +52,16 @@ public partial class Verifier
             }
         }
         ExitNFrames(nOfVarShadows);
+    } // statement
+
+    private void VerifyBlock(Ast.Block block)
+    {
+        VerifyStatementSeq(block.Statements);
     } // block statement
 
     private void VerifyVariableDefinition(Ast.VariableDefinition defn)
     {
         // create shadow frame
         doFooBarQuxBaz();
-    }
-    // variable definition
+    } // variable definition
 }
