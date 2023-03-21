@@ -77,6 +77,7 @@ public partial class Verifier
 
     private void VerifySuperStatement(Ast.SuperStatement stmt)
     {
-        doFooBarQuxBaz();
+        var constructorDefinition = m_Frame.FindClassFrame();
+        VerifyFunctionCall(stmt.ArgumentsList, stmt.Span.Value, constructorDefinition.StaticType);
     } // super statement
 }

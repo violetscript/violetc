@@ -652,4 +652,9 @@ public class Symbol {
     {
         get => this.Property is MethodSlot ? this.Property.IsGenericTypeOrMethod : this.TypeParameters != null;
     }
+
+    public Symbol FindClassFrame()
+    {
+        return this is ClassFrame ? this : this.ParentFrame?.FindClassFrame();
+    }
 }
