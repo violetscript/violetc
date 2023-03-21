@@ -96,7 +96,13 @@ public partial class Verifier
             // from the global package.
             if (first && name == "global")
             {
+                first = false;
                 continue;
+            }
+            if (!(imported is Package))
+            {
+                VerifyError(null, 215, stmt.Span.Value, new DiagnosticArguments {});
+                return;
             }
             var imported2 = imported.ResolveProperty(name);
             if (imported2 == null)
@@ -116,12 +122,12 @@ public partial class Verifier
         }
         if (stmt.Wildcard && !(imported is Package))
         {
-            doFooBarQuxBaz();
+            VerifyError(null, 216, stmt.Span.Value, new DiagnosticArguments {});
             return;
         }
         else if (!stmt.Wildcard && imported is Package)
         {
-            doFooBarQuxBaz();
+            VerifyError(null, 217, stmt.Span.Value, new DiagnosticArguments {});
             return;
         }
         doFooBarQuxBaz();

@@ -203,6 +203,9 @@ public static class DefaultDiagnosticFormatterStatics {
         [212] = "Cannot use 'new' operator with this item",
         [213] = "Cannot use 'super' expression here",
         [214] = "Package '$p' has no property '$name'",
+        [215] = "Cannot import from non-package",
+        [216] = "Import item must be a package",
+        [217] = "Import item must not be a package",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
