@@ -89,6 +89,31 @@ public partial class Verifier
     private void VerifyImportDirective(Ast.ImportStatement stmt)
     {
         var imported = m_ModelCore.GlobalPackage;
+        foreach (var name in stmt.ImportName)
+        {
+            var imported2 = imported.ResolveProperty(name);
+            if (imported2 == null)
+            {
+                if (imported is Package)
+                {
+                    VerifyError(null, 214, stmt.Span.Value, new DiagnosticArguments {["p"] = imported, ["name"] = name});
+                }
+                else
+                {
+                    VerifyError(null, 128, stmt.Span.Value, new DiagnosticArguments {["name"] = name});
+                }
+                return;
+            }
+            imported = imported2;
+        }
+        if (stmt.Wildcard && !(imported is Package))
+        {
+            doFooBarQuxBaz();
+        }
+        else if (!stmt.Wildcard && imported is Package)
+        {
+            doFooBarQuxBaz();
+        }
         doFooBarQuxBaz();
     } // import statatement
 }

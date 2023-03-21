@@ -202,6 +202,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [211] = "Cannot construct type '$t'",
         [212] = "Cannot use 'new' operator with this item",
         [213] = "Cannot use 'super' expression here",
+        [214] = "Package '$p' has no property '$name'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

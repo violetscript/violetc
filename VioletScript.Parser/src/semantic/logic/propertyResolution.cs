@@ -16,6 +16,8 @@ public static class PropertyResolution {
                     r = f.ReferenceValueFromType(parentOrBaseFrame, r, parentOrBaseFrame);
                 } else if (parentOrBaseFrame is Namespace) {
                     r = f.ReferenceValueFromNamespace(parentOrBaseFrame, r);
+                } else if (r is ReferenceValueFromNamespace || r is ReferenceValueFromType) {
+                    // here, 'r' is an import alias to a property from a namespace or type.
                 } else {
                     r = f.ReferenceValueFromFrame(parentOrBaseFrame, r);
                 }
