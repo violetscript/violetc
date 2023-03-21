@@ -206,6 +206,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [215] = "Cannot import from non-package",
         [216] = "Import item must be a package",
         [217] = "Import item must not be a package",
+        [218] = "Return must not be empty",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

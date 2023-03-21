@@ -1094,6 +1094,8 @@ public class CatchClause : Node {
     public DestructuringPattern Pattern;
     public Block Block;
 
+    public Symbol SemanticFrame = null;
+
     public CatchClause(DestructuringPattern pattern, Block block) : base() {
         Pattern = pattern;
         Block = block;
@@ -1120,6 +1122,12 @@ public class ForStatement : Statement {
     /// <summary>Possibly null.</summary>
     public Expression Update;
     public Statement Body;
+
+    /// <summary>
+    /// Frame used by the entire statement, including the initializer expression,
+    /// test expression, update expression and body.
+    /// </summary>
+    public Symbol SemanticFrame = null;
 
     public ForStatement(Node init, Expression test, Expression update, Statement body) : base() {
         Init = init;

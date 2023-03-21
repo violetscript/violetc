@@ -39,9 +39,57 @@ public partial class Verifier
         {
             VerifyImportDirective(importStmt);
         }
+        // if statement
+        else if (stmt is Ast.IfStatement ifStmt)
+        {
+            VerifyIfStatement(ifStmt);
+        }
+        // do statement
+        else if (stmt is Ast.DoStatement doStmt)
+        {
+            VerifyDoStatement(doStmt);
+        }
+        // while statement
+        else if (stmt is Ast.WhileStatement whileStmt)
+        {
+            VerifyWhileStatement(whileStmt);
+        }
+        // break statement
+        else if (stmt is Ast.BreakStatement breakStmt)
+        {
+        }
+        // continue statement
+        else if (stmt is Ast.ContinueStatement contStmt)
+        {
+        }
         // empty statement
         else if (stmt is Ast.EmptyStatement)
         {
+        }
+        // return statement
+        else if (stmt is Ast.ReturnStatement ret)
+        {
+            VerifyReturnStatement(ret);
+        }
+        // throw statement
+        else if (stmt is Ast.ThrowStatement throwStmt)
+        {
+            VerifyExpAsValue(throwStmt.Expression);
+        }
+        // try statement
+        else if (stmt is Ast.TryStatement tryStmt)
+        {
+            VerifyTryStatement(tryStmt);
+        }
+        // labeled statement
+        else if (stmt is Ast.LabeledStatement labeled)
+        {
+            VerifyStatement(labeled.Statement);
+        }
+        // for statement
+        else if (stmt is Ast.ForStatement forStmt)
+        {
+            VerifyForStatement(forStmt);
         }
         else
         {
@@ -160,4 +208,116 @@ public partial class Verifier
             }
         }
     } // import statement
+
+    private void VerifyIfStatement(Ast.IfStatement stmt)
+    {
+        VerifyExpAsValue(stmt.Test);
+        VerifyStatement(stmt.Consequent);
+        if (stmt.Alternative != null)
+        {
+            VerifyStatement(stmt.Alternative);
+        }
+    } // if statement
+
+    private void VerifyDoStatement(Ast.DoStatement stmt)
+    {
+        VerifyStatement(stmt.Body);
+        VerifyExpAsValue(stmt.Test);
+    } // do statement
+
+    private void VerifyWhileStatement(Ast.WhileStatement stmt)
+    {
+        VerifyExpAsValue(stmt.Test);
+        VerifyStatement(stmt.Body);
+    } // while statement
+
+    private void VerifyReturnStatement(Ast.ReturnStatement stmt)
+    {
+        var method = CurrentMethodSlot;
+        if (method == null)
+        {
+            if (stmt.Expression != null)
+            {
+                VerifyExpAsValue(stmt.Expression);
+            }
+            return;
+        }
+        if (method.UsesYield || method.StaticType.FunctionReturnType == m_ModelCore.UndefinedType)
+        {
+            if (stmt.Expression != null)
+            {
+                LimitExpType(stmt.Expression, m_ModelCore.UndefinedType);
+            }
+            return;
+        }
+        if (method.UsesAwait)
+        {
+            var resolvedType = method.StaticType.FunctionReturnType.ArgumentTypes[0];
+            if (stmt.Expression != null)
+            {
+                LimitExpType(stmt.Expression, resolvedType);
+            }
+            else if (resolvedType != m_ModelCore.UndefinedType)
+            {
+                // VerifyError: return must not be empty
+                VerifyError(null, 218, stmt.Span.Value, new DiagnosticArguments {});
+            }
+            return;
+        }
+
+        var returnType = method.StaticType.FunctionReturnType;
+        if (stmt.Expression != null)
+        {
+            LimitExpType(stmt.Expression, returnType);
+        }
+        else if (returnType != m_ModelCore.UndefinedType)
+        {
+            // VerifyError: return must not be empty
+            VerifyError(null, 218, stmt.Span.Value, new DiagnosticArguments {});
+        }
+    } // return statement
+
+    private void VerifyTryStatement(Ast.TryStatement stmt)
+    {
+        VerifyStatement(stmt.Block);
+
+        // verify catch clauses
+        foreach (var catchClause in stmt.CatchClauses)
+        {
+            catchClause.SemanticFrame = m_ModelCore.Factory.Frame();
+            VerifyDestructuringPattern(catchClause.Pattern, false, catchClause.SemanticFrame.Properties, Visibility.Public, null);
+            EnterFrame(catchClause.SemanticFrame);
+            VerifyStatement(catchClause.Block);
+            ExitFrame();
+        }
+
+        if (stmt.FinallyBlock != null)
+        {
+            VerifyStatement(stmt.FinallyBlock);
+        }
+    } // try statement
+
+    private void VerifyForStatement(Ast.ForStatement stmt)
+    {
+        stmt.SemanticFrame = m_ModelCore.Factory.Frame();
+        EnterFrame(stmt.SemanticFrame);
+        if (stmt.Init is Ast.SimpleVariableDeclaration)
+        {
+            VerifySimpleVariableDeclaration((Ast.SimpleVariableDeclaration) stmt.Init);
+        }
+        else if (stmt.Init != null)
+        {
+            VerifyExpAsValue((Ast.Expression) stmt.Init);
+        }
+        if (stmt.Test != null)
+        {
+            VerifyExpAsValue(stmt.Test);
+        }
+        if (stmt.Update != null)
+        {
+            VerifyExpAsValue(stmt.Update);
+        }
+        VerifyStatement(stmt.Body);
+        ExitFrame();
+    } // for statement
 }
