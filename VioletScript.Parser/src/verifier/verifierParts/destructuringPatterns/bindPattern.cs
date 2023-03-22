@@ -52,7 +52,7 @@ public partial class Verifier
         if (previousDefinition != null)
         {
             // VerifyError: duplicate definition
-            newDefinition = previousDefinition;
+            newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
             if (!m_Options.AllowDuplicates)
             {
                 VerifyError(pattern.Span.Value.Script, 139, pattern.Span.Value, new DiagnosticArguments { ["name"] = pattern.Name });

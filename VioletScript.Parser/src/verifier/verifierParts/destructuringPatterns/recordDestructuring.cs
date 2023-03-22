@@ -81,7 +81,7 @@ public partial class Verifier
                     if (previousDefinition != null)
                     {
                         // VerifyError: duplicate definition
-                        newDefinition = previousDefinition;
+                        newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
                         if (!m_Options.AllowDuplicates)
                         {
                             VerifyError(key.Span.Value.Script, 139, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
@@ -141,7 +141,7 @@ public partial class Verifier
                     if (previousDefinition != null)
                     {
                         // VerifyError: duplicate definition
-                        newDefinition = previousDefinition;
+                        newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
                         if (!m_Options.AllowDuplicates)
                         {
                             VerifyError(key.Span.Value.Script, 139, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
@@ -225,7 +225,7 @@ public partial class Verifier
                     if (previousDefinition != null)
                     {
                         // VerifyError: duplicate definition
-                        newDefinition = previousDefinition;
+                        newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
                         if (!m_Options.AllowDuplicates)
                         {
                             VerifyError(key.Span.Value.Script, 139, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
