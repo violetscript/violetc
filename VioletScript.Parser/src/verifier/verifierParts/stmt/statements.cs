@@ -126,6 +126,31 @@ public partial class Verifier
         {
             VerifyWithStatement(withStmt);
         }
+        // function definition
+        else if (stmt is Ast.FunctionDefinition fnDefn)
+        {
+            VerifyFunctionDefinition(fnDefn);
+        }
+        // getter definition
+        else if (stmt is Ast.GetterDefinition getterDefn)
+        {
+            VerifyGetterDefinition(getterDefn);
+        }
+        // setter definition
+        else if (stmt is Ast.SetterDefinition setterDefn)
+        {
+            VerifySetterDefinition(setterDefn);
+        }
+        // namespace alias definition
+        else if (stmt is Ast.NamespaceAliasDefinition nsAliasDefn)
+        {
+            VerifyNamespaceAliasDefinition(nsAliasDefn);
+        }
+        // type definition
+        else if (stmt is Ast.TypeDefinition typeDefn)
+        {
+            VerifyTypeDefinition(typeDefn);
+        }
         else
         {
             throw new Exception("Unimplemented directive or statement");
@@ -546,4 +571,29 @@ public partial class Verifier
         VerifyStatement(stmt.Body);
         ExitFrame();
     } // with statement
+
+    private void VerifyFunctionDefinition(Ast.FunctionDefinition defn)
+    {
+        doFooBarQuxBaz();
+    } // function definition
+
+    private void VerifyGetterDefinition(Ast.GetterDefinition defn)
+    {
+        doFooBarQuxBaz();
+    } // getter definition
+
+    private void VerifySetterDefinition(Ast.SetterDefinition defn)
+    {
+        doFooBarQuxBaz();
+    } // setter definition
+
+    private void VerifyNamespaceAliasDefinition(Ast.NamespaceAliasDefinition defn)
+    {
+        doFooBarQuxBaz();
+    } // namespace alias definition
+
+    private void VerifyTypeDefinition(Ast.TypeDefinition defn)
+    {
+        doFooBarQuxBaz();
+    } // type definition
 }
