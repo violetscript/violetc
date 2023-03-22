@@ -664,6 +664,11 @@ public class Program : Node {
     /// </summary>
     public List<Statement> Statements;
 
+    /// <summary>
+    /// If there is any statement, there is an activation.
+    /// </summary>
+    public Symbol SemanticActivation = null;
+
     public Program(List<PackageDefinition> packages, List<Statement> statements) : base() {
         Packages = packages;
         Statements = statements;
