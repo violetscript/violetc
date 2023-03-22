@@ -572,28 +572,29 @@ public partial class Verifier
         ExitFrame();
     } // with statement
 
-    private void VerifyFunctionDefinition(Ast.FunctionDefinition defn)
-    {
-        doFooBarQuxBaz();
-    } // function definition
-
-    private void VerifyGetterDefinition(Ast.GetterDefinition defn)
-    {
-        doFooBarQuxBaz();
-    } // getter definition
-
-    private void VerifySetterDefinition(Ast.SetterDefinition defn)
-    {
-        doFooBarQuxBaz();
-    } // setter definition
-
     private void VerifyNamespaceAliasDefinition(Ast.NamespaceAliasDefinition defn)
     {
-        doFooBarQuxBaz();
+        var right = VerifyConstantExp(defn.Expression, true);
+        if (right == null)
+        {
+            return;
+        }
+        if (!(right is Namespace))
+        {
+            // VerifyError: not a namespace
+            VerifyError(null, 222, defn.Expression.Span.Value, new DiagnosticArguments {});
+            return;
+        }
+        if (m_Frame.Properties.Has(defn.Id.Name))
+        {
+            // VerifyError: duplicate
+            VerifyError(null, 139, defn.Id.Span.Value, new DiagnosticArguments {["name"] = defn.Id.Name});
+        }
+        else
+        {
+            var alias = m_ModelCore.Factory.Alias(defn.Id.Name, right);
+            alias.Visibility = defn.SemanticVisibility;
+            m_Frame.Properties[alias.Name] = alias;
+        }
     } // namespace alias definition
-
-    private void VerifyTypeDefinition(Ast.TypeDefinition defn)
-    {
-        doFooBarQuxBaz();
-    } // type definition
 }

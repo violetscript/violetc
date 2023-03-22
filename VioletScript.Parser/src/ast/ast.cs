@@ -703,6 +703,13 @@ public class AnnotatableDefinition : Statement {
     public List<Expression> Decorators;
     public AnnotatableDefinitionModifier Modifiers;
     public AnnotatableDefinitionAccessModifier? AccessModifier;
+
+    public Visibility SemanticVisibility
+    {
+        get => this.AccessModifier == AnnotatableDefinitionAccessModifier.Public ? Visibility.Public
+            :  this.AccessModifier == AnnotatableDefinitionAccessModifier.Private ? Visibility.Private
+            :  this.AccessModifier == AnnotatableDefinitionAccessModifier.Protected ? Visibility.Protected : Visibility.Internal;
+    }
 }
 
 [Flags]
