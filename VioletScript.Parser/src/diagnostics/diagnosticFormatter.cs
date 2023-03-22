@@ -211,6 +211,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [220] = "Cannot iterate values on type '$t'",
         [221] = "Switch discriminant is never of type '$t'",
         [222] = "Item is not a namespace",
+        [223] = "Not all code paths return a value",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

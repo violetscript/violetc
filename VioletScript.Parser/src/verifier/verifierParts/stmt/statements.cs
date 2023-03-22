@@ -476,7 +476,10 @@ public partial class Verifier
         {
             if (swCase.Test != null)
             {
-                LimitExpType(swCase.Test, discriminant?.StaticType ?? m_ModelCore.AnyType);
+                foreach (var t in swCase.Test)
+                {
+                    LimitExpType(t, discriminant?.StaticType ?? m_ModelCore.AnyType);
+                }
             }
             VerifyStatementSeq(swCase.Consequent);
         }

@@ -16,6 +16,12 @@ public partial class Verifier
     {
         foreach (var program in programs)
         {
+            foreach (var packageDefn in program.Packages)
+            {
+                var pckg = m_ModelCore.GlobalPackage.FindOrCreateDeepSubpackage(packageDefn.Id);
+                packageDefn.SemanticPackage = pckg;
+                packageDefn.SemanticFrame = m_ModelCore.Factory.PackageFrame(pckg);
+            }
             doFooBarQuxBaz();
         }
     }

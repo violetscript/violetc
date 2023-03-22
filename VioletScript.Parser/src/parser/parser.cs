@@ -2291,15 +2291,22 @@ internal class ParserBackend {
             if (Token.IsKeyword("case")) {
                 MarkLocation();
                 NextToken();
+                var testList = new List<Ast.Expression>();
                 var test = ParseExpression(true, OperatorPrecedence.List, false);
+                testList.Add(test);
                 Expect(TToken.Colon);
+                while (ConsumeKeyword("case"))
+                {
+                    testList.Add(ParseExpression(true, OperatorPrecedence.List, false));
+                    Expect(TToken.Colon);
+                }
                 var consequent = new List<Ast.Statement>{};
                 while (!Token.IsKeyword("case") && !Token.IsKeyword("default")) {
                     var (stmt2, semicolonInserted2) = ParseStatement(consequentContext);
                     consequent.Add(stmt2);
                     if (!semicolonInserted2) goto endCases;
                 }
-                cases.Add((Ast.SwitchCase) FinishNode(new Ast.SwitchCase(test, consequent)));
+                cases.Add((Ast.SwitchCase) FinishNode(new Ast.SwitchCase(testList, consequent)));
             } else if (Token.IsKeyword("default")) {
                 MarkLocation();
                 NextToken();

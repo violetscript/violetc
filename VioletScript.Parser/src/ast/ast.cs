@@ -682,6 +682,9 @@ public class PackageDefinition: Node {
     public string[] Id;
     public Block Block;
 
+    public Symbol SemanticPackage = null;
+    public Symbol SemanticFrame = null;
+
     public PackageDefinition(string[] id, Block block) : base() {
         Id = id;
         Block = block;
@@ -689,6 +692,10 @@ public class PackageDefinition: Node {
 }
 
 public class Statement : Node {
+    public virtual bool AllCodePathsReturn
+    {
+        get => false;
+    }
 }
 
 public class AnnotatableDefinition : Statement {
@@ -993,6 +1000,11 @@ public class Block : Statement {
     public Block(List<Statement> statements) : base() {
         Statements = statements;
     }
+
+    public override bool AllCodePathsReturn
+    {
+        get => this.Statements.Where(stmt => stmt.AllCodePathsReturn).Count() > 0;
+    }
 }
 
 public class SuperStatement : Statement {
@@ -1026,6 +1038,13 @@ public class IfStatement : Statement {
         Consequent = consequent;
         Alternative = alternative;
     }
+
+    public override bool AllCodePathsReturn
+    {
+        get => this.Consequent.AllCodePathsReturn
+            && this.Alternative != null
+            && this.Alternative.AllCodePathsReturn;
+    }
 }
 
 public class DoStatement : Statement {
@@ -1036,6 +1055,11 @@ public class DoStatement : Statement {
         Body = body;
         Test = test;
     }
+
+    public override bool AllCodePathsReturn
+    {
+        get => false;
+    }
 }
 
 public class WhileStatement : Statement {
@@ -1045,6 +1069,11 @@ public class WhileStatement : Statement {
     public WhileStatement(Expression test, Statement body) : base() {
         Test = test;
         Body = body;
+    }
+
+    public override bool AllCodePathsReturn
+    {
+        get => false;
     }
 }
 
@@ -1073,6 +1102,11 @@ public class ReturnStatement : Statement {
     public ReturnStatement(Expression expression) : base() {
         Expression = expression;
     }
+
+    public override bool AllCodePathsReturn
+    {
+        get => true;
+    }
 }
 
 public class ThrowStatement : Statement {
@@ -1080,6 +1114,11 @@ public class ThrowStatement : Statement {
 
     public ThrowStatement(Expression expression) : base() {
         Expression = expression;
+    }
+
+    public override bool AllCodePathsReturn
+    {
+        get => true;
     }
 }
 
@@ -1092,6 +1131,22 @@ public class TryStatement : Statement {
         Block = block;
         CatchClauses = catchClauses;
         FinallyBlock = finallyBlock;
+    }
+
+    public override bool AllCodePathsReturn
+    {
+        get
+        {
+            if (!this.Block.AllCodePathsReturn)
+            {
+                return false;
+            }
+            if (this.CatchClauses.Where(c => !c.Block.AllCodePathsReturn).Count() > 0)
+            {
+                return false;
+            }
+            return this.FinallyBlock == null ? false : this.FinallyBlock.AllCodePathsReturn;
+        }
     }
 }
 
@@ -1114,6 +1169,11 @@ public class LabeledStatement : Statement {
     public LabeledStatement(string label, Statement statement) : base() {
         Label = label;
         Statement = statement;
+    }
+
+    public override bool AllCodePathsReturn
+    {
+        get => this.Statement.AllCodePathsReturn;
     }
 }
 
@@ -1140,6 +1200,11 @@ public class ForStatement : Statement {
         Update = update;
         Body = body;
     }
+
+    public override bool AllCodePathsReturn
+    {
+        get => false;
+    }
 }
 
 public class ForInStatement : Statement {
@@ -1162,6 +1227,11 @@ public class ForInStatement : Statement {
         Right = right;
         Body = body;
     }
+
+    public override bool AllCodePathsReturn
+    {
+        get => false;
+    }
 }
 
 public class SimpleVariableDeclaration : Statement {
@@ -1182,16 +1252,35 @@ public class SwitchStatement : Statement {
         Discriminant = discriminant;
         Cases = cases;
     }
+
+    public override bool AllCodePathsReturn
+    {
+        get
+        {
+            var n = Cases.Where(c => c.Test != null && !c.AllCodePathsReturn).Count();
+            if (n > 0)
+            {
+                return false;
+            }
+            var defaultCase = Cases.Where(c => c.Test == null).FirstOrDefault();
+            return defaultCase != null ? defaultCase.AllCodePathsReturn : false;
+        }
+    }
 }
 
 public class SwitchCase : Node {
-    /// <summary>Test. Null for a <c>default</c> case.</summary>
-    public Expression Test;
+    /// <summary>List of tests. Null for a <c>default</c> case.</summary>
+    public List<Expression> Test;
     public List<Statement> Consequent;
 
-    public SwitchCase(Expression test, List<Statement> consequent) : base() {
+    public SwitchCase(List<Expression> test, List<Statement> consequent) : base() {
         Test = test;
         Consequent = consequent;
+    }
+
+    public bool AllCodePathsReturn
+    {
+        get => Consequent.Where(c => c.AllCodePathsReturn).Count() > 0;
     }
 }
 
@@ -1202,6 +1291,20 @@ public class SwitchTypeStatement : Statement {
     public SwitchTypeStatement(Expression discriminant, List<SwitchTypeCase> cases) : base() {
         Discriminant = discriminant;
         Cases = cases;
+    }
+
+    public override bool AllCodePathsReturn
+    {
+        get
+        {
+            var n = Cases.Where(c => c.Pattern != null && !c.Block.AllCodePathsReturn).Count();
+            if (n > 0)
+            {
+                return false;
+            }
+            var defaultCase = Cases.Where(c => c.Pattern == null).FirstOrDefault();
+            return defaultCase != null ? defaultCase.Block.AllCodePathsReturn : false;
+        }
     }
 }
 
@@ -1226,6 +1329,11 @@ public class IncludeStatement : Statement {
     public IncludeStatement(string source) : base() {
         Source = source;
     }
+
+    public override bool AllCodePathsReturn
+    {
+        get => InnerStatements.Where(stmt => stmt.AllCodePathsReturn).Count() > 0;
+    }
 }
 
 public class UseNamespaceStatement : Statement {
@@ -1246,6 +1354,11 @@ public class UseResourceStatement : Statement {
         Bindings = bindings;
         Block = block;
     }
+
+    public override bool AllCodePathsReturn
+    {
+        get => this.Block.AllCodePathsReturn;
+    }
 }
 
 public class WithStatement : Statement {
@@ -1257,5 +1370,10 @@ public class WithStatement : Statement {
     public WithStatement(Expression @object, Statement body) : base() {
         Object = @object;
         Body = body;
+    }
+
+    public override bool AllCodePathsReturn
+    {
+        get => Body.AllCodePathsReturn;
     }
 }
