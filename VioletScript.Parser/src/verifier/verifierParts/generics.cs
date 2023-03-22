@@ -12,6 +12,33 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
+    private List<Symbol> VerifyTypeParameters(Ast.Generics generics, Properties propsOutput)
+    {
+        var r = new List<Symbol>();
+        foreach (var paramNode in generics.Params)
+        {
+            var p = m_ModelCore.Factory.TypeParameter(paramNode.Name);
+            r.Add(p);
+            // T:Cons
+            if (paramNode.DefaultIsBound != null)
+            {
+                //
+                doFooBarQuxBaz();
+            }
+            // assign property to 'propsOutput'
+            doFooBarQuxBaz();
+        }
+        if (generics.Bounds != null)
+        {
+            foreach (var boundNode in generics.Bounds)
+            {
+                //
+                doFooBarQuxBaz();
+            }
+        }
+        return r;
+    }
+
     // verify arguments to a generic type or function; ensure:
     // - the number of arguments is correct.
     // - the arguments follow the constraints.
