@@ -1032,7 +1032,7 @@ public partial class Verifier
         m_MethodSlotStack.Push(methodSlot);
 
         // resolve body.
-        VerifyFunctionBody(common.Body, methodSlot);
+        VerifyFunctionBody(exp.Id != null ? exp.Id.Span.Value : exp.Span.Value, common.Body, methodSlot);
 
         m_MethodSlotStack.Pop();
         ExitFrame();

@@ -14,7 +14,7 @@ public partial class Verifier
 {
     // - verify return code paths.
     // - verify return type.
-    private void VerifyFunctionBody(Ast.Node body, Symbol methodSlot)
+    private void VerifyFunctionBody(Span functionSpan, Ast.Node body, Symbol methodSlot)
     {
         var returnType = methodSlot.StaticType.FunctionReturnType;
         if (methodSlot.UsesAwait)
@@ -32,7 +32,7 @@ public partial class Verifier
         else if (body is Ast.Statement stmtBody && returnType != m_ModelCore.UndefinedType && !stmtBody.AllCodePathsReturn)
         {
             // VerifyError: not all code paths return
-            doFooBarQuxBaz();
+            VerifyError(null, 223, functionSpan, new DiagnosticArguments {});
         }
     }
 }
