@@ -1152,7 +1152,7 @@ public class TryStatement : Statement {
             {
                 return false;
             }
-            return this.FinallyBlock == null ? false : this.FinallyBlock.AllCodePathsReturn;
+            return this.FinallyBlock == null ? true : this.FinallyBlock.AllCodePathsReturn;
         }
     }
 }
