@@ -324,11 +324,11 @@ public class Symbol {
     public virtual void AddMethodOverrider(Symbol method) {
     }
 
-    public virtual bool IsInstantiatedTypeParameterizedMethod {
+    public virtual bool IsInstantiatedGenericMethod {
         get => false;
     }
 
-    public virtual Symbol[] ArgumentsToTypeParameterizedMethod {
+    public virtual Symbol[] ArgumentsToGenericMethod {
         get => new Symbol[]{};
     }
 

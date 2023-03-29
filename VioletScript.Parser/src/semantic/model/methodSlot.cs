@@ -121,7 +121,7 @@ public class InstantiationOfGenericMethodSlot : MethodSlot {
         m_Type = type;
     }
 
-    public override bool IsInstantiatedTypeParameterizedMethod {
+    public override bool IsInstantiatedGenericMethod {
         get => true;
     }
 
