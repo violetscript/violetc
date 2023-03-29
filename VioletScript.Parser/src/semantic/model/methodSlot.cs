@@ -110,12 +110,12 @@ public class NormalMethodSlot : MethodSlot {
     }
 }
 
-public class InstantiationOfTParamMethodSlot : MethodSlot {
+public class InstantiationOfGenericMethodSlot : MethodSlot {
     private Symbol m_Origin;
     private Symbol[] m_Arguments;
     private Symbol m_Type;
 
-    public InstantiationOfTParamMethodSlot(Symbol origin, Symbol[] arguments, Symbol type) {
+    public InstantiationOfGenericMethodSlot(Symbol origin, Symbol[] arguments, Symbol type) {
         m_Origin = origin;
         m_Arguments = arguments;
         m_Type = type;
