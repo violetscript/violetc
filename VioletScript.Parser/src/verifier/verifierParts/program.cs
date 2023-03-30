@@ -70,6 +70,12 @@ public partial class Verifier
                 // verify program's statements
                 doFooBarQuxBaz();
             }
+            // phase 2 -> rearrange and resolve various directives
+            if (phase == VerifyPhase.Phase2)
+            {
+                //
+                dooFooBarQuxBaz();
+            }
         }
         VerifyAllGenericInstAsTypeExps();
     }
@@ -108,17 +114,13 @@ public partial class Verifier
 
     private void Fragmented_VerifyStatement(Ast.Statement stmt, VerifyPhase phase)
     {
-        if (stmt is Ast.VariableDefinition varDefn)
+        if (stmt is Ast.ImportStatement importDrtv)
         {
-            Fragmented_VerifyVariableDefinition(varDefn, phase);
-        }
-        else if (stmt is Ast.ImportStatement importDrtv)
-        {
-            Fragmented_VerifyImportDirective(importDrtv);
+            Fragmented_VerifyImportDirective(importDrtv, phase);
         }
         else if (stmt is Ast.UseNamespaceStatement useNsDrtv)
         {
-            Fragmented_VerifyUseNamespaceDirective(useNsDrtv);
+            Fragmented_VerifyUseNamespaceDirective(useNsDrtv, phase);
         }
         else if (stmt is Ast.IncludeStatement incDrtv)
         {
@@ -134,53 +136,53 @@ public partial class Verifier
                 VerifyStatement(stmt);
             }
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.VariableDefinition varDefn)
         {
-            //
+            Fragmented_VerifyVariableDefinition(varDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.NamespaceDefinition nsDefn)
         {
-            //
+            Fragmented_VerifyNamespaceDefinition(nsDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.NamespaceAliasDefinition nsaDefn)
         {
-            //
+            Fragmented_VerifyNamespaceAliasDefinition(nsaDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.FunctionDefinition fnDefn)
         {
-            //
+            Fragmented_VerifyFunctionDefinition(fnDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.ConstructorDefinition ctorDefn)
         {
-            //
+            Fragmented_VerifyConstructorDefinition(ctorDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.ProxyDefinition proxyDefn)
         {
-            //
+            Fragmented_VerifyProxyDefinition(proxyDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.GetterDefinition getterDefn)
         {
-            //
+            Fragmented_VerifyGetterDefinition(getterDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.SetterDefinition setterDefn)
         {
-            //
+            Fragmented_VerifySetterDefinition(setterDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.ClassDefinition classDefn)
         {
-            //
+            Fragmented_VerifyClassDefinition(classDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.InterfaceDefinition itrfcDefn)
         {
-            //
+            Fragmented_VerifyInterfaceDefinition(itrfcDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.EnumDefinition enumDefn)
         {
-            //
+            Fragmented_VerifyEnumDefinition(enumDefn, phase);
         }
-        else if (stmt is Ast.XDefinition xDefn)
+        else if (stmt is Ast.TypeDefinition typeDefn)
         {
-            //
+            Fragmented_VerifyTypeDefinition(typeDefn, phase);
         }
         else
         {
