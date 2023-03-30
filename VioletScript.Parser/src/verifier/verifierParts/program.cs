@@ -54,6 +54,7 @@ public partial class Verifier
             VerifyPhase.Phase4,
             VerifyPhase.Phase5,
         };
+        m_GenericInstantiationsAsTypeExp = new List<Ast.GenericInstantiationTypeExpression>();
         foreach (var phase in phases)
         {
             foreach (var program in programs)
@@ -67,6 +68,39 @@ public partial class Verifier
                 doFooBarQuxBaz();
             }
         }
+        VerifyAllGenericInstAsTypeExps();
+    }
+
+    private void VerifyAllGenericInstAsTypeExps()
+    {
+        foreach (var gi in m_GenericInstantiationsAsTypeExp)
+        {
+            var typeParameters = gi.Base.SemanticSymbol.TypeParameters;
+            var arguments = gi.ArgumentsList.Select(te => te.SemanticSymbol).ToArray();
+
+            for (int i = 0; i < arguments.Count(); ++i)
+            {
+                var argument = arguments[i];
+                var argumentExp = gi.ArgumentsList[i];
+                foreach (var @param in typeParameters)
+                {
+                    foreach (var constraintItrfc in @param.ImplementsInterfaces)
+                    {
+                        // VerifyError: missing interface constraint
+                        if (!argument.IsSubtypeOf(constraintItrfc))
+                        {
+                            VerifyError(null, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = constraintItrfc });
+                        }
+                    }
+                    // VerifyError: missing class constraint
+                    if (argument.SuperType != null && !argument.IsSubtypeOf(@param.SuperType))
+                    {
+                        VerifyError(null, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = @param.SuperType });
+                    }
+                }
+            }
+        }
+        m_GenericInstantiationsAsTypeExp.Clear();
     }
 }
 
@@ -77,15 +111,6 @@ public enum VerifyPhase
     /// </summary>
     Phase1,
     /// <summary>
-    /// To-do: change this "summary" and plan better the phase. Actually
-    /// the verifier should not resolve aliases direcly. It also needs to
-    /// fragment more how generic constraints are resolved, including
-    /// the instantiation type expressions, as instantiation should be
-    /// deferred probably as type aliases can use them.
-    /// The GenericInstantiationTypeExpression should have constraints
-    /// verified later, so the verifier should collect them and the
-    /// The <c>VerifyPrograms</c> method should iterate these collected nodes.
-    ///
     /// Phase in which alias definitions, including <c>type</c> and <c>namespace</c>,
     /// are gathered into a list, are re-arranged into the best order based on how
     /// an alias depends on the other, and then resolved.

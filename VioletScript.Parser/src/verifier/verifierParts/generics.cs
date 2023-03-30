@@ -131,7 +131,10 @@ public partial class Verifier
     // note that, for generic functions, this method does not automatically wrap
     // them into reference values, for now.
     //
-    private Symbol VerifyGenericInstArguments(Span wholeSpan, Symbol genericTypeOrF, List<Ast.TypeExpression> giTeArguments)
+    // note that generic instantiations as type expressions defer validating
+    // the constraints to the `VerifyPrograms` method.
+    //
+    private Symbol VerifyGenericInstArguments(Span wholeSpan, Symbol genericTypeOrF, List<Ast.TypeExpression> giTeArguments, Ast.GenericInstantiationTypeExpression surroundingTypeExp = null)
     {
         Symbol[] typeParameters = genericTypeOrF.TypeParameters;
         // VerifyError: wrong number of arguments
@@ -153,24 +156,31 @@ public partial class Verifier
             return null;
         }
 
-        for (int i = 0; i < arguments.Count(); ++i)
+        if (surroundingTypeExp != null)
         {
-            var argument = arguments[i];
-            var argumentExp = giTeArguments[i];
-            foreach (var @param in typeParameters)
+            m_GenericInstantiationsAsTypeExp.Add(surroundingTypeExp);
+        }
+        else
+        {
+            for (int i = 0; i < arguments.Count(); ++i)
             {
-                foreach (var constraintItrfc in @param.ImplementsInterfaces)
+                var argument = arguments[i];
+                var argumentExp = giTeArguments[i];
+                foreach (var @param in typeParameters)
                 {
-                    // VerifyError: missing interface constraint
-                    if (!argument.IsSubtypeOf(constraintItrfc))
+                    foreach (var constraintItrfc in @param.ImplementsInterfaces)
                     {
-                        VerifyError(null, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = constraintItrfc });
+                        // VerifyError: missing interface constraint
+                        if (!argument.IsSubtypeOf(constraintItrfc))
+                        {
+                            VerifyError(null, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = constraintItrfc });
+                        }
                     }
-                }
-                // VerifyError: missing class constraint
-                if (argument.SuperType != null && !argument.IsSubtypeOf(@param.SuperType))
-                {
-                    VerifyError(null, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = @param.SuperType });
+                    // VerifyError: missing class constraint
+                    if (argument.SuperType != null && !argument.IsSubtypeOf(@param.SuperType))
+                    {
+                        VerifyError(null, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = @param.SuperType });
+                    }
                 }
             }
         }

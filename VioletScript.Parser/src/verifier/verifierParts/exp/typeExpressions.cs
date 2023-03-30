@@ -326,7 +326,7 @@ public partial class Verifier
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
-        exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, giTe.ArgumentsList);
+        exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, giTe.ArgumentsList, giTe);
         exp.SemanticResolved = true;
         return exp.SemanticSymbol;
     }

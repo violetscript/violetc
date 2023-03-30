@@ -83,7 +83,7 @@ public class Symbol {
     }
 
     public virtual Symbol[] TypeParameters {
-        get => null;
+        get => this.Property is MethodSlot ? this.Property.TypeParameters : null;
         set {}
     }
 

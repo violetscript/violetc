@@ -34,6 +34,13 @@ public partial class Verifier
     private Stack<Symbol> m_MethodSlotStack = new Stack<Symbol>();
     private bool m_Valid = true;
 
+    /// <summary>
+    /// List of generic item instantiations as type expressions.
+    /// This list is feed by the <c>VerifyTypeExp</c> method and later consumed by
+    /// <c>VerifyPrograms</c>.
+    /// </summary>
+    private List<Ast.GenericInstantiationTypeExpression> m_GenericInstantiationsAsTypeExp = null;
+
     private Symbol CurrentMethodSlot
     {
         get => m_MethodSlotStack.Count() != 0 ? m_MethodSlotStack.Peek() : null;
