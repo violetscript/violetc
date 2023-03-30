@@ -81,7 +81,7 @@ public static class TypeReplacement {
                     symbolToReplace.ArgumentTypes.Select(t => t.ReplaceTypes(typeParameters, argumentsList)).ToArray());
             }
             if (symbolToReplace is TypeParameter) {
-                var i = Array.IndexOf(typeParameters, symbolToReplace);
+                int i = Array.IndexOf(typeParameters, symbolToReplace.ShadowsTypeParameter ?? symbolToReplace);
                 if (i != -1) {
                     return argumentsList[i];
                 }
@@ -1034,6 +1034,7 @@ public class TypeParameter : Type {
     private string m_Name;
     private Symbol m_ExtendsClass = null;
     private List<Symbol> m_ImplementsInterfaces = null;
+    private Symbol m_Shadows = null;
 
     public TypeParameter(string name) {
         m_Name = name;
@@ -1079,6 +1080,15 @@ public class TypeParameter : Type {
         m_ImplementsInterfaces ??= new List<Symbol>{};
         if (!m_ImplementsInterfaces.Contains(itrfc)) {
             m_ImplementsInterfaces.Add(itrfc);
+        }
+    }
+
+    public override Symbol ShadowsTypeParameter
+    {
+        get => m_Shadows;
+        set
+        {
+            m_Shadows = value;
         }
     }
 

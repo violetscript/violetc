@@ -679,4 +679,12 @@ public class Symbol {
     {
         return !(type is AnyType) && !(this is UnionType) && !this.IsSubtypeOf(type);
     }
+
+    public virtual Symbol ShadowsTypeParameter
+    {
+        get => null;
+        set
+        {
+        }
+    }
 }
