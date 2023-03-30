@@ -267,7 +267,7 @@ internal class ParserBackend {
             r = (Ast.TypeExpression) FinishNode(new Ast.UndefinedTypeExpression());
         } else if (Consume(TToken.Identifier)) {
             r = (Ast.TypeExpression) FinishNode(new Ast.IdentifierTypeExpression(PreviousToken.StringValue));
-            if (Consume(TToken.Arrow)) {
+            if (Consume(TToken.FatArrow)) {
                 PushLocation(r.Span.Value);
                 var (@params, optParams) = ConvertTypeExpressionsIntoFunctionParams(new List<Ast.TypeExpression>{r});
                 r = ParseArrowFunctionTypeExpression(@params, null, null);
@@ -387,7 +387,7 @@ internal class ParserBackend {
         Ast.TypeExpression r = null;
         if (Token.Type == TToken.RParen) {
             NextToken();
-            Expect(TToken.Arrow);
+            Expect(TToken.FatArrow);
             return ParseArrowFunctionTypeExpression(null, null, null);
         }
         if (Consume(TToken.Ellipsis)) {
@@ -395,7 +395,7 @@ internal class ParserBackend {
             var restParamName = ExpectIdentifier();
             var restParam = (Ast.Identifier) FinishNode(new Ast.Identifier(restParamName, Consume(TToken.Colon) ? ParseTypeExpression() : null));
             Expect(TToken.RParen);
-            Expect(TToken.Arrow);
+            Expect(TToken.FatArrow);
             return ParseArrowFunctionTypeExpression(null, null, restParam);
         }
         var fst = ParseTypeExpression();
@@ -413,17 +413,17 @@ internal class ParserBackend {
                 var restParamName = ExpectIdentifier();
                 var restParam = (Ast.Identifier) FinishNode(new Ast.Identifier(restParamName, Consume(TToken.Colon) ? ParseTypeExpression() : null));
                 Expect(TToken.RParen);
-                Expect(TToken.Arrow);
+                Expect(TToken.FatArrow);
                 r = ParseArrowFunctionTypeExpression(@params, optParams, restParam);
             } else {
                 Expect(TToken.RParen);
-                Expect(TToken.Arrow);
+                Expect(TToken.FatArrow);
                 var (@params, optParams) = ConvertTypeExpressionsIntoFunctionParams(itemTypes);
                 r = ParseArrowFunctionTypeExpression(@params, optParams, null);
             }
         } else {
             Expect(TToken.RParen);
-            if (Consume(TToken.Arrow)) {
+            if (Consume(TToken.FatArrow)) {
                 var (@params, optParams) = ConvertTypeExpressionsIntoFunctionParams(new List<Ast.TypeExpression>{fst});
                 r = ParseArrowFunctionTypeExpression(@params, optParams, null);
             } else r = (Ast.TypeExpression) FinishNode(new Ast.ParensTypeExpression(fst));
@@ -642,7 +642,7 @@ internal class ParserBackend {
             PushLocation(PreviousToken.Span);
             // arrow function
             if (minPrecedence.ValueOf() <= OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction.ValueOf() && Consume(TToken.RParen)) {
-                Expect(TToken.Arrow);
+                Expect(TToken.FatArrow);
                 return ParseArrowFunctionExpression(null, null, null);
             }
             if (minPrecedence.ValueOf() <= OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction.ValueOf() && Consume(TToken.RParen)) {
@@ -775,7 +775,7 @@ internal class ParserBackend {
             return FinishExp(new Ast.EmbedExpression(source, embedType));
         }
         var r = FinishExp(new Ast.Identifier(name));
-        if (Consume(TToken.Arrow)) {
+        if (Consume(TToken.FatArrow)) {
             PushLocation(r.Span.Value);
             var (@params, optParams) = ConvertExpsIntoArrowFParams(new List<Ast.Expression>{r});
             r = ParseArrowFunctionExpression(@params, null, null);
@@ -792,7 +792,7 @@ internal class ParserBackend {
                 if (restParam.Init != null) SyntaxError(29, restParam.Span.Value);
                 Expect(TToken.RParen);
                 var returnType = Consume(TToken.Colon) ? ParseTypeExpression() : null;
-                Expect(TToken.Arrow);
+                Expect(TToken.FatArrow);
                 return ParseArrowFunctionExpression(@params, optParams, restParam, returnType);
             }
             expressions.Add(ParseExpression(true, OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction));
@@ -801,10 +801,10 @@ internal class ParserBackend {
         if (Consume(TToken.Colon)) {
             var (@params, optParams) = ConvertExpsIntoArrowFParams(expressions);
             var returnType = ParseTypeExpression();
-            Expect(TToken.Arrow);
+            Expect(TToken.FatArrow);
             return ParseArrowFunctionExpression(@params, optParams, null, returnType);
         }
-        if (Consume(TToken.Arrow)) {
+        if (Consume(TToken.FatArrow)) {
             var (@params, optParams) = ConvertExpsIntoArrowFParams(expressions);
             return ParseArrowFunctionExpression(@params, optParams, null, null);
         }
@@ -858,7 +858,7 @@ internal class ParserBackend {
         return (outParams, outOptParams);
     }
 
-    // parses arrow function, assuming the previous token is `->`
+    // parses arrow function, assuming the previous token is `=>`
     // and that the starting location was pushed to the stack.
     private Ast.Expression ParseArrowFunctionExpression(List<Ast.VariableBinding> @params, List<Ast.VariableBinding> optParams, Ast.VariableBinding restParam, Ast.TypeExpression returnType = null) {
         var sf = new StackFunction();

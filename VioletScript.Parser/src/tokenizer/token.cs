@@ -24,6 +24,6 @@ public enum Token {
     ExclamationMark,
     Colon,
     Assign,
-    Arrow,
+    FatArrow,
     LtSlash,
 }

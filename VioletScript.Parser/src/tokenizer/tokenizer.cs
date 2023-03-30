@@ -126,7 +126,7 @@ public sealed class Tokenizer {
             switch (StringSubstr.Substr(slice, 0, 2)) {
                 case "?.": this.SkipAndEndToken(2, TToken.QuestionDot); return;
                 case "</": this.SkipAndEndToken(2, TToken.LtSlash); return;
-                case "->": this.SkipAndEndToken(2, TToken.Arrow); return;
+                case "=>": this.SkipAndEndToken(2, TToken.FatArrow); return;
                 case "+=": this.SkipAndEndCompoundAssignment(2, Operator.Add); return;
                 case "-=": this.SkipAndEndCompoundAssignment(2, Operator.Subtract); return;
                 case "*=": this.SkipAndEndCompoundAssignment(2, Operator.Multiply); return;

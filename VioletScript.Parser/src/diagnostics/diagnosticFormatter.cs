@@ -241,7 +241,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [Token.ExclamationMark] = "!",
         [Token.Colon] = ":",
         [Token.Assign] = "=",
-        [Token.Arrow] = "->",
+        [Token.FatArrow] = "=>",
         [Token.LtSlash] = "</",
     };
 }

@@ -650,7 +650,7 @@ public class FunctionType : Type {
         if (m_RestParam != null) {
             p.Add("..." + m_RestParam.Value.Name + ":" + m_RestParam.Value.Type.ToString());
         }
-        return "(" + String.Join(", ", p) + ")" + "->" + (FunctionReturnType == ModelCore.UndefinedType ? "void" : FunctionReturnType.ToString());
+        return "(" + String.Join(", ", p) + ")" + "=>" + (FunctionReturnType == ModelCore.UndefinedType ? "void" : FunctionReturnType.ToString());
     }
 
     public override bool TypeStructurallyEquals(Symbol otherAbstract) {
