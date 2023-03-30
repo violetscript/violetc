@@ -49,6 +49,10 @@ public partial class Verifier
                 packageDefn.SemanticPackage = pckg;
                 packageDefn.SemanticFrame = m_ModelCore.Factory.PackageFrame(pckg);
             }
+            if (program.Statements != null)
+            {
+                program.SemanticFrame = m_ModelCore.Factory.Frame();
+            }
         }
         var phases = new VerifyPhase[] {
             VerifyPhase.Phase1,
@@ -67,10 +71,17 @@ public partial class Verifier
                 foreach (var packageDefn in program.Packages)
                 {
                     // verify package definition
-                    doFooBarQuxBaz();
+                    EnterFrame(packageDefn.SemanticFrame);
+                    Fragmented_VerifyStatementSeq(packageDefn.Block.Statements, phase);
+                    ExitFrame();
                 }
-                // verify program's statements
-                doFooBarQuxBaz();
+                // verify main program's directives if any
+                if (program.Statements != null)
+                {
+                    EnterFrame(program.SemanticFrame);
+                    Fragmented_VerifyStatementSeq(program.Statements, phase);
+                    ExitFrame();
+                }
             }
             // phase 2 = rearrange and resolve various directives
             if (phase == VerifyPhase.Phase2)
@@ -115,6 +126,14 @@ public partial class Verifier
             }
         }
         m_GenericInstantiationsAsTypeExp.Clear();
+    }
+
+    private void Fragmented_VerifyStatementSeq(List<Ast.Statement> seq, VerifyPhase phase)
+    {
+        foreach (var stmt in seq)
+        {
+            Fragmented_VerifyStatement(stmt, phase);
+        }
     }
 
     private void Fragmented_VerifyStatement(Ast.Statement stmt, VerifyPhase phase)

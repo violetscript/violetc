@@ -665,9 +665,9 @@ public class Program : Node {
     public List<Statement> Statements;
 
     /// <summary>
-    /// If there is any statement, there is an activation.
+    /// If there is any statement, there is a main lexical frame.
     /// </summary>
-    public Symbol SemanticActivation = null;
+    public Symbol SemanticFrame = null;
 
     public Program(List<PackageDefinition> packages, List<Statement> statements) : base() {
         Packages = packages;
