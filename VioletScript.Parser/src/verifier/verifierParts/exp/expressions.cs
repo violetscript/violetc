@@ -901,6 +901,19 @@ public partial class Verifier
         }
         inferType = inferType ?? (expectedType is FunctionType ? expectedType : null);
 
+        // if expected type is an union with more than one function type,
+        // then do not infer signature types.
+        int nOfInferFunctionTypes = expectedType is UnionType
+            ? expectedType.UnionMemberTypes.Select(t => t is FunctionType).Count()
+            : expectedType is FunctionType
+            ? 1
+            : 0;
+        if (nOfInferFunctionTypes > 1)
+        {
+            inferType = null;
+            nOfInferFunctionTypes = 0;
+        }
+
         Symbol prevActivation = m_Frame.FindActivation();
         Symbol activation = m_ModelCore.Factory.ActivationFrame();
         common.SemanticActivation = activation;
@@ -930,10 +943,15 @@ public partial class Verifier
         List<NameAndTypePair> resultType_optParams = null;
         NameAndTypePair? resultType_restParam = null;
         Symbol resultType_returnType = null;
+        bool sameInfReqParamQty = true;
         if (common.Params != null)
         {
             resultType_params = new List<NameAndTypePair>();
             var actualCount = common.Params.Count();
+            if (inferType != null && inferType.FunctionCountOfRequiredParameters != actualCount)
+            {
+                sameInfReqParamQty = false;
+            }
             for (int i = 0; i < actualCount; ++i)
             {
                 var binding = common.Params[i];
@@ -943,24 +961,45 @@ public partial class Verifier
                 resultType_params.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
             }
         }
+        else if (inferType != null && inferType.FunctionHasRequiredParameters)
+        {
+            sameInfReqParamQty = false;
+        }
+        bool sameInfOptParamQty = true;
         if (common.OptParams != null)
         {
             resultType_optParams = new List<NameAndTypePair>();
             var actualCount = common.OptParams.Count();
+            if (inferType != null && inferType.FunctionCountOfOptParameters != actualCount)
+            {
+                sameInfOptParamQty = false;
+            }
             for (int i = 0; i < actualCount; ++i)
             {
                 var binding = common.OptParams[i];
-                NameAndTypePair? paramInferNameAndType = inferType != null && inferType.FunctionHasOptParameters && i < inferType.FunctionCountOfOptParameters ? inferType.FunctionOptParameters[i] : null;
+                NameAndTypePair? paramInferNameAndType = null;
+                if (sameInfReqParamQty && sameInfOptParamQty)
+                {
+                    paramInferNameAndType = inferType != null && inferType.FunctionHasOptParameters && i < inferType.FunctionCountOfOptParameters ? inferType.FunctionOptParameters[i] : null;
+                }
                 FOptParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
                 var name = binding.Pattern is Ast.BindPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
                 resultType_optParams.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
             }
         }
+        else if (inferType != null && inferType.FunctionHasOptParameters)
+        {
+            sameInfOptParamQty = false;
+        }
         // type of a rest parameter must be * or an Array
         if (common.RestParam != null)
         {
             var binding = common.RestParam;
-            NameAndTypePair? paramInferNameAndType = inferType != null ? inferType.FunctionRestParameter : null;
+            NameAndTypePair? paramInferNameAndType = null;
+            if (sameInfReqParamQty && sameInfOptParamQty)
+            {
+                paramInferNameAndType = inferType != null ? inferType.FunctionRestParameter : null;
+            }
             FRestParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
             var name = binding.Pattern is Ast.BindPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
             resultType_restParam = new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType);
@@ -989,11 +1028,6 @@ public partial class Verifier
         // add them to the resulting type if applicable.
         // this is done except if the expected type was an union with
         // more than one function type.
-        int nOfInferFunctionTypes = expectedType is UnionType
-            ? expectedType.UnionMemberTypes.Select(t => t is FunctionType).Count()
-            : expectedType is FunctionType
-            ? 1
-            : 0;
         if (nOfInferFunctionTypes == 1)
         {
             var r = FunctionExp_AddMissingParameters

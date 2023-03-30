@@ -214,6 +214,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [223] = "Not all code paths return a value",
         [224] = "Invalid generic bound type: '$t'",
         [225] = "Item must be a type parameter",
+        [226] = "Generic function not allowed here",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
