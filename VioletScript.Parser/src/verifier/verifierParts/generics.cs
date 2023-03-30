@@ -12,7 +12,16 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    private List<Symbol> VerifyTypeParameters(Ast.Generics generics, Properties propsOutput)
+    private Symbol[] VerifyTypeParameters(Ast.Generics generics, Properties propsOutput)
+    {
+        var r = FragmentedA_VerifyTypeParameters(generics, propsOutput);
+        // resolve constraints
+        FragmentedB_VerifyTypeParameters(r, generics, propsOutput);
+        return r;
+    }
+
+    // declare the type parameters. this won't resolve its constraints.
+    private Symbol[] FragmentedA_VerifyTypeParameters(Ast.Generics generics, Properties propsOutput)
     {
         var r = new List<Symbol>();
         foreach (var paramNode in generics.Params)
@@ -31,6 +40,13 @@ public partial class Verifier
                 propsOutput[p.Name] = p;
             }
         }
+        return r.ToArray();
+    }
+
+    // resolves the constraints of a generic declaration.
+    private void FragmentedB_VerifyTypeParameters(Symbol[] typeParameters, Ast.Generics generics, Properties propsOutput)
+    {
+        var r = typeParameters;
         foreach (var paramNode in generics.Params)
         {
             // T:Cons
@@ -86,7 +102,6 @@ public partial class Verifier
                 }
             }
         }
-        return r;
     }
 
     // verifies lexical reference resolving to a type parameter.

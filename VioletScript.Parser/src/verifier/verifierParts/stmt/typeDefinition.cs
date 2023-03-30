@@ -15,7 +15,7 @@ public partial class Verifier
     private void VerifyTypeDefinition(Ast.TypeDefinition defn)
     {
         defn.SemanticRightFrame = m_ModelCore.Factory.Frame();
-        List<Symbol> typeParameters = null;
+        Symbol[] typeParameters = null;
         if (defn.Generics != null)
         {
             typeParameters = VerifyTypeParameters(defn.Generics, defn.SemanticRightFrame.Properties);
@@ -25,7 +25,7 @@ public partial class Verifier
         ExitFrame();
 
         var alias = m_ModelCore.Factory.Alias(defn.Id.Name, right);
-        alias.TypeParameters = typeParameters.ToArray();
+        alias.TypeParameters = typeParameters;
         defn.SemanticAlias = alias;
 
         if (m_Frame.Properties.Has(alias.Name))
