@@ -17,16 +17,28 @@ public partial class Verifier
         var r = new List<Symbol>();
         foreach (var paramNode in generics.Params)
         {
-            var p = m_ModelCore.Factory.TypeParameter(paramNode.Name);
+            var p = m_ModelCore.Factory.TypeParameter(paramNode.Id.Name);
             r.Add(p);
+            paramNode.SemanticSymbol = p;
+
+            // assign property to 'propsOutput'
+            if (propsOutput.Has(p.Name))
+            {
+                VerifyError(null, 139, paramNode.Id.Span.Value, new DiagnosticArguments { ["name"] = p.Name });
+            }
+            else
+            {
+                propsOutput[p.Name] = p;
+            }
+        }
+        foreach (var paramNode in generics.Params)
+        {
             // T:Cons
             if (paramNode.DefaultIsBound != null)
             {
-                //
+                var defaultBound = VerifyTypeExp(paramNode.DefaultIsBound);
                 doFooBarQuxBaz();
             }
-            // assign property to 'propsOutput'
-            doFooBarQuxBaz();
         }
         if (generics.Bounds != null)
         {

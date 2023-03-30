@@ -968,6 +968,8 @@ public class GenericTypeParameter : Node {
     /// <summary>Optional type annotation following the identifier.</summary>
     public TypeExpression DefaultIsBound;
 
+    public Symbol SemanticSymbol = null;
+
     public GenericTypeParameter(Identifier id, TypeExpression defaultIsBound) : base() {
         Id = id;
         DefaultIsBound = defaultIsBound;
