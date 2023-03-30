@@ -180,7 +180,7 @@ public partial class Verifier
         }
         else if (genericTypeOrF is Alias)
         {
-            askdofkssofskdofsdfksdf();
+            return genericTypeOrF.AliasToSymbol.ReplaceTypes(genericTypeOrF.TypeParameters, arguments);
         }
         else
         {
