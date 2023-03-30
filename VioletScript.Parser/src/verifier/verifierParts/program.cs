@@ -77,11 +77,14 @@ public enum VerifyPhase
     /// </summary>
     Phase1,
     /// <summary>
-    /// TODO: change this "summary" and plan better the phase. actually
-    /// the verifier should not resolve aliases direcly. it also needs to
+    /// To-do: change this "summary" and plan better the phase. Actually
+    /// the verifier should not resolve aliases direcly. It also needs to
     /// fragment more how generic constraints are resolved, including
-    /// the instantiation expressions, as instantiation should be
-    /// deferred probably.
+    /// the instantiation type expressions, as instantiation should be
+    /// deferred probably as type aliases can use them.
+    /// The GenericInstantiationTypeExpression should have constraints
+    /// verified later, so the verifier should collect them and the
+    /// The <c>VerifyPrograms</c> method should iterate these collected nodes.
     ///
     /// Phase in which alias definitions, including <c>type</c> and <c>namespace</c>,
     /// are gathered into a list, are re-arranged into the best order based on how
