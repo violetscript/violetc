@@ -55,11 +55,52 @@ public partial class Verifier
         {
             foreach (var boundNode in generics.Bounds)
             {
-                //
+                var isBoundNode = (Ast.GenericTypeParameterIsBound) boundNode;
+                Symbol typeParameter = VerifyGenericBoundLex(isBoundNode.Id);
+                if (typeParameter == null)
+                {
+                    VerifyTypeExp(isBoundNode.Type);
+                    continue;
+                }
                 doFooBarQuxBaz();
             }
         }
         return r;
+    }
+
+    // verifies lexical reference resolving to a type parameter.
+    private Symbol VerifyGenericBoundLex(Ast.Identifier id)
+    {
+        var r = m_Frame.ResolveProperty(id.Name);
+        if (r == null)
+        {
+            // VerifyError: undefined reference
+            VerifyError(null, 128, id.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+            return null;
+        }
+        else if (r is AmbiguousReferenceIssue)
+        {
+            // VerifyError: ambiguous reference
+            VerifyError(null, 129, id.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+            return null;
+        }
+        else
+        {
+            if (!r.PropertyIsVisibleTo(m_Frame))
+            {
+                // VerifyError: accessing private property
+                VerifyError(null, 130, id.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+            }
+            r = r?.EscapeAlias();
+            if (!(r is TypeParameter))
+            {
+                // VerifyError: not a type parameter
+                VerifyError(null, 225, id.Span.Value, new DiagnosticArguments {});
+                return null;
+            }
+
+            return r;
+        }
     }
 
     // verify arguments to a generic type or function; ensure:

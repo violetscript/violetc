@@ -213,6 +213,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [222] = "Item is not a namespace",
         [223] = "Not all code paths return a value",
         [224] = "Invalid generic bound type: '$t'",
+        [225] = "Item must be a type parameter",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
