@@ -12,7 +12,8 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    private void VerifyPrograms(List<Ast.Program> programs)
+    // program resolution is fragmented in phases.
+    public void VerifyPrograms(List<Ast.Program> programs)
     {
         foreach (var program in programs)
         {
@@ -22,7 +23,35 @@ public partial class Verifier
                 packageDefn.SemanticPackage = pckg;
                 packageDefn.SemanticFrame = m_ModelCore.Factory.PackageFrame(pckg);
             }
-            doFooBarQuxBaz();
+        }
+        var phases = new VerifyPhase[] {
+            VerifyPhase.Phase1,
+            VerifyPhase.Phase2,
+            VerifyPhase.Phase3,
+            VerifyPhase.Phase4,
+            VerifyPhase.Phase5,
+        };
+        foreach (var phase in phases)
+        {
+            foreach (var program in programs)
+            {
+                foreach (var packageDefn in program.Packages)
+                {
+                    // verify package definition
+                    doFooBarQuxBaz();
+                }
+                // verify program's statements
+                doFooBarQuxBaz();
+            }
         }
     }
+}
+
+public enum VerifyPhase
+{
+    Phase1,
+    Phase2,
+    Phase3,
+    Phase4,
+    Phase5,
 }
