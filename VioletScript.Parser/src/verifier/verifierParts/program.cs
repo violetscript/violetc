@@ -30,8 +30,11 @@ public partial class Verifier
     // namespace Q = B;
     // ```
     //
+    // import directives are also re-arranged as neccessary.
+    //
     // for namespace aliases, complex constant expressions do not have to be tested
-    // as users mostly only use lexical references and member expressions.
+    // as users mostly only use lexical references and member expressions as the
+    // right expression.
     //
     public void VerifyPrograms(List<Ast.Program> programs)
     {
@@ -111,9 +114,10 @@ public enum VerifyPhase
     /// </summary>
     Phase1,
     /// <summary>
-    /// Phase in which alias definitions, including <c>type</c> and <c>namespace</c>,
+    /// Phase in which alias definitions and <c>import</c> directives,
+    /// including <c>type</c> and <c>namespace</c>,
     /// are gathered into a list, are re-arranged into the best order based on how
-    /// an alias depends on the other, and then resolved.
+    /// one directive depends on the other, and then resolved.
     /// </summary>
     Phase2,
     Phase3,
