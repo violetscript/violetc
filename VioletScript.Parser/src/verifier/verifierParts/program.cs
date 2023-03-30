@@ -83,7 +83,9 @@ public partial class Verifier
                     ExitFrame();
                 }
             }
-            // phase 2 = rearrange and resolve various directives
+            // phase 2 = rearrange and resolve various directives.
+            // - how to determine where the directive node is from?
+            // look at the node's surrounding frame. for example, it can be a PackageFrame.
             if (phase == VerifyPhase.Phase2)
             {
                 //
