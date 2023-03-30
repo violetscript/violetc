@@ -54,6 +54,13 @@ public partial class Verifier
         get => m_ModelCore;
     }
 
+    private Diagnostic SyntaxError(Script script, int id, Span span, DiagnosticArguments args = null)
+    {
+        script ??= span.Script;
+        m_Valid = false;
+        return script.CollectDiagnostic(Diagnostic.SyntaxError(id, span, args));
+    }
+
     private Diagnostic VerifyError(Script script, int id, Span span, DiagnosticArguments args = null)
     {
         script ??= span.Script;

@@ -134,12 +134,12 @@ public partial class Verifier
         // getter definition
         else if (stmt is Ast.GetterDefinition getterDefn)
         {
-            VerifyGetterDefinition(getterDefn);
+            SyntaxError(null, 16, getterDefn.Id.Span.Value, new DiagnosticArguments {});
         }
         // setter definition
         else if (stmt is Ast.SetterDefinition setterDefn)
         {
-            VerifySetterDefinition(setterDefn);
+            SyntaxError(null, 16, setterDefn.Id.Span.Value, new DiagnosticArguments {});
         }
         // namespace alias definition
         else if (stmt is Ast.NamespaceAliasDefinition nsAliasDefn)
