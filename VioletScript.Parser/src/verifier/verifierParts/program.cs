@@ -80,6 +80,8 @@ public partial class Verifier
                 m_ImportOrAliasDirectives.Clear();
             }
         }
+
+        // apply constraints to generic item instantiations in type expressions.
         VerifyAllGenericInstAsTypeExps();
     }
 
