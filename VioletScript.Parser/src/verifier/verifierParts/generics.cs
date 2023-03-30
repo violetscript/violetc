@@ -36,8 +36,19 @@ public partial class Verifier
             // T:Cons
             if (paramNode.DefaultIsBound != null)
             {
-                var defaultBound = VerifyTypeExp(paramNode.DefaultIsBound);
-                doFooBarQuxBaz();
+                Symbol defaultBound = VerifyTypeExp(paramNode.DefaultIsBound);
+                if (defaultBound != null && defaultBound.IsClassType)
+                {
+                    paramNode.SemanticSymbol.SuperType = defaultBound;
+                }
+                else if (defaultBound != null && defaultBound.IsInterfaceType)
+                {
+                    paramNode.SemanticSymbol.AddImplementedInterface(defaultBound);
+                }
+                else if (defaultBound != null)
+                {
+                    VerifyError(null, 224, paramNode.DefaultIsBound.Span.Value, new DiagnosticArguments { ["t"] = defaultBound });
+                }
             }
         }
         if (generics.Bounds != null)

@@ -212,6 +212,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [221] = "Switch discriminant is never of type '$t'",
         [222] = "Item is not a namespace",
         [223] = "Not all code paths return a value",
+        [224] = "Invalid generic bound type: '$t'",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

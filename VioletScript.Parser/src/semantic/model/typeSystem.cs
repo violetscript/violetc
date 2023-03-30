@@ -251,6 +251,10 @@ public class ClassType : Type {
         get => false;
     }
 
+    public override bool IsClassType {
+        get => true;
+    }
+
     public override string Name {
         get => m_Name;
     }
@@ -510,6 +514,10 @@ public class InterfaceType : Type {
 
     public override bool IncludesNull {
         get => false;
+    }
+
+    public override bool IsInterfaceType {
+        get => true;
     }
 
     public override string Name {
@@ -947,6 +955,14 @@ public class InstantiatedType : Type {
         get => true;
     }
 
+    public override bool IsClassType {
+        get => m_Origin.IsClassType;
+    }
+
+    public override bool IsInterfaceType {
+        get => m_Origin.IsInterfaceType;
+    }
+
     public override Symbol ParentDefinition {
         get => m_Origin.ParentDefinition;
     }
@@ -1090,6 +1106,15 @@ public class TypeParameter : Type {
         {
             m_Shadows = value;
         }
+    }
+
+    public override Symbol CloneTypeParameter()
+    {
+        TypeParameter r = (TypeParameter) this.ModelCore.Factory.TypeParameter(this.Name);
+        r.m_ExtendsClass = this.m_ExtendsClass;
+        r.m_ImplementsInterfaces = this.m_ImplementsInterfaces?.GetRange(0, this.m_ImplementsInterfaces.Count());
+        r.m_Shadows = this.m_Shadows;
+        return r;
     }
 
     public override string ToString() {

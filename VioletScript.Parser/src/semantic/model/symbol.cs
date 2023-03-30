@@ -687,4 +687,17 @@ public class Symbol {
         {
         }
     }
+
+    public virtual bool IsClassType {
+        get => false;
+    }
+
+    public virtual bool IsInterfaceType {
+        get => false;
+    }
+
+    public virtual Symbol CloneTypeParameter()
+    {
+        throw new Exception("Unimplemented");
+    }
 }
