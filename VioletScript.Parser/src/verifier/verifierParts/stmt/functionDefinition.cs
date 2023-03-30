@@ -14,6 +14,7 @@ public partial class Verifier
 {
     private void VerifyFunctionDefinition(Ast.FunctionDefinition defn)
     {
+        // prohibit and ignore generics
         if (defn.Generics != null)
         {
             VerifyError(null, 226, defn.Id.Span.Value, new DiagnosticArguments {});
@@ -38,7 +39,6 @@ public partial class Verifier
                 (common.UsesAwait ? MethodSlotFlags.UsesAwait : 0)
             |   (common.UsesYield ? MethodSlotFlags.UsesYield : 0));
 
-        bool valid = true;
         Symbol signatureType = null;
 
         // resolve common before pushing to method slot stack,
@@ -84,7 +84,6 @@ public partial class Verifier
             signatureType_returnType = VerifyTypeExp(common.ReturnType);
             if (signatureType_returnType == null)
             {
-                valid = false;
                 signatureType_returnType = m_ModelCore.AnyType;
             }
         }
@@ -130,6 +129,15 @@ public partial class Verifier
         m_MethodSlotStack.Pop();
         ExitFrame();
 
-        doFooBarQuxBaz();
+        defn.SemanticMethodSlot = methodSlot;
+
+        if (m_Frame.Properties.Has(defn.Id.Name))
+        {
+            VerifyError(null, 139, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = defn.Id.Name });
+        }
+        else
+        {
+            m_Frame.Properties[defn.Id.Name] = methodSlot;
+        }
     } // function definition
 }

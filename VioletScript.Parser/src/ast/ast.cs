@@ -790,6 +790,8 @@ public class FunctionDefinition : AnnotatableDefinition {
     public Generics Generics;
     public FunctionCommon Common;
 
+    public Symbol SemanticMethodSlot = null;
+
     public FunctionDefinition(Identifier id, Generics generics, FunctionCommon common) : base() {
         Id = id;
         Generics = generics;
