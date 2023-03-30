@@ -56,8 +56,10 @@ public partial class Verifier
             VerifyPhase.Phase3,
             VerifyPhase.Phase4,
             VerifyPhase.Phase5,
+            VerifyPhase.Phase6,
         };
         m_GenericInstantiationsAsTypeExp = new List<Ast.GenericInstantiationTypeExpression>();
+        m_ImportOrAliasDirectives = new List<Ast.Statement>();
         foreach (var phase in phases)
         {
             foreach (var program in programs)
@@ -70,11 +72,12 @@ public partial class Verifier
                 // verify program's statements
                 doFooBarQuxBaz();
             }
-            // phase 2 -> rearrange and resolve various directives
+            // phase 2 = rearrange and resolve various directives
             if (phase == VerifyPhase.Phase2)
             {
                 //
                 dooFooBarQuxBaz();
+                m_ImportOrAliasDirectives.Clear();
             }
         }
         VerifyAllGenericInstAsTypeExps();
@@ -131,7 +134,7 @@ public partial class Verifier
         }
         else if (!(stmt is Ast.AnnotatableDefinition))
         {
-            if (phase == VerifyPhase.Phase5)
+            if (phase == VerifyPhase.Phase6)
             {
                 VerifyStatement(stmt);
             }
@@ -189,6 +192,42 @@ public partial class Verifier
             throw new Exception("Unimplemented");
         }
     }
+
+    private void Fragmented_VerifyImportDirective(Ast.ImportStatement drtv, VerifyPhase phase)
+    {
+        if (phase == VerifyPhase.Phase2)
+        {
+            drtv.SemanticSurroundingFrame = m_Frame;
+            m_ImportOrAliasDirectives.Add(drtv);
+        }
+    }
+
+    private void Fragmented_VerifyUseNamespaceDirective(Ast.UseNamespaceStatement drtv, VerifyPhase phase)
+    {
+        if (phase == VerifyPhase.Phase2)
+        {
+            drtv.SemanticSurroundingFrame = m_Frame;
+            m_ImportOrAliasDirectives.Add(drtv);
+        }
+    }
+
+    private void Fragmented_VerifyTypeDefinition(Ast.TypeDefinition defn, VerifyPhase phase)
+    {
+        if (phase == VerifyPhase.Phase2)
+        {
+            defn.SemanticSurroundingFrame = m_Frame;
+            m_ImportOrAliasDirectives.Add(defn);
+        }
+    }
+
+    private void Fragmented_VerifyNamespaceAliasDefinition(Ast.NamespaceAliasDefinition defn, VerifyPhase phase)
+    {
+        if (phase == VerifyPhase.Phase2)
+        {
+            defn.SemanticSurroundingFrame = m_Frame;
+            m_ImportOrAliasDirectives.Add(defn);
+        }
+    }
 }
 
 public enum VerifyPhase
@@ -202,10 +241,14 @@ public enum VerifyPhase
     /// <c>use namespace</c> directives, including <c>type</c> and <c>namespace</c>,
     /// are gathered into a list together with their lexical frames,
     /// are re-arranged into the best order based on how
-    /// one directive depends on the other, and then resolved.
+    /// one directive depends on the other, and then resolved with the next phase.
     /// </summary>
     Phase2,
+    /// <summary>
+    /// Phase in which nodes gathered from the previous phase are fully verified.
+    /// </summary>
     Phase3,
     Phase4,
     Phase5,
+    Phase6,
 }

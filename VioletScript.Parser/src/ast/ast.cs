@@ -1362,6 +1362,8 @@ public class IncludeStatement : Statement {
 public class UseNamespaceStatement : Statement {
     public Expression Expression;
 
+    public Symbol SemanticSurroundingFrame = null;
+
     public UseNamespaceStatement(Expression expression) : base() {
         Expression = expression;
     }
