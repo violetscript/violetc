@@ -9,6 +9,7 @@ public class Alias : Symbol {
     private Symbol m_To;
     private Visibility m_Visibility;
     private Symbol m_Parent;
+    private Symbol[] m_TypeParameters = null;
 
     public Alias(string name, Symbol to) {
         m_Name = name;
@@ -31,6 +32,11 @@ public class Alias : Symbol {
     public override Symbol ParentDefinition {
         get => m_Parent;
         set { m_Parent = value; }
+    }
+
+    public override Symbol[] TypeParameters {
+        get => m_TypeParameters;
+        set => m_TypeParameters = value;
     }
 
     public override Symbol EscapeAlias()

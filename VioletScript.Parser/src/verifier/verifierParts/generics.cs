@@ -178,6 +178,10 @@ public partial class Verifier
         {
             return m_ModelCore.InternInstantiatedType(genericTypeOrF, arguments);
         }
+        else if (genericTypeOrF is Alias)
+        {
+            askdofkssofskdofsdfksdf();
+        }
         else
         {
             return m_ModelCore.InternInstantiationOfGenericMethodSlot(genericTypeOrF, arguments);

@@ -295,7 +295,10 @@ public partial class Verifier
                 exp.SemanticExpResolved = true;
                 return exp.SemanticSymbol;
             }
-            r = r?.EscapeAlias();
+            if (r == null || !(r is Alias && r.IsGenericTypeOrMethod))
+            {
+                r = r?.EscapeAlias();
+            }
             // VerifyError: unargumented generic type or function
             if (!instantiatingGeneric && r.IsGenericTypeOrMethod)
             {
@@ -366,7 +369,10 @@ public partial class Verifier
                 exp.SemanticExpResolved = true;
                 return exp.SemanticSymbol;
             }
-            r = r?.EscapeAlias();
+            if (r == null || !(r is Alias && r.IsGenericTypeOrMethod))
+            {
+                r = r?.EscapeAlias();
+            }
             // VerifyError: unargumented generic type or function
             if (!instantiatingGeneric && r.IsGenericTypeOrMethod)
             {

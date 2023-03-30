@@ -50,7 +50,10 @@ public partial class Verifier
                     // VerifyError: accessing private property
                     VerifyError(null, 130, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
                 }
-                r = r?.EscapeAlias();
+                if (r == null || !(r is Alias && r.IsGenericTypeOrMethod))
+                {
+                    r = r?.EscapeAlias();
+                }
                 if (!isBase && !(r is Type))
                 {
                     // VerifyError: not a type constant
@@ -60,7 +63,7 @@ public partial class Verifier
                     return exp.SemanticSymbol;
                 }
                 // VerifyError: unargumented generic type
-                if (!isBase && r.TypeParameters != null)
+                if (!isBase && r.IsGenericTypeOrMethod)
                 {
                     VerifyError(null, 132, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
                     exp.SemanticSymbol = null;
@@ -223,7 +226,10 @@ public partial class Verifier
                     // VerifyError: accessing private property
                     VerifyError(exp.Span.Value.Script, 130, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
                 }
-                r = r?.EscapeAlias();
+                if (r == null || !(r is Alias && r.IsGenericTypeOrMethod))
+                {
+                    r = r?.EscapeAlias();
+                }
                 if (!isBase && !(r is Type))
                 {
                     // VerifyError: not a type constant
@@ -233,7 +239,7 @@ public partial class Verifier
                     return exp.SemanticSymbol;
                 }
                 // VerifyError: unargumented generic type
-                if (!isBase && r.TypeParameters != null)
+                if (!isBase && r.IsGenericTypeOrMethod)
                 {
                     VerifyError(memberTe.Id.Span.Value.Script, 132, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
                     exp.SemanticSymbol = null;
