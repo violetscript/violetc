@@ -30,7 +30,7 @@ public partial class Verifier
     // namespace Q = B;
     // ```
     //
-    // import directives are also re-arranged as neccessary.
+    // 'import' and 'use namespace' directives are also re-arranged as neccessary.
     //
     // for namespace aliases, complex constant expressions do not have to be tested
     // as users mostly only use lexical references and member expressions as the
@@ -105,6 +105,88 @@ public partial class Verifier
         }
         m_GenericInstantiationsAsTypeExp.Clear();
     }
+
+    private void Fragmented_VerifyStatement(Ast.Statement stmt, VerifyPhase phase)
+    {
+        if (stmt is Ast.VariableDefinition varDefn)
+        {
+            Fragmented_VerifyVariableDefinition(varDefn, phase);
+        }
+        else if (stmt is Ast.ImportStatement importDrtv)
+        {
+            Fragmented_VerifyImportDirective(importDrtv);
+        }
+        else if (stmt is Ast.UseNamespaceStatement useNsDrtv)
+        {
+            Fragmented_VerifyUseNamespaceDirective(useNsDrtv);
+        }
+        else if (stmt is Ast.IncludeStatement incDrtv)
+        {
+            foreach (var innerStmt in incDrtv.InnerStatements)
+            {
+                Fragmented_VerifyStatement(innerStmt, phase);
+            }
+        }
+        else if (!(stmt is Ast.AnnotatableDefinition))
+        {
+            if (phase == VerifyPhase.Phase5)
+            {
+                VerifyStatement(stmt);
+            }
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else if (stmt is Ast.XDefinition xDefn)
+        {
+            //
+        }
+        else
+        {
+            throw new Exception("Unimplemented");
+        }
+    }
 }
 
 public enum VerifyPhase
@@ -114,9 +196,10 @@ public enum VerifyPhase
     /// </summary>
     Phase1,
     /// <summary>
-    /// Phase in which alias definitions and <c>import</c> directives,
-    /// including <c>type</c> and <c>namespace</c>,
-    /// are gathered into a list, are re-arranged into the best order based on how
+    /// Phase in which alias definitions, <c>import</c> directives and
+    /// <c>use namespace</c> directives, including <c>type</c> and <c>namespace</c>,
+    /// are gathered into a list together with their lexical frames,
+    /// are re-arranged into the best order based on how
     /// one directive depends on the other, and then resolved.
     /// </summary>
     Phase2,

@@ -35,6 +35,13 @@ public partial class Verifier
     private bool m_Valid = true;
 
     /// <summary>
+    /// List of import directives, use namespace directives,
+    /// namespace aliases and type aliases.
+    /// This list is consumed by <c>VerifyPrograms</c>.
+    /// </summary>
+    private List<Ast.Statement> m_ImportOrAliasDirectives = null;
+
+    /// <summary>
     /// List of generic item instantiations as type expressions.
     /// This list is feed by the <c>VerifyTypeExp</c> method and later consumed by
     /// <c>VerifyPrograms</c>.

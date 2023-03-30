@@ -173,6 +173,10 @@ public partial class Verifier
 
         if (surroundingTypeExp != null)
         {
+            if (m_GenericInstantiationsAsTypeExp == null)
+            {
+                throw new Exception("Program verification must be done through verifyPrograms()");
+            }
             m_GenericInstantiationsAsTypeExp.Add(surroundingTypeExp);
         }
         else

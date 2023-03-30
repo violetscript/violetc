@@ -763,6 +763,8 @@ public class NamespaceAliasDefinition : AnnotatableDefinition {
     public Identifier Id;
     public Expression Expression;
 
+    public Symbol SemanticSurroundingFrame = null;
+
     public NamespaceAliasDefinition(Identifier id, Expression expression) : base() {
         Id = id;
         Expression = expression;
@@ -945,6 +947,10 @@ public class TypeDefinition : AnnotatableDefinition {
 
     public Symbol SemanticRightFrame = null;
     public Symbol SemanticAlias = null;
+    /// <summary>
+    /// Used by fragmented program type definitions.
+    /// </summary>
+    public Symbol SemanticSurroundingFrame = null;
 
     public TypeDefinition(Identifier id, Generics generics, TypeExpression type) : base() {
         Id = id;
@@ -1035,6 +1041,8 @@ public class ImportStatement : Statement {
     public Identifier Alias;
     public string[] ImportName;
     public bool Wildcard;
+
+    public Symbol SemanticSurroundingFrame = null;
 
     public ImportStatement(Identifier alias, string[] importName, bool wildcard) : base() {
         Alias = alias;
