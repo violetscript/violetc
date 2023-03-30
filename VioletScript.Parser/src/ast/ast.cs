@@ -941,6 +941,9 @@ public class TypeDefinition : AnnotatableDefinition {
     public Generics Generics;
     public TypeExpression Type;
 
+    public Symbol SemanticRightFrame = null;
+    public Symbol SemanticAlias = null;
+
     public TypeDefinition(Identifier id, Generics generics, TypeExpression type) : base() {
         Id = id;
         Generics = generics;
