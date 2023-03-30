@@ -62,7 +62,28 @@ public partial class Verifier
                     VerifyTypeExp(isBoundNode.Type);
                     continue;
                 }
-                doFooBarQuxBaz();
+                if (!r.Contains(typeParameter))
+                {
+                    var shadowed = typeParameter;
+                    typeParameter = shadowed.CloneTypeParameter();
+                    typeParameter.ShadowsTypeParameter ??= shadowed;
+                    m_Frame.Properties[typeParameter.Name] = typeParameter;
+                }
+                isBoundNode.SemanticTypeParameter = typeParameter;
+
+                Symbol bound = VerifyTypeExp(isBoundNode.Type);
+                if (bound != null && bound.IsClassType)
+                {
+                    typeParameter.SuperType = bound;
+                }
+                else if (bound != null && bound.IsInterfaceType)
+                {
+                    typeParameter.AddImplementedInterface(bound);
+                }
+                else if (bound != null)
+                {
+                    VerifyError(null, 224, isBoundNode.Type.Span.Value, new DiagnosticArguments { ["t"] = bound });
+                }
             }
         }
         return r;

@@ -977,6 +977,7 @@ public class GenericTypeParameter : Node {
 }
 
 public class GenericTypeParameterBound : Node {
+    public Symbol SemanticTypeParameter = null;
 }
 
 /// <summary>
