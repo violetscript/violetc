@@ -60,7 +60,6 @@ public partial class Verifier
             VerifyPhase.Phase3,
             VerifyPhase.Phase4,
             VerifyPhase.Phase5,
-            VerifyPhase.Phase6,
         };
         m_GenericInstantiationsAsTypeExp = new List<Ast.GenericInstantiationTypeExpression>();
         m_ImportOrAliasDirectives = new List<Ast.Statement>();
@@ -88,8 +87,10 @@ public partial class Verifier
             // look at the node's surrounding frame. for example, it can be a PackageFrame.
             if (phase == VerifyPhase.Phase2)
             {
-                //
-                dooFooBarQuxBaz();
+                foreach (var drtv in m_ImportOrAliasDirectives)
+                {
+                    Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase1);
+                }
                 m_ImportOrAliasDirectives.Clear();
             }
         }
@@ -157,7 +158,7 @@ public partial class Verifier
         }
         else if (!(stmt is Ast.AnnotatableDefinition))
         {
-            if (phase == VerifyPhase.Phase6)
+            if (phase == VerifyPhase.Phase5)
             {
                 VerifyStatement(stmt);
             }
@@ -264,14 +265,16 @@ public enum VerifyPhase
     /// <c>use namespace</c> directives, including <c>type</c> and <c>namespace</c>,
     /// are gathered into a list together with their lexical frames,
     /// are re-arranged into the best order based on how
-    /// one directive depends on the other, and then resolved with the next phase.
+    /// one directive depends on the other, and then resolved with the phase
+    /// <c>ImportOrAliasPhase1</c>.
     /// </summary>
     Phase2,
-    /// <summary>
-    /// Phase in which nodes gathered from the previous phase are fully verified.
-    /// </summary>
     Phase3,
     Phase4,
     Phase5,
-    Phase6,
+
+    /// <summary>
+    /// Phase in which nodes gathered from the phase <c>Phase2</c> are fully verified.
+    /// </summary>
+    ImportOrAliasPhase1,
 }
