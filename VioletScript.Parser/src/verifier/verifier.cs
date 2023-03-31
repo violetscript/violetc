@@ -15,17 +15,6 @@ public class VerifierOptions
     public bool AllowDuplicates = false;
 }
 
-public class VerifierContext
-{
-    public Symbol ExpectedType = null;
-    public DefinitionPhase DefinitionPhase = DefinitionPhase.Initial;
-}
-
-public enum DefinitionPhase
-{
-    Initial,
-}
-
 public partial class Verifier
 {
     private ModelCore m_ModelCore = new ModelCore();

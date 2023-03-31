@@ -18,7 +18,7 @@ public partial class Verifier
     //
     // nested patterns always need an `inferredType` argument.
     //
-    public void VerifyDestructuringPattern
+    private void VerifyDestructuringPattern
     (
         Ast.DestructuringPattern pattern,
         bool readOnly,
