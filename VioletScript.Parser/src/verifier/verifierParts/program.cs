@@ -87,6 +87,7 @@ public partial class Verifier
             // look at the node's surrounding frame. for example, it can be a PackageFrame.
             if (phase == VerifyPhase.Phase2)
             {
+                doFooBarQuxBaz();
                 foreach (var drtv in m_ImportOrAliasDirectives)
                 {
                     Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase1);
