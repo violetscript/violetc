@@ -1293,7 +1293,7 @@ internal class ParserBackend {
             if (Consume(TToken.Colon)) {
                 return ParseLabeledStatement(name, context, startSpan);
             } else if (Token.Type == TToken.StringLiteral && PreviousToken.IsContextKeyword("include") && TokenIsInline) {
-                return ParseIncludeSTatement(context, startSpan);
+                return ParseIncludeStatement(context, startSpan);
             } else if (Token.Type == TToken.Identifier && PreviousTokenIsDefinitionContextKeyword) {
                 return ParseAnnotatableDefinition(new DefinitionAttributes(), context, startSpan);
             } else {
@@ -1331,7 +1331,7 @@ internal class ParserBackend {
         return null;
     }
 
-    private (Ast.Statement node, bool semicolonInserted) ParseIncludeSTatement(Context context, Span startSpan) {
+    private (Ast.Statement node, bool semicolonInserted) ParseIncludeStatement(Context context, Span startSpan) {
         PushLocation(startSpan);
         var src = Token.StringValue;
         NextToken();
