@@ -96,6 +96,7 @@ public partial class Verifier
                     Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase1);
                 }
                 m_ImportOrAliasDirectives.Clear();
+                m_ImportOrAliasDirectives = null;
             }
         }
 
@@ -133,6 +134,7 @@ public partial class Verifier
             }
         }
         m_GenericInstantiationsAsTypeExp.Clear();
+        m_GenericInstantiationsAsTypeExp = null;
     }
 
     private void Fragmented_VerifyStatementSeq(List<Ast.Statement> seq, VerifyPhase phase)
