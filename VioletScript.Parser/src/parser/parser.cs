@@ -1234,7 +1234,7 @@ internal class ParserBackend {
         context.IsConstructor = isConstructor;
         var block = Token.Type == TToken.LCurly ? ParseBlock(context) : null;
         if (block != null) return (block, true);
-        var semicolonInserted = forFunctionDefinition ? ParseSemicolon() : false;
+        var semicolonInserted = forFunctionDefinition && Token.Type != TToken.LParen ? ParseSemicolon() : false;
         if (semicolonInserted) return (null, true);
         var exp = ParseExpression(true, OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction);
         semicolonInserted = forFunctionDefinition ? ParseSemicolon() : semicolonInserted;
