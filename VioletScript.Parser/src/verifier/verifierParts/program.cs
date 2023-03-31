@@ -87,7 +87,10 @@ public partial class Verifier
             // look at the node's surrounding frame. for example, it can be a PackageFrame.
             if (phase == VerifyPhase.Phase2)
             {
+                // re-arrange directives
                 doFooBarQuxBaz();
+
+                // resolve directives
                 foreach (var drtv in m_ImportOrAliasDirectives)
                 {
                     Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase1);
@@ -152,10 +155,7 @@ public partial class Verifier
         }
         else if (stmt is Ast.IncludeStatement incDrtv)
         {
-            foreach (var innerStmt in incDrtv.InnerStatements)
-            {
-                Fragmented_VerifyStatement(innerStmt, phase);
-            }
+            Fragmented_VerifyStatementSeq(incDrtv.InnerStatements, phase);
         }
         else if (!(stmt is Ast.AnnotatableDefinition))
         {
@@ -215,42 +215,6 @@ public partial class Verifier
         else
         {
             throw new Exception("Unimplemented");
-        }
-    }
-
-    private void Fragmented_VerifyImportDirective(Ast.ImportStatement drtv, VerifyPhase phase)
-    {
-        if (phase == VerifyPhase.Phase2)
-        {
-            drtv.SemanticSurroundingFrame = m_Frame;
-            m_ImportOrAliasDirectives.Add(drtv);
-        }
-    }
-
-    private void Fragmented_VerifyUseNamespaceDirective(Ast.UseNamespaceStatement drtv, VerifyPhase phase)
-    {
-        if (phase == VerifyPhase.Phase2)
-        {
-            drtv.SemanticSurroundingFrame = m_Frame;
-            m_ImportOrAliasDirectives.Add(drtv);
-        }
-    }
-
-    private void Fragmented_VerifyTypeDefinition(Ast.TypeDefinition defn, VerifyPhase phase)
-    {
-        if (phase == VerifyPhase.Phase2)
-        {
-            defn.SemanticSurroundingFrame = m_Frame;
-            m_ImportOrAliasDirectives.Add(defn);
-        }
-    }
-
-    private void Fragmented_VerifyNamespaceAliasDefinition(Ast.NamespaceAliasDefinition defn, VerifyPhase phase)
-    {
-        if (phase == VerifyPhase.Phase2)
-        {
-            defn.SemanticSurroundingFrame = m_Frame;
-            m_ImportOrAliasDirectives.Add(defn);
         }
     }
 }

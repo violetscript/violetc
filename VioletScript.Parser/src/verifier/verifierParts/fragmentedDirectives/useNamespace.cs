@@ -12,12 +12,12 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    private void Fragmented_VerifyTypeDefinition(Ast.TypeDefinition defn, VerifyPhase phase)
+    private void Fragmented_VerifyUseNamespaceDirective(Ast.UseNamespaceStatement drtv, VerifyPhase phase)
     {
         if (phase == VerifyPhase.Phase2)
         {
-            defn.SemanticSurroundingFrame = m_Frame;
-            m_ImportOrAliasDirectives.Add(defn);
+            drtv.SemanticSurroundingFrame = m_Frame;
+            m_ImportOrAliasDirectives.Add(drtv);
         }
     }
 }
