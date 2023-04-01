@@ -15,26 +15,8 @@ public partial class Verifier
     // program resolution is fragmented in phases.
     // type aliases and namespace aliases are resolved after
     // original item definitions. the verifier gathers
-    // a list of type aliases and namespace aliases
-    // and re-arranges them in a new list for resolving
-    // them in the right order.
-    //
-    // here is an example program where aliases have to be re-arranged
-    // as one may rely on another:
-    //
-    // ```violetscript
-    // type TA = TB; // TB is still undefined at this point
-    // type TB = Number;
-
-    // namespace F = Q; // Q is still undefined at this point
-    // namespace Q = B;
-    // ```
-    //
-    // 'import' and 'use namespace' directives are also re-arranged as neccessary.
-    //
-    // for namespace aliases, complex constant expressions do not have to be tested
-    // as users mostly only use lexical references and member expressions as the
-    // right expression.
+    // a list of imports, type aliases and namespace aliases
+    // and tries to resolve them until 10 attempts.
     //
     public void VerifyPrograms(List<Ast.Program> programs)
     {
@@ -82,18 +64,24 @@ public partial class Verifier
                     ExitFrame();
                 }
             }
-            // phase 2 = rearrange and resolve various directives.
-            // - how to determine where the directive node is from?
-            // look at the node's surrounding frame. for example, it can be a PackageFrame.
+            // phase 2 = resolve import and alias directives.
             if (phase == VerifyPhase.Phase2)
             {
-                // re-arrange directives
-                doFooBarQuxBaz();
-
-                // resolve directives
-                foreach (var drtv in m_ImportOrAliasDirectives)
+                int i = 0;
+                while (m_ImportOrAliasDirectives.Count() != 0 && i != 9)
                 {
-                    Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase1);
+                    foreach (var drtv in m_ImportOrAliasDirectives)
+                    {
+                        Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase1);
+                    }
+                    i += 1;
+                }
+                if (m_ImportOrAliasDirectives.Count() != 0)
+                {
+                    foreach (var drtv in m_ImportOrAliasDirectives)
+                    {
+                        Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase2);
+                    }
                 }
                 m_ImportOrAliasDirectives.Clear();
                 m_ImportOrAliasDirectives = null;
@@ -242,6 +230,13 @@ public enum VerifyPhase
 
     /// <summary>
     /// Phase in which nodes gathered from the phase <c>Phase2</c> are fully verified.
+    /// Different from <c>ImportOrAliasPhase2</c>, this phase will not report diagnostics.
     /// </summary>
     ImportOrAliasPhase1,
+
+    /// <summary>
+    /// Phase in which nodes gathered from the phase <c>Phase2</c> are fully verified.
+    /// Different from <c>ImportOrAliasPhase1</c>, this phase will report diagnostics.
+    /// </summary>
+    ImportOrAliasPhase2,
 }

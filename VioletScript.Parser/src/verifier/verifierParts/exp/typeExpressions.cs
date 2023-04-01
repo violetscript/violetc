@@ -12,7 +12,7 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    private Symbol VerifyTypeExp(Ast.TypeExpression exp, bool isBase = false)
+    private Symbol VerifyTypeExp(Ast.TypeExpression exp, bool isBase = false, bool reportDiagnostics = true)
     {
         if (exp.SemanticResolved)
         {
@@ -20,7 +20,7 @@ public partial class Verifier
         }
         if (exp is Ast.IdentifierTypeExpression id)
         {
-            return VerifyLexTypeExp(id, isBase);
+            return VerifyLexTypeExp(id, isBase, reportDiagnostics);
         }
         else if (exp is Ast.AnyTypeExpression)
         {
@@ -98,11 +98,11 @@ public partial class Verifier
         }
         else if (exp is Ast.MemberTypeExpression memberTe)
         {
-            return VerifyMemberTe(memberTe, isBase);
+            return VerifyMemberTe(memberTe, isBase, reportDiagnostics);
         }
         else if (exp is Ast.GenericInstantiationTypeExpression giTe)
         {
-            return VerifyGenericInstTe(giTe);
+            return VerifyGenericInstTe(giTe, reportDiagnostics);
         }
         else if (exp is Ast.NullableTypeExpression nullableTe)
         {
@@ -118,9 +118,13 @@ public partial class Verifier
         }
         else if (exp is Ast.TypedTypeExpression typedTe)
         {
-            VerifyError(exp.Span.Value.Script, 137, exp.Span.Value, new DiagnosticArguments {});
+            if (reportDiagnostics)
+            {
+                VerifyError(exp.Span.Value.Script, 137, exp.Span.Value, new DiagnosticArguments {});
+            }
             VerifyTypeExp(typedTe.Base);
-            exp.SemanticSymbol = VerifyTypeExp(typedTe.Type);
+            VerifyTypeExp(typedTe.Type);
+            exp.SemanticSymbol = null;
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
@@ -133,14 +137,17 @@ public partial class Verifier
     // - it is lexically visible.
     // - it is a type unless it is the base of a member.
     // - if it is a non-argumented generic type, throw a VerifyError.
-    private Symbol VerifyLexTypeExp(Ast.IdentifierTypeExpression id, bool isBase)
+    private Symbol VerifyLexTypeExp(Ast.IdentifierTypeExpression id, bool isBase, bool reportDiagnostics)
     {
         var exp = id;
         var r = m_Frame.ResolveProperty(id.Name);
         if (r == null)
         {
             // VerifyError: undefined reference
-            VerifyError(null, 128, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+            if (reportDiagnostics)
+            {
+                VerifyError(null, 128, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+            }
             exp.SemanticSymbol = null;
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
@@ -148,7 +155,10 @@ public partial class Verifier
         else if (r is AmbiguousReferenceIssue)
         {
             // VerifyError: ambiguous reference
-            VerifyError(null, 129, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+            if (reportDiagnostics)
+            {
+                VerifyError(null, 129, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+            }
             exp.SemanticSymbol = null;
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
@@ -158,7 +168,13 @@ public partial class Verifier
             if (!r.PropertyIsVisibleTo(m_Frame))
             {
                 // VerifyError: accessing private property
-                VerifyError(null, 130, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                if (reportDiagnostics)
+                {
+                    VerifyError(null, 130, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticResolved = true;
+                return exp.SemanticSymbol;
             }
             if (r == null || !(r is Alias && r.IsGenericTypeOrMethod))
             {
@@ -167,7 +183,10 @@ public partial class Verifier
             if (!isBase && !(r is Type))
             {
                 // VerifyError: not a type constant
-                VerifyError(null, 131, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                if (reportDiagnostics)
+                {
+                    VerifyError(null, 131, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                }
                 exp.SemanticSymbol = null;
                 exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
@@ -175,7 +194,10 @@ public partial class Verifier
             // VerifyError: unargumented generic type
             if (!isBase && r.IsGenericTypeOrMethod)
             {
-                VerifyError(null, 132, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                if (reportDiagnostics)
+                {
+                    VerifyError(null, 132, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                }
                 exp.SemanticSymbol = null;
                 exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
@@ -244,7 +266,7 @@ public partial class Verifier
     // - it is lexically visible.
     // - it is a type unless it is the base of a member.
     // - if it is a non-argumented generic type, throw a VerifyError.
-    private Symbol VerifyMemberTe(Ast.MemberTypeExpression memberTe, bool isBase)
+    private Symbol VerifyMemberTe(Ast.MemberTypeExpression memberTe, bool isBase, bool reportDiagnostics)
     {
         var exp = memberTe;
         var @base = VerifyTypeExp(memberTe.Base, true);
@@ -258,7 +280,10 @@ public partial class Verifier
         if (r == null)
         {
             // VerifyError: undefined reference
-            VerifyError(memberTe.Id.Span.Value.Script, 128, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+            if (reportDiagnostics)
+            {
+                VerifyError(memberTe.Id.Span.Value.Script, 128, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+            }
             exp.SemanticSymbol = null;
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
@@ -268,7 +293,13 @@ public partial class Verifier
             if (!r.PropertyIsVisibleTo(m_Frame))
             {
                 // VerifyError: accessing private property
-                VerifyError(exp.Span.Value.Script, 130, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+                if (reportDiagnostics)
+                {
+                    VerifyError(exp.Span.Value.Script, 130, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+                }
+                exp.SemanticSymbol = null;
+                exp.SemanticResolved = true;
+                return exp.SemanticSymbol;
             }
             if (r == null || !(r is Alias && r.IsGenericTypeOrMethod))
             {
@@ -277,7 +308,10 @@ public partial class Verifier
             if (!isBase && !(r is Type))
             {
                 // VerifyError: not a type constant
-                VerifyError(memberTe.Id.Span.Value.Script, 131, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+                if (reportDiagnostics)
+                {
+                    VerifyError(memberTe.Id.Span.Value.Script, 131, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+                }
                 exp.SemanticSymbol = null;
                 exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
@@ -285,7 +319,10 @@ public partial class Verifier
             // VerifyError: unargumented generic type
             if (!isBase && r.IsGenericTypeOrMethod)
             {
-                VerifyError(memberTe.Id.Span.Value.Script, 132, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+                if (reportDiagnostics)
+                {
+                    VerifyError(memberTe.Id.Span.Value.Script, 132, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+                }
                 exp.SemanticSymbol = null;
                 exp.SemanticResolved = true;
                 return exp.SemanticSymbol;
@@ -300,7 +337,7 @@ public partial class Verifier
     // - the base is a generic type.
     // - the number of arguments is correct.
     // - the arguments follow the constraints.
-    private Symbol VerifyGenericInstTe(Ast.GenericInstantiationTypeExpression giTe)
+    private Symbol VerifyGenericInstTe(Ast.GenericInstantiationTypeExpression giTe, bool reportDiagnostics)
     {
         var exp = giTe;
         var @base = VerifyTypeExp(giTe.Base, true);
@@ -315,12 +352,18 @@ public partial class Verifier
             // VerifyError: base is not a generic type
             if (@base is Type)
             {
-                VerifyError(exp.Span.Value.Script, 133, giTe.Base.Span.Value, new DiagnosticArguments { ["t"] = @base });
+                if (reportDiagnostics)
+                {
+                    VerifyError(exp.Span.Value.Script, 133, giTe.Base.Span.Value, new DiagnosticArguments { ["t"] = @base });
+                }
             }
             // VerifyError: base is not a type constant
             else
             {
-                VerifyError(exp.Span.Value.Script, 134, giTe.Base.Span.Value, new DiagnosticArguments {});
+                if (reportDiagnostics)
+                {
+                    VerifyError(exp.Span.Value.Script, 134, giTe.Base.Span.Value, new DiagnosticArguments {});
+                }
             }
             exp.SemanticSymbol = null;
             exp.SemanticResolved = true;

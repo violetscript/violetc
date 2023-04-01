@@ -19,5 +19,17 @@ public partial class Verifier
             drtv.SemanticSurroundingFrame = m_Frame;
             m_ImportOrAliasDirectives.Add(drtv);
         }
+        else if (phase == VerifyPhase.ImportOrAliasPhase1)
+        {
+            // if successful, remove directive from 'm_ImportOrAliasDirectives'.
+            // do not report diagnostics.
+            doFooBarQuxBaz();
+        }
+        else if (phase == VerifyPhase.ImportOrAliasPhase2)
+        {
+            // if successful, remove directive from 'm_ImportOrAliasDirectives'.
+            // report any diagnostics.
+            doFooBarQuxBaz();
+        }
     }
 }
