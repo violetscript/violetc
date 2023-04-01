@@ -21,6 +21,7 @@ public static class PropertyResolution {
                 } else {
                     r = f.ReferenceValueFromFrame(parentOrBaseFrame, r);
                 }
+                return r;
             }
             Symbol r2 = null;
             if (r == null && @base is ActivationFrame && @base.ActivationThisOrThisAsStaticType != null) {
