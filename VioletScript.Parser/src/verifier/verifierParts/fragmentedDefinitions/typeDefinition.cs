@@ -19,6 +19,10 @@ public partial class Verifier
             defn.SemanticSurroundingFrame = m_Frame;
             m_ImportOrAliasDirectives.Add(defn);
         }
+        else if (phase == VerifyPhase.Phase3)
+        {
+            Fragmented_VerifyTypeDefinition3(defn);
+        }
         else if (phase == VerifyPhase.ImportOrAliasPhase1)
         {
             // if successful, remove directive from 'm_ImportOrAliasDirectives'.
@@ -34,12 +38,13 @@ public partial class Verifier
 
     private void Fragmented_VerifyTypeDefinition1(Ast.TypeDefinition defn)
     {
-        defn.SemanticRightFrame = m_ModelCore.Factory.Frame();
         Symbol[] typeParameters = null;
-        if (defn.Generics != null)
+        if (defn.Generics != null && defn.SemanticRightFrame == null)
         {
-            typeParameters = VerifyTypeParameters(defn.Generics, defn.SemanticRightFrame.Properties);
+            defn.SemanticRightFrame = m_ModelCore.Factory.Frame();
+            typeParameters = FragmentedA_VerifyTypeParameters(defn.Generics, defn.SemanticRightFrame.Properties);
         }
+        defn.SemanticRightFrame ??= m_ModelCore.Factory.Frame();
         EnterFrame(defn.SemanticRightFrame);
         var right = VerifyTypeExp(defn.Type, false, false);
         ExitFrame();
@@ -75,12 +80,13 @@ public partial class Verifier
 
     private void Fragmented_VerifyTypeDefinition2(Ast.TypeDefinition defn)
     {
-        defn.SemanticRightFrame = m_ModelCore.Factory.Frame();
         Symbol[] typeParameters = null;
-        if (defn.Generics != null)
+        if (defn.Generics != null && defn.SemanticRightFrame == null)
         {
-            typeParameters = VerifyTypeParameters(defn.Generics, defn.SemanticRightFrame.Properties);
+            defn.SemanticRightFrame = m_ModelCore.Factory.Frame();
+            typeParameters = FragmentedA_VerifyTypeParameters(defn.Generics, defn.SemanticRightFrame.Properties);
         }
+        defn.SemanticRightFrame ??= m_ModelCore.Factory.Frame();
         EnterFrame(defn.SemanticRightFrame);
         var right = VerifyTypeExp(defn.Type, false);
         ExitFrame();
@@ -109,6 +115,15 @@ public partial class Verifier
         else
         {
             m_Frame.Properties[alias.Name] = alias;
+        }
+    }
+
+    private void Fragmented_VerifyTypeDefinition3(Ast.TypeDefinition defn)
+    {
+        var alias = defn.SemanticAlias;
+        if (alias != null && defn.Generics != null)
+        {
+            FragmentedB_VerifyTypeParameters(alias.TypeParameters, defn.Generics, defn.SemanticRightFrame.Properties);
         }
     }
 }
