@@ -196,4 +196,72 @@ public static class EnumConstHelpers
         if (type == modelCore.BigIntType) return (((BigInteger) @base) & ((BigInteger) flag)) != 0;
         throw new ArgumentException("Enum numeric type not handled: " + type.ToString());
     }
+
+    public static bool IsOne(object value)
+    {
+        if (value is double doubleV)
+        {
+            return doubleV == 1;
+        }
+        if (value is decimal decimalV)
+        {
+            return decimalV == 1;
+        }
+        if (value is int intV)
+        {
+            return intV == 1;
+        }
+        if (value is byte byteV)
+        {
+            return byteV == 1;
+        }
+        if (value is short shortV)
+        {
+            return shortV == 1;
+        }
+        if (value is long longV)
+        {
+            return longV == 1;
+        }
+        if (value is BigInteger bigIntV)
+        {
+            return bigIntV == 1;
+        }
+        throw new Exception("Unimplemented");
+    }
+
+    public static bool IsPowerOf2(object value)
+    {
+        if (value is double doubleV)
+        {
+            var intV2 = (int) doubleV;
+            return (intV2 != 0) && ((intV2 & (intV2 - 1)) == 0);
+        }
+        if (value is decimal decimalV)
+        {
+            var intV2 = (int) decimalV;
+            return (intV2 != 0) && ((intV2 & (intV2 - 1)) == 0);
+        }
+        if (value is int intV)
+        {
+            return (intV != 0) && ((intV & (intV - 1)) == 0);
+        }
+        if (value is byte byteV)
+        {
+            return (byteV != 0) && ((byteV & (byteV - 1)) == 0);
+        }
+        if (value is short shortV)
+        {
+            return (shortV != 0) && ((shortV & (shortV - 1)) == 0);
+        }
+        if (value is long longV)
+        {
+            return (longV != 0) && ((longV & (longV - 1)) == 0);
+        }
+        if (value is BigInteger bigIntV)
+        {
+            return (bigIntV != 0) && ((bigIntV & (bigIntV - 1)) == 0);
+        }
+        throw new Exception("Unimplemented");
+    }
 }

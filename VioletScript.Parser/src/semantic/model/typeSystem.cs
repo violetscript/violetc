@@ -424,7 +424,14 @@ public class EnumType : Type {
     }
 
     public override bool EnumHasVariantByNumber(object value) {
-        return m_Variants.ContainsValue(value);
+        foreach (var (variantStr, variantNum) in m_Variants)
+        {
+            if (EnumConstHelpers.ValuesEquals(variantNum, value))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public override object EnumGetVariantNumberByString(string value) {
