@@ -19,7 +19,7 @@ public partial class Verifier
             defn.SemanticSurroundingFrame = m_Frame;
             m_ImportOrAliasDirectives.Add(defn);
         }
-        else if (phase == VerifyPhase.Phase3)
+        else if (phase == VerifyPhase.Phase2)
         {
             Fragmented_VerifyTypeDefinition3(defn);
         }
