@@ -595,6 +595,7 @@ public partial class Verifier
             var alias = m_ModelCore.Factory.Alias(defn.Id.Name, right);
             alias.Visibility = defn.SemanticVisibility;
             m_Frame.Properties[alias.Name] = alias;
+            defn.SemanticAlias = alias;
         }
     } // namespace alias definition
 }

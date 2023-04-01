@@ -764,6 +764,7 @@ public class NamespaceAliasDefinition : AnnotatableDefinition {
     public Expression Expression;
 
     public Symbol SemanticSurroundingFrame = null;
+    public Symbol SemanticAlias = null;
 
     public NamespaceAliasDefinition(Identifier id, Expression expression) : base() {
         Id = id;

@@ -23,12 +23,42 @@ public partial class Verifier
         {
             // if successful, remove directive from 'm_ImportOrAliasDirectives'.
             // do not report diagnostics.
-            doFooBarQuxBaz();
+            Fragmented_VerifyUseNamespaceDirective1(drtv);
         }
         else if (phase == VerifyPhase.ImportOrAliasPhase2)
         {
             // report any diagnostics.
-            doFooBarQuxBaz();
+            Fragmented_VerifyUseNamespaceDirective2(drtv);
         }
+    }
+
+    private void Fragmented_VerifyUseNamespaceDirective1(Ast.UseNamespaceStatement drtv)
+    {
+        var ns = VerifyConstantExp(drtv.Expression, false);
+        if (ns == null)
+        {
+            return;
+        }
+        if (!(ns is Namespace))
+        {
+            return;
+        }
+        m_ImportOrAliasDirectives.Remove(drtv);
+        m_Frame.OpenNamespace(ns);
+    }
+
+    private void Fragmented_VerifyUseNamespaceDirective2(Ast.UseNamespaceStatement drtv)
+    {
+        var ns = VerifyConstantExp(drtv.Expression, true);
+        if (ns == null)
+        {
+            return;
+        }
+        if (!(ns is Namespace))
+        {
+            VerifyError(null, 222, drtv.Expression.Span.Value, new DiagnosticArguments {});
+            return;
+        }
+        m_Frame.OpenNamespace(ns);
     }
 }

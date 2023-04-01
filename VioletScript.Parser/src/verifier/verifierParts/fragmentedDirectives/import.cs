@@ -23,12 +23,108 @@ public partial class Verifier
         {
             // if successful, remove directive from 'm_ImportOrAliasDirectives'.
             // do not report diagnostics.
-            doFooBarQuxBaz();
+            Fragmented_VerifyImportDirective1Or2(drtv, false);
         }
         else if (phase == VerifyPhase.ImportOrAliasPhase2)
         {
             // report any diagnostics.
-            doFooBarQuxBaz();
+            Fragmented_VerifyImportDirective1Or2(drtv, true);
+        }
+    }
+
+    private void Fragmented_VerifyImportDirective1Or2(Ast.ImportStatement stmt, bool lastAttempt)
+    {
+        var imported = m_ModelCore.GlobalPackage;
+        bool first = true;
+        foreach (var name in stmt.ImportName)
+        {
+            // the 'global' identifier may be used to alias a property
+            // from the global package.
+            if (first && name == "global")
+            {
+                first = false;
+                continue;
+            }
+            if (!(imported is Package))
+            {
+                if (lastAttempt)
+                {
+                    VerifyError(null, 215, stmt.Span.Value, new DiagnosticArguments {});
+                }
+                return;
+            }
+            var imported2 = imported.ResolveProperty(name);
+            if (imported2 == null)
+            {
+                if (lastAttempt)
+                {
+                    if (imported is Package)
+                    {
+                        VerifyError(null, 214, stmt.Span.Value, new DiagnosticArguments {["p"] = imported, ["name"] = name});
+                    }
+                    else
+                    {
+                        VerifyError(null, 128, stmt.Span.Value, new DiagnosticArguments {["name"] = name});
+                    }
+                }
+                return;
+            }
+            imported = imported2;
+            first = false;
+        }
+        if (stmt.Wildcard && !(imported is Package))
+        {
+            if (lastAttempt)
+            {
+                VerifyError(null, 216, stmt.Span.Value, new DiagnosticArguments {});
+            }
+            return;
+        }
+        else if (!stmt.Wildcard && imported is Package)
+        {
+            if (lastAttempt)
+            {
+                VerifyError(null, 217, stmt.Span.Value, new DiagnosticArguments {});
+            }
+            return;
+        }
+
+        if (stmt.Alias == null && stmt.Wildcard)
+        {
+            m_Frame.OpenNamespace(imported);
+            m_ImportOrAliasDirectives.Remove(stmt);
+        }
+        else if (stmt.Alias != null)
+        {
+            // alias item or package
+            if (m_Frame.Properties.Has(stmt.Alias.Name))
+            {
+                if (lastAttempt)
+                {
+                    VerifyError(null, 139, stmt.Alias.Span.Value, new DiagnosticArguments {["name"] = stmt.Alias.Name});
+                }
+            }
+            else
+            {
+                m_Frame.Properties[stmt.Alias.Name] = imported;
+                m_ImportOrAliasDirectives.Remove(stmt);
+            }
+        }
+        else
+        {
+            // alias item
+            if (m_Frame.Properties.Has(imported.Name))
+            {
+                if (lastAttempt)
+                {
+                    VerifyError(null, 139, stmt.Span.Value, new DiagnosticArguments {["name"] = imported.Name});
+                }
+            }
+            else
+            {
+                m_Frame.Properties[imported.Name] = imported;
+                m_ImportOrAliasDirectives.Remove(stmt);
+            }
         }
     }
 }
