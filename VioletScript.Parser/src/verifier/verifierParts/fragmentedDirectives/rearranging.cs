@@ -21,6 +21,6 @@ public partial class Verifier
     // - `type` definition
     //
     // after gathering to which other directives each of these directives
-    // depend, build a tree and then fully verify each of them
-    // in the ascending order.
+    // depend, build a tree which can be fully verified
+    // in ascending order.
 }
