@@ -1044,6 +1044,7 @@ public class ImportStatement : Statement {
     public bool Wildcard;
 
     public Symbol SemanticSurroundingFrame = null;
+    public Symbol SemanticImportee = null;
 
     public ImportStatement(Identifier alias, string[] importName, bool wildcard) : base() {
         Alias = alias;
@@ -1364,6 +1365,7 @@ public class UseNamespaceStatement : Statement {
     public Expression Expression;
 
     public Symbol SemanticSurroundingFrame = null;
+    public Symbol SemanticOpenedNamespace = null;
 
     public UseNamespaceStatement(Expression expression) : base() {
         Expression = expression;

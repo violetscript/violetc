@@ -92,6 +92,7 @@ public partial class Verifier
         if (stmt.Alias == null && stmt.Wildcard)
         {
             m_Frame.OpenNamespace(imported);
+            stmt.SemanticImportee = imported;
             m_ImportOrAliasDirectives.Remove(stmt);
         }
         else if (stmt.Alias != null)
@@ -107,6 +108,7 @@ public partial class Verifier
             else
             {
                 m_Frame.Properties[stmt.Alias.Name] = imported;
+                stmt.SemanticImportee = imported;
                 m_ImportOrAliasDirectives.Remove(stmt);
             }
         }
@@ -123,6 +125,7 @@ public partial class Verifier
             else
             {
                 m_Frame.Properties[imported.Name] = imported;
+                stmt.SemanticImportee = imported;
                 m_ImportOrAliasDirectives.Remove(stmt);
             }
         }

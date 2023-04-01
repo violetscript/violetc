@@ -242,6 +242,7 @@ public partial class Verifier
         if (stmt.Alias == null && stmt.Wildcard)
         {
             m_Frame.OpenNamespace(imported);
+            stmt.SemanticImportee = imported;
         }
         else if (stmt.Alias != null)
         {
@@ -253,6 +254,7 @@ public partial class Verifier
             else
             {
                 m_Frame.Properties[stmt.Alias.Name] = imported;
+                stmt.SemanticImportee = imported;
             }
         }
         else
@@ -265,6 +267,7 @@ public partial class Verifier
             else
             {
                 m_Frame.Properties[imported.Name] = imported;
+                stmt.SemanticImportee = imported;
             }
         }
     } // import statement
@@ -544,6 +547,7 @@ public partial class Verifier
             return;
         }
         m_Frame.OpenNamespace(ns);
+        drtv.SemanticOpenedNamespace = ns;
     } // use namespace directive
 
     private void VerifyUseResourceStatement(Ast.UseResourceStatement stmt)

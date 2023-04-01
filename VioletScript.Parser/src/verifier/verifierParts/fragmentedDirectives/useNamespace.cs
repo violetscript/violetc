@@ -45,6 +45,7 @@ public partial class Verifier
         }
         m_ImportOrAliasDirectives.Remove(drtv);
         m_Frame.OpenNamespace(ns);
+        drtv.SemanticOpenedNamespace = ns;
     }
 
     private void Fragmented_VerifyUseNamespaceDirective2(Ast.UseNamespaceStatement drtv)
@@ -60,5 +61,6 @@ public partial class Verifier
             return;
         }
         m_Frame.OpenNamespace(ns);
+        drtv.SemanticOpenedNamespace = ns;
     }
 }
