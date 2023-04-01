@@ -12,4 +12,11 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
+    private void Fragmented_VerifyEnumDefinition(Ast.EnumDefinition defn, VerifyPhase phase)
+    {
+        if (phase == VerifyPhase.Phase2)
+        {
+            m_ImportOrAliasDirectives.Add(defn);
+        }
+    }
 }

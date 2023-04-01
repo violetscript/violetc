@@ -23,12 +23,18 @@ public partial class Verifier
         {
             // if successful, remove directive from 'm_ImportOrAliasDirectives'.
             // do not report diagnostics.
+            var previousFrame = m_Frame;
+            m_Frame = defn.SemanticSurroundingFrame;
             Fragmented_VerifyNamespaceAliasDefinition1(defn);
+            m_Frame = previousFrame;
         }
         else if (phase == VerifyPhase.ImportOrAliasPhase2)
         {
             // report any diagnostics.
+            var previousFrame = m_Frame;
+            m_Frame = defn.SemanticSurroundingFrame;
             Fragmented_VerifyNamespaceAliasDefinition2(defn);
+            m_Frame = previousFrame;
         }
     }
 
