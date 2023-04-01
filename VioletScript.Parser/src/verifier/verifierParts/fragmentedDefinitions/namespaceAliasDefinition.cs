@@ -14,7 +14,7 @@ public partial class Verifier
 {
     private void Fragmented_VerifyNamespaceAliasDefinition(Ast.NamespaceAliasDefinition defn, VerifyPhase phase)
     {
-        if (phase == VerifyPhase.Phase2)
+        if (phase == VerifyPhase.Phase1)
         {
             defn.SemanticSurroundingFrame = m_Frame;
             m_ImportOrAliasDirectives.Add(defn);

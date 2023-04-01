@@ -66,8 +66,8 @@ public partial class Verifier
                     ExitFrame();
                 }
             }
-            // phase 2 = resolve import and alias directives.
-            if (phase == VerifyPhase.Phase2)
+            // phase 1 = resolve import and alias directives.
+            if (phase == VerifyPhase.Phase1)
             {
                 int i = 0;
                 while (m_ImportOrAliasDirectives.Count() != 0 && i != 9)
@@ -215,16 +215,14 @@ public enum VerifyPhase
 {
     /// <summary>
     /// Phase in which original definitions are partially initialized.
-    /// </summary>
-    Phase1,
-    /// <summary>
-    /// Phase in which alias definitions, <c>import</c> directives and
+    /// Also alias definitions, <c>import</c> directives and
     /// <c>use namespace</c> directives, including <c>type</c> and <c>namespace</c>,
     /// are gathered into a list together with their lexical frames,
     /// are re-arranged into the best order based on how
     /// one directive depends on the other, and then resolved with the phase
-    /// <c>ImportOrAliasPhase1</c>.
+    /// <c>ImportOrAliasPhase1</c> or <c>ImportOrAliasPhase2</c>.
     /// </summary>
+    Phase1,
     Phase2,
     Phase3,
     Phase4,

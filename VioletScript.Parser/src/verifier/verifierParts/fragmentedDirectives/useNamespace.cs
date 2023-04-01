@@ -14,7 +14,7 @@ public partial class Verifier
 {
     private void Fragmented_VerifyUseNamespaceDirective(Ast.UseNamespaceStatement drtv, VerifyPhase phase)
     {
-        if (phase == VerifyPhase.Phase2)
+        if (phase == VerifyPhase.Phase1)
         {
             drtv.SemanticSurroundingFrame = m_Frame;
             m_ImportOrAliasDirectives.Add(drtv);
