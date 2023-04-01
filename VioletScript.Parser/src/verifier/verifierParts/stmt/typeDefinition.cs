@@ -24,6 +24,11 @@ public partial class Verifier
         var right = VerifyTypeExp(defn.Type);
         ExitFrame();
 
+        if (right == null)
+        {
+            return;
+        }
+
         var alias = m_ModelCore.Factory.Alias(defn.Id.Name, right);
         alias.TypeParameters = typeParameters;
         defn.SemanticAlias = alias;

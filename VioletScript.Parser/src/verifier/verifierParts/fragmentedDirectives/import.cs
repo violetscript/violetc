@@ -27,7 +27,6 @@ public partial class Verifier
         }
         else if (phase == VerifyPhase.ImportOrAliasPhase2)
         {
-            // if successful, remove directive from 'm_ImportOrAliasDirectives'.
             // report any diagnostics.
             doFooBarQuxBaz();
         }
