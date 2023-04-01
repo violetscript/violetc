@@ -12,4 +12,32 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
+    private void Fragmented_VerifyInterfaceDefinition(Ast.InterfaceDefinition defn, VerifyPhase phase)
+    {
+        if (phase == VerifyPhase.Phase1)
+        {
+            doFooBarQuxBaz();
+        }
+        else if (phase == VerifyPhase.Phase2)
+        {
+            doFooBarQuxBaz();
+        }
+        else if (phase == VerifyPhase.Phase3)
+        {
+            doFooBarQuxBaz();
+        }
+        else if (phase == VerifyPhase.Phase4)
+        {
+            doFooBarQuxBaz();
+        }
+        else if (phase == VerifyPhase.Phase5)
+        {
+            doFooBarQuxBaz();
+        }
+        // VerifyPhase.Phase6
+        else
+        {
+            doFooBarQuxBaz();
+        }
+    }
 }

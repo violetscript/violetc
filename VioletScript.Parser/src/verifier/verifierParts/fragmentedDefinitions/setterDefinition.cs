@@ -12,7 +12,7 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    private void Fragmented_VerifyFunctionDefinition(Ast.FunctionDefinition defn, VerifyPhase phase)
+    private void Fragmented_VerifySetterDefinition(Ast.SetterDefinition defn, VerifyPhase phase)
     {
         if (phase == VerifyPhase.Phase1)
         {
