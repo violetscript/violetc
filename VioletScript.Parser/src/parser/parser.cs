@@ -263,6 +263,7 @@ internal class ParserBackend {
     public Ast.TypeExpression ParseTypeExpression() {
         MarkLocation();
         Ast.TypeExpression r = null;
+        ConsumeOperator(Operator.BitwiseOr);
         if (ConsumeContextKeyword("undefined")) {
             r = (Ast.TypeExpression) FinishNode(new Ast.UndefinedTypeExpression());
         } else if (Consume(TToken.Identifier)) {
