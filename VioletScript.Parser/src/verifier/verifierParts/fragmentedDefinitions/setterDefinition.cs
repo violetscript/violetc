@@ -34,7 +34,11 @@ public partial class Verifier
         {
             doFooBarQuxBaz();
         }
-        // VerifyPhase.Phase6
+        else if (phase == VerifyPhase.Phase6)
+        {
+            doFooBarQuxBaz();
+        }
+        // VerifyPhase.Phase7
         else
         {
             doFooBarQuxBaz();

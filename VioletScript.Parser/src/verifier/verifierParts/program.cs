@@ -43,6 +43,7 @@ public partial class Verifier
             VerifyPhase.Phase4,
             VerifyPhase.Phase5,
             VerifyPhase.Phase6,
+            VerifyPhase.Phase7,
         };
         m_GenericInstantiationsAsTypeExp = new List<Ast.GenericInstantiationTypeExpression>();
         m_ImportOrAliasDirectives = new List<Ast.Statement>();
@@ -150,7 +151,7 @@ public partial class Verifier
         }
         else if (!(stmt is Ast.AnnotatableDefinition))
         {
-            if (phase == VerifyPhase.Phase6)
+            if (phase == VerifyPhase.Phase7)
             {
                 VerifyStatement(stmt);
             }
@@ -229,6 +230,7 @@ public enum VerifyPhase
     Phase4,
     Phase5,
     Phase6,
+    Phase7,
 
     /// <summary>
     /// Phase in which nodes gathered from the phase <c>Phase2</c> are fully verified.
