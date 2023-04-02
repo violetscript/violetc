@@ -62,7 +62,12 @@ public partial class Verifier
 
         m_ImportOrAliasDirectives.Remove(defn);
 
-        var previousDefinition = m_Frame.Properties[defn.Id.Name];
+        Properties outputProps =
+            m_Frame.NamespaceFromFrame != null ? m_Frame.NamespaceFromFrame.Properties
+            : m_Frame.PackageFromFrame != null ? m_Frame.PackageFromFrame.Properties
+            : m_Frame.Properties;
+
+        var previousDefinition = outputProps[defn.Id.Name];
 
         if (previousDefinition != null && m_Options.AllowDuplicates && previousDefinition is Alias && previousDefinition.AliasToSymbol is Type)
         {
@@ -80,7 +85,7 @@ public partial class Verifier
         }
         else
         {
-            m_Frame.Properties[alias.Name] = alias;
+            outputProps[alias.Name] = alias;
         }
     }
 
@@ -102,7 +107,12 @@ public partial class Verifier
             return;
         }
 
-        var previousDefinition = m_Frame.Properties[defn.Id.Name];
+        Properties outputProps =
+            m_Frame.NamespaceFromFrame != null ? m_Frame.NamespaceFromFrame.Properties
+            : m_Frame.PackageFromFrame != null ? m_Frame.PackageFromFrame.Properties
+            : m_Frame.Properties;
+
+        var previousDefinition = outputProps[defn.Id.Name];
 
         if (previousDefinition != null && m_Options.AllowDuplicates && previousDefinition is Alias && previousDefinition.AliasToSymbol is Type)
         {
@@ -120,7 +130,7 @@ public partial class Verifier
         }
         else
         {
-            m_Frame.Properties[alias.Name] = alias;
+            outputProps[alias.Name] = alias;
         }
     }
 
