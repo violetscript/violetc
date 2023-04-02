@@ -696,6 +696,11 @@ public class Statement : Node {
     {
         get => false;
     }
+
+    public bool IsEnumVariantDefinition
+    {
+        get => this is Ast.VariableDefinition d ? !d.Modifiers.HasFlag(AnnotatableDefinitionModifier.Static) : false;
+    }
 }
 
 public class AnnotatableDefinition : Statement {
