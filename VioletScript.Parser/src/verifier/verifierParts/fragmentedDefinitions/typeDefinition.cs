@@ -77,6 +77,7 @@ public partial class Verifier
 
         var alias = m_ModelCore.Factory.Alias(defn.Id.Name, right);
         alias.TypeParameters = typeParameters;
+        alias.ParentDefinition = m_Frame.NamespaceFromFrame ?? m_Frame.PackageFromFrame;
         defn.SemanticAlias = alias;
 
         if (previousDefinition != null)
@@ -122,6 +123,7 @@ public partial class Verifier
 
         var alias = m_ModelCore.Factory.Alias(defn.Id.Name, right);
         alias.TypeParameters = typeParameters;
+        alias.ParentDefinition = m_Frame.NamespaceFromFrame ?? m_Frame.PackageFromFrame;
         defn.SemanticAlias = alias;
 
         if (previousDefinition != null)

@@ -75,6 +75,7 @@ public partial class Verifier
         {
             var alias = m_ModelCore.Factory.Alias(defn.Id.Name, right);
             alias.Visibility = defn.SemanticVisibility;
+            alias.ParentDefinition = m_Frame.NamespaceFromFrame ?? m_Frame.PackageFromFrame;
             outputProps[alias.Name] = alias;
             defn.SemanticAlias = alias;
         }
@@ -116,6 +117,7 @@ public partial class Verifier
         {
             var alias = m_ModelCore.Factory.Alias(defn.Id.Name, right);
             alias.Visibility = defn.SemanticVisibility;
+            alias.ParentDefinition = m_Frame.NamespaceFromFrame ?? m_Frame.PackageFromFrame;
             outputProps[alias.Name] = alias;
             defn.SemanticAlias = alias;
         }
