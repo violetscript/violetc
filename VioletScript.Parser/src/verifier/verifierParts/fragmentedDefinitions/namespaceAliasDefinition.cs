@@ -52,7 +52,13 @@ public partial class Verifier
             VerifyError(null, 222, defn.Expression.Span.Value, new DiagnosticArguments {});
             return;
         }
-        var previousDefinition = m_Frame.Properties[defn.Id.Name];
+
+        Properties outputProps =
+            m_Frame.NamespaceFromFrame != null ? m_Frame.NamespaceFromFrame.Properties
+            : m_Frame.PackageFromFrame != null ? m_Frame.PackageFromFrame.Properties
+            : m_Frame.Properties;
+
+        var previousDefinition = outputProps[defn.Id.Name];
         if (previousDefinition != null)
         {
             if (m_Options.AllowDuplicates && previousDefinition is Alias && previousDefinition.AliasToSymbol is Namespace)
@@ -69,7 +75,7 @@ public partial class Verifier
         {
             var alias = m_ModelCore.Factory.Alias(defn.Id.Name, right);
             alias.Visibility = defn.SemanticVisibility;
-            m_Frame.Properties[alias.Name] = alias;
+            outputProps[alias.Name] = alias;
             defn.SemanticAlias = alias;
         }
     }
@@ -87,7 +93,13 @@ public partial class Verifier
             VerifyError(null, 222, defn.Expression.Span.Value, new DiagnosticArguments {});
             return;
         }
-        var previousDefinition = m_Frame.Properties[defn.Id.Name];
+
+        Properties outputProps =
+            m_Frame.NamespaceFromFrame != null ? m_Frame.NamespaceFromFrame.Properties
+            : m_Frame.PackageFromFrame != null ? m_Frame.PackageFromFrame.Properties
+            : m_Frame.Properties;
+
+        var previousDefinition = outputProps[defn.Id.Name];
         if (previousDefinition != null)
         {
             if (m_Options.AllowDuplicates && previousDefinition is Alias && previousDefinition.AliasToSymbol is Namespace)
@@ -104,7 +116,7 @@ public partial class Verifier
         {
             var alias = m_ModelCore.Factory.Alias(defn.Id.Name, right);
             alias.Visibility = defn.SemanticVisibility;
-            m_Frame.Properties[alias.Name] = alias;
+            outputProps[alias.Name] = alias;
             defn.SemanticAlias = alias;
         }
     }
