@@ -102,6 +102,8 @@ public static class MethodOverride {
             return false;
         }
 
-        return superTypeSignature.FunctionReturnType.TypeStructurallyEquals(subtypeSignature.FunctionReturnType);
+        return superTypeSignature.FunctionReturnType.TypeStructurallyEquals(subtypeSignature.FunctionReturnType)
+            || subtypeSignature.FunctionReturnType.IsSubtypeOf(superTypeSignature.FunctionReturnType)
+            || subtypeSignature.FunctionReturnType is AnyType;
     }
 }
