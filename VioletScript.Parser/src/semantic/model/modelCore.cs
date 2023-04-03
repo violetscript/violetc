@@ -31,6 +31,14 @@ public sealed class ModelCore {
     /// </remarks>
     public Symbol ObjectType = null;
     /// <summary>
+    /// Built-in method. It is overriden by enums.
+    /// </summary>
+    public Symbol ObjectValueOfMethod = null;
+    /// <summary>
+    /// Built-in method. It is overriden by enums.
+    /// </summary>
+    public Symbol ObjectToStringMethod = null;
+    /// <summary>
     /// Built-in object.
     /// </summary>
     public Symbol StringType = null;
@@ -220,48 +228,78 @@ public sealed class ModelCore {
         // undefined
         var undefinedConstant = Factory.VariableSlot("undefined", true, UndefinedType);
         undefinedConstant.InitValue = Factory.UndefinedConstantValue(UndefinedType);
+        undefinedConstant.Visibility = Visibility.Public;
+        undefinedConstant.ParentDefinition = this.GlobalPackage;
         this.GlobalPackage.Properties.Set("undefined", undefinedConstant);
 
         // NaN
         var nanConstant = Factory.VariableSlot("NaN", true, NumberType);
         nanConstant.InitValue = Factory.NumberConstantValue(double.NaN, NumberType);
+        nanConstant.Visibility = Visibility.Public;
+        nanConstant.ParentDefinition = this.GlobalPackage;
         this.GlobalPackage.Properties.Set("NaN", nanConstant);
 
         // Infinity
         var infConstant = Factory.VariableSlot("Infinity", true, NumberType);
         infConstant.InitValue = Factory.NumberConstantValue(double.PositiveInfinity, NumberType);
+        infConstant.Visibility = Visibility.Public;
+        infConstant.ParentDefinition = this.GlobalPackage;
         this.GlobalPackage.Properties.Set("Infinity", infConstant);
 
         // Number.MIN_VALUE
         var numberMinConstant = Factory.VariableSlot("MIN_VALUE", true, NumberType);
         numberMinConstant.InitValue = Factory.NumberConstantValue(double.MinValue, NumberType);
+        numberMinConstant.Visibility = Visibility.Public;
+        numberMinConstant.ParentDefinition = this.NumberType;
         NumberType.Properties.Set("MIN_VALUE", numberMinConstant);
 
         // Number.MAX_VALUE
         var numberMaxConstant = Factory.VariableSlot("MAX_VALUE", true, NumberType);
         numberMaxConstant.InitValue = Factory.NumberConstantValue(double.MaxValue, NumberType);
+        numberMaxConstant.Visibility = Visibility.Public;
+        numberMaxConstant.ParentDefinition = this.NumberType;
         NumberType.Properties.Set("MAX_VALUE", numberMaxConstant);
 
         // Long.MIN_VALUE
         var longMinConstant = Factory.VariableSlot("MIN_VALUE", true, LongType);
         longMinConstant.InitValue = Factory.LongConstantValue(long.MinValue, LongType);
+        longMinConstant.Visibility = Visibility.Public;
+        longMinConstant.ParentDefinition = this.LongType;
         LongType.Properties.Set("MIN_VALUE", longMinConstant);
 
         // Long.MAX_VALUE
         var longMaxConstant = Factory.VariableSlot("MAX_VALUE", true, LongType);
         longMaxConstant.InitValue = Factory.LongConstantValue(long.MaxValue, LongType);
+        longMaxConstant.Visibility = Visibility.Public;
+        longMaxConstant.ParentDefinition = this.LongType;
         LongType.Properties.Set("MAX_VALUE", longMaxConstant);
+
+        // object.valueOf()
+        var objValueOfMethodSt = Factory.FunctionType(null, null, null, AnyType);
+        this.ObjectValueOfMethod = Factory.MethodSlot("valueOf", objValueOfMethodSt, MethodSlotFlags.Native);
+        this.ObjectValueOfMethod.Visibility = Visibility.Public;
+        this.ObjectValueOfMethod.ParentDefinition = this.ObjectType;
+        ObjectType.Delegate.Properties["valueOf"] = ObjectValueOfMethod;
+
+        // object.toString()
+        var objToStringMethodSt = Factory.FunctionType(null, null, null, StringType);
+        this.ObjectToStringMethod = Factory.MethodSlot("toString", objToStringMethodSt, MethodSlotFlags.Native);
+        this.ObjectToStringMethod.Visibility = Visibility.Public;
+        this.ObjectToStringMethod.ParentDefinition = this.ObjectType;
+        ObjectType.Delegate.Properties["toString"] = ObjectToStringMethod;
     }
 
     private Symbol DefineGlobalBuiltinClass(string name, bool isFinal = true, bool isValue = false) {
         isFinal = isFinal || isValue;
         var r = Factory.ClassType(name, isFinal, isValue);
+        r.Visibility = Visibility.Public;
         GlobalPackage.Properties[name] = r;
         return r;
     }
 
     private Symbol DefineGlobalBuiltinInterface(string name) {
         var r = Factory.InterfaceType(name);
+        r.Visibility = Visibility.Public;
         GlobalPackage.Properties.Set(name, r);
         return r;
     }

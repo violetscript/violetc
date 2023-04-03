@@ -447,11 +447,13 @@ public class EnumType : Type {
         var valueOfMethod = ModelCore.Factory.MethodSlot("valueOf", ModelCore.Factory.FunctionType(null, null, null, m_NumericType), MethodSlotFlags.Override | MethodSlotFlags.Native);
         valueOfMethod.Visibility = Visibility.Public;
         Delegate.Properties.Set("valueOf", valueOfMethod);
+        this.ModelCore.ObjectValueOfMethod.AddMethodOverrider(valueOfMethod);
 
         // toString()
         var toStringMethod = ModelCore.Factory.MethodSlot("toString", ModelCore.Factory.FunctionType(null, null, null, ModelCore.StringType), MethodSlotFlags.Override | MethodSlotFlags.Native);
         toStringMethod.Visibility = Visibility.Public;
         Delegate.Properties.Set("toString", toStringMethod);
+        this.ModelCore.ObjectToStringMethod.AddMethodOverrider(toStringMethod);
 
         if (m_IsFlags) {
             // all
