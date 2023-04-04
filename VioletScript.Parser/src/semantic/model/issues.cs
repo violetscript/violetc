@@ -31,6 +31,18 @@ public class CannotOverrideGenericMethodIssue : Symbol {
     }
 }
 
+public class CannotOverrideFinalMethodIssue : Symbol {
+    private string m_Name;
+
+    public CannotOverrideFinalMethodIssue(string name) {
+        m_Name = name;
+    }
+
+    public override string Name {
+        get => m_Name;
+    }
+}
+
 public class MustOverrideAMethodIssue : Symbol {
     private string m_Name;
 

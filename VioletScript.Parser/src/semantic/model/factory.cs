@@ -24,6 +24,12 @@ public sealed class Factory {
         return r;
     }
 
+    public Symbol CannotOverrideFinalMethodIssue(string name) {
+        Symbol r = new CannotOverrideFinalMethodIssue(name);
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
     public Symbol MustOverrideAMethodIssue(string name) {
         Symbol r = new MustOverrideAMethodIssue(name);
         r.ModelCore = ModelCore;

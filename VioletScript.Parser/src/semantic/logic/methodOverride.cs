@@ -57,7 +57,10 @@ public static class MethodOverride {
         if (!IsOverrideSignatureCompatible(superTypeMethod.StaticType, subtypeMethod.StaticType)) {
             return f.IncompatibleOverrideSignatureIssue(name, superTypeMethod.StaticType);
         }
-        superTypeMethod.AddMethodOverrider(superTypeMethod);
+        if (superTypeMethod.MethodFlags.HasFlag(MethodSlotFlags.Final)) {
+            return f.CannotOverrideFinalMethodIssue(name);
+        }
+        superTypeMethod.AddMethodOverrider(subtypeMethod);
         return null;
     }
 
