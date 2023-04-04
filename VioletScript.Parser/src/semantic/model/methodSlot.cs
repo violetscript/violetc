@@ -12,6 +12,7 @@ public enum MethodSlotFlags {
     Final,
     Native,
     OptionalInterfaceMethod,
+    Constructor,
 }
 
 public class MethodSlot : Symbol {

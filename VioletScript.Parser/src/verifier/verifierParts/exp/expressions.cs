@@ -149,8 +149,19 @@ public partial class Verifier
 
         if (writting && r.ReadOnly)
         {
-            VerifyError(null, 175, exp.Span.Value, new DiagnosticArguments {});
-            exp.SemanticSymbol = null;
+            // writing to read-only variable from 'this' is allowed in
+            // in constructors.
+            var ctorWritableVar = m_Frame is ActivationFrame
+                && r is ReferenceValue
+                && r.Base == m_Frame.ActivationThisOrThisAsStaticType
+                && r.Property is VariableSlot
+                && CurrentMethodSlot.MethodFlags.HasFlag(MethodSlotFlags.Constructor);
+
+            if (!ctorWritableVar)
+            {
+                VerifyError(null, 175, exp.Span.Value, new DiagnosticArguments {});
+                exp.SemanticSymbol = null;
+            }
         }
         else if (!writting && r.WriteOnly)
         {
