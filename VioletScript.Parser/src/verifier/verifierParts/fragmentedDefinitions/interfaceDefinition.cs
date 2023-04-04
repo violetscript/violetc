@@ -67,8 +67,8 @@ public partial class Verifier
         }
         else
         {
-            // create type; set type's parent
-            doFooBarQuxBaz();
+            type = m_ModelCore.Factory.InterfaceType(defn.Id.Name);
+            type.ParentDefinition = m_Frame.NamespaceFromFrame ?? m_Frame.PackageFromFrame;
             outputProps[defn.Id.Name] = type;
         }
 
@@ -76,8 +76,7 @@ public partial class Verifier
 
         if (type != null)
         {
-            // create and attach interface frame
-            doFooBarQuxBaz();
+            defn.SemanticFrame = m_ModelCore.Factory.InterfaceFrame(type);
 
             // type parameters (if duplicate interface, re-use them)
             doFooBarQuxBaz();
