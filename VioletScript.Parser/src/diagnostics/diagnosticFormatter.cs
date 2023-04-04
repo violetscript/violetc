@@ -222,6 +222,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [231] = "Type must not inherit itself",
         [232] = "$t is not a class type",
         [233] = "Cannot inherit $t as it is marked final",
+        [234] = "The class $c already implements the interface $i",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

@@ -22,26 +22,24 @@ public partial class Verifier
         {
             Fragmented_VerifyClassDefinition2(defn);
         }
-        else if (phase == VerifyPhase.Phase3)
+        else if (phase == VerifyPhase.Phase3 || phase == VerifyPhase.Phase4)
         {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase4)
-        {
-            doFooBarQuxBaz();
+            if (defn.SemanticFrame != null)
+            {
+                EnterFrame(defn.SemanticFrame);
+                Fragmented_VerifyStatementSeq(defn.Block.Statements, phase);
+                ExitFrame();
+            }
         }
         else if (phase == VerifyPhase.Phase5)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyClassDefinition5(defn);
         }
-        else if (phase == VerifyPhase.Phase6)
+        else if (defn.SemanticFrame != null)
         {
-            doFooBarQuxBaz();
-        }
-        // VerifyPhase.Phase7
-        else
-        {
-            doFooBarQuxBaz();
+            EnterFrame(defn.SemanticFrame);
+            Fragmented_VerifyStatementSeq(defn.Block.Statements, phase);
+            ExitFrame();
         }
     }
 
@@ -124,7 +122,29 @@ public partial class Verifier
             }
         }
 
-        doFooBarQuxBaz();
+        if (defn.ImplementsList != null)
+        {
+            foreach (var tx in defn.ImplementsList)
+            {
+                var implT = VerifyTypeExp(tx);
+                if (implT == null)
+                {
+                    continue;
+                }
+                if (!implT.IsInterfaceType)
+                {
+                    VerifyError(null, 230, tx.Span.Value, new DiagnosticArguments { ["t"] = implT });
+                }
+                else if (type.IsSubtypeOf(implT))
+                {
+                    VerifyError(null, 234, tx.Span.Value, new DiagnosticArguments { ["c"] = type, ["i"] = implT });
+                }
+                else
+                {
+                    type.AddImplementedInterface(implT);
+                }
+            }
+        }
 
         if (defn.Generics != null)
         {
@@ -132,6 +152,26 @@ public partial class Verifier
         }
 
         Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase2);
+        ExitFrame();
+    }
+
+    private void Fragmented_VerifyClassDefinition5(Ast.ClassDefinition defn)
+    {
+        var type = defn.SemanticType;
+        if (type == null)
+        {
+            return;
+        }
+
+        EnterFrame(defn.SemanticFrame);
+
+        // verify interface implementations
+        foreach (var itrfc in type.ImplementsInterfaces)
+        {
+            doFooBarQuxBaz();
+        }
+
+        Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase5);
         ExitFrame();
     }
 }
