@@ -82,7 +82,7 @@ public sealed class Factory {
         Symbol r = new ClassType(name, isFinal || isValue, isValue);
         r.ModelCore = ModelCore;
         r.Delegate = Delegate(r);
-        r.SuperType = ModelCore.ObjectType;
+        r.SuperType = r == ModelCore.ObjectType ? null : ModelCore.ObjectType;
         return r;
     }
 

@@ -16,11 +16,11 @@ public partial class Verifier
     {
         if (phase == VerifyPhase.Phase1)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyClassDefinition1(defn);
         }
         else if (phase == VerifyPhase.Phase2)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyClassDefinition2(defn);
         }
         else if (phase == VerifyPhase.Phase3)
         {
@@ -43,5 +43,61 @@ public partial class Verifier
         {
             doFooBarQuxBaz();
         }
+    }
+
+    private void Fragmented_VerifyClassDefinition1(Ast.ClassDefinition defn)
+    {
+        Properties outputProps =
+            m_Frame.NamespaceFromFrame != null ? m_Frame.NamespaceFromFrame.Properties
+            : m_Frame.PackageFromFrame != null ? m_Frame.PackageFromFrame.Properties
+            : m_Frame.Properties;
+        Symbol type = null;
+
+        var previousDuplicate = outputProps[defn.Id.Name];
+        if (previousDuplicate != null)
+        {
+            if (m_Options.AllowDuplicates && previousDuplicate is InterfaceType)
+            {
+                type = previousDuplicate;
+            }
+            else
+            {
+                VerifyError(null, 139, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = defn.Id.Name });
+            }
+        }
+        else
+        {
+            type = m_ModelCore.Factory.ClassType(defn.Id.Name, defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Final), defn.IsValue);
+            type.DontInit = defn.DontInit;
+            type.ParentDefinition = m_Frame.NamespaceFromFrame ?? m_Frame.PackageFromFrame;
+            outputProps[defn.Id.Name] = type;
+        }
+
+        defn.SemanticType = type;
+
+        if (type != null)
+        {
+            defn.SemanticFrame = m_ModelCore.Factory.ClassFrame(type);
+            type.TypeParameters = FragmentedA_VerifyTypeParameters(defn.Generics, defn.SemanticFrame.Properties, type);
+
+            EnterFrame(defn.SemanticFrame);
+            Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase1);
+            ExitFrame();
+        }
+    }
+
+    private void Fragmented_VerifyClassDefinition2(Ast.ClassDefinition defn)
+    {
+        var type = defn.SemanticType;
+        if (type == null)
+        {
+            return;
+        }
+
+        doFooBarQuxBaz();
+
+        EnterFrame(defn.SemanticFrame);
+        Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase2);
+        ExitFrame();
     }
 }

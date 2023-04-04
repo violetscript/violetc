@@ -894,6 +894,9 @@ public class ClassDefinition : AnnotatableDefinition {
     public List<TypeExpression> ImplementsList;
     public Block Block;
 
+    public Symbol SemanticType = null;
+    public Symbol SemanticFrame = null;
+
     public ClassDefinition(
         Identifier id,
         bool isValue,
