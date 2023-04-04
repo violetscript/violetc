@@ -56,7 +56,7 @@ public partial class Verifier
         var previousDuplicate = outputProps[defn.Id.Name];
         if (previousDuplicate != null)
         {
-            if (m_Options.AllowDuplicates && previousDuplicate is InterfaceType)
+            if (m_Options.AllowDuplicates && previousDuplicate is ClassType)
             {
                 type = previousDuplicate;
             }
@@ -94,9 +94,43 @@ public partial class Verifier
             return;
         }
 
+        EnterFrame(defn.SemanticFrame);
+
+        if (defn.ExtendsType != null)
+        {
+            var xt = VerifyTypeExp(defn.ExtendsType);
+            if (xt != null)
+            {
+                if (!xt.IsClassType)
+                {
+                    VerifyError(null, 232, defn.ExtendsType.Span.Value, new DiagnosticArguments { ["t"] = xt });
+                }
+                else if (xt.IsFinal)
+                {
+                    VerifyError(null, 233, defn.ExtendsType.Span.Value, new DiagnosticArguments { ["t"] = xt });
+                }
+                else if (type == xt || xt.IsSubtypeOf(type))
+                {
+                    VerifyError(null, 231, defn.Id.Span.Value, new DiagnosticArguments {});
+                }
+                else
+                {
+                    type.SuperType = xt;
+                    if (xt != m_ModelCore.ObjectType)
+                    {
+                        xt.AddLimitedKnownSubtype(type);
+                    }
+                }
+            }
+        }
+
         doFooBarQuxBaz();
 
-        EnterFrame(defn.SemanticFrame);
+        if (defn.Generics != null)
+        {
+            FragmentedB_VerifyTypeParameters(type.TypeParameters, defn.Generics, defn.SemanticFrame.Properties);
+        }
+
         Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase2);
         ExitFrame();
     }

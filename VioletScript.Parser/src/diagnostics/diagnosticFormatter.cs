@@ -220,6 +220,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [229] = "Another enum variant has the same string",
         [230] = "$t is not an interface type",
         [231] = "Type must not inherit itself",
+        [232] = "$t is not a class type",
+        [233] = "Cannot inherit $t as it is marked final",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

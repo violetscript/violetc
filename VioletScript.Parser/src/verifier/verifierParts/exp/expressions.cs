@@ -1147,7 +1147,7 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
-        var initialisable = type is ClassType && type.ClassHasParameterlessConstructor && !type.DontInit;
+        var initialisable = type.IsClassType && type.ClassHasParameterlessConstructor && !type.DontInit;
         if (!initialisable)
         {
             VerifyError(null, 193, exp.Id.Span.Value, new DiagnosticArguments {["t"] = type});
@@ -1367,7 +1367,7 @@ public partial class Verifier
             VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, @base.StaticType);
             r = m_ModelCore.Factory.Value(@base.StaticType.FunctionReturnType);
         }
-        else if (@base is ClassType)
+        else if (@base.IsClassType)
         {
             var constructorDefinition = @base.InheritConstructorDefinition();
             if (constructorDefinition == null)
@@ -1736,7 +1736,7 @@ public partial class Verifier
             return exp.SemanticSymbol;
         }
         Symbol r = null;
-        if (@base is ClassType)
+        if (@base.IsClassType)
         {
             var constructorDefinition = @base.InheritConstructorDefinition();
             if (constructorDefinition == null)
@@ -1762,7 +1762,7 @@ public partial class Verifier
     private Symbol VerifySuperExp(Ast.SuperExpression exp)
     {
         var thisValue = m_Frame.FindActivation()?.ActivationThisOrThisAsStaticType;
-        if (thisValue == null || !(thisValue is ThisValue) || !(thisValue.StaticType is ClassType) || (thisValue.StaticType.SuperType == null))
+        if (thisValue == null || !(thisValue is ThisValue) || !(thisValue.StaticType.IsClassType) || (thisValue.StaticType.SuperType == null))
         {
             VerifyError(null, 213, exp.Span.Value, new DiagnosticArguments {});
             thisValue = null;

@@ -597,7 +597,7 @@ public class Symbol {
         get =>  this.IsInstantiationOf(this.ModelCore.MapType)
             ||  this.IsFlagsEnum
             ||  this is RecordType
-            || (this is ClassType && !this.DontInit)
+            || (this.IsClassType && !this.DontInit)
             ||  this is AnyType;
     }
 

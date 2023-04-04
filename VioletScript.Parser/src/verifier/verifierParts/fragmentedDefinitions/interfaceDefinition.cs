@@ -94,7 +94,7 @@ public partial class Verifier
                 {
                     continue;
                 }
-                if (!(type2 is InterfaceType))
+                if (!type2.IsInterfaceType)
                 {
                     VerifyError(null, 230, tx.Span.Value, new DiagnosticArguments { ["t"] = type2 });
                     continue;
