@@ -215,6 +215,9 @@ public static class DefaultDiagnosticFormatterStatics {
         [224] = "Invalid generic bound type: '$t'",
         [225] = "Item must be a type parameter",
         [226] = "Generic function not allowed here",
+        [227] = "Enum variant number must be one or power of 2",
+        [228] = "Another enum variant has the same number",
+        [229] = "Another enum variant has the same string",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

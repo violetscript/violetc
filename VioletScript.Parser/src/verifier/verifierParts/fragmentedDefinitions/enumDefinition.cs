@@ -148,9 +148,28 @@ public partial class Verifier
                     variantString = ScreamingSnakeCaseToCamelCase(screamingSnakeCaseName);
                 }
 
-                // check for duplicate variant number/string and if none, define variant.
                 // if it is a flags enum, ensure number is one or power of 2.
-                doFooBarQuxBaz();
+                if (isFlags && !(EnumConstHelpers.IsOne(variantNumber) || EnumConstHelpers.IsPowerOf2(variantNumber)))
+                {
+                    VerifyError(null, 227, binding.Pattern.Span.Value, new DiagnosticArguments {});
+                }
+
+                // check for duplicate variant number/string
+                if (type.EnumHasVariantByNumber(variantNumber))
+                {
+                    VerifyError(null, 228, binding.Pattern.Span.Value, new DiagnosticArguments {});
+                }
+                if (type.EnumHasVariantByString(variantString))
+                {
+                    VerifyError(null, 229, binding.Pattern.Span.Value, new DiagnosticArguments {});
+                }
+
+                type.EnumSetVariant(variantString, variantNumber);
+                var variantVar = m_ModelCore.Factory.VariableSlot(screamingSnakeCaseName, true, type);
+                variantVar.InitValue = m_ModelCore.Factory.EnumConstantValue(variantNumber, type);
+                variantVar.ParentDefinition = type;
+                variantVar.Visibility = Visibility.Public;
+                type.Properties[screamingSnakeCaseName] = variantVar;
 
                 counter = variantNumber;
                 counter = isFlags ? EnumConstHelpers.MultiplyPer2(type, counter) : EnumConstHelpers.Increment(type, counter);
