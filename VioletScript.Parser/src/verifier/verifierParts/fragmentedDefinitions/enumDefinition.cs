@@ -181,7 +181,7 @@ public partial class Verifier
     {
         var str = string.Join("", name.Split("_").Select(s =>
         {
-            if (s.Count() < 0)
+            if (s.Count() == 0)
             {
                 return "";
             }
@@ -191,7 +191,7 @@ public partial class Verifier
             }
             return s.Substring(0, 1).ToUpper() + s.Substring(1).ToLower();
         }).ToArray());
-        if (str.Count() < 0)
+        if (str.Count() == 0)
         {
             return "";
         }
