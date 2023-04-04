@@ -919,6 +919,9 @@ public class InterfaceDefinition : AnnotatableDefinition {
     public List<TypeExpression> ExtendsList;
     public Block Block;
 
+    public Symbol SemanticType = null;
+    public Symbol SemanticFrame = null;
+
     public InterfaceDefinition(
         Identifier id,
         Generics generics,
