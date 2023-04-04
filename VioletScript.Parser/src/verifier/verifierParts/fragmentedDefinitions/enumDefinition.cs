@@ -89,7 +89,97 @@ public partial class Verifier
                     Fragmented_VerifyStatement(drtv, VerifyPhase.Phase1);
                 }
             }
+            Fragmented_VerifyEnumDefinition1Variants(defn);
             ExitFrame();
         }
+    }
+
+    private void Fragmented_VerifyEnumDefinition1Variants(Ast.EnumDefinition defn)
+    {
+        Symbol type = defn.SemanticType;
+        var numType = type.NumericType;
+        bool isFlags = type.IsFlagsEnum;
+        object counter = type.IsFlagsEnum ? EnumConstHelpers.One(type) : EnumConstHelpers.Zero(type);
+        foreach (var drtv in defn.Block.Statements.Where(d => d.IsEnumVariantDefinition))
+        {
+            foreach (var binding in ((Ast.VariableDefinition) drtv).Bindings)
+            {
+                var screamingSnakeCaseName = binding.Pattern.Name;
+                var previousDuplicate = type.Properties[screamingSnakeCaseName];
+                if (previousDuplicate != null)
+                {
+                    VerifyError(null, 139, binding.Pattern.Span.Value, new DiagnosticArguments { ["name"] = screamingSnakeCaseName });
+                    continue;
+                }
+                object variantNumber = null;
+                string variantString = "";
+                if (binding.Init is Ast.ArrayInitializer arrayInitStN
+                    && arrayInitStN.Items.Count() == 2
+                    && arrayInitStN.Items[0] is Ast.StringLiteral strLit1
+                    && !(arrayInitStN.Items[1] is Ast.Spread))
+                {
+                    var numSymbol = LimitConstantExpType(arrayInitStN.Items[1], numType);
+                    variantNumber = numSymbol?.NumericConstantValueAsObject ?? counter;
+                    variantString = strLit1.Value;
+                }
+                else if (binding.Init is Ast.ArrayInitializer arrayInitNtS
+                    && arrayInitNtS.Items.Count() == 2
+                    && !(arrayInitNtS.Items[0] is Ast.Spread)
+                    && arrayInitNtS.Items[1] is Ast.StringLiteral strLit2)
+                {
+                    var numSymbol = LimitConstantExpType(arrayInitNtS.Items[0], numType);
+                    variantNumber = numSymbol?.NumericConstantValueAsObject ?? counter;
+                    variantString = strLit2.Value;
+                }
+                else if (binding.Init is Ast.StringLiteral strLiteral)
+                {
+                    variantNumber = counter;
+                    variantString = strLiteral.Value;
+                }
+                else if (binding.Init != null)
+                {
+                    var numSymbol = LimitConstantExpType(binding.Init, numType);
+                    variantNumber = numSymbol?.NumericConstantValueAsObject ?? counter;
+                    variantString = ScreamingSnakeCaseToCamelCase(screamingSnakeCaseName);
+                }
+                else
+                {
+                    variantNumber = counter;
+                    variantString = ScreamingSnakeCaseToCamelCase(screamingSnakeCaseName);
+                }
+
+                // check for duplicate variant number/string and if none, define variant.
+                // if it is a flags enum, ensure number is one or power of 2.
+                doFooBarQuxBaz();
+
+                counter = variantNumber;
+                counter = isFlags ? EnumConstHelpers.MultiplyPer2(type, counter) : EnumConstHelpers.Increment(type, counter);
+            }
+        }
+    }
+
+    private static string ScreamingSnakeCaseToCamelCase(string name)
+    {
+        var str = string.Join("", name.Split("_").Select(s =>
+        {
+            if (s.Count() < 0)
+            {
+                return "";
+            }
+            if (s.Count() == 1)
+            {
+                return s.Substring(0, 1).ToUpper();
+            }
+            return s.Substring(0, 1).ToUpper() + s.Substring(1).ToLower();
+        }).ToArray());
+        if (str.Count() < 0)
+        {
+            return "";
+        }
+        if (str.Count() == 1)
+        {
+            return str.ToLower();
+        }
+        return str.Substring(0, 1).ToLower() + str.Substring(1);
     }
 }

@@ -700,4 +700,16 @@ public class Symbol {
     {
         throw new Exception("Unimplemented");
     }
+
+    public object NumericConstantValueAsObject
+    {
+        get => this is NumberConstantValue ? this.NumberValue
+            : this is DecimalConstantValue ? this.DecimalValue
+            : this is ByteConstantValue ? this.ByteValue
+            : this is ShortConstantValue ? this.ShortValue
+            : this is IntConstantValue ? this.IntValue
+            : this is LongConstantValue ? this.LongValue
+            : this is BigIntConstantValue ? this.BigIntValue
+            : null;
+    }
 }
