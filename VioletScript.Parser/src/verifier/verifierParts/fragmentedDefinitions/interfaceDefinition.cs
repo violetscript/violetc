@@ -77,6 +77,44 @@ public partial class Verifier
     // - visit block.
     private void Fragmented_VerifyInterfaceDefinition2(Ast.InterfaceDefinition defn)
     {
-        doFooBarQuxBaz();
+        var type = defn.SemanticType;
+        if (type == null)
+        {
+            return;
+        }
+
+        EnterFrame(defn.SemanticFrame);
+
+        if (defn.ExtendsList != null)
+        {
+            foreach (var tx in defn.ExtendsList)
+            {
+                var type2 = VerifyTypeExp(tx);
+                if (type2 == null)
+                {
+                    continue;
+                }
+                if (!(type2 is InterfaceType))
+                {
+                    VerifyError(null, 230, tx.Span.Value, new DiagnosticArguments { ["t"] = type2 });
+                    continue;
+                }
+                if (type == type2 || type2.IsSubtypeOf(type))
+                {
+                    VerifyError(null, 231, defn.Id.Span.Value, new DiagnosticArguments {});
+                    continue;
+                }
+                type.AddExtendedInterface(type2);
+                type2.AddLimitedKnownSubtype(type);
+            }
+        }
+
+        if (defn.Generics != null)
+        {
+            FragmentedB_VerifyTypeParameters(type.TypeParameters, defn.Generics, defn.SemanticFrame.Properties);
+        }
+
+        Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase2);
+        ExitFrame();
     }
 }

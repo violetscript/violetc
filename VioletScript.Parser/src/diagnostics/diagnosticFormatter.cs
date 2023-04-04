@@ -218,6 +218,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [227] = "Enum variant number must be one or power of 2",
         [228] = "Another enum variant has the same number",
         [229] = "Another enum variant has the same string",
+        [230] = "$t is not an interface type",
+        [231] = "Type must not inherit itself",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
