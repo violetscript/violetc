@@ -443,6 +443,11 @@ public class EnumType : Type {
     }
 
     public override void EnumInitializeMethods() {
+        if (this.ModelCore.ObjectValueOfMethod == null || this.ModelCore.ObjectToStringMethod == null)
+        {
+            throw new Exception("'EnumInitializeMethods' must be internally called after initializing object.valueOf() and object.toString()");
+        }
+
         // valueOf()
         var valueOfMethod = ModelCore.Factory.MethodSlot("valueOf", ModelCore.Factory.FunctionType(null, null, null, m_NumericType), MethodSlotFlags.Override | MethodSlotFlags.Native);
         valueOfMethod.Visibility = Visibility.Public;

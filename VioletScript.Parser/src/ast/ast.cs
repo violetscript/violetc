@@ -938,6 +938,9 @@ public class EnumDefinition : AnnotatableDefinition {
     public TypeExpression NumericType;
     public Block Block;
 
+    public Symbol SemanticFrame = null;
+    public Symbol SemanticType = null;
+
     public EnumDefinition(Identifier id, bool isFlags, TypeExpression numericType, Block block) : base() {
         Id = id;
         IsFlags = isFlags;
