@@ -100,6 +100,7 @@ public class NormalMethodSlot : MethodSlot {
     public override void AddMethodOverrider(Symbol method) {
         m_OverridenBy ??= new List<Symbol>{};
         m_OverridenBy.Add(method);
+        method.MethodFlags |= MethodSlotFlags.Override;
     }
 
     public override string ToString() {
@@ -299,5 +300,6 @@ public class InstantiatedMethodSlot : MethodSlot {
     public override void AddMethodOverrider(Symbol method) {
         m_OverridenBy ??= new List<Symbol>{};
         m_OverridenBy.Add(method);
+        method.MethodFlags |= MethodSlotFlags.Override;
     }
 }
