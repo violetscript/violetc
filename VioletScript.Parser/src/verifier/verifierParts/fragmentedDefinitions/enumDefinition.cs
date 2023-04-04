@@ -18,30 +18,15 @@ public partial class Verifier
         {
             Fragmented_VerifyEnumDefinition1(defn);
         }
-        else if (phase == VerifyPhase.Phase2)
-        {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase3)
-        {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase4)
-        {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase5)
-        {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase6)
-        {
-            doFooBarQuxBaz();
-        }
-        // VerifyPhase.Phase7
         else
         {
-            doFooBarQuxBaz();
+            foreach (var drtv in defn.Block.Statements)
+            {
+                if (!drtv.IsEnumVariantDefinition)
+                {
+                    Fragmented_VerifyStatement(drtv, phase);
+                }
+            }
         }
     }
 
@@ -82,6 +67,9 @@ public partial class Verifier
         {
             defn.SemanticFrame = m_ModelCore.Factory.EnumFrame(type);
             EnterFrame(defn.SemanticFrame);
+
+            Fragmented_VerifyEnumDefinition1Variants(defn);
+
             foreach (var drtv in defn.Block.Statements)
             {
                 if (!drtv.IsEnumVariantDefinition)
@@ -89,7 +77,7 @@ public partial class Verifier
                     Fragmented_VerifyStatement(drtv, VerifyPhase.Phase1);
                 }
             }
-            Fragmented_VerifyEnumDefinition1Variants(defn);
+
             ExitFrame();
         }
     }
