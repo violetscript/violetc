@@ -155,6 +155,7 @@ public partial class Verifier
                 && r is ReferenceValue
                 && r.Base == m_Frame.ActivationThisOrThisAsStaticType
                 && r.Property is VariableSlot
+                && CurrentMethodSlot != null
                 && CurrentMethodSlot.MethodFlags.HasFlag(MethodSlotFlags.Constructor);
 
             if (!ctorWritableVar)
