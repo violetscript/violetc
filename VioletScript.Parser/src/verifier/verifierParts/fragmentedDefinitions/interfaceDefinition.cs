@@ -20,28 +20,13 @@ public partial class Verifier
         }
         else if (phase == VerifyPhase.Phase2)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyInterfaceDefinition2(defn);
         }
-        else if (phase == VerifyPhase.Phase3)
+        else if (defn.SemanticFrame != null)
         {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase4)
-        {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase5)
-        {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase6)
-        {
-            doFooBarQuxBaz();
-        }
-        // VerifyPhase.Phase7
-        else
-        {
-            doFooBarQuxBaz();
+            EnterFrame(defn.SemanticFrame);
+            Fragmented_VerifyStatementSeq(defn.Block.Statements, phase);
+            ExitFrame();
         }
     }
 
@@ -77,13 +62,21 @@ public partial class Verifier
         if (type != null)
         {
             defn.SemanticFrame = m_ModelCore.Factory.InterfaceFrame(type);
-
-            // type parameters (if duplicate interface, re-use them)
-            doFooBarQuxBaz();
+            type.TypeParameters = FragmentedA_VerifyTypeParameters(defn.Generics, defn.SemanticFrame.Properties, type);
 
             EnterFrame(defn.SemanticFrame);
             Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase1);
             ExitFrame();
         }
+    }
+
+    // - verifies 'extends' clause if any.
+    //   - add the interface itself as a limited known subtype of each
+    //     extended type.
+    // - finish verifying generics if any by calling `FragmentedB_VerifyTypeParameters`.
+    // - visit block.
+    private void Fragmented_VerifyInterfaceDefinition2(Ast.InterfaceDefinition defn)
+    {
+        doFooBarQuxBaz();
     }
 }

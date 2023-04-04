@@ -21,8 +21,25 @@ public partial class Verifier
     }
 
     // declare the type parameters. this won't resolve its constraints.
-    private Symbol[] FragmentedA_VerifyTypeParameters(Ast.Generics generics, Properties propsOutput)
+    private Symbol[] FragmentedA_VerifyTypeParameters(Ast.Generics generics, Properties propsOutput, Symbol parentTypeOrMethod = null)
     {
+        if (parentTypeOrMethod != null && parentTypeOrMethod.TypeParameters != null)
+        {
+            int i = 0;
+            var reusedTypeParams = parentTypeOrMethod.TypeParameters;
+            foreach (var paramNode in generics.Params)
+            {
+                if (i >= reusedTypeParams.Count())
+                {
+                    break;
+                }
+                var p = reusedTypeParams[i];
+                paramNode.SemanticSymbol = p;
+                propsOutput[p.Name] = p;
+                i += 1;
+            }
+            return parentTypeOrMethod.TypeParameters;
+        }
         var r = new List<Symbol>();
         foreach (var paramNode in generics.Params)
         {

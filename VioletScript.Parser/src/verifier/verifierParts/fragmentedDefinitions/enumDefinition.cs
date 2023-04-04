@@ -18,8 +18,9 @@ public partial class Verifier
         {
             Fragmented_VerifyEnumDefinition1(defn);
         }
-        else
+        else if (defn.SemanticFrame != null)
         {
+            EnterFrame(defn.SemanticFrame);
             foreach (var drtv in defn.Block.Statements)
             {
                 if (!drtv.IsEnumVariantDefinition)
@@ -27,6 +28,7 @@ public partial class Verifier
                     Fragmented_VerifyStatement(drtv, phase);
                 }
             }
+            ExitFrame();
         }
     }
 
