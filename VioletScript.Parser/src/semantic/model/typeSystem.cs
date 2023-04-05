@@ -653,18 +653,18 @@ public class FunctionType : Type {
         var p = new List<string>{};
         if (m_RequiredParams != null) {
             foreach (var p2 in m_RequiredParams) {
-                p.Add(p2.Name + ":" + p2.Type.ToString());
+                p.Add(p2.Name + " : " + p2.Type.ToString());
             }
         }
         if (m_OptParams != null) {
             foreach (var p2 in m_OptParams) {
-                p.Add(p2.Name + "?:" + p2.Type.ToString());
+                p.Add(p2.Name + "? : " + p2.Type.ToString());
             }
         }
         if (m_RestParam != null) {
-            p.Add("..." + m_RestParam.Value.Name + ":" + m_RestParam.Value.Type.ToString());
+            p.Add("..." + m_RestParam.Value.Name + " : " + m_RestParam.Value.Type.ToString());
         }
-        return "(" + String.Join(", ", p) + ")" + "=>" + (FunctionReturnType == ModelCore.UndefinedType ? "void" : FunctionReturnType.ToString());
+        return "(" + String.Join(", ", p) + ")" + " => " + (FunctionReturnType == ModelCore.UndefinedType ? "void" : FunctionReturnType.ToString());
     }
 
     public override bool TypeStructurallyEquals(Symbol otherAbstract) {
@@ -816,7 +816,7 @@ public class RecordType : Type {
     }
 
     public override string ToString() {
-        return "{" + String.Join(", ", m_Fields.Select(field => field.Name + ":" + field.Type.ToString())) + "}";
+        return "{" + String.Join(", ", m_Fields.Select(field => field.Name + " : " + field.Type.ToString())) + "}";
     }
 
     public override bool TypeStructurallyEquals(Symbol otherAbstract) {
@@ -882,7 +882,7 @@ public class UnionType : Type {
                 o.Add(t.ToString());
             }
         }
-        return String.Join("|", o);
+        return String.Join(" | ", o);
     }
 
     public override bool TypeStructurallyEquals(Symbol otherAbstract) {
