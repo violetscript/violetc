@@ -168,7 +168,53 @@ public partial class Verifier
         // verify interface implementations
         foreach (var itrfc in type.ImplementsInterfaces)
         {
-            doFooBarQuxBaz();
+            InterfaceImpl.VerifyImpl(type, itrfc,
+                // VerifyError! missing method
+                name =>
+                {
+                    doFooBarQuxBaz();
+                },
+                // VerifyError! missing getter
+                name =>
+                {
+                    doFooBarQuxBaz();
+                },
+                // VerifyError! missing setter
+                name =>
+                {
+                    doFooBarQuxBaz();
+                },
+                // VerifyError! requirement must be method
+                name =>
+                {
+                    doFooBarQuxBaz();
+                },
+                // VerifyError! requirement must be virtual property
+                name =>
+                {
+                    doFooBarQuxBaz();
+                },
+                // VerifyError! wrong method signature
+                (name, expectedSignature) =>
+                {
+                    doFooBarQuxBaz();
+                },
+                // VerifyError! wrong getter signature
+                (name, expectedSignature) =>
+                {
+                    doFooBarQuxBaz();
+                },
+                // VerifyError! wrong setter signature
+                (name, expectedSignature) =>
+                {
+                    doFooBarQuxBaz();
+                },
+                // VerifyError! required generics do not match
+                name =>
+                {
+                    doFooBarQuxBaz();
+                }
+            );
         }
 
         Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase5);
