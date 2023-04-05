@@ -16,7 +16,7 @@ public partial class Verifier
     {
         if (phase == VerifyPhase.Phase1)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyVariableDefinition1(defn);
         }
         else if (phase == VerifyPhase.Phase2)
         {
@@ -43,5 +43,9 @@ public partial class Verifier
         {
             doFooBarQuxBaz();
         }
+    }
+    private void Fragmented_VerifyVariableDefinition1(Ast.VariableDefinition defn)
+    {
+        doFooBarQuxBaz();
     }
 }
