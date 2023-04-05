@@ -62,7 +62,10 @@ public partial class Verifier
         if (type != null)
         {
             defn.SemanticFrame = m_ModelCore.Factory.InterfaceFrame(type);
-            type.TypeParameters = FragmentedA_VerifyTypeParameters(defn.Generics, defn.SemanticFrame.Properties, type);
+            if (defn.Generics != null)
+            {
+                type.TypeParameters = FragmentedA_VerifyTypeParameters(defn.Generics, defn.SemanticFrame.Properties, type);
+            }
 
             EnterFrame(defn.SemanticFrame);
             Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase1);

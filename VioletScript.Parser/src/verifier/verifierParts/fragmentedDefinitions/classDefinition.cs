@@ -76,7 +76,10 @@ public partial class Verifier
         if (type != null)
         {
             defn.SemanticFrame = m_ModelCore.Factory.ClassFrame(type);
-            type.TypeParameters = FragmentedA_VerifyTypeParameters(defn.Generics, defn.SemanticFrame.Properties, type);
+            if (defn.Generics != null)
+            {
+                type.TypeParameters = FragmentedA_VerifyTypeParameters(defn.Generics, defn.SemanticFrame.Properties, type);
+            }
 
             EnterFrame(defn.SemanticFrame);
             Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase1);
@@ -172,47 +175,47 @@ public partial class Verifier
                 // VerifyError! missing method
                 name =>
                 {
-                    doFooBarQuxBaz();
+                    VerifyError(null, 235, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = name, ["itrfc"] = itrfc });
                 },
                 // VerifyError! missing getter
                 name =>
                 {
-                    doFooBarQuxBaz();
+                    VerifyError(null, 236, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = name, ["itrfc"] = itrfc });
                 },
                 // VerifyError! missing setter
                 name =>
                 {
-                    doFooBarQuxBaz();
+                    VerifyError(null, 237, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = name, ["itrfc"] = itrfc });
                 },
                 // VerifyError! requirement must be method
                 name =>
                 {
-                    doFooBarQuxBaz();
+                    VerifyError(null, 238, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = name, ["itrfc"] = itrfc });
                 },
                 // VerifyError! requirement must be virtual property
                 name =>
                 {
-                    doFooBarQuxBaz();
+                    VerifyError(null, 239, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = name, ["itrfc"] = itrfc });
                 },
                 // VerifyError! wrong method signature
                 (name, expectedSignature) =>
                 {
-                    doFooBarQuxBaz();
+                    VerifyError(null, 240, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = name, ["s"] = expectedSignature, ["itrfc"] = itrfc });
                 },
                 // VerifyError! wrong getter signature
                 (name, expectedSignature) =>
                 {
-                    doFooBarQuxBaz();
+                    VerifyError(null, 241, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = name, ["s"] = expectedSignature, ["itrfc"] = itrfc });
                 },
                 // VerifyError! wrong setter signature
                 (name, expectedSignature) =>
                 {
-                    doFooBarQuxBaz();
+                    VerifyError(null, 242, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = name, ["s"] = expectedSignature, ["itrfc"] = itrfc });
                 },
                 // VerifyError! required generics do not match
                 name =>
                 {
-                    doFooBarQuxBaz();
+                    VerifyError(null, 243, defn.Id.Span.Value, new DiagnosticArguments { ["name"] = name, ["itrfc"] = itrfc });
                 }
             );
         }

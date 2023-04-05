@@ -758,6 +758,9 @@ public class NamespaceDefinition : AnnotatableDefinition {
     public Identifier Id;
     public Block Block;
 
+    public Symbol SemanticNamespace = null;
+    public Symbol SemanticFrame = null;
+
     public NamespaceDefinition(Identifier id, Block block) : base() {
         Id = id;
         Block = block;

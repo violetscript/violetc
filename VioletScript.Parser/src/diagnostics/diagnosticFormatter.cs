@@ -223,6 +223,15 @@ public static class DefaultDiagnosticFormatterStatics {
         [232] = "$t is not a class type",
         [233] = "Cannot inherit $t as it is marked final",
         [234] = "The class $c already implements the interface $i",
+        [235] = "Missing method '$name' for implemented interface $itrfc",
+        [236] = "Missing getter '$name' for implemented interface $itrfc",
+        [237] = "Missing setter '$name' for implemented interface $itrfc",
+        [238] = "Implemented interface $itrfc requires '$name' as a method",
+        [239] = "Implemented interface $itrfc requires '$name' as a virtual property",
+        [240] = "Implemented interface $itrfc requires '$name' as a method of signature '$s'",
+        [241] = "Implemented interface $itrfc requires '$name' as a getter of signature '$s'",
+        [242] = "Implemented interface $itrfc requires '$name' as a setter of signature '$s'",
+        [243] = "Did not match generic method '$name' of interface $itrfc",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
