@@ -12,6 +12,14 @@ public class Node {
         get => "";
         set {}
     }
+
+    /// <summary>
+    /// Returns a list of frames gathered from binding `is` operations.
+    /// </summary>
+    public virtual List<Symbol> GetTypeTestFrames()
+    {
+        return new List<Symbol>{};
+    }
 }
 
 public class TypeExpression : Node {
@@ -308,6 +316,15 @@ public class BinaryExpression : Expression {
         Left = l;
         Right = r;
     }
+
+    public override List<Symbol> GetTypeTestFrames()
+    {
+        if (this.Operator != Operator.LogicalAnd)
+        {
+            return new List<Symbol>{};
+        }
+        return this.Left.GetTypeTestFrames().Concat(this.Right.GetTypeTestFrames()).ToList();
+    }
 }
 
 public class TypeBinaryExpression : Expression {
@@ -320,11 +337,26 @@ public class TypeBinaryExpression : Expression {
     /// </summary>
     public Identifier BindsTo;
 
+    /// <summary>
+    /// Frame created in case this expression binds a variable.
+    /// </summary>
+    public Symbol SemanticFrame = null;
+
     public TypeBinaryExpression(Operator op, Expression l, TypeExpression r, Identifier bindsTo) : base() {
         Operator = op;
         Left = l;
         Right = r;
         BindsTo = bindsTo;
+    }
+
+    public override List<Symbol> GetTypeTestFrames()
+    {
+        var r = new List<Symbol>{};
+        if (this.SemanticFrame != null)
+        {
+            r.Add(this.SemanticFrame);
+        }
+        return r;
     }
 }
 
@@ -595,6 +627,11 @@ public class ConditionalExpression : Expression {
         Test = test;
         Consequent = consequent;
         Alternative = alternative;
+    }
+
+    public override List<Symbol> GetTypeTestFrames()
+    {
+        return this.Test.GetTypeTestFrames();
     }
 }
 

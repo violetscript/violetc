@@ -278,7 +278,10 @@ public partial class Verifier
     private void VerifyIfStatement(Ast.IfStatement stmt)
     {
         VerifyExpAsValue(stmt.Test);
+        var ttFrames = stmt.Test.GetTypeTestFrames();
+        EnterFrames(ttFrames);
         VerifyStatement(stmt.Consequent);
+        ExitNFrames(ttFrames.Count());
         if (stmt.Alternative != null)
         {
             VerifyStatement(stmt.Alternative);
@@ -294,7 +297,10 @@ public partial class Verifier
     private void VerifyWhileStatement(Ast.WhileStatement stmt)
     {
         VerifyExpAsValue(stmt.Test);
+        var ttFrames = stmt.Test.GetTypeTestFrames();
+        EnterFrames(ttFrames);
         VerifyStatement(stmt.Body);
+        ExitNFrames(ttFrames.Count());
     } // while statement
 
     private void VerifyReturnStatement(Ast.ReturnStatement stmt)
@@ -367,6 +373,7 @@ public partial class Verifier
     {
         stmt.SemanticFrame = m_ModelCore.Factory.Frame();
         EnterFrame(stmt.SemanticFrame);
+        List<Symbol> ttFrames = null;
         if (stmt.Init is Ast.SimpleVariableDeclaration)
         {
             VerifySimpleVariableDeclaration((Ast.SimpleVariableDeclaration) stmt.Init);
@@ -378,12 +385,16 @@ public partial class Verifier
         if (stmt.Test != null)
         {
             VerifyExpAsValue(stmt.Test);
+            ttFrames = stmt.Test.GetTypeTestFrames();
         }
         if (stmt.Update != null)
         {
             VerifyExpAsValue(stmt.Update);
         }
+        ttFrames ??= new List<Symbol>();
+        EnterFrames(ttFrames);
         VerifyStatement(stmt.Body);
+        ExitNFrames(ttFrames.Count());
         ExitFrame();
     } // for statement
 

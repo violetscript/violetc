@@ -772,7 +772,10 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
+        var ttFrames = exp.Operator == Operator.LogicalAnd ? exp.Left.GetTypeTestFrames() : new List<Symbol>();
+        EnterFrames(ttFrames);
         LimitExpType(exp.Right, left.StaticType);
+        ExitNFrames(ttFrames.Count());
         exp.SemanticSymbol = m_ModelCore.Factory.Value(left.StaticType);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
@@ -862,10 +865,6 @@ public partial class Verifier
 
     private Symbol Is_VerifyTypeBinaryExp(Ast.TypeBinaryExpression exp, Symbol left, Symbol right)
     {
-        if (exp.BindsTo != null)
-        {
-            VerifyError(null, 184, exp.BindsTo.Span.Value, new DiagnosticArguments {});
-        }
         if (right == m_ModelCore.AnyType)
         {
             Warn(null, 182, exp.Span.Value, new DiagnosticArguments {});
@@ -877,6 +876,15 @@ public partial class Verifier
         else if (!right.CanBeASubtypeOf(left.StaticType))
         {
             Warn(null, 181, exp.Span.Value, new DiagnosticArguments {["right"] = right});
+        }
+        if (exp.BindsTo != null)
+        {
+            var nextFrame = m_ModelCore.Factory.Frame();
+            var nextVar = m_ModelCore.Factory.VariableSlot(exp.BindsTo.Name, false, right);
+            nextFrame.Properties[nextVar.Name] = nextVar;
+            exp.BindsTo.SemanticSymbol = nextVar;
+            EnterFrame(nextFrame);
+            ExitFrame();
         }
         exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
         exp.SemanticExpResolved = true;
@@ -1553,7 +1561,10 @@ public partial class Verifier
     private Symbol VerifyConditionalExp(Ast.ConditionalExpression exp, Symbol expectedType)
     {
         VerifyExpAsValue(exp.Test);
+        var ttFrames = exp.Test.GetTypeTestFrames();
+        EnterFrames(ttFrames);
         var conseq = VerifyExpAsValue(exp.Consequent, expectedType);
+        ExitNFrames(ttFrames.Count());
         if (conseq == null)
         {
             VerifyExpAsValue(exp.Alternative);

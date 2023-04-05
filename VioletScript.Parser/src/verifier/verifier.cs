@@ -83,6 +83,22 @@ public partial class Verifier
         m_Frame = frame;
     }
 
+    private void EnterFrames(List<Symbol> frames)
+    {
+        foreach (var frame in frames)
+        {
+            EnterFrame(frame);
+        }
+    }
+
+    private void EnterFrames(Symbol[] frames)
+    {
+        foreach (var frame in frames)
+        {
+            EnterFrame(frame);
+        }
+    }
+
     private void ExitFrame()
     {
         m_Frame = m_Frame?.ParentFrame;

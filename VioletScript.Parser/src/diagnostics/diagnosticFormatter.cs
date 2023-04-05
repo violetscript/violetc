@@ -172,7 +172,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [181] = "Left-hand side is never of type '$right'",
         [182] = "Left-hand side is always of type *",
         [183] = "Left-hand side is already of type '$right'",
-        [184] = "Binding 'is' operator is not yet implemented",
+        [184] = "",
         [185] = "Rest parameter must be of Array type",
         [186] = "Object or array initializer inferred no type",
         [187] = "Object initializer cannot be used for '$t'",
