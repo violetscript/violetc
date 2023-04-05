@@ -1036,6 +1036,8 @@ public class EmptyStatement : Statement {
 public class Block : Statement {
     public List<Statement> Statements;
 
+    public Symbol SemanticFrame = null;
+
     public Block(List<Statement> statements) : base() {
         Statements = statements;
     }
@@ -1289,6 +1291,8 @@ public class SimpleVariableDeclaration : Statement {
 public class SwitchStatement : Statement {
     public Expression Discriminant;
     public List<SwitchCase> Cases;
+
+    public Symbol SemanticFrame = null;
 
     public SwitchStatement(Expression discriminant, List<SwitchCase> cases) : base() {
         Discriminant = discriminant;

@@ -174,7 +174,10 @@ public partial class Verifier
 
     private void VerifyBlock(Ast.Block block)
     {
+        block.SemanticFrame = m_ModelCore.Factory.Frame();
+        EnterFrame(block.SemanticFrame);
         VerifyStatementSeq(block.Statements);
+        ExitFrame();
     } // block statement
 
     private void VerifyVariableDefinition(Ast.VariableDefinition defn)
@@ -500,6 +503,8 @@ public partial class Verifier
     private void VerifySwitchStatement(Ast.SwitchStatement stmt)
     {
         var discriminant = VerifyExpAsValue(stmt.Discriminant);
+        stmt.SemanticFrame = m_ModelCore.Factory.Frame();
+        EnterFrame(stmt.SemanticFrame);
         foreach (var swCase in stmt.Cases)
         {
             if (swCase.Test != null)
@@ -511,6 +516,7 @@ public partial class Verifier
             }
             VerifyStatementSeq(swCase.Consequent);
         }
+        ExitFrame();
     } // switch statement
 
     private void VerifySwitchTypeStatement(Ast.SwitchTypeStatement stmt)
