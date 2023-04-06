@@ -127,6 +127,8 @@ public sealed class ModelCore {
     /// </summary>
     public Symbol IDisposableType = null;
 
+    public Symbol TypeAttachedDecoratorType = null;
+
     private Dictionary<int, List<Symbol>> m_InternedRecordTypesByFieldCount = new Dictionary<int, List<Symbol>>{};
     private Dictionary<int, List<Symbol>> m_InternedTupleTypesByItemCount = new Dictionary<int, List<Symbol>>{};
     private Dictionary<int, List<Symbol>> m_InternedUnionTypesByMCount = new Dictionary<int, List<Symbol>>{};
@@ -221,6 +223,8 @@ public sealed class ModelCore {
         this.IMarkupContainerType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
 
         this.IDisposableType = DefineGlobalBuiltinInterface("IDisposable");
+
+        this.TypeAttachedDecoratorType = this.Factory.FunctionType(new NameAndTypePair[]{new NameAndTypePair("type", ClassType)}, null, null, UndefinedType);
 
         // global
         this.GlobalPackage.Properties.Set("global", GlobalPackage);

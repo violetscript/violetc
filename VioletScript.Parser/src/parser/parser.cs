@@ -1580,7 +1580,7 @@ internal class ParserBackend {
     private Ast.AnnotatableDefinition FinishAnnotatableDefinition(Ast.AnnotatableDefinition node, DefinitionAttributes attribs) {
         node.Modifiers = attribs.Modifiers;
         node.AccessModifier = attribs.AccessModifier;
-        node.Decorators = attribs.Decorators;
+        node.Decorators = attribs.Decorators != null && attribs.Decorators.Count() > 0 ? attribs.Decorators : null;
         FinishNode(node);
         return node;
     }

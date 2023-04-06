@@ -20,6 +20,10 @@ public partial class Verifier
         }
         else if (defn.SemanticFrame != null)
         {
+            if (phase == VerifyPhase.Phase7)
+            {
+                VerifyTypeDefinitionDecorators(defn);
+            }
             EnterFrame(defn.SemanticFrame);
             foreach (var drtv in defn.Block.Statements)
             {

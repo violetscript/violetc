@@ -24,6 +24,10 @@ public partial class Verifier
         }
         else if (defn.SemanticFrame != null)
         {
+            if (phase == VerifyPhase.Phase7)
+            {
+                VerifyTypeDefinitionDecorators(defn);
+            }
             EnterFrame(defn.SemanticFrame);
             Fragmented_VerifyStatementSeq(defn.Block.Statements, phase);
             ExitFrame();
