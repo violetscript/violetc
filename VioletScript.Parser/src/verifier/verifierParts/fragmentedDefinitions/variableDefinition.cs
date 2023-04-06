@@ -44,8 +44,4 @@ public partial class Verifier
             doFooBarQuxBaz();
         }
     }
-    private void Fragmented_VerifyVariableDefinition1(Ast.VariableDefinition defn)
-    {
-        doFooBarQuxBaz();
-    }
 }
