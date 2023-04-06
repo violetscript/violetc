@@ -20,28 +20,28 @@ public partial class Verifier
         }
         else if (phase == VerifyPhase.Phase2)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyVariableDefinition2(defn);
         }
         else if (phase == VerifyPhase.Phase3)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyVariableDefinition3(defn);
         }
         else if (phase == VerifyPhase.Phase4)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyVariableDefinition4(defn);
         }
         else if (phase == VerifyPhase.Phase5)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyVariableDefinition5(defn);
         }
         else if (phase == VerifyPhase.Phase6)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyVariableDefinition6(defn);
         }
         // VerifyPhase.Phase7
         else
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyVariableDefinition7(defn);
         }
     }
 }
