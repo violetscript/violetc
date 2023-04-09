@@ -164,6 +164,9 @@ public partial class Verifier
             variantVar.Visibility = Visibility.Public;
             type.Properties[screamingSnakeCaseName] = variantVar;
 
+            binding.SemanticString = variantString;
+            binding.SemanticValue = variantNumber;
+
             counter = variantNumber;
             counter = isFlags ? EnumConstHelpers.MultiplyPer2(type, counter) : EnumConstHelpers.Increment(type, counter);
         }

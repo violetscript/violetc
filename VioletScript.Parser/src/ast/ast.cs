@@ -821,6 +821,9 @@ public class EnumVariantDefinition : Statement {
     public Identifier Id;
     public Expression Init;
 
+    public object SemanticValue = null;
+    public string SemanticString = null;
+
     public EnumVariantDefinition(Identifier id, Expression init) : base() {
         this.Id = id;
         this.Init = init;
