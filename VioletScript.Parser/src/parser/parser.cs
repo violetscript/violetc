@@ -1991,6 +1991,28 @@ internal class ParserBackend {
                         PushLocation(id3.Span.Value);
                         block.Statements[i] = (Ast.Statement) FinishNode(new Ast.EnumVariantDefinition(id3, assignExp.Right), assignExp.Right.Span.Value);
                     }
+                } else if (expStmt.Expression is Ast.ListExpression listExp) {
+                    var variantExps = listExp.Expressions.Where(exp => {
+                        return exp is Ast.Identifier
+                            || (exp is Ast.AssignmentExpression assignExp && assignExp.Compound == null && assignExp.Left is Ast.Identifier);
+                    });
+                    if (variantExps.Count() == listExp.Expressions.Count()) {
+                        IEnumerable<Ast.Statement> variants = variantExps.Select(exp => {
+                            if (exp is Ast.Identifier id2) {
+                                PushLocation(id2.Span.Value);
+                                return (Ast.Statement) FinishNode(new Ast.EnumVariantDefinition(id2, null), id2.Span.Value);
+                            } else {
+                                var assignExp = (Ast.AssignmentExpression) exp;
+                                var id3 = (Ast.Identifier) assignExp.Left;
+                                PushLocation(id3.Span.Value);
+                                return (Ast.Statement) FinishNode(new Ast.EnumVariantDefinition(id3, assignExp.Right), assignExp.Right.Span.Value);
+                            }
+                        }); // variants
+                        block.Statements.RemoveAt(i);
+                        block.Statements.InsertRange(i, variants);
+                        i += variants.Count();
+                        --i;
+                    }
                 }
             }
         }
