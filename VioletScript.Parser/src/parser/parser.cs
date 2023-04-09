@@ -1600,17 +1600,12 @@ internal class ParserBackend {
         do {
             var binding = ParseVariableBinding();
             bindings.Add(binding);
-
-            // enum constant restrictions
-            if (context is EnumContext && !isStatic && (!(binding.Pattern is Ast.BindPattern) || binding.Pattern.Type != null)) {
-                VerifyError(15, binding.Span.Value);
-            }
         } while (Consume(TToken.Comma));
         var semicolonInserted = ParseSemicolon();
         var r = FinishAnnotatableDefinition(new Ast.VariableDefinition(readOnly, bindings), attribs);
 
         // enum context
-        if (context is EnumContext && !isStatic && !readOnly) {
+        if (context is EnumContext && !isStatic) {
             VerifyError(14, r.Span.Value);
         } else if (context is InterfaceContext) {
             VerifyError(16, r.Span.Value);
@@ -1986,6 +1981,19 @@ internal class ParserBackend {
         }
         Ast.TypeExpression numericType = ConsumeContextKeyword("wraps") ? ParseTypeExpression() : null;
         var block = ParseBlock(new EnumContext());
+        for (int i = 0; i < block.Statements.Count(); ++i) {
+            if (block.Statements[i] is Ast.ExpressionStatement expStmt) {
+                if (expStmt.Expression is Ast.Identifier id2) {
+                    PushLocation(id2.Span.Value);
+                    block.Statements[i] = (Ast.Statement) FinishNode(new Ast.EnumVariantDefinition(id2, null), id2.Span.Value);
+                } else if (expStmt.Expression is Ast.AssignmentExpression assignExp && assignExp.Compound == null) {
+                    if (assignExp.Left is Ast.Identifier id3) {
+                        PushLocation(id3.Span.Value);
+                        block.Statements[i] = (Ast.Statement) FinishNode(new Ast.EnumVariantDefinition(id3, assignExp.Right), assignExp.Right.Span.Value);
+                    }
+                }
+            }
+        }
         var r = FinishAnnotatableDefinition(new Ast.EnumDefinition(id, isFlags, numericType, block), attribs);
 
         if (!(context is PackageContext || context is NamespaceContext || context is TopLevelContext)) {

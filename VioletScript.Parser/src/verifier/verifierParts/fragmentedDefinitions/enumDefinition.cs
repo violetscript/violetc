@@ -96,78 +96,76 @@ public partial class Verifier
         object counter = type.IsFlagsEnum ? EnumConstHelpers.One(type) : EnumConstHelpers.Zero(type);
         foreach (var drtv in defn.Block.Statements.Where(d => d.IsEnumVariantDefinition))
         {
-            foreach (var binding in ((Ast.VariableDefinition) drtv).Bindings)
+            var binding = (Ast.EnumVariantDefinition) drtv;
+            var screamingSnakeCaseName = binding.Id.Name;
+            var previousDuplicate = type.Properties[screamingSnakeCaseName];
+            if (previousDuplicate != null)
             {
-                var screamingSnakeCaseName = binding.Pattern.Name;
-                var previousDuplicate = type.Properties[screamingSnakeCaseName];
-                if (previousDuplicate != null)
-                {
-                    VerifyError(null, 139, binding.Pattern.Span.Value, new DiagnosticArguments { ["name"] = screamingSnakeCaseName });
-                    continue;
-                }
-                object variantNumber = null;
-                string variantString = "";
-                if (binding.Init is Ast.ArrayInitializer arrayInitStN
-                    && arrayInitStN.Items.Count() == 2
-                    && arrayInitStN.Items[0] is Ast.StringLiteral strLit1
-                    && !(arrayInitStN.Items[1] is Ast.Spread))
-                {
-                    var numSymbol = LimitConstantExpType(arrayInitStN.Items[1], numType);
-                    variantNumber = numSymbol?.NumericConstantValueAsObject ?? counter;
-                    variantString = strLit1.Value;
-                }
-                else if (binding.Init is Ast.ArrayInitializer arrayInitNtS
-                    && arrayInitNtS.Items.Count() == 2
-                    && !(arrayInitNtS.Items[0] is Ast.Spread)
-                    && arrayInitNtS.Items[1] is Ast.StringLiteral strLit2)
-                {
-                    var numSymbol = LimitConstantExpType(arrayInitNtS.Items[0], numType);
-                    variantNumber = numSymbol?.NumericConstantValueAsObject ?? counter;
-                    variantString = strLit2.Value;
-                }
-                else if (binding.Init is Ast.StringLiteral strLiteral)
-                {
-                    variantNumber = counter;
-                    variantString = strLiteral.Value;
-                }
-                else if (binding.Init != null)
-                {
-                    var numSymbol = LimitConstantExpType(binding.Init, numType);
-                    variantNumber = numSymbol?.NumericConstantValueAsObject ?? counter;
-                    variantString = ScreamingSnakeCaseToCamelCase(screamingSnakeCaseName);
-                }
-                else
-                {
-                    variantNumber = counter;
-                    variantString = ScreamingSnakeCaseToCamelCase(screamingSnakeCaseName);
-                }
-
-                // if it is a flags enum, ensure number is one or power of 2.
-                if (isFlags && !(EnumConstHelpers.IsOne(variantNumber) || EnumConstHelpers.IsPowerOf2(variantNumber)))
-                {
-                    VerifyError(null, 227, binding.Pattern.Span.Value, new DiagnosticArguments {});
-                }
-
-                // check for duplicate variant number/string
-                if (type.EnumHasVariantByNumber(variantNumber))
-                {
-                    VerifyError(null, 228, binding.Pattern.Span.Value, new DiagnosticArguments {});
-                }
-                if (type.EnumHasVariantByString(variantString))
-                {
-                    VerifyError(null, 229, binding.Pattern.Span.Value, new DiagnosticArguments {});
-                }
-
-                type.EnumSetVariant(variantString, variantNumber);
-                var variantVar = m_ModelCore.Factory.VariableSlot(screamingSnakeCaseName, true, type);
-                variantVar.InitValue = m_ModelCore.Factory.EnumConstantValue(variantNumber, type);
-                variantVar.ParentDefinition = type;
-                variantVar.Visibility = Visibility.Public;
-                type.Properties[screamingSnakeCaseName] = variantVar;
-
-                counter = variantNumber;
-                counter = isFlags ? EnumConstHelpers.MultiplyPer2(type, counter) : EnumConstHelpers.Increment(type, counter);
+                VerifyError(null, 139, binding.Id.Span.Value, new DiagnosticArguments { ["name"] = screamingSnakeCaseName });
+                continue;
             }
+            object variantNumber = null;
+            string variantString = "";
+            if (binding.Init is Ast.ArrayInitializer arrayInitStN
+                && arrayInitStN.Items.Count() == 2
+                && arrayInitStN.Items[0] is Ast.StringLiteral strLit1
+                && !(arrayInitStN.Items[1] is Ast.Spread))
+            {
+                var numSymbol = LimitConstantExpType(arrayInitStN.Items[1], numType);
+                variantNumber = numSymbol?.NumericConstantValueAsObject ?? counter;
+                variantString = strLit1.Value;
+            }
+            else if (binding.Init is Ast.ArrayInitializer arrayInitNtS
+                && arrayInitNtS.Items.Count() == 2
+                && !(arrayInitNtS.Items[0] is Ast.Spread)
+                && arrayInitNtS.Items[1] is Ast.StringLiteral strLit2)
+            {
+                var numSymbol = LimitConstantExpType(arrayInitNtS.Items[0], numType);
+                variantNumber = numSymbol?.NumericConstantValueAsObject ?? counter;
+                variantString = strLit2.Value;
+            }
+            else if (binding.Init is Ast.StringLiteral strLiteral)
+            {
+                variantNumber = counter;
+                variantString = strLiteral.Value;
+            }
+            else if (binding.Init != null)
+            {
+                var numSymbol = LimitConstantExpType(binding.Init, numType);
+                variantNumber = numSymbol?.NumericConstantValueAsObject ?? counter;
+                variantString = ScreamingSnakeCaseToCamelCase(screamingSnakeCaseName);
+            }
+            else
+            {
+                variantNumber = counter;
+                variantString = ScreamingSnakeCaseToCamelCase(screamingSnakeCaseName);
+            }
+
+            // if it is a flags enum, ensure number is one or power of 2.
+            if (isFlags && !(EnumConstHelpers.IsOne(variantNumber) || EnumConstHelpers.IsPowerOf2(variantNumber)))
+            {
+                VerifyError(null, 227, binding.Id.Span.Value, new DiagnosticArguments {});
+            }
+
+            // check for duplicate variant number/string
+            if (type.EnumHasVariantByNumber(variantNumber))
+            {
+                VerifyError(null, 228, binding.Id.Span.Value, new DiagnosticArguments {});
+            }
+            if (type.EnumHasVariantByString(variantString))
+            {
+                VerifyError(null, 229, binding.Id.Span.Value, new DiagnosticArguments {});
+            }
+
+            type.EnumSetVariant(variantString, variantNumber);
+            var variantVar = m_ModelCore.Factory.VariableSlot(screamingSnakeCaseName, true, type);
+            variantVar.InitValue = m_ModelCore.Factory.EnumConstantValue(variantNumber, type);
+            variantVar.ParentDefinition = type;
+            variantVar.Visibility = Visibility.Public;
+            type.Properties[screamingSnakeCaseName] = variantVar;
+
+            counter = variantNumber;
+            counter = isFlags ? EnumConstHelpers.MultiplyPer2(type, counter) : EnumConstHelpers.Increment(type, counter);
         }
     }
 

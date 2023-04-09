@@ -736,7 +736,7 @@ public class Statement : Node {
 
     public bool IsEnumVariantDefinition
     {
-        get => this is Ast.VariableDefinition d ? !d.Modifiers.HasFlag(AnnotatableDefinitionModifier.Static) : false;
+        get => this is Ast.EnumVariantDefinition;
     }
 }
 
@@ -814,6 +814,16 @@ public class NamespaceAliasDefinition : AnnotatableDefinition {
     public NamespaceAliasDefinition(Identifier id, Expression expression) : base() {
         Id = id;
         Expression = expression;
+    }
+}
+
+public class EnumVariantDefinition : Statement {
+    public Identifier Id;
+    public Expression Init;
+
+    public EnumVariantDefinition(Identifier id, Expression init) : base() {
+        this.Id = id;
+        this.Init = init;
     }
 }
 
