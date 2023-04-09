@@ -166,6 +166,7 @@ public partial class Verifier
 
             binding.SemanticString = variantString;
             binding.SemanticValue = variantNumber;
+            binding.Id.SemanticSymbol = variantVar;
 
             counter = variantNumber;
             counter = isFlags ? EnumConstHelpers.MultiplyPer2(type, counter) : EnumConstHelpers.Increment(type, counter);
