@@ -343,6 +343,8 @@ internal class ParserBackend {
         } else if (ConsumeOperator(Operator.BitwiseOr)) {
             PopLocation();
             r = ParseTypeExpression();
+        } else if (Consume(TToken.QuestionMark)) {
+            r = (Ast.TypeExpression) FinishNode(new Ast.NullableTypeExpression(ParseTypeExpression()));
         } else ThrowUnexpected();
 
         for (;;) {
