@@ -124,11 +124,11 @@ public class UnionTypeExpression : TypeExpression {
     }
 }
 
-public class GenericInstantiationTypeExpression : TypeExpression {
+public class TypeExpressionWithArguments : TypeExpression {
     public TypeExpression Base;
     public List<TypeExpression> ArgumentsList;
 
-    public GenericInstantiationTypeExpression(TypeExpression @base, List<TypeExpression> argumentsList) : base() {
+    public TypeExpressionWithArguments(TypeExpression @base, List<TypeExpression> argumentsList) : base() {
         Base = @base;
         ArgumentsList = argumentsList;
     }
@@ -651,11 +651,11 @@ public class ListExpression : Expression {
     }
 }
 
-public class GenericInstantiationExpression : Expression {
+public class ExpressionWithTypeArguments : Expression {
     public Expression Base;
     public List<TypeExpression> ArgumentsList;
 
-    public GenericInstantiationExpression(Expression @base, List<TypeExpression> argumentsList) : base() {
+    public ExpressionWithTypeArguments(Expression @base, List<TypeExpression> argumentsList) : base() {
         Base = @base;
         ArgumentsList = argumentsList;
     }

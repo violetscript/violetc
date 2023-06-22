@@ -100,7 +100,7 @@ public partial class Verifier
         {
             return VerifyMemberTe(memberTe, isBase, reportDiagnostics);
         }
-        else if (exp is Ast.GenericInstantiationTypeExpression giTe)
+        else if (exp is Ast.TypeExpressionWithArguments giTe)
         {
             return VerifyGenericInstTe(giTe, reportDiagnostics);
         }
@@ -333,11 +333,11 @@ public partial class Verifier
         }
     }
 
-    // verify a generic instantiation; ensure:
+    // verify a type expression with arguments; ensure:
     // - the base is a generic type.
     // - the number of arguments is correct.
     // - the arguments follow the constraints.
-    private Symbol VerifyGenericInstTe(Ast.GenericInstantiationTypeExpression giTe, bool reportDiagnostics)
+    private Symbol VerifyGenericInstTe(Ast.TypeExpressionWithArguments giTe, bool reportDiagnostics)
     {
         var exp = giTe;
         var @base = VerifyTypeExp(giTe.Base, true);

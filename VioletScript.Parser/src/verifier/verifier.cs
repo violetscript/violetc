@@ -31,11 +31,11 @@ public partial class Verifier
     private List<Ast.Statement> m_ImportOrAliasDirectives = null;
 
     /// <summary>
-    /// List of generic item instantiations as type expressions.
+    /// List of type expressions with arguments.
     /// This list is feed by the <c>VerifyTypeExp</c> method and later consumed by
     /// <c>VerifyPrograms</c>.
     /// </summary>
-    private List<Ast.GenericInstantiationTypeExpression> m_GenericInstantiationsAsTypeExp = null;
+    private List<Ast.TypeExpressionWithArguments> m_TypeExpsWithArguments = null;
 
     private Symbol CurrentMethodSlot
     {

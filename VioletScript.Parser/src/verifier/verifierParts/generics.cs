@@ -163,10 +163,10 @@ public partial class Verifier
     // note that, for generic functions, this method does not automatically wrap
     // them into reference values, for now.
     //
-    // note that generic instantiations as type expressions defer validating
+    // note that type expressions with arguments (G.<T>) defer validating
     // the constraints to the `VerifyPrograms` method.
     //
-    private Symbol VerifyGenericInstArguments(Span wholeSpan, Symbol genericTypeOrF, List<Ast.TypeExpression> giTeArguments, Ast.GenericInstantiationTypeExpression surroundingTypeExp = null)
+    private Symbol VerifyGenericInstArguments(Span wholeSpan, Symbol genericTypeOrF, List<Ast.TypeExpression> giTeArguments, Ast.TypeExpressionWithArguments surroundingTypeExp = null)
     {
         Symbol[] typeParameters = genericTypeOrF.TypeParameters;
         // VerifyError: wrong number of arguments
@@ -190,11 +190,11 @@ public partial class Verifier
 
         if (surroundingTypeExp != null)
         {
-            if (m_GenericInstantiationsAsTypeExp == null)
+            if (m_TypeExpsWithArguments == null)
             {
                 throw new Exception("Program verification must be done through verifyPrograms()");
             }
-            m_GenericInstantiationsAsTypeExp.Add(surroundingTypeExp);
+            m_TypeExpsWithArguments.Add(surroundingTypeExp);
         }
         else
         {

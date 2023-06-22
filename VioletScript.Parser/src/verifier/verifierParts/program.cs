@@ -45,7 +45,7 @@ public partial class Verifier
             VerifyPhase.Phase6,
             VerifyPhase.Phase7,
         };
-        m_GenericInstantiationsAsTypeExp = new List<Ast.GenericInstantiationTypeExpression>();
+        m_TypeExpsWithArguments = new List<Ast.TypeExpressionWithArguments>();
         m_ImportOrAliasDirectives = new List<Ast.Statement>();
         foreach (var phase in phases)
         {
@@ -96,7 +96,7 @@ public partial class Verifier
 
     private void VerifyAllGenericInstAsTypeExps()
     {
-        foreach (var gi in m_GenericInstantiationsAsTypeExp)
+        foreach (var gi in m_TypeExpsWithArguments)
         {
             var typeParameters = gi.Base.SemanticSymbol.TypeParameters;
             var arguments = gi.ArgumentsList.Select(te => te.SemanticSymbol).ToArray();
@@ -123,8 +123,8 @@ public partial class Verifier
                 }
             }
         }
-        m_GenericInstantiationsAsTypeExp.Clear();
-        m_GenericInstantiationsAsTypeExp = null;
+        m_TypeExpsWithArguments.Clear();
+        m_TypeExpsWithArguments = null;
     }
 
     private void Fragmented_VerifyStatementSeq(List<Ast.Statement> seq, VerifyPhase phase)

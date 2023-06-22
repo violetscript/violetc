@@ -126,9 +126,9 @@ public partial class Verifier
         {
             r = VerifyListExp(listExp, expectedType);
         }
-        else if (exp is Ast.GenericInstantiationExpression gie)
+        else if (exp is Ast.ExpressionWithTypeArguments gie)
         {
-            r = VerifyGenericInstantiationExp(gie);
+            r = VerifyExpWithTypeArgs(gie);
         }
         else if (exp is Ast.AssignmentExpression assignExp)
         {
@@ -1622,7 +1622,7 @@ public partial class Verifier
         return exp.SemanticSymbol;
     } // list expression
 
-    private Symbol VerifyGenericInstantiationExp(Ast.GenericInstantiationExpression exp)
+    private Symbol VerifyExpWithTypeArgs(Ast.ExpressionWithTypeArguments exp)
     {
         var @base = VerifyExp(exp.Base, null, true);
         if (@base == null)
@@ -1682,7 +1682,7 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
-    } // generic instantiation expression
+    } // expression with type arguments
 
     private Symbol VerifyAssignmentExp(Ast.AssignmentExpression exp)
     {

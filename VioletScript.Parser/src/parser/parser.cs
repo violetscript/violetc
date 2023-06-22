@@ -364,7 +364,7 @@ internal class ParserBackend {
                         argumentsList.Add(ParseTypeExpression());
                     } while (Consume(TToken.Comma));
                     ExpectGT();
-                    r = (Ast.TypeExpression) FinishNode(new Ast.GenericInstantiationTypeExpression(r, argumentsList));
+                    r = (Ast.TypeExpression) FinishNode(new Ast.TypeExpressionWithArguments(r, argumentsList));
                 } else {
                     r = (Ast.TypeExpression) FinishNode(new Ast.MemberTypeExpression(r, ParseIdentifier(true)));
                 }
@@ -726,7 +726,7 @@ internal class ParserBackend {
                         argumentsList2.Add(ParseTypeExpression());
                     } while (Consume(TToken.Comma));
                     ExpectGT();
-                    @base = FinishExp(new Ast.GenericInstantiationExpression(@base, argumentsList2));
+                    @base = FinishExp(new Ast.ExpressionWithTypeArguments(@base, argumentsList2));
                 } else {
                     var id = ParseIdentifier(true);
                     @base = FinishExp(new Ast.MemberExpression(@base, id));
@@ -1102,7 +1102,7 @@ internal class ParserBackend {
                         argumentsList.Add(ParseTypeExpression());
                     } while (Consume(TToken.Comma));
                     ExpectGT();
-                    r = FinishExp(new Ast.GenericInstantiationExpression(r, argumentsList));
+                    r = FinishExp(new Ast.ExpressionWithTypeArguments(r, argumentsList));
                 } else {
                     var id = ParseIdentifier(true);
                     r = FinishExp(new Ast.MemberExpression(r, id));
