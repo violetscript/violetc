@@ -133,7 +133,7 @@ public sealed class ModelCore {
     private Dictionary<int, List<Symbol>> m_InternedTupleTypesByItemCount = new Dictionary<int, List<Symbol>>{};
     private Dictionary<int, List<Symbol>> m_InternedUnionTypesByMCount = new Dictionary<int, List<Symbol>>{};
     private Dictionary<int, List<Symbol>> m_InternedFuncTypesByReqParamCount = new Dictionary<int, List<Symbol>>{};
-    private Dictionary<Symbol, List<Symbol>> m_InternedInstantiatedTypesByOrigin = new Dictionary<Symbol, List<Symbol>>{};
+    private Dictionary<Symbol, List<Symbol>> m_InternedTypesWithArgumentsByOrigin = new Dictionary<Symbol, List<Symbol>>{};
     private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedInstantiatedVarSlotsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
     private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedInstantiatedVirtualSlotsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
     private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedInstantiatedMethodSlotsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
@@ -456,11 +456,11 @@ public sealed class ModelCore {
         return r;
     }
 
-    public Symbol InternInstantiatedType(Symbol origin, Symbol[] argumentsList) {
-        if (!m_InternedInstantiatedTypesByOrigin.ContainsKey(origin)) {
-            m_InternedInstantiatedTypesByOrigin[origin] = new List<Symbol>{};
+    public Symbol InternTypeWithArguments(Symbol origin, Symbol[] argumentsList) {
+        if (!m_InternedTypesWithArgumentsByOrigin.ContainsKey(origin)) {
+            m_InternedTypesWithArgumentsByOrigin[origin] = new List<Symbol>{};
         }
-        var list = m_InternedInstantiatedTypesByOrigin[origin];
+        var list = m_InternedTypesWithArgumentsByOrigin[origin];
 
         var originParams = origin.TypeParameters;
         var n = originParams.Count();
@@ -485,7 +485,7 @@ public sealed class ModelCore {
             }
             if (eq) return type2;
         }
-        var r = new InstantiatedType(origin, argumentsList);
+        var r = new TypeWithArguments(origin, argumentsList);
         r.ModelCore = this;
         list.Add(r);
         return r;

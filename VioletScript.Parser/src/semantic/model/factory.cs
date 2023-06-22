@@ -117,8 +117,8 @@ public sealed class Factory {
         return ModelCore.InternUnionType(types);
     }
 
-    public Symbol InstantiatedType(Symbol origin, Symbol[] argumentTypes) {
-        return ModelCore.InternInstantiatedType(origin, argumentTypes);
+    public Symbol TypeWithArguments(Symbol origin, Symbol[] argumentTypes) {
+        return ModelCore.InternTypeWithArguments(origin, argumentTypes);
     }
 
     public Symbol TypeParameter(string name) {

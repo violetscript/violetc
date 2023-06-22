@@ -1066,11 +1066,11 @@ public partial class Verifier
         // - if the function uses 'yield', automatically wrap its return to Generator.
         if (common.UsesAwait && !resultType_returnType.IsInstantiationOf(m_ModelCore.PromiseType))
         {
-            resultType_returnType = m_ModelCore.Factory.InstantiatedType(m_ModelCore.PromiseType, new Symbol[]{resultType_returnType});
+            resultType_returnType = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.PromiseType, new Symbol[]{resultType_returnType});
         }
         else if (common.UsesYield && !resultType_returnType.IsInstantiationOf(m_ModelCore.GeneratorType))
         {
-            resultType_returnType = m_ModelCore.Factory.InstantiatedType(m_ModelCore.GeneratorType, new Symbol[]{resultType_returnType});
+            resultType_returnType = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.GeneratorType, new Symbol[]{resultType_returnType});
         }
 
         // get result type
@@ -1413,7 +1413,7 @@ public partial class Verifier
         }
         else if (@base is Value && @base.StaticType == m_ModelCore.FunctionType)
         {
-            var arrayOfAny = m_ModelCore.Factory.InstantiatedType(m_ModelCore.ArrayType, new Symbol[]{m_ModelCore.AnyType});
+            var arrayOfAny = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.ArrayType, new Symbol[]{m_ModelCore.AnyType});
             var functionTakingAny = m_ModelCore.Factory.FunctionType(null, null, new NameAndTypePair("_", arrayOfAny), m_ModelCore.AnyType);
             VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, functionTakingAny);
             r = m_ModelCore.Factory.Value(m_ModelCore.AnyType);
@@ -1472,7 +1472,7 @@ public partial class Verifier
         }
         else if (throwawayNonNullBase is Value && throwawayNonNullBase.StaticType == m_ModelCore.FunctionType)
         {
-            var arrayOfAny = m_ModelCore.Factory.InstantiatedType(m_ModelCore.ArrayType, new Symbol[]{m_ModelCore.AnyType});
+            var arrayOfAny = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.ArrayType, new Symbol[]{m_ModelCore.AnyType});
             var functionTakingAny = m_ModelCore.Factory.FunctionType(null, null, new NameAndTypePair("_", arrayOfAny), m_ModelCore.AnyType);
             VerifyFunctionCall(exp.ArgumentsList, exp.Span.Value, functionTakingAny);
             r = m_ModelCore.Factory.Value(m_ModelCore.AnyType);

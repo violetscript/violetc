@@ -222,7 +222,7 @@ public partial class Verifier
         }
         if (genericTypeOrF is Type)
         {
-            return m_ModelCore.InternInstantiatedType(genericTypeOrF, arguments);
+            return m_ModelCore.InternTypeWithArguments(genericTypeOrF, arguments);
         }
         else if (genericTypeOrF is Alias)
         {

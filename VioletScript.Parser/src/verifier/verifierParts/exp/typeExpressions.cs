@@ -47,7 +47,7 @@ public partial class Verifier
         else if (exp is Ast.ArrayTypeExpression arrayTe)
         {
             var itemType = VerifyTypeExp(arrayTe.ItemType);
-            exp.SemanticSymbol = itemType == null ? null : m_ModelCore.InternInstantiatedType(m_ModelCore.ArrayType, new Symbol[]{itemType});
+            exp.SemanticSymbol = itemType == null ? null : m_ModelCore.InternTypeWithArguments(m_ModelCore.ArrayType, new Symbol[]{itemType});
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }

@@ -105,7 +105,7 @@ public partial class Verifier
                 spreadUnionType ??= m_ModelCore.Factory.UnionType(new Symbol[]
                 {
                     type,
-                    m_ModelCore.Factory.InstantiatedType(m_ModelCore.IteratorType, new Symbol[]
+                    m_ModelCore.Factory.TypeWithArguments(m_ModelCore.IteratorType, new Symbol[]
                     {
                         elementType,
                     }),
@@ -130,7 +130,7 @@ public partial class Verifier
             }
             if (itemOrHole is Ast.Spread spread)
             {
-                spreadUnionType ??= m_ModelCore.Factory.InstantiatedType(m_ModelCore.IteratorType, new Symbol[]
+                spreadUnionType ??= m_ModelCore.Factory.TypeWithArguments(m_ModelCore.IteratorType, new Symbol[]
                 {
                     elementType,
                 });

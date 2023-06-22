@@ -96,11 +96,11 @@ public partial class Verifier
         // - if the function uses 'yield', automatically wrap its return to Generator.
         if (common.UsesAwait && !signatureType_returnType.IsInstantiationOf(m_ModelCore.PromiseType))
         {
-            signatureType_returnType = m_ModelCore.Factory.InstantiatedType(m_ModelCore.PromiseType, new Symbol[]{signatureType_returnType});
+            signatureType_returnType = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.PromiseType, new Symbol[]{signatureType_returnType});
         }
         else if (common.UsesYield && !signatureType_returnType.IsInstantiationOf(m_ModelCore.GeneratorType))
         {
-            signatureType_returnType = m_ModelCore.Factory.InstantiatedType(m_ModelCore.GeneratorType, new Symbol[]{signatureType_returnType});
+            signatureType_returnType = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.GeneratorType, new Symbol[]{signatureType_returnType});
         }
 
         // ignore "throws" clause

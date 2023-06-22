@@ -75,8 +75,8 @@ public static class TypeReplacement {
                 return symbolToReplace.ModelCore.InternUnionType(
                     symbolToReplace.UnionMemberTypes.Select(t => t.ReplaceTypes(typeParameters, argumentsList)).ToArray());
             }
-            if (symbolToReplace is InstantiatedType) {
-                return symbolToReplace.ModelCore.InternInstantiatedType(
+            if (symbolToReplace is TypeWithArguments) {
+                return symbolToReplace.ModelCore.InternTypeWithArguments(
                     symbolToReplace.OriginalDefinition,
                     symbolToReplace.ArgumentTypes.Select(t => t.ReplaceTypes(typeParameters, argumentsList)).ToArray());
             }
@@ -912,14 +912,14 @@ public class UnionType : Type {
     }
 }
 
-public class InstantiatedType : Type {
+public class TypeWithArguments : Type {
     private Symbol m_Origin;
     private Symbol[] m_ArgumentsList;
     private Symbol m_Delegate = null;
     private Properties m_Properties = null;
     private Symbol m_Constructor = null;
 
-    public InstantiatedType(Symbol origin, Symbol[] argumentsList) {
+    public TypeWithArguments(Symbol origin, Symbol[] argumentsList) {
         m_Origin = origin;
         m_ArgumentsList = argumentsList;
     }
@@ -1040,10 +1040,10 @@ public class InstantiatedType : Type {
     }
 
     public override bool TypeStructurallyEquals(Symbol otherAbstract) {
-        if (!(otherAbstract is InstantiatedType)) {
+        if (!(otherAbstract is TypeWithArguments)) {
             return false;
         }
-        var other = (InstantiatedType) otherAbstract;
+        var other = (TypeWithArguments) otherAbstract;
         if (!m_Origin.TypeStructurallyEquals(other.m_Origin)) {
             return false;
         }
