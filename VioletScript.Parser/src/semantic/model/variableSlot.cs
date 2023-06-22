@@ -59,13 +59,13 @@ public class NormalVariableSlot : VariableSlot {
     }
 }
 
-public class InstantiatedVariableSlot : VariableSlot {
+public class VariableSlotFromTypeWithArgs : VariableSlot {
     private Symbol[] m_ParamTypeTParams;
     private Symbol[] m_ParamTypeArgumentsList;
     private Symbol m_Origin;
     private Symbol m_Type;
 
-    public InstantiatedVariableSlot(Symbol[] paramTypeTParams, Symbol[] paramTypeArgs, Symbol origin, Symbol type) {
+    public VariableSlotFromTypeWithArgs(Symbol[] paramTypeTParams, Symbol[] paramTypeArgs, Symbol origin, Symbol type) {
         m_ParamTypeTParams = paramTypeTParams;
         m_ParamTypeArgumentsList = paramTypeArgs;
         m_Origin = origin;

@@ -88,15 +88,15 @@ public static class TypeReplacement {
             }
         }
         else if (symbolToReplace is VariableSlot) {
-            return symbolToReplace.ModelCore.InternInstantiatedVariableSlot(
+            return symbolToReplace.ModelCore.InternVariableSlotFromTypeWithArgs(
                 symbolToReplace, typeParameters, argumentsList);
         }
         else if (symbolToReplace is VirtualSlot) {
-            return symbolToReplace.ModelCore.InternInstantiatedVirtualSlot(
+            return symbolToReplace.ModelCore.InternVirtualSlotFromTypeWithArgs(
                 symbolToReplace, typeParameters, argumentsList);
         }
         else if (symbolToReplace is MethodSlot) {
-            return symbolToReplace.ModelCore.InternInstantiatedMethodSlot(
+            return symbolToReplace.ModelCore.InternMethodSlotFromTypeWithArgs(
                 symbolToReplace, typeParameters, argumentsList);
         }
         return symbolToReplace;

@@ -135,8 +135,8 @@ public sealed class ModelCore {
     private Dictionary<int, List<Symbol>> m_InternedFuncTypesByReqParamCount = new Dictionary<int, List<Symbol>>{};
     private Dictionary<Symbol, List<Symbol>> m_InternedTypesWithArgumentsByOrigin = new Dictionary<Symbol, List<Symbol>>{};
     private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedInstantiatedVarSlotsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
-    private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedInstantiatedVirtualSlotsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
-    private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedInstantiatedMethodSlotsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
+    private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedVirtualSlotFromTypeWithArgssByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
+    private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedMethodSlotFromTypeWithArgssByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
     private Dictionary<Symbol, List<Symbol>> m_InternedInstantiationOfGenericMethodsByOrigin = new Dictionary<Symbol, List<Symbol>>{};
 
     public ModelCore() {
@@ -491,7 +491,7 @@ public sealed class ModelCore {
         return r;
     }
 
-    public Symbol InternInstantiatedVariableSlot(Symbol origin, Symbol[] relTypeParams, Symbol[] argumentsList) {
+    public Symbol InternVariableSlotFromTypeWithArgs(Symbol origin, Symbol[] relTypeParams, Symbol[] argumentsList) {
         if (!m_InternedInstantiatedVarSlotsByOrigin.ContainsKey(origin)) {
             m_InternedInstantiatedVarSlotsByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
         }
@@ -512,17 +512,17 @@ public sealed class ModelCore {
             }
             if (eq) return slot2;
         }
-        var r = new InstantiatedVariableSlot(relTypeParams, argumentsList, origin, origin.StaticType.ReplaceTypes(relTypeParams, argumentsList));
+        var r = new VariableSlotFromTypeWithArgs(relTypeParams, argumentsList, origin, origin.StaticType.ReplaceTypes(relTypeParams, argumentsList));
         r.ModelCore = this;
         list2.Add(r);
         return r;
     }
 
-    public Symbol InternInstantiatedVirtualSlot(Symbol origin, Symbol[] relTypeParams, Symbol[] argumentsList) {
-        if (!m_InternedInstantiatedVirtualSlotsByOrigin.ContainsKey(origin)) {
-            m_InternedInstantiatedVirtualSlotsByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
+    public Symbol InternVirtualSlotFromTypeWithArgs(Symbol origin, Symbol[] relTypeParams, Symbol[] argumentsList) {
+        if (!m_InternedVirtualSlotFromTypeWithArgssByOrigin.ContainsKey(origin)) {
+            m_InternedVirtualSlotFromTypeWithArgssByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
         }
-        var list1 = m_InternedInstantiatedVirtualSlotsByOrigin[origin];
+        var list1 = m_InternedVirtualSlotFromTypeWithArgssByOrigin[origin];
         if (!list1.ContainsKey(relTypeParams)) {
             list1[relTypeParams] = new List<Symbol>{};
         }
@@ -539,17 +539,17 @@ public sealed class ModelCore {
             }
             if (eq) return slot2;
         }
-        var r = new InstantiatedVirtualSlot(relTypeParams, argumentsList, origin, origin.StaticType.ReplaceTypes(relTypeParams, argumentsList));
+        var r = new VirtualSlotFromTypeWithArgs(relTypeParams, argumentsList, origin, origin.StaticType.ReplaceTypes(relTypeParams, argumentsList));
         r.ModelCore = this;
         list2.Add(r);
         return r;
     }
 
-    public Symbol InternInstantiatedMethodSlot(Symbol origin, Symbol[] relTypeParams, Symbol[] argumentsList) {
-        if (!m_InternedInstantiatedMethodSlotsByOrigin.ContainsKey(origin)) {
-            m_InternedInstantiatedMethodSlotsByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
+    public Symbol InternMethodSlotFromTypeWithArgs(Symbol origin, Symbol[] relTypeParams, Symbol[] argumentsList) {
+        if (!m_InternedMethodSlotFromTypeWithArgssByOrigin.ContainsKey(origin)) {
+            m_InternedMethodSlotFromTypeWithArgssByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
         }
-        var list1 = m_InternedInstantiatedMethodSlotsByOrigin[origin];
+        var list1 = m_InternedMethodSlotFromTypeWithArgssByOrigin[origin];
         if (!list1.ContainsKey(relTypeParams)) {
             list1[relTypeParams] = new List<Symbol>{};
         }
@@ -566,7 +566,7 @@ public sealed class ModelCore {
             }
             if (eq) return slot2;
         }
-        var r = new InstantiatedMethodSlot(relTypeParams, argumentsList, origin, origin.StaticType.ReplaceTypes(relTypeParams, argumentsList));
+        var r = new MethodSlotFromTypeWithArgs(relTypeParams, argumentsList, origin, origin.StaticType.ReplaceTypes(relTypeParams, argumentsList));
         r.ModelCore = this;
         list2.Add(r);
         return r;

@@ -66,7 +66,7 @@ public class NormalVirtualSlot : VirtualSlot {
     }
 }
 
-public class InstantiatedVirtualSlot : VirtualSlot {
+public class VirtualSlotFromTypeWithArgs : VirtualSlot {
     private Symbol[] m_ParamTypeTParams;
     private Symbol[] m_ParamTypeArgumentsList;
     private Symbol m_Origin;
@@ -74,7 +74,7 @@ public class InstantiatedVirtualSlot : VirtualSlot {
     private Symbol m_Getter = null;
     private Symbol m_Setter = null;
 
-    public InstantiatedVirtualSlot(Symbol[] paramTypeTParams, Symbol[] paramTypeArgs, Symbol origin, Symbol type) {
+    public VirtualSlotFromTypeWithArgs(Symbol[] paramTypeTParams, Symbol[] paramTypeArgs, Symbol origin, Symbol type) {
         m_ParamTypeTParams = paramTypeTParams;
         m_ParamTypeArgumentsList = paramTypeArgs;
         m_Origin = origin;
