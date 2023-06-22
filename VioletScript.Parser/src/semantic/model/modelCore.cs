@@ -137,7 +137,7 @@ public sealed class ModelCore {
     private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedInstantiatedVarSlotsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
     private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedVirtualSlotFromTypeWithArgssByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
     private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedMethodSlotFromTypeWithArgssByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
-    private Dictionary<Symbol, List<Symbol>> m_InternedInstantiationOfGenericMethodsByOrigin = new Dictionary<Symbol, List<Symbol>>{};
+    private Dictionary<Symbol, List<Symbol>> m_InternedMethodSlotsWithTypeArgsByOrigin = new Dictionary<Symbol, List<Symbol>>{};
 
     public ModelCore() {
         Factory = new Factory(this);
@@ -572,11 +572,11 @@ public sealed class ModelCore {
         return r;
     }
 
-    public Symbol InternInstantiationOfGenericMethodSlot(Symbol origin, Symbol[] argumentsList) {
-        if (!m_InternedInstantiationOfGenericMethodsByOrigin.ContainsKey(origin)) {
-            m_InternedInstantiationOfGenericMethodsByOrigin[origin] = new List<Symbol>{};
+    public Symbol InternMethodSlotWithTypeArgs(Symbol origin, Symbol[] argumentsList) {
+        if (!m_InternedMethodSlotsWithTypeArgsByOrigin.ContainsKey(origin)) {
+            m_InternedMethodSlotsWithTypeArgsByOrigin[origin] = new List<Symbol>{};
         }
-        var list = m_InternedInstantiationOfGenericMethodsByOrigin[origin];
+        var list = m_InternedMethodSlotsWithTypeArgsByOrigin[origin];
         var n = argumentsList.Count();
         foreach (var slot2 in list) {
             var eq = true;
@@ -589,7 +589,7 @@ public sealed class ModelCore {
             }
             if (eq) return slot2;
         }
-        var r = new InstantiationOfGenericMethodSlot(origin, argumentsList, origin.StaticType.ReplaceTypes(origin.TypeParameters, argumentsList));
+        var r = new MethodSlotWithTypeArgs(origin, argumentsList, origin.StaticType.ReplaceTypes(origin.TypeParameters, argumentsList));
         r.ModelCore = this;
         list.Add(r);
         return r;

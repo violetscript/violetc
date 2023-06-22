@@ -112,12 +112,12 @@ public class NormalMethodSlot : MethodSlot {
     }
 }
 
-public class InstantiationOfGenericMethodSlot : MethodSlot {
+public class MethodSlotWithTypeArgs : MethodSlot {
     private Symbol m_Origin;
     private Symbol[] m_Arguments;
     private Symbol m_Type;
 
-    public InstantiationOfGenericMethodSlot(Symbol origin, Symbol[] arguments, Symbol type) {
+    public MethodSlotWithTypeArgs(Symbol origin, Symbol[] arguments, Symbol type) {
         m_Origin = origin;
         m_Arguments = arguments;
         m_Type = type;

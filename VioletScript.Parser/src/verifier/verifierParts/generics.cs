@@ -230,7 +230,7 @@ public partial class Verifier
         }
         else
         {
-            return m_ModelCore.InternInstantiationOfGenericMethodSlot(genericTypeOrF, arguments);
+            return m_ModelCore.InternMethodSlotWithTypeArgs(genericTypeOrF, arguments);
         }
     }
 }
