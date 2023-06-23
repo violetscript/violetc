@@ -102,7 +102,7 @@ public partial class Verifier
         }
         else if (exp is Ast.TypeExpressionWithArguments giTe)
         {
-            return VerifyGenericInstTe(giTe, reportDiagnostics);
+            return VerifyTypeExpWithArgs(giTe, reportDiagnostics);
         }
         else if (exp is Ast.NullableTypeExpression nullableTe)
         {
@@ -337,7 +337,7 @@ public partial class Verifier
     // - the base is a generic type.
     // - the number of arguments is correct.
     // - the arguments follow the constraints.
-    private Symbol VerifyGenericInstTe(Ast.TypeExpressionWithArguments giTe, bool reportDiagnostics)
+    private Symbol VerifyTypeExpWithArgs(Ast.TypeExpressionWithArguments giTe, bool reportDiagnostics)
     {
         var exp = giTe;
         var @base = VerifyTypeExp(giTe.Base, true);
@@ -369,7 +369,7 @@ public partial class Verifier
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
-        exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, giTe.ArgumentsList, giTe);
+        exp.SemanticSymbol = VerifyGenericTypeArguments(exp.Span.Value, @base, giTe.ArgumentsList, giTe);
         exp.SemanticResolved = true;
         return exp.SemanticSymbol;
     }

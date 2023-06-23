@@ -166,7 +166,7 @@ public partial class Verifier
     // note that type expressions with arguments (G.<T>) defer validating
     // the constraints to the `VerifyPrograms` method.
     //
-    private Symbol VerifyGenericInstArguments(Span wholeSpan, Symbol genericTypeOrF, List<Ast.TypeExpression> giTeArguments, Ast.TypeExpressionWithArguments surroundingTypeExp = null)
+    private Symbol VerifyGenericTypeArguments(Span wholeSpan, Symbol genericTypeOrF, List<Ast.TypeExpression> giTeArguments, Ast.TypeExpressionWithArguments surroundingTypeExp = null)
     {
         Symbol[] typeParameters = genericTypeOrF.TypeParameters;
         // VerifyError: wrong number of arguments

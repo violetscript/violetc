@@ -1633,7 +1633,7 @@ public partial class Verifier
         }
         if (@base is Type && @base.IsGenericTypeOrMethod)
         {
-            exp.SemanticSymbol = VerifyGenericInstArguments(exp.Span.Value, @base, exp.ArgumentsList);
+            exp.SemanticSymbol = VerifyGenericTypeArguments(exp.Span.Value, @base, exp.ArgumentsList);
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
@@ -1648,7 +1648,7 @@ public partial class Verifier
         else if (@base.IsGenericTypeOrMethod)
         {
             var method = @base.Property;
-            var instantiatedMethod = VerifyGenericInstArguments(exp.Span.Value, method, exp.ArgumentsList);
+            var instantiatedMethod = VerifyGenericTypeArguments(exp.Span.Value, method, exp.ArgumentsList);
             if (instantiatedMethod == null)
             {
                 exp.SemanticSymbol = null;
