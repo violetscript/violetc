@@ -1583,6 +1583,7 @@ internal class ParserBackend {
         node.Modifiers = attribs.Modifiers;
         node.AccessModifier = attribs.AccessModifier;
         if (attribs.Decorators != null) {
+            // separate Metadata
             var d = attribs.Decorators
                 .Where(e => e is Ast.CallExpression d_asCe
                     && d_asCe.Base is Ast.Identifier d_asId
