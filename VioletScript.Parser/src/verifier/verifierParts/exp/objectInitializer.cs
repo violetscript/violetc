@@ -22,10 +22,6 @@ public partial class Verifier
         {
             type = VerifyTypeExp(exp.Type) ?? m_ModelCore.AnyType;
         }
-        if (type == null)
-        {
-            type = expectedType;
-        }
         type ??= expectedType;
         type = type?.ToNonNullableType();
 
