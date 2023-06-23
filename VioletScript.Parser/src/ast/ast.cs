@@ -1422,6 +1422,13 @@ public class SwitchTypeCase : Node {
 public class IncludeStatement : Statement {
     public string Source;
     public Script InnerScript = null;
+
+    /// <summary>
+    /// Package definitions. This only works when the
+    /// the script is included from a top-level context.
+    /// </summary>
+    public List<PackageDefinition> InnerPackages = new List<PackageDefinition> {};
+
     public List<Statement> InnerStatements = new List<Statement> {};
 
     public IncludeStatement(string source) : base() {

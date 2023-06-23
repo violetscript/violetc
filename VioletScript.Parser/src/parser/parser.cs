@@ -1358,6 +1358,18 @@ internal class ParserBackend {
                 tokenizer.Tokenize();
                 var innerParser = new ParserBackend(innerScript, tokenizer);
                 innerParser.FunctionStack = this.FunctionStack;
+                while (innerParser.Token.IsKeyword("package") && context is TopLevelContext) {
+                    innerParser.MarkLocation();
+                    innerParser.NextToken();
+                    var id = new List<string>{};
+                    if (innerParser.Consume(TToken.Identifier)) {
+                        id.Add(innerParser.PreviousToken.StringValue);
+                        while (innerParser.Consume(TToken.Dot)) {
+                            id.Add(innerParser.ExpectIdentifier(true));
+                        }
+                    }
+                    r.InnerPackages.Add((Ast.PackageDefinition) innerParser.FinishNode(new Ast.PackageDefinition(id.ToArray(), innerParser.ParseBlock(new PackageContext()))));
+                }
                 while (innerParser.Token.Type != TToken.Eof) {
                     var stmt = innerParser.ParseOptStatement(context);
                     if (stmt != null) innerStatements.Add(stmt.Value.node);

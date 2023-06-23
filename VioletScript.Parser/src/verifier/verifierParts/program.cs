@@ -23,14 +23,23 @@ public partial class Verifier
         var rootFrame = m_ModelCore.Factory.PackageFrame(m_ModelCore.GlobalPackage);
         EnterFrame(rootFrame);
 
+        var packageDefinitions = new List<Ast.PackageDefinition>();
+
         foreach (var program in programs)
         {
-            foreach (var packageDefn in program.Packages)
-            {
-                var pckg = m_ModelCore.GlobalPackage.FindOrCreateDeepSubpackage(packageDefn.Id);
-                packageDefn.SemanticPackage = pckg;
-                packageDefn.SemanticFrame = m_ModelCore.Factory.PackageFrame(pckg);
-            }
+            packageDefinitions.AddRange(program.Packages);
+            packageDefinitions.AddRange(this.collectPackageDefinitionsFromDirectives(program.Statements));
+        }
+
+        foreach (var packageDefn in packageDefinitions)
+        {
+            var pckg = m_ModelCore.GlobalPackage.FindOrCreateDeepSubpackage(packageDefn.Id);
+            packageDefn.SemanticPackage = pckg;
+            packageDefn.SemanticFrame = m_ModelCore.Factory.PackageFrame(pckg);
+        }
+
+        foreach (var program in programs)
+        {
             if (program.Statements != null)
             {
                 program.SemanticFrame = m_ModelCore.Factory.Frame();
@@ -47,17 +56,18 @@ public partial class Verifier
         };
         m_TypeExpsWithArguments = new List<Ast.TypeExpressionWithArguments>();
         m_ImportOrAliasDirectives = new List<Ast.Statement>();
+
         foreach (var phase in phases)
         {
+            foreach (var packageDefn in packageDefinitions)
+            {
+                // verify package definition
+                EnterFrame(packageDefn.SemanticFrame);
+                Fragmented_VerifyStatementSeq(packageDefn.Block.Statements, phase);
+                ExitFrame();
+            }
             foreach (var program in programs)
             {
-                foreach (var packageDefn in program.Packages)
-                {
-                    // verify package definition
-                    EnterFrame(packageDefn.SemanticFrame);
-                    Fragmented_VerifyStatementSeq(packageDefn.Block.Statements, phase);
-                    ExitFrame();
-                }
                 // verify main program's directives if any
                 if (program.Statements != null)
                 {
@@ -91,10 +101,29 @@ public partial class Verifier
         }
 
         // apply constraints to generic item instantiations in type expressions.
-        VerifyAllGenericInstAsTypeExps();
+        VerifyAllTypeExpsWithArgs();
     }
 
-    private void VerifyAllGenericInstAsTypeExps()
+    // collects package definitions from include directives.
+    private List<Ast.PackageDefinition> collectPackageDefinitionsFromDirectives(List<Ast.Statement> list)
+    {
+        var r = new List<Ast.PackageDefinition>();
+        if (list == null)
+        {
+            return r;
+        }
+        foreach (var drtv in list)
+        {
+            if (drtv is Ast.IncludeStatement incDrtv)
+            {
+                r.AddRange(incDrtv.InnerPackages);
+                r.AddRange(collectPackageDefinitionsFromDirectives(incDrtv.InnerStatements));
+            }
+        }
+        return r;
+    }
+
+    private void VerifyAllTypeExpsWithArgs()
     {
         foreach (var gi in m_TypeExpsWithArguments)
         {
