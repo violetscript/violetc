@@ -42,7 +42,14 @@ public partial class Verifier
         Symbol parentDefinition
     )
     {
+        // either a type annotation or an initializer
+        // has to be present.
+        if (binding.Pattern.Type == null && binding.Init == null)
+        {
+            this.VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
+        }
+
         // - set parent definition in the variables from the patterns
-        toDo();
+        this.Fragmented_VerifyDestructuringPattern1(binding.Pattern, readOnly, output, visibility, parentDefinition);
     }
 }
