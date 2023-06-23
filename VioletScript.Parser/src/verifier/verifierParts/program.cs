@@ -224,6 +224,7 @@ public partial class Verifier
         }
         else if (!(stmt is Ast.AnnotatableDefinition))
         {
+            // verify statement in last phase
             if (phase == VerifyPhase.Phase7)
             {
                 VerifyStatement(stmt);

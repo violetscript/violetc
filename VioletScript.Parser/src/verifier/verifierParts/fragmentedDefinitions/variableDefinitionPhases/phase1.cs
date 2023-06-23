@@ -30,7 +30,7 @@ public partial class Verifier
 
         foreach (var binding in defn.Bindings)
         {
-            this.Fragmented_VerifyVariableBinding1(binding, defn.ReadOnly, output, defn.SemanticVisibility);
+            this.Fragmented_VerifyVariableBinding1(binding, defn.ReadOnly, output, defn.SemanticVisibility, parentDefinition);
         }
     }
 
@@ -38,7 +38,8 @@ public partial class Verifier
         Ast.VariableBinding binding,
         bool readOnly,
         Properties output,
-        Visibility visibility
+        Visibility visibility,
+        Symbol parentDefinition
     )
     {
         // - set parent definition in the variables from the patterns
