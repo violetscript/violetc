@@ -743,6 +743,8 @@ public class Statement : Node {
 public class AnnotatableDefinition : Statement {
     /// <summary>Possibly null list of decorators.</summary>
     public List<Expression> Decorators;
+    /// <summary>Null or a meta-data node.</summary>
+    public ObjectInitializer Metadata;
     public AnnotatableDefinitionModifier Modifiers;
     public AnnotatableDefinitionAccessModifier? AccessModifier;
 

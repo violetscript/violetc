@@ -1582,6 +1582,19 @@ internal class ParserBackend {
     private Ast.AnnotatableDefinition FinishAnnotatableDefinition(Ast.AnnotatableDefinition node, DefinitionAttributes attribs) {
         node.Modifiers = attribs.Modifiers;
         node.AccessModifier = attribs.AccessModifier;
+        if (attribs.Decorators != null) {
+            var d = attribs.Decorators
+                .Where(e => e is Ast.CallExpression d_asCe
+                    && d_asCe.Base is Ast.Identifier d_asId
+                    && d_asId.Name == "Metadata"
+                    && d_asId.Type == null
+                    && d_asCe.ArgumentsList.Count() == 1
+                    && d_asCe.ArgumentsList[0] is Ast.ObjectInitializer);
+            if (d.Count() > 0) {
+                attribs.Decorators.Remove(d.First());
+                node.Metadata = (Ast.ObjectInitializer) ((Ast.CallExpression) attribs.Decorators.First()).ArgumentsList[0];
+            }
+        }
         node.Decorators = attribs.Decorators != null && attribs.Decorators.Count() > 0 ? attribs.Decorators : null;
         FinishNode(node);
         return node;
