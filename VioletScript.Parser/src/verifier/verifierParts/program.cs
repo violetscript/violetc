@@ -71,7 +71,7 @@ public partial class Verifier
             // phase 1 = resolve import and alias directives.
             if (phase == VerifyPhase.Phase1)
             {
-                this.resolveImportAndAliasUntilExhausted();
+                this.resolveImportsAndAliasesUntilExhausted();
             }
         }
 
@@ -109,7 +109,7 @@ public partial class Verifier
             // phase 1 = resolve import and alias directives.
             if (phase == VerifyPhase.Phase1)
             {
-                this.resolveImportAndAliasUntilExhausted();
+                this.resolveImportsAndAliasesUntilExhausted();
             }
         }
 
@@ -138,7 +138,7 @@ public partial class Verifier
 
     // attempts to resolve imports and aliases until a limit.
     // this is useful in case one import or alias relies on another.
-    private void resolveImportAndAliasUntilExhausted()
+    private void resolveImportsAndAliasesUntilExhausted()
     { 
         int i = 0;
         while (m_ImportOrAliasDirectives.Count() != 0 && i != 9)
