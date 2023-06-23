@@ -1343,15 +1343,19 @@ internal class ParserBackend {
 
         if (Script.FilePath != null) {
             var resolvedPath = Path.Combine(Path.GetDirectoryName(Script.FilePath), src);
+
             // directory/index.violet
             try {
                 resolvedPath = File.GetAttributes(resolvedPath).HasFlag(FileAttributes.Directory) ? Path.Combine(resolvedPath, "./index.violet") : resolvedPath;
             } catch {
             }
+
             resolvedPath = Path.ChangeExtension(resolvedPath, ".violet");
+
             string innerSource = "";
             Script innerScript = null;
             var innerStatements = new List<Ast.Statement>{};
+
             try {
                 innerSource = File.ReadAllText(resolvedPath);
             } catch (IOException) {
