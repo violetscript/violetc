@@ -195,11 +195,18 @@ public partial class Verifier
 
     private void Fragmented_VerifyStatementSeq(List<Ast.Statement> seq, VerifyPhase phase)
     {
+        int nOfVarShadows = 0;
         foreach (var stmt in seq)
         {
             Fragmented_VerifyStatement(stmt, phase);
+            if (stmt is Ast.VariableDefinition varDefn && varDefn.SemanticShadowFrame != null)
+            {
+                EnterFrame(varDefn.SemanticShadowFrame);
+                ++nOfVarShadows;
+            }
         }
-    }
+        ExitNFrames(nOfVarShadows);
+    } // statement sequence
 
     private void Fragmented_VerifyStatement(Ast.Statement stmt, VerifyPhase phase)
     {

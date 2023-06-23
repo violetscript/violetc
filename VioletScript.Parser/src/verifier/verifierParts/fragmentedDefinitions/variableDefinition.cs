@@ -26,20 +26,8 @@ public partial class Verifier
         {
             Fragmented_VerifyVariableDefinition3(defn);
         }
-        else if (phase == VerifyPhase.Phase4)
-        {
-            Fragmented_VerifyVariableDefinition4(defn);
-        }
-        else if (phase == VerifyPhase.Phase5)
-        {
-            Fragmented_VerifyVariableDefinition5(defn);
-        }
-        else if (phase == VerifyPhase.Phase6)
-        {
-            Fragmented_VerifyVariableDefinition6(defn);
-        }
         // VerifyPhase.Phase7
-        else
+        else if (phase == VerifyPhase.Phase7)
         {
             Fragmented_VerifyVariableDefinition7(defn);
         }
