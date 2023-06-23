@@ -64,7 +64,7 @@ public partial class Verifier
         var noInitialValueOrInit = binding.Pattern.SemanticProperty.InitValue == null && binding.Init == null;
         if (notInClassOrNotReadOnly && noInitialValueOrInit)
         {
-            VerifyError(binding.Pattern.Span.Value.Script, 244, binding.Pattern.Span.Value, new DiagnosticArguments {});
+            VerifyError(binding.Pattern.Span.Value.Script, 244, binding.Span.Value, new DiagnosticArguments {});
         }
 
         binding.SemanticVerified = true;
