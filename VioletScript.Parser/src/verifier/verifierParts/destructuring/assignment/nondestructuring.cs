@@ -12,8 +12,8 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    // verify a destructuring pattern for assignment expressions.
-    private void VerifyAssignmentPattern(Ast.NondestructuringPattern pattern, Symbol type)
+    // verify a non-destructuring pattern for assignment expressions.
+    private void VerifyAssignmentNondestructuringPattern(Ast.NondestructuringPattern pattern, Symbol type)
     {
         Symbol annotatedType = null;
         if (pattern.Type != null)

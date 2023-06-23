@@ -45,6 +45,11 @@ public partial class Verifier
             var type = binding.Pattern.SemanticProperty.StaticType;
             init = type == null ? this.VerifyExpAsValue(binding.Init) : this.LimitExpType(binding.Init, type);
         }
+        // if init is a constant value, use it as initial value
+        if (init is ConstantValue && init.StaticType == binding.Pattern.SemanticProperty.StaticType)
+        {
+            binding.Pattern.SemanticProperty.InitValue = init;
+        }
         this.Fragmented_VerifyDestructuringPattern7(binding.Pattern, init);
     }
 

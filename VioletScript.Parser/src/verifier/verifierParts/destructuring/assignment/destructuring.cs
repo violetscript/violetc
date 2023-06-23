@@ -17,7 +17,7 @@ public partial class Verifier
     {
         if (pattern is Ast.NondestructuringPattern ap)
         {
-            VerifyAssignmentPattern(ap, type);
+            VerifyAssignmentNondestructuringPattern(ap, type);
         }
         else if (pattern is Ast.ArrayDestructuringPattern arrayP)
         {

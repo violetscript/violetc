@@ -17,5 +17,29 @@ public partial class Verifier
         Properties output, Visibility visibility,
         Symbol parentDefinition)
     {
+        Symbol newDefinition = null;
+        var previousDefinition = output[pattern.Name];
+        if (previousDefinition != null)
+        {
+            // VerifyError: duplicate definition
+            newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
+            // assert newDefinition != null
+            if (newDefinition == null)
+            {
+                throw new Exception("Duplicating definition with wrong kind.");
+            }
+            if (!m_Options.AllowDuplicates)
+            {
+                VerifyError(pattern.Span.Value.Script, 139, pattern.Span.Value, new DiagnosticArguments { ["name"] = pattern.Name });
+            }
+        }
+        else
+        {
+            newDefinition = m_ModelCore.Factory.VariableSlot(pattern.Name, readOnly, null);
+            newDefinition.Visibility = visibility;
+            newDefinition.ParentDefinition = parentDefinition;
+            output[pattern.Name] = newDefinition;
+        }
+        pattern.SemanticProperty = newDefinition;
     }
 }
