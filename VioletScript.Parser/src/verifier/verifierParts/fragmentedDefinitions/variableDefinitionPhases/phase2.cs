@@ -29,13 +29,24 @@ public partial class Verifier
 
     private void Fragmented_VerifyVariableBinding2(Ast.VariableBinding binding)
     {
-        this.Fragmented_VerifyDestructuringPattern2(binding.Pattern);
+        // if not in class frame or not a read-only,
+        // the binding must have a constant initial value
+        // or initializer.
+        var notInClassOrNotReadOnly = !(this.m_Frame is ClassFrame) || !binding.Pattern.SemanticProperty.ReadOnly;
+        var noInitialValueOrInit = binding.Pattern.SemanticProperty.InitValue == null && binding.Init == null;
+        if (notInClassOrNotReadOnly && noInitialValueOrInit)
+        {
+            VerifyError(binding.Pattern.Span.Value.Script, 244, binding.Span.Value, new DiagnosticArguments {});
+        }
+
         // try resolving initializer as a constant expression
         if (binding.Init != null)
         {
             var val = this.VerifyConstantExpAsValue(binding.Init, false, binding.Pattern.SemanticProperty.StaticType);
             binding.Pattern.SemanticProperty.StaticType ??= val;
         }
+
+        this.Fragmented_VerifyDestructuringPattern2(binding.Pattern);
     }
 
     private void Fragmented_VerifyDestructuringPattern2(Ast.DestructuringPattern pattern)
