@@ -38,13 +38,6 @@ public partial class Verifier
             packageDefn.SemanticFrame = m_ModelCore.Factory.PackageFrame(pckg);
         }
 
-        foreach (var program in programs)
-        {
-            if (program.Statements != null)
-            {
-                program.SemanticFrame = m_ModelCore.Factory.Frame();
-            }
-        }
         var phases = new VerifyPhase[] {
             VerifyPhase.Phase1,
             VerifyPhase.Phase2,
@@ -54,8 +47,17 @@ public partial class Verifier
             VerifyPhase.Phase6,
             VerifyPhase.Phase7,
         };
-        m_TypeExpsWithArguments = new List<Ast.TypeExpressionWithArguments>();
-        m_ImportOrAliasDirectives = new List<Ast.Statement>();
+
+        this.verifyProgramPackages(packageDefinitions, phases);
+        this.verifyProgramDirectives(programs, phases);
+    }
+
+    // verifies packages from programs.
+    // top-level directives are resolved later in a separate method.
+    private void verifyProgramPackages(List<Ast.PackageDefinition> packageDefinitions, VerifyPhase[] phases)
+    {
+        this.m_TypeExpsWithArguments = new List<Ast.TypeExpressionWithArguments>();
+        this.m_ImportOrAliasDirectives = new List<Ast.Statement>();
 
         foreach (var phase in phases)
         {
@@ -66,6 +68,34 @@ public partial class Verifier
                 Fragmented_VerifyStatementSeq(packageDefn.Block.Statements, phase);
                 ExitFrame();
             }
+            // phase 1 = resolve import and alias directives.
+            if (phase == VerifyPhase.Phase1)
+            {
+                this.resolveImportAndAliasUntilExhausted();
+            }
+        }
+
+        // apply constraints to generic item instantiations in type expressions.
+        this.VerifyAllTypeExpsWithArgs();
+    }
+
+    // verifies top-level directives from programs.
+    // packages are resolved before in a separate method.
+    private void verifyProgramDirectives(List<Ast.Program> programs, VerifyPhase[] phases)
+    {
+        foreach (var program in programs)
+        {
+            if (program.Statements != null)
+            {
+                program.SemanticFrame = m_ModelCore.Factory.Frame();
+            }
+        }
+
+        this.m_TypeExpsWithArguments = new List<Ast.TypeExpressionWithArguments>();
+        this.m_ImportOrAliasDirectives = new List<Ast.Statement>();
+
+        foreach (var phase in phases)
+        {
             foreach (var program in programs)
             {
                 // verify main program's directives if any
@@ -79,29 +109,12 @@ public partial class Verifier
             // phase 1 = resolve import and alias directives.
             if (phase == VerifyPhase.Phase1)
             {
-                int i = 0;
-                while (m_ImportOrAliasDirectives.Count() != 0 && i != 9)
-                {
-                    foreach (var drtv in m_ImportOrAliasDirectives)
-                    {
-                        Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase1);
-                    }
-                    i += 1;
-                }
-                if (m_ImportOrAliasDirectives.Count() != 0)
-                {
-                    foreach (var drtv in m_ImportOrAliasDirectives)
-                    {
-                        Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase2);
-                    }
-                }
-                m_ImportOrAliasDirectives.Clear();
-                m_ImportOrAliasDirectives = null;
+                this.resolveImportAndAliasUntilExhausted();
             }
         }
 
         // apply constraints to generic item instantiations in type expressions.
-        VerifyAllTypeExpsWithArgs();
+        this.VerifyAllTypeExpsWithArgs();
     }
 
     // collects package definitions from include directives.
@@ -121,6 +134,30 @@ public partial class Verifier
             }
         }
         return r;
+    }
+
+    // attempts to resolve imports and aliases until a limit.
+    // this is useful in case one import or alias relies on another.
+    private void resolveImportAndAliasUntilExhausted()
+    { 
+        int i = 0;
+        while (m_ImportOrAliasDirectives.Count() != 0 && i != 9)
+        {
+            foreach (var drtv in m_ImportOrAliasDirectives)
+            {
+                Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase1);
+            }
+            i += 1;
+        }
+        if (m_ImportOrAliasDirectives.Count() != 0)
+        {
+            foreach (var drtv in m_ImportOrAliasDirectives)
+            {
+                Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase2);
+            }
+        }
+        m_ImportOrAliasDirectives.Clear();
+        m_ImportOrAliasDirectives = null;
     }
 
     private void VerifyAllTypeExpsWithArgs()

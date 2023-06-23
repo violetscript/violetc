@@ -1424,7 +1424,7 @@ public class IncludeStatement : Statement {
     public Script InnerScript = null;
 
     /// <summary>
-    /// Package definitions. This only works when the
+    /// Package definitions. This is only available when the
     /// the script is included from a top-level context.
     /// </summary>
     public List<PackageDefinition> InnerPackages = new List<PackageDefinition> {};
