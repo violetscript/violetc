@@ -21,6 +21,37 @@ public partial class Verifier
             return;
         }
 
-        doFooBarQuxBaz();
+        var isClassProp = this.m_Frame is ClassFrame && !defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static);
+        if (defn.Decorators != null && isClassProp)
+        {
+            var decoratorFnType = this.m_ModelCore.Factory.FunctionType(new NameAndTypePair[]{new NameAndTypePair("obj", this.m_Frame.TypeFromFrame), new NameAndTypePair("binding", this.m_ModelCore.BindingType)}, null, null, this.m_ModelCore.UndefinedType);
+            foreach (var decorator in defn.Decorators)
+            {
+                this.LimitExpType(decorator, decoratorFnType);
+            }
+        }
+
+        foreach (var binding in defn.Bindings)
+        {
+            this.Fragmented_VerifyVariableBinding7(binding);
+        }
+    }
+
+    private void Fragmented_VerifyVariableBinding7(Ast.VariableBinding binding)
+    {
+        Symbol init = null;
+        if (binding.Init != null)
+        {
+            var type = binding.Pattern.SemanticProperty.StaticType;
+            init = type == null ? this.VerifyExpAsValue(binding.Init) : this.LimitExpType(binding.Init, type);
+        }
+        this.Fragmented_VerifyDestructuringPattern7(binding.Pattern, init);
+    }
+
+    private void Fragmented_VerifyDestructuringPattern7(Ast.DestructuringPattern pattern, Symbol init)
+    {
+        return pattern is Ast.NondestructuringPattern nondestructuring ? this.Fragmented_VerifyNondestructuringPattern7(nondestructuring, init)
+            : pattern is Ast.RecordDestructuringPattern recordDestructuring ? this.Fragmented_VerifyRecordDestructuringPattern7(recordDestructuring, init) :
+                this.Fragmented_VerifyArrayDestructuringPattern7((Ast.ArrayDestructuringPattern) pattern, init);
     }
 }

@@ -21,14 +21,26 @@ public partial class Verifier
             return;
         }
 
+        var isStatic = defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static);
         foreach (var binding in defn.Bindings)
         {
-            this.Fragmented_VerifyVariableBinding3(binding);
+            this.Fragmented_VerifyVariableBinding3(binding, isStatic);
         }
     }
 
-    private void Fragmented_VerifyVariableBinding3(Ast.VariableBinding binding)
+    private void Fragmented_VerifyVariableBinding3(Ast.VariableBinding binding, bool isStatic)
     {
-        toDo();
+        // do not allow shadowing instance inherited properties
+        if (!isStatic && this.m_Frame.TypeFromFrame != null)
+        {
+            this.Fragmented_VerifyDestructuringPattern3(binding.Pattern);
+        }
+    }
+
+    private void Fragmented_VerifyDestructuringPattern3(Ast.DestructuringPattern pattern)
+    {
+        return pattern is Ast.NondestructuringPattern nondestructuring ? this.Fragmented_VerifyNondestructuringPattern3(nondestructuring)
+            : pattern is Ast.RecordDestructuringPattern recordDestructuring ? this.Fragmented_VerifyRecordDestructuringPattern3(recordDestructuring) :
+                this.Fragmented_VerifyArrayDestructuringPattern3((Ast.ArrayDestructuringPattern) pattern);
     }
 }
