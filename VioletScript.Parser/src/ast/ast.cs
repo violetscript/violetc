@@ -242,6 +242,10 @@ public class ArrayDestructuringSpread : Node {
     }
 }
 
+/// <summary>
+/// If the binding has no initializer, the pattern
+/// has a variable binding with a constant initial  value.
+/// </summary>
 public class VariableBinding : Node {
     public DestructuringPattern Pattern;
     /// <summary>Optional initializer.</summary>

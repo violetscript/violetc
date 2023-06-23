@@ -57,6 +57,16 @@ public partial class Verifier
             binding.Pattern.SemanticProperty.InitValue = init;
         }
 
+        // if not in class frame or not a read-only,
+        // the binding must have a constant initial value
+        // or initializer.
+        var notInClassOrNotReadOnly = !(this.m_Frame is ClassFrame) || !readOnly;
+        var noInitialValueOrInit = binding.Pattern.SemanticProperty.InitValue == null && binding.Init == null;
+        if (notInClassOrNotReadOnly && noInitialValueOrInit)
+        {
+            VerifyError(binding.Pattern.Span.Value.Script, 244, binding.Pattern.Span.Value, new DiagnosticArguments {});
+        }
+
         binding.SemanticVerified = true;
     }
 

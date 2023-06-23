@@ -232,6 +232,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [241] = "Implemented interface $itrfc requires '$name' as a getter of signature '$s'",
         [242] = "Implemented interface $itrfc requires '$name' as a setter of signature '$s'",
         [243] = "Did not match generic method '$name' of interface $itrfc",
+        [244] = "Variable must have an initializer",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

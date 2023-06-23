@@ -47,6 +47,7 @@ public partial class Verifier
         type ??= m_ModelCore.AnyType;
 
         pattern.SemanticProperty = m_ModelCore.Factory.VariableSlot("", readOnly, type);
+        pattern.SemanticProperty.InitValue ??= type.DefaultValue;
 
         if (type is TupleType)
         {

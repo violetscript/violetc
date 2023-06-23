@@ -62,6 +62,7 @@ public partial class Verifier
         {
             newDefinition = m_ModelCore.Factory.VariableSlot(pattern.Name, readOnly, type);
             newDefinition.Visibility = visibility;
+            newDefinition.InitValue ??= type.DefaultValue;
             output[pattern.Name] = newDefinition;
         }
         pattern.SemanticProperty = newDefinition;
