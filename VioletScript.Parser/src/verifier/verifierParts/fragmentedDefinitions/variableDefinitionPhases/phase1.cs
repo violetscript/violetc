@@ -35,12 +35,9 @@ public partial class Verifier
     }
 
     private void Fragmented_VerifyVariableBinding1(
-        Ast.VariableBinding binding,
-        bool readOnly,
-        Properties output,
-        Visibility visibility,
-        Symbol parentDefinition
-    )
+        Ast.VariableBinding binding, bool readOnly,
+        Properties output, Visibility visibility,
+        Symbol parentDefinition)
     {
         // either a type annotation or an initializer
         // has to be present.
@@ -51,5 +48,15 @@ public partial class Verifier
 
         // - set parent definition in the variables from the patterns
         this.Fragmented_VerifyDestructuringPattern1(binding.Pattern, readOnly, output, visibility, parentDefinition);
+    }
+
+    private void Fragmented_VerifyDestructuringPattern1(
+        Ast.DestructuringPattern pattern, bool readOnly,
+        Properties output, Visibility visibility,
+        Symbol parentDefinition)
+    {
+        return pattern is Ast.NondestructuringPattern nondestructuring ? this.Fragmented_VerifyNondestructuringPattern1(nondestructuring, readOnly, output, visibility, parentDefinition)
+            : pattern is Ast.RecordDestructuringPattern recordDestructuring ? this.Fragmented_VerifyRecordDestructuringPattern1(recordDestructuring, readOnly, output, visibility, parentDefinition) :
+                this.Fragmented_VerifyArrayDestructuringPattern1((Ast.ArrayDestructuringPattern) pattern, readOnly, output, visibility, parentDefinition);
     }
 }

@@ -55,7 +55,7 @@ public partial class Verifier
             {
                 var binding = common.Params[i];
                 FRequiredParam_VerifyVariableBinding(binding, activation.Properties, null);
-                var name = binding.Pattern is Ast.BindPattern p ? p.Name : "_";
+                var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
                 signatureType_params.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
             }
         }
@@ -67,7 +67,7 @@ public partial class Verifier
             {
                 var binding = common.OptParams[i];
                 FOptParam_VerifyVariableBinding(binding, activation.Properties, null);
-                var name = binding.Pattern is Ast.BindPattern p ? p.Name : "_";
+                var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
                 signatureType_optParams.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
             }
         }
@@ -76,7 +76,7 @@ public partial class Verifier
         {
             var binding = common.RestParam;
             FRestParam_VerifyVariableBinding(binding, activation.Properties, null);
-            var name = binding.Pattern is Ast.BindPattern p ? p.Name : "_";
+            var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
             signatureType_restParam = new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType);
         }
         if (common.ReturnType != null)

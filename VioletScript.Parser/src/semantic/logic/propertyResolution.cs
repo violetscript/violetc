@@ -70,6 +70,10 @@ public static class PropertyResolution {
                 }
             }
             return null;
+        } else if (@base is ClassStaticThis) {
+            return @base.TypeFromClassStaticThis.ResolveProperty(name);
+        } else if (@base is TypeAsValue) {
+            return @base.TypeFromTypeAsValue.ResolveProperty(name);
         } else if (@base is Value) {
             foreach (var (name2, prop, definedByType) in InstancePropertiesHierarchy.Iterate(@base.StaticType)) {
                 if (name == name2) {

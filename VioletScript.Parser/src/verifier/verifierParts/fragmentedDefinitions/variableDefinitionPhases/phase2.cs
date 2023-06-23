@@ -21,6 +21,27 @@ public partial class Verifier
             return;
         }
 
-        doFooBarQuxBaz();
+        foreach (var binding in defn.Bindings)
+        {
+            this.Fragmented_VerifyVariableBinding2(binding);
+        }
+    }
+
+    private void Fragmented_VerifyVariableBinding2(Ast.VariableBinding binding)
+    {
+        this.Fragmented_VerifyDestructuringPattern2(binding.Pattern);
+        // try resolving initializer as a constant expression
+        if (binding.Init != null)
+        {
+            var val = this.VerifyConstantExpAsValue(binding.Init, false, binding.Pattern.SemanticProperty.StaticType);
+            binding.Pattern.SemanticProperty.StaticType ??= val;
+        }
+    }
+
+    private void Fragmented_VerifyDestructuringPattern2(Ast.DestructuringPattern pattern)
+    {
+        return pattern is Ast.NondestructuringPattern nondestructuring ? this.Fragmented_VerifyNondestructuringPattern2(nondestructuring)
+            : pattern is Ast.RecordDestructuringPattern recordDestructuring ? this.Fragmented_VerifyRecordDestructuringPattern2(recordDestructuring) :
+                this.Fragmented_VerifyArrayDestructuringPattern2((Ast.ArrayDestructuringPattern) pattern);
     }
 }

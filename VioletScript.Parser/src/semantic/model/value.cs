@@ -188,10 +188,22 @@ public class NamespaceSetAsValue : Value {
 /// <summary>
 /// Represents an instance of the enclosing class, enumeration or interface.
 /// In a type's static context, the <c>this</c> literal does not produce a <c>ThisValue</c>;
-/// rather it produces a <c>TypeAsValue</c> symbol.
+/// rather it produces a <c>ClassStaticThis</c> symbol.
 /// </summary>
 public class ThisValue : Value {
     public ThisValue() {
+    }
+}
+
+public class ClassStaticThis : Value {
+    private Symbol m_Type;
+
+    public ClassStaticThis(Symbol type) {
+        m_Type = type;
+    }
+
+    public override Symbol TypeFromClassStaticThis {
+        get => m_Type;
     }
 }
 

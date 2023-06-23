@@ -13,7 +13,7 @@ using DiagnosticArguments = Dictionary<string, object>;
 public partial class Verifier
 {
     // verify a destructuring pattern for assignment expressions.
-    private void VerifyAssignmentPattern(Ast.BindPattern pattern, Symbol type)
+    private void VerifyAssignmentPattern(Ast.NondestructuringPattern pattern, Symbol type)
     {
         Symbol annotatedType = null;
         if (pattern.Type != null)

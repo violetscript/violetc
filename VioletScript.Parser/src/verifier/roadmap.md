@@ -1,16 +1,15 @@
-# Verifier notes
+# Compiler notes
 
-Some of the notes in this document also apply to bytecode import phase.
+Some of the notes in this document apply to verification and bytecode or code generation.
 
+- [ ] When a class inherits static methods or virtual properties, `this` has to be replaced by that class in each such method. Look everywhere for `ClassStaticThis`.
 - [x] Enum definitions "override" the `valueOf()` and `toString()` methods.
-- [ ] Prohibit destructuring patterns in variable definitions of type-block, package-block or namespace-block.
 - [x] `typeExp.<>`: verify constraints
 - [x] `exp.<>`: verify constraints
 - [x] `v as T` or `v as? T` DO NOT turn `T` into `T?`; instead, verification for such conversion produces a `ConversionValue` with `isOptional` set to `true`, and `TypeConversions.convertExploicit(...)` will properly wrap `T` into `T?` if needed.
 - [ ] Prohibit non-read-only non-static variable definitions for `[Value]` classes.
 - [x] Instance methods can be overriden with additional optional parameters and a contravariant return type or any return type if the original return type is any.
 - [ ] Decorators must not be allowed in certain places, like over ordinary functions and ordinary variables.
-- [ ] Prohibit non-static fragmented variable definitions in enum frame. Or do this only at the bytecode level?
 
 ### `x is y:C`
 

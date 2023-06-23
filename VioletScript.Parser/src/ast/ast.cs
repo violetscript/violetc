@@ -175,7 +175,7 @@ public class DestructuringPattern : Node {
 /// <summary>
 /// Either a binding or assignment pattern.
 /// </summary>
-public class BindPattern : DestructuringPattern {
+public class NondestructuringPattern : DestructuringPattern {
     private string m_Name;
 
     /// <summary>
@@ -183,7 +183,7 @@ public class BindPattern : DestructuringPattern {
     /// </summary>
     public Symbol SemanticFrameAssignedReference = null;
 
-    public BindPattern(string name, TypeExpression type) : base(type) {
+    public NondestructuringPattern(string name, TypeExpression type) : base(type) {
         m_Name = name;
     }
 
@@ -668,7 +668,7 @@ public class ExpressionWithTypeArguments : Expression {
 public class AssignmentExpression : Expression {
     /// <summary>
     /// Left, either a <c>Expression</c> or <c>DestructuringPattern</c>.
-    /// This is never a <c>BindPattern</c> node.
+    /// This is never a <c>NondestructuringPattern</c> node.
     /// </summary>
     public Node Left;
     /// <summary>

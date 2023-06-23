@@ -21,6 +21,14 @@ public partial class Verifier
             return;
         }
 
-        doFooBarQuxBaz();
+        foreach (var binding in defn.Bindings)
+        {
+            this.Fragmented_VerifyVariableBinding3(binding);
+        }
+    }
+
+    private void Fragmented_VerifyVariableBinding3(Ast.VariableBinding binding)
+    {
+        toDo();
     }
 }

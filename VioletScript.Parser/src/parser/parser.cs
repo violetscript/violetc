@@ -519,7 +519,7 @@ internal class ParserBackend {
     private Ast.DestructuringPattern OptConvertExpressionIntoDestructuringPattern(Ast.Expression e) {
         if (e is Ast.Identifier e_asId) {
             PushLocation(e_asId.Span.Value);
-            return (Ast.DestructuringPattern) FinishNode(new Ast.BindPattern(e_asId.Name, e_asId.Type), e_asId.Span.Value);
+            return (Ast.DestructuringPattern) FinishNode(new Ast.NondestructuringPattern(e_asId.Name, e_asId.Type), e_asId.Span.Value);
         } else if (e is Ast.ArrayInitializer e_asAi) {
             PushLocation(e_asAi.Span.Value);
             var items = new List<Ast.Node>{};

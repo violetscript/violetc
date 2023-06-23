@@ -16,9 +16,9 @@ public partial class Verifier
     // - it is a non-duplicate property.
     // - if there is both a type annotation and an inferred type, ensure they are equals.
     // - if there is no type annotation and no inferred type, throw a VerifyError.
-    private void VerifyBindPattern
+    private void VerifyNondestructuringPattern
     (
-        Ast.BindPattern pattern,
+        Ast.NondestructuringPattern pattern,
         bool readOnly,
         Properties output,
         Visibility visibility,

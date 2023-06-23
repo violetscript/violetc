@@ -31,9 +31,9 @@ public partial class Verifier
         {
             return;
         }
-        if (pattern is Ast.BindPattern bp)
+        if (pattern is Ast.NondestructuringPattern bp)
         {
-            VerifyBindPattern(bp, readOnly, output, visibility, inferredType);
+            VerifyNondestructuringPattern(bp, readOnly, output, visibility, inferredType);
         }
         else if (pattern is Ast.ArrayDestructuringPattern arrayP)
         {

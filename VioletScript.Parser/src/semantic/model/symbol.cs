@@ -388,6 +388,10 @@ public class Symbol {
         get => null;
     }
 
+    public virtual Symbol TypeFromClassStaticThis {
+        get => null;
+    }
+
     public virtual Symbol NamespaceFromNamespaceAsValue {
         get => null;
     }

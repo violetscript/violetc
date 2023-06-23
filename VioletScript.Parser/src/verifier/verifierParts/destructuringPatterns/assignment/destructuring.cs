@@ -15,7 +15,7 @@ public partial class Verifier
     // verify a destructuring pattern for assignment expressions.
     private void VerifyAssignmentDestructuringPattern(Ast.DestructuringPattern pattern, Symbol type)
     {
-        if (pattern is Ast.BindPattern ap)
+        if (pattern is Ast.NondestructuringPattern ap)
         {
             VerifyAssignmentPattern(ap, type);
         }

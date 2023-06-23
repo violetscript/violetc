@@ -275,6 +275,13 @@ public sealed class Factory {
         return r;
     }
 
+    public Symbol ClassStaticThis(Symbol type) {
+        Symbol r = new ClassStaticThis(type);
+        r.StaticType = ModelCore.ClassType;
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
     public Symbol NamespaceAsValue(Symbol ns) {
         Symbol r = new NamespaceAsValue(ns);
         r.StaticType = ModelCore.AnyType;
