@@ -26,11 +26,11 @@ public partial class Verifier
 
         // determine target properties. this depends
         // on the 'static' modifier.
-        toDo();
+        var output = defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static) && parentDefinition is Type ? parentDefinition.Properties : parentDefinition.Delegate.Properties;
 
         foreach (var binding in defn.Bindings)
         {
-            this.Fragmented_VerifyVariableBinding1(binding, defn.ReadOnly, output, Visibility.Public);
+            this.Fragmented_VerifyVariableBinding1(binding, defn.ReadOnly, output, defn.SemanticVisibility);
         }
     }
 
@@ -41,5 +41,7 @@ public partial class Verifier
         Visibility visibility
     )
     {
+        // - set parent definition in the variables from the patterns
+        toDo();
     }
 }

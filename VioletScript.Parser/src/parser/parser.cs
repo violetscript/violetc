@@ -482,7 +482,7 @@ internal class ParserBackend {
         var init = Consume(TToken.Assign) ? ParseExpression(allowIn, OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction) : null;
         return (Ast.VariableBinding) FinishNode(new Ast.VariableBinding(pattern, init));
     }
-    
+
     public Ast.SimpleVariableDeclaration ParseSimpleVariableDeclaration(bool allowIn = true) {
         var r = ParseOptSimpleVariableDeclaration(allowIn);
         if (r == null) ThrowUnexpected();
@@ -1624,7 +1624,7 @@ internal class ParserBackend {
 
     private void RestrictModifiers(Span span, Ast.AnnotatableDefinitionModifier actualModifiers, params Ast.AnnotatableDefinitionModifier[] modifiersToRestrict) {
         foreach (var m in modifiersToRestrict)
-            if ((actualModifiers & m) != 0) {
+            if (actualModifiers.HasFlag(m)) {
                 SyntaxError(18, span, new DiagnosticArguments {["m"] = m});
             }
     }
@@ -1632,7 +1632,7 @@ internal class ParserBackend {
     private (Ast.Statement node, bool semicolonInserted) ParseVariableDefinition(DefinitionAttributes attribs, Context context, Span startSpan) {
         PushLocation(startSpan);
         var readOnly = PreviousToken.IsKeyword("const");
-        var isStatic = (attribs.Modifiers & Ast.AnnotatableDefinitionModifier.Static) != 0;
+        var isStatic = attribs.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static);
         var bindings = new List<Ast.VariableBinding>{};
         do {
             var binding = ParseVariableBinding();
@@ -1670,7 +1670,7 @@ internal class ParserBackend {
         if (context is ClassContext && id.Name == context.Name) {
             return ParseConstructorDefinition(attribs, id);
         }
-        if ((attribs.Modifiers & Ast.AnnotatableDefinitionModifier.Proxy) != 0) {
+        if (attribs.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Proxy)) {
             return ParseProxyDefinition(attribs, context, id);
         }
 
@@ -1683,7 +1683,7 @@ internal class ParserBackend {
                 SyntaxError(21, id.Span.Value);
             }
         } else {
-            if ((attribs.Modifiers & Ast.AnnotatableDefinitionModifier.Native) != 0) {
+            if (attribs.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Native)) {
                 // native function must not have body
                 if (common.Body != null) {
                     SyntaxError(19, id.Span.Value);
@@ -1712,7 +1712,7 @@ internal class ParserBackend {
         var (common, semicolonInserted) = ParseFunctionCommon(null, true, true);
         var r = FinishAnnotatableDefinition(new Ast.ConstructorDefinition(id, common), attribs);
 
-        if ((attribs.Modifiers & Ast.AnnotatableDefinitionModifier.Native) != 0) {
+        if (attribs.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Native)) {
             // native function must not have body
             if (common.Body != null) {
                 SyntaxError(19, id.Span.Value);
@@ -1750,7 +1750,7 @@ internal class ParserBackend {
                 SyntaxError(21, id.Span.Value);
             }
         } else {
-            if ((attribs.Modifiers & Ast.AnnotatableDefinitionModifier.Native) != 0) {
+            if (attribs.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Native)) {
                 // native function must not have body
                 if (common.Body != null) {
                     SyntaxError(19, id.Span.Value);
@@ -1827,7 +1827,7 @@ internal class ParserBackend {
         var r = FinishAnnotatableDefinition(new Ast.ProxyDefinition(id, @operator, common), attribs);
 
         if (context is ClassContext || context is EnumContext) {
-            if ((attribs.Modifiers & Ast.AnnotatableDefinitionModifier.Native) != 0) {
+            if (attribs.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Native)) {
                 // native function must not have body
                 if (common.Body != null) {
                     SyntaxError(19, id.Span.Value);
