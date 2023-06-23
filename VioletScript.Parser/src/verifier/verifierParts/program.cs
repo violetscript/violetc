@@ -16,7 +16,7 @@ public partial class Verifier
     // type aliases and namespace aliases are resolved after
     // original item definitions. the verifier gathers
     // a list of imports, type aliases and namespace aliases
-    // and tries to resolve them until 10 attempts.
+    // and tries to resolve them until exhausted.
     //
     public void VerifyPrograms(List<Ast.Program> programs)
     {
