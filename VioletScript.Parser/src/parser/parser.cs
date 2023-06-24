@@ -1377,7 +1377,7 @@ internal class ParserBackend {
                             id.Add(innerParser.ExpectIdentifier(true));
                         }
                     }
-                    r.InnerPackages.Add((Ast.PackageDefinition) innerParser.FinishNode(new Ast.PackageDefinition(id.ToArray(), innerParser.ParseBlock(new PackageContext()))));
+                    r.InnerPackages.Add((Ast.PackageDefinition) innerParser.FinishNode(new Ast.PackageDefinition(id.ToArray(), innerParser.ParsePackageBlock())));
                 }
                 while (innerParser.Token.Type != TToken.Eof) {
                     var stmt = innerParser.ParseOptStatement(context);
@@ -2115,6 +2115,24 @@ internal class ParserBackend {
         return (Ast.Block) FinishStatement(new Ast.Block(statements));
     }
 
+    // a package block can omit the curly brackets.
+    private Ast.Block ParsePackageBlock() {
+        var context = new PackageContext();
+        if (Token.Type == TToken.LCurly)
+        {
+            return ParseBlock(context);
+        }
+        MarkLocation();
+        var statements = new List<Ast.Statement>{};
+        while (Token.Type != TToken.Eof) {
+            var (stmt, semicolonInserted) = ParseStatement(context);
+            statements.Add(stmt);
+            if (!semicolonInserted) break;
+        }
+        Expect(TToken.Eof);
+        return (Ast.Block) FinishStatement(new Ast.Block(statements));
+    }
+
     private (Ast.Statement node, bool semicolonInserted) ParseLabeledStatement(string label, Context context, Span startSpan) {
         PushLocation(startSpan);
         var labeledContext = (context is LabeledStatementsContext ? context : new LabeledStatementsContext()).AddLabel(label);
@@ -2464,7 +2482,7 @@ internal class ParserBackend {
                     id.Add(ExpectIdentifier(true));
                 }
             }
-            packages.Add((Ast.PackageDefinition) FinishNode(new Ast.PackageDefinition(id.ToArray(), ParseBlock(new PackageContext()))));
+            packages.Add((Ast.PackageDefinition) FinishNode(new Ast.PackageDefinition(id.ToArray(), ParsePackageBlock())));
         }
         List<Ast.Statement> statements = null;
         Context topLevelContext = new TopLevelContext();
