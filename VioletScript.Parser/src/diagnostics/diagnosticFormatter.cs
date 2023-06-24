@@ -115,8 +115,11 @@ public static class DefaultDiagnosticFormatterStatics {
         [32] = "Illegal break statement",
         [33] = "Illegal continue statement: no surrounding iteration statement",
 
-        // verifier-only messages
-        [128] = "'$name' is undefined",
+        // # Verification Diagnostics
+
+        // undefined property
+        [128] = "'$name' not found",
+
         [129] = "Ambiguous reference to '$name'",
         [130] = "'$name' is private",
         [131] = "'$name' is not a type constant",

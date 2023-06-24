@@ -12,7 +12,7 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    private void Fragmented_VerifyNondestructuringPattern3(Ast.DestructuringPattern pattern)
+    private void Fragmented_VerifyNondestructuringPattern3(Ast.NondestructuringPattern pattern)
     {
         var superType = this.m_Frame.TypeFromFrame.SuperType;
         if (superType == null)

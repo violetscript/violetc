@@ -12,7 +12,7 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    private void Fragmented_VerifyNondestructuringPattern7(Ast.DestructuringPattern pattern, Symbol init)
+    private void Fragmented_VerifyNondestructuringPattern7(Ast.NondestructuringPattern pattern, Symbol init)
     {
         pattern.SemanticProperty.StaticType ??= init?.StaticType ?? this.m_ModelCore.AnyType;
         pattern.SemanticProperty.InitValue ??= pattern.SemanticProperty.StaticType?.DefaultValue;

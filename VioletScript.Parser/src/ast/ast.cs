@@ -234,7 +234,7 @@ public class RecordDestructuringPatternField : Node {
 /// the any type, a tuple type or an array type.
 /// </summary>
 public class ArrayDestructuringPattern : DestructuringPattern {
-    /// <summary>Item. Either <c>null</c>, <c>DestructuringPattern</c> or <c>ArrayDestructuringSpread</c>.</summary>
+    /// <summary>Items. Each item is either <c>null</c>, <c>DestructuringPattern</c> or <c>ArrayDestructuringSpread</c>.</summary>
     public List<Node> Items;
 
     public ArrayDestructuringPattern(List<Node> items, TypeExpression type) : base(type) {
