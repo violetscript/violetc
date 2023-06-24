@@ -113,6 +113,11 @@ public static class SingleInheritanceInstancePropertiesHierarchy {
             }
         }
     }
+
+    public static bool HasProperty(Symbol type, string name)
+    {
+        return SingleInheritanceInstancePropertiesHierarchy.Iterate(type).Any(prop => prop.Name == name);
+    }
 }
 
 /// <summary>

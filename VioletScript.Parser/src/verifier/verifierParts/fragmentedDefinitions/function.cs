@@ -206,13 +206,9 @@ public partial class Verifier
             return;
         }
         var methodName = method.Name;
-        foreach (var prop in SingleInheritanceInstancePropertiesHierarchy.Iterate(superType))
+        if (SingleInheritanceInstancePropertiesHierarchy.HasProperty(superType, methodName))
         {
-            if (prop.Name == methodName)
-            {
-                this.VerifyError(defn.Id.Span.Value.Script, 246, defn.Id.Span.Value, new DiagnosticArguments {["name"] = methodName});
-                break;
-            }
+            this.VerifyError(defn.Id.Span.Value.Script, 246, defn.Id.Span.Value, new DiagnosticArguments {["name"] = methodName});
         }
     }
 }

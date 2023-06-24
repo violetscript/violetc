@@ -19,13 +19,9 @@ public partial class Verifier
         {
             return;
         }
-        foreach (var prop in SingleInheritanceInstancePropertiesHierarchy.Iterate(superType))
+        if (SingleInheritanceInstancePropertiesHierarchy.HasProperty(superType, pattern.Name))
         {
-            if (prop.Name == pattern.Name)
-            {
-                this.VerifyError(pattern.Span.Value.Script, 246, pattern.Span.Value, new DiagnosticArguments {["name"] = pattern.Name});
-                break;
-            }
+            this.VerifyError(pattern.Span.Value.Script, 246, pattern.Span.Value, new DiagnosticArguments {["name"] = pattern.Name});
         }
     }
 }

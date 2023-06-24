@@ -35,13 +35,9 @@ public partial class Verifier
             return;
         }
         var key = ((Ast.StringLiteral) field.Key).Value;
-        foreach (var prop in SingleInheritanceInstancePropertiesHierarchy.Iterate(superType))
+        if (SingleInheritanceInstancePropertiesHierarchy.HasProperty(superType, key))
         {
-            if (prop.Name == key)
-            {
-                this.VerifyError(field.Span.Value.Script, 246, field.Span.Value, new DiagnosticArguments {["name"] = key});
-                break;
-            }
+            this.VerifyError(field.Span.Value.Script, 246, field.Span.Value, new DiagnosticArguments {["name"] = key});
         }
     }
 }
