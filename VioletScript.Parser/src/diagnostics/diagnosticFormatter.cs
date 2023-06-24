@@ -243,6 +243,9 @@ public static class DefaultDiagnosticFormatterStatics {
         [246] = "Shadowing already defined property '$name' in super type",
         [247] = "Accessing tuple requires a constant numeric literal key",
         [248] = "Accessing tuple index out of bounds: $type",
+
+        // warning
+        [249] = "Variable has no type annotation",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

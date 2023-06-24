@@ -90,10 +90,10 @@ public partial class Verifier
         }
         if (binding.Pattern.Type == null)
         {
-            // VerifyError
+            // WARNING: untyped
             if (inferType == null)
             {
-                VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
+                Warn(binding.Pattern.Span.Value.Script, 249, binding.Pattern.Span.Value, new DiagnosticArguments {});
             }
             VerifyDestructuringPattern(binding.Pattern, false, output, Visibility.Public, inferType ?? m_ModelCore.AnyType);
         }
@@ -161,10 +161,10 @@ public partial class Verifier
         }
         if (binding.Pattern.Type == null)
         {
-            // VerifyError
+            // WARNING: untyped
             if (inferType == null)
             {
-                VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
+                Warn(binding.Pattern.Span.Value.Script, 249, binding.Pattern.Span.Value, new DiagnosticArguments {});
             }
             VerifyDestructuringPattern(binding.Pattern, false, output, Visibility.Public, inferType ?? m_ModelCore.AnyType);
         }
