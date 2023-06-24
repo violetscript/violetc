@@ -195,7 +195,7 @@ public partial class Verifier
                 if (throwawayProp == null)
                 {
                     // VerifyError: undefined reference
-                    VerifyError(key.Span.Value.Script, 128, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
+                    VerifyError(key.Span.Value.Script, 198, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value, ["t"] = type });
                     fieldType = m_ModelCore.AnyType;
                 }
                 else
