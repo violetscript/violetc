@@ -2490,7 +2490,9 @@ internal class ParserBackend {
             var (stmt, semicolonInserted) = ParseStatement(topLevelContext);
             statements ??= new List<Ast.Statement>{};
             statements.Add(stmt);
+            if (!semicolonInserted) break;
         }
+        Expect(TToken.Eof);
         return (Ast.Program) FinishNode(new Ast.Program(packages, statements));
     }
 }
