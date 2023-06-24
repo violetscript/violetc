@@ -4,6 +4,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
 
 - [ ] **VioletDoc:** In the verifier, for valid annotatable definitions, parse VioletDoc comments for the items.
   - [ ] Parse VioletDoc comments applied to record fields.
+- [ ] **Code generation:** Empty programs that, for example, contain include directives whose inner statement sequence is empty or consist of other empty include directives, should not generate any activation and not be evaluated.
 - [ ] **Code generation:** When a class inherits static methods or virtual properties, `this` has to be replaced by that class in each such method. Look everywhere for `ClassStaticThis`.
 - [ ] Decorators must not be allowed in certain places, like over ordinary functions, ordinary variables and `static` variables.
 - [ ] Prohibit defining writable instance (non `static`) variables for `[Value]` classes.
