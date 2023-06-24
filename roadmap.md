@@ -5,6 +5,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
 - [ ] **VioletDoc:** In the verifier, for valid annotatable definitions, parse VioletDoc comments for the items.
   - [ ] Parse VioletDoc comments applied to record fields.
 - [ ] **Code generation:** Any-type conversion should convert structurally taking into consideration union member sequence and record field sequence.
+- [ ] **Code generation:** Method dynamic dispatch (i.e. overriden method) should convert signature structurally, similiar to any-type conversion, to allow union members and record fields in different order, for each specific override. If an overrider has no overrider and is exactly the same type (i.e. same union members sequences and record fields sequences) or all consequent overriders are in that condition, no such conversion is needed at code generation for that overrider.
 - [ ] **Code generation:** Empty programs that, for example, contain include directives whose inner statement sequence is empty or consist of other empty include directives, should not generate any activation and not be evaluated.
 - [ ] **Code generation:** When a class inherits static methods or virtual properties, `this` has to be replaced by that class in each such method. Look everywhere for `ClassStaticThis`.
 - [ ] Decorators must not be allowed in certain places, like over ordinary functions, ordinary variables and `static` variables.
