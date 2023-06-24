@@ -47,7 +47,7 @@ public partial class Verifier
                         newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, null);
                         newDefinition.Visibility = visibility;
                         newDefinition.ParentDefinition = parentDefinition;
-                        output[pattern.Name] = newDefinition;
+                        output[key.Value] = newDefinition;
                     }
                     field.SemanticProperty = newDefinition;
                 }

@@ -92,7 +92,7 @@ public partial class Verifier
                     {
                         newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, m_ModelCore.AnyType);
                         newDefinition.Visibility = visibility;
-                        output[pattern.Name] = newDefinition;
+                        output[key.Value] = newDefinition;
                     }
                     field.SemanticProperty = newDefinition;
                 }
@@ -152,7 +152,7 @@ public partial class Verifier
                     {
                         newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, undefinedOrValueType);
                         newDefinition.Visibility = visibility;
-                        output[pattern.Name] = newDefinition;
+                        output[key.Value] = newDefinition;
                     }
                     field.SemanticProperty = newDefinition;
                 }
@@ -209,7 +209,7 @@ public partial class Verifier
                     {
                         newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, fieldType);
                         newDefinition.Visibility = visibility;
-                        output[pattern.Name] = newDefinition;
+                        output[key.Value] = newDefinition;
                     }
                     field.SemanticProperty = newDefinition;
                 }
