@@ -892,6 +892,14 @@ public class FunctionDefinition : AnnotatableDefinition {
     {
         get => this.Id.Name;
     }
+
+    public MethodSlotFlags SemanticFlags(Symbol parentDefinition) =>
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Final) ? MethodSlotFlags.Final : 0) |
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Override) ? MethodSlotFlags.Override : 0) |
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Native) ? MethodSlotFlags.Native : 0) |
+        (parentDefinition != null && parentDefinition.IsInterfaceType && this.Common.Body != null ? MethodSlotFlags.OptionalInterfaceMethod : 0) |
+        (this.Common.UsesAwait ? MethodSlotFlags.UsesAwait : 0) |
+        (this.Common.UsesYield ? MethodSlotFlags.UsesYield : 0);
 }
 
 public class ConstructorDefinition : AnnotatableDefinition {
@@ -907,6 +915,13 @@ public class ConstructorDefinition : AnnotatableDefinition {
     {
         get => this.Id.Name;
     }
+
+    public MethodSlotFlags SemanticFlags(Symbol parentDefinition) =>
+        MethodSlotFlags.Constructor |
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Native) ? MethodSlotFlags.Native : 0) |
+        // a constructor currently cannot have `await`, but
+        // this may be possible in the future.
+        (this.Common.UsesAwait ? MethodSlotFlags.UsesAwait : 0);
 }
 
 public class GetterDefinition : AnnotatableDefinition {
@@ -922,6 +937,12 @@ public class GetterDefinition : AnnotatableDefinition {
     {
         get => this.Id.Name;
     }
+
+    public MethodSlotFlags SemanticFlags(Symbol parentDefinition) =>
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Final) ? MethodSlotFlags.Final : 0) |
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Override) ? MethodSlotFlags.Override : 0) |
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Native) ? MethodSlotFlags.Native : 0) |
+        (parentDefinition != null && parentDefinition.IsInterfaceType && this.Common.Body != null ? MethodSlotFlags.OptionalInterfaceMethod : 0);
 }
 
 public class SetterDefinition : AnnotatableDefinition {
@@ -937,6 +958,12 @@ public class SetterDefinition : AnnotatableDefinition {
     {
         get => this.Id.Name;
     }
+
+    public MethodSlotFlags SemanticFlags(Symbol parentDefinition) =>
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Final) ? MethodSlotFlags.Final : 0) |
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Override) ? MethodSlotFlags.Override : 0) |
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Native) ? MethodSlotFlags.Native : 0) |
+        (parentDefinition != null && parentDefinition.IsInterfaceType && this.Common.Body != null ? MethodSlotFlags.OptionalInterfaceMethod : 0);
 }
 
 public class ProxyDefinition : AnnotatableDefinition {
@@ -957,6 +984,12 @@ public class ProxyDefinition : AnnotatableDefinition {
     {
         get => this.Id.Name;
     }
+
+    public MethodSlotFlags SemanticFlags(Symbol parentDefinition) =>
+        (this.Modifiers.HasFlag(AnnotatableDefinitionModifier.Native) ? MethodSlotFlags.Native : 0) |
+        (parentDefinition != null && parentDefinition.IsInterfaceType && this.Common.Body != null ? MethodSlotFlags.OptionalInterfaceMethod : 0) |
+        (this.Common.UsesAwait ? MethodSlotFlags.UsesAwait : 0) |
+        (this.Common.UsesYield ? MethodSlotFlags.UsesYield : 0);
 }
 
 public class FunctionCommon : Node {

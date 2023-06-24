@@ -51,9 +51,9 @@ public partial class Verifier
 
         // determine target set of properties. this depends
         // on the 'static' modifier.
-        var output = (defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static) && parentDefinition is Type) || !(parentDefinition is Type) ? parentDefinition.Properties : parentDefinition.Delegate.Properties;
+        var output = (defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static) && parentDefinition is Type) || !(parentDefinition is Type) ? parentDefinition?.Properties ?? this.m_Frame.Properties : parentDefinition.Delegate.Properties;
 
-        defn.SemanticMethodSlot = this.DefineOrReusePartialMethod(defn.Id.Name, output, defn.Id.Span.Value);
+        defn.SemanticMethodSlot = this.DefineOrReusePartialMethod(defn.Id.Name, output, defn.Id.Span.Value, defn.SemanticVisibility, defn.SemanticFlags(parentDefinition), parentDefinition);
     }
 
     /// <summary>
