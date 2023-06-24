@@ -24,7 +24,7 @@ public partial class Verifier
         }
         else if (phase == VerifyPhase.Phase3)
         {
-            doFooBarQuxBaz();
+            this.Fragmented_VerifyFunctionDefinition3(defn);
         }
         // VerifyPhase.Phase7
         else if (phase == VerifyPhase.Phase7)
@@ -164,5 +164,28 @@ public partial class Verifier
         }
         returnType ??= this.m_ModelCore.AnyType;
         return this.m_ModelCore.Factory.FunctionType(@params?.ToArray(), optParams?.ToArray(), restParam, returnType);
+    }
+
+    private void Fragmented_VerifyFunctionDefinition3(Ast.FunctionDefinition defn)
+    {
+        var method = defn.SemanticMethodSlot;
+        if (method == null)
+        {
+            return;
+        }
+        var superType = this.m_Frame.TypeFromFrame.SuperType;
+        if (superType == null)
+        {
+            return;
+        }
+        var methodName = method.Name;
+        foreach (var prop in SingleInheritanceInstancePropertiesHierarchy.Iterate(superType))
+        {
+            if (prop.Name == methodName)
+            {
+                this.VerifyError(defn.Id.Span.Value.Script, 246, defn.Id.Span.Value, new DiagnosticArguments {["name"] = methodName});
+                break;
+            }
+        }
     }
 }
