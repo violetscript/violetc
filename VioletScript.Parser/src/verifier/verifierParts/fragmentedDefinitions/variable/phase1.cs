@@ -24,9 +24,9 @@ public partial class Verifier
             return;
         }
 
-        // determine target properties. this depends
+        // determine target set of properties. this depends
         // on the 'static' modifier.
-        var output = defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static) && parentDefinition is Type ? parentDefinition.Properties : parentDefinition.Delegate.Properties;
+        var output = (defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static) && parentDefinition is Type) || !(parentDefinition is Type) ? parentDefinition.Properties : parentDefinition.Delegate.Properties;
 
         foreach (var binding in defn.Bindings)
         {

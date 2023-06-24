@@ -816,6 +816,11 @@ public class NamespaceDefinition : AnnotatableDefinition {
         Id = id;
         Block = block;
     }
+
+    public override string Name
+    {
+        get => this.Id.Name;
+    }
 }
 
 public class NamespaceAliasDefinition : AnnotatableDefinition {
@@ -829,6 +834,11 @@ public class NamespaceAliasDefinition : AnnotatableDefinition {
         Id = id;
         Expression = expression;
     }
+
+    public override string Name
+    {
+        get => this.Id.Name;
+    }
 }
 
 public class EnumVariantDefinition : Statement {
@@ -841,6 +851,11 @@ public class EnumVariantDefinition : Statement {
     public EnumVariantDefinition(Identifier id, Expression init) : base() {
         this.Id = id;
         this.Init = init;
+    }
+
+    public override string Name
+    {
+        get => this.Id.Name;
     }
 }
 
@@ -872,6 +887,11 @@ public class FunctionDefinition : AnnotatableDefinition {
         Generics = generics;
         Common = common;
     }
+
+    public override string Name
+    {
+        get => this.Id.Name;
+    }
 }
 
 public class ConstructorDefinition : AnnotatableDefinition {
@@ -881,6 +901,11 @@ public class ConstructorDefinition : AnnotatableDefinition {
     public ConstructorDefinition(Identifier id, FunctionCommon common) : base() {
         Id = id;
         Common = common;
+    }
+
+    public override string Name
+    {
+        get => this.Id.Name;
     }
 }
 
@@ -892,6 +917,11 @@ public class GetterDefinition : AnnotatableDefinition {
         Id = id;
         Common = common;
     }
+
+    public override string Name
+    {
+        get => this.Id.Name;
+    }
 }
 
 public class SetterDefinition : AnnotatableDefinition {
@@ -901,6 +931,11 @@ public class SetterDefinition : AnnotatableDefinition {
     public SetterDefinition(Identifier id, FunctionCommon common) : base() {
         Id = id;
         Common = common;
+    }
+
+    public override string Name
+    {
+        get => this.Id.Name;
     }
 }
 
@@ -916,6 +951,11 @@ public class ProxyDefinition : AnnotatableDefinition {
         Id = id;
         Operator = op;
         Common = common;
+    }
+
+    public override string Name
+    {
+        get => this.Id.Name;
     }
 }
 
@@ -981,6 +1021,11 @@ public class ClassDefinition : AnnotatableDefinition {
         ImplementsList = implementsList;
         Block = block;
     }
+
+    public override string Name
+    {
+        get => this.Id.Name;
+    }
 }
 
 public class InterfaceDefinition : AnnotatableDefinition {
@@ -1003,6 +1048,11 @@ public class InterfaceDefinition : AnnotatableDefinition {
         ExtendsList = extendsList;
         Block = block;
     }
+
+    public override string Name
+    {
+        get => this.Id.Name;
+    }
 }
 
 public class EnumDefinition : AnnotatableDefinition {
@@ -1019,6 +1069,11 @@ public class EnumDefinition : AnnotatableDefinition {
         IsFlags = isFlags;
         NumericType = numericType;
         Block = block;
+    }
+
+    public override string Name
+    {
+        get => this.Id.Name;
     }
 }
 
@@ -1038,6 +1093,11 @@ public class TypeDefinition : AnnotatableDefinition {
         Id = id;
         Generics = generics;
         Type = type;
+    }
+
+    public override string Name
+    {
+        get => this.Id.Name;
     }
 }
 

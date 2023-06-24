@@ -47,7 +47,13 @@ public partial class Verifier
 
     private void Fragmented_VerifyFunctionDefinition1(Ast.FunctionDefinition defn)
     {
-        defn.SemanticMethodSlot = this.DefineOrReusePartialMethod();
+        var parentDefinition = m_Frame.TypeFromFrame ?? m_Frame.NamespaceFromFrame ?? m_Frame.PackageFromFrame;
+
+        // determine target set of properties. this depends
+        // on the 'static' modifier.
+        var output = (defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static) && parentDefinition is Type) || !(parentDefinition is Type) ? parentDefinition.Properties : parentDefinition.Delegate.Properties;
+
+        defn.SemanticMethodSlot = this.DefineOrReusePartialMethod(defn.Id.Name, output, defn.Id.Span.Value);
     }
 
     /// <summary>
