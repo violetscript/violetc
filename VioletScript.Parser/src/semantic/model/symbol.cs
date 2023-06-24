@@ -178,6 +178,11 @@ public class Symbol {
         get => null;
     }
 
+    public virtual int TupleElementIndex
+    {
+        get => 0;
+    }
+
     public virtual Symbol[] TupleElementTypes {
         get => new Symbol[]{};
     }

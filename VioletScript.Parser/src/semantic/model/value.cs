@@ -359,6 +359,33 @@ public class DynamicReferenceValue : Value {
     }
 }
 
+public class TupleElementValue : Value {
+    private Symbol m_Base;
+    private int m_Index;
+
+    public TupleElementValue(Symbol @base, int index) {
+        m_Base = @base;
+        m_Index = index;
+    }
+
+    public override Symbol Base {
+        get => m_Base;
+    }
+
+    public override int TupleElementIndex
+    {
+        get => m_Index;
+    }
+
+    public override bool ReadOnly {
+        get => true;
+    }
+
+    public override bool WriteOnly {
+        get => false;
+    }
+}
+
 public class IndexValue : Value {
     private Symbol m_Base;
 

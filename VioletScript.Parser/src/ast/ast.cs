@@ -225,6 +225,10 @@ public class RecordDestructuringPatternField : Node {
     }
 }
 
+/// <summary>
+/// Use to destructure from either the any type, a tuple type or
+/// an array type.
+/// </summary>
 public class ArrayDestructuringPattern : DestructuringPattern {
     /// <summary>Item. Either <c>null</c>, <c>DestructuringPattern</c> or <c>ArrayDestructuringSpread</c>.</summary>
     public List<Node> Items;

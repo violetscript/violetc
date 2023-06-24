@@ -233,6 +233,10 @@ public static class DefaultDiagnosticFormatterStatics {
         [242] = "Implemented interface $itrfc requires '$name' as a setter of signature '$s'",
         [243] = "Did not match generic method '$name' of interface $itrfc",
         [244] = "Property must have an initializer",
+        [245] = "Property annotated type does not match actual property type",
+        [246] = "Shadowing already defined property '$name' in super type",
+        [247] = "Accessing tuple requires a constant numeric literal key",
+        [248] = "Accessing tuple index out of bounds: $type",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

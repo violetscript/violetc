@@ -268,6 +268,18 @@ public sealed class Factory {
         return r;
     }
 
+    public Symbol TupleElementValue(Symbol @base, int index, Symbol tupleType) {
+        // assert index is in bounds
+        if (index < 0 || index >= tupleType.CountOfTupleElements)
+        {
+            throw new Exception("Index out of bounds for tuple type.");
+        }
+        Symbol r = new TupleElementValue(@base, index);
+        r.StaticType = tupleType.TupleElementTypes[index];
+        r.ModelCore = ModelCore;
+        return r;
+    }
+
     public Symbol TypeAsValue(Symbol type) {
         Symbol r = new TypeAsValue(type);
         r.StaticType = ModelCore.ClassType;

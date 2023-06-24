@@ -1285,6 +1285,29 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
+        var baseNonNullType = @base.StaticType.ToNonNullableType();
+        if (baseNonNullType is TupleType)
+        {
+            var tupleType = baseNonNullType;
+            if (!(exp.Key is Ast.NumericLiteral))
+            {
+                VerifyError(null, 247, exp.Span.Value, new DiagnosticArguments {});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            var idx = (int) ((Ast.NumericLiteral) exp.Key).Value;
+            if (idx < 0 || idx >= tupleType.CountOfTupleElements)
+            {
+                VerifyError(null, 248, exp.Span.Value, new DiagnosticArguments {["type"] = tupleType});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            exp.SemanticSymbol = this.m_ModelCore.Factory.TupleElementValue(@base, idx, tupleType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
         var proxy = InheritedProxies.Find(@base.StaticType, Operator.ProxyToGetIndex);
         if (proxy == null)
         {
