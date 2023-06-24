@@ -25,7 +25,6 @@ public partial class Verifier
         Symbol inferredType = null
     )
     {
-        Symbol newDefinition = null;
         Symbol type = null;
         if (pattern.Type != null)
         {
@@ -47,29 +46,37 @@ public partial class Verifier
         }
 
         type ??= m_ModelCore.AnyType;
+        pattern.SemanticProperty = this.DefineOrReuseVariable(pattern.Name, output, type, pattern.Span.Value, readOnly, visibility);
+    }
 
-        var previousDefinition = output[pattern.Name];
+    private Symbol DefineOrReuseVariable(string name, Properties output, Symbol type, Span span, bool readOnly, Visibility visibility)
+    {
+        Symbol newDefinition = null;
+        var previousDefinition = output[name];
+
         if (previousDefinition != null)
         {
-            // VerifyError: duplicate definition
             newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
+
             // assert newDefinition != null
             if (newDefinition == null)
             {
                 throw new Exception("Duplicating definition with wrong kind.");
             }
+
+            // ERROR: duplicate definition
             if (!m_Options.AllowDuplicates)
             {
-                VerifyError(pattern.Span.Value.Script, 139, pattern.Span.Value, new DiagnosticArguments { ["name"] = pattern.Name });
+                VerifyError(span.Script, 139, span, new DiagnosticArguments { ["name"] = name });
             }
         }
         else
         {
-            newDefinition = m_ModelCore.Factory.VariableSlot(pattern.Name, readOnly, type);
+            newDefinition = m_ModelCore.Factory.VariableSlot(name, readOnly, type);
             newDefinition.Visibility = visibility;
             newDefinition.InitValue ??= type.DefaultValue;
-            output[pattern.Name] = newDefinition;
+            output[name] = newDefinition;
         }
-        pattern.SemanticProperty = newDefinition;
+        return newDefinition;
     }
 }

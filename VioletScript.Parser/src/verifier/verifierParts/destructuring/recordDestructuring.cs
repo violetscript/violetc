@@ -77,24 +77,7 @@ public partial class Verifier
             {
                 if (field.Subpattern == null)
                 {
-                    Symbol newDefinition = null;
-                    var previousDefinition = output[key.Value];
-                    if (previousDefinition != null)
-                    {
-                        // VerifyError: duplicate definition
-                        newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
-                        if (!m_Options.AllowDuplicates)
-                        {
-                            VerifyError(key.Span.Value.Script, 139, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
-                        }
-                    }
-                    else
-                    {
-                        newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, m_ModelCore.AnyType);
-                        newDefinition.Visibility = visibility;
-                        output[key.Value] = newDefinition;
-                    }
-                    field.SemanticProperty = newDefinition;
+                    field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, this.m_ModelCore.AnyType, key.Span.Value, readOnly, visibility);
                 }
                 else
                 {
@@ -137,24 +120,7 @@ public partial class Verifier
             {
                 if (field.Subpattern == null)
                 {
-                    Symbol newDefinition = null;
-                    var previousDefinition = output[key.Value];
-                    if (previousDefinition != null)
-                    {
-                        // VerifyError: duplicate definition
-                        newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
-                        if (!m_Options.AllowDuplicates)
-                        {
-                            VerifyError(key.Span.Value.Script, 139, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
-                        }
-                    }
-                    else
-                    {
-                        newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, undefinedOrValueType);
-                        newDefinition.Visibility = visibility;
-                        output[key.Value] = newDefinition;
-                    }
-                    field.SemanticProperty = newDefinition;
+                    field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, undefinedOrValueType, key.Span.Value, readOnly, visibility);
                 }
                 else
                 {
@@ -194,24 +160,7 @@ public partial class Verifier
 
                 if (field.Subpattern == null)
                 {
-                    Symbol newDefinition = null;
-                    var previousDefinition = output[key.Value];
-                    if (previousDefinition != null)
-                    {
-                        // VerifyError: duplicate definition
-                        newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
-                        if (!m_Options.AllowDuplicates)
-                        {
-                            VerifyError(key.Span.Value.Script, 139, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
-                        }
-                    }
-                    else
-                    {
-                        newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, fieldType);
-                        newDefinition.Visibility = visibility;
-                        output[key.Value] = newDefinition;
-                    }
-                    field.SemanticProperty = newDefinition;
+                    field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, fieldType, key.Span.Value, readOnly, visibility);
                 }
                 else
                 {
