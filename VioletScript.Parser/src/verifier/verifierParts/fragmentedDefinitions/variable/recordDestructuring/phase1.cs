@@ -27,7 +27,10 @@ public partial class Verifier
                 if (field.Subpattern == null)
                 {
                     field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, null, key.Span.Value, readOnly, visibility);
-                    field.SemanticProperty.ParentDefinition = parentDefinition;
+                    if (field.SemanticProperty != null)
+                    {
+                        field.SemanticProperty.ParentDefinition = parentDefinition;
+                    }
                 }
                 else
                 {

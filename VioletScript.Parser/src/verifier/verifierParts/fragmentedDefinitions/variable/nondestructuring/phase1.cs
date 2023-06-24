@@ -18,6 +18,9 @@ public partial class Verifier
         Symbol parentDefinition)
     {
         pattern.SemanticProperty = this.DefineOrReuseVariable(pattern.Name, output, null, pattern.Span.Value, readOnly, visibility);
-        pattern.SemanticProperty.ParentDefinition = parentDefinition;
+        if (pattern.SemanticProperty != null)
+        {
+            pattern.SemanticProperty.ParentDefinition = parentDefinition;
+        }
     }
 }
