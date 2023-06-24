@@ -22,24 +22,8 @@ public partial class Verifier
         {
             doFooBarQuxBaz();
         }
-        else if (phase == VerifyPhase.Phase3)
-        {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase4)
-        {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase5)
-        {
-            doFooBarQuxBaz();
-        }
-        else if (phase == VerifyPhase.Phase6)
-        {
-            doFooBarQuxBaz();
-        }
         // VerifyPhase.Phase7
-        else
+        else if (phase == VerifyPhase.Phase7)
         {
             doFooBarQuxBaz();
         }
