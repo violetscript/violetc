@@ -44,7 +44,10 @@ public partial class Verifier
             VerifyPhase.Phase3,
             VerifyPhase.Phase4,
             VerifyPhase.Phase5,
-            VerifyPhase.Phase6,
+
+            // unused
+            // VerifyPhase.Phase6,
+
             VerifyPhase.Phase7,
         };
 
@@ -301,7 +304,14 @@ public enum VerifyPhase
     Phase3,
     Phase4,
     Phase5,
+
+    /// <summary>
+    /// Future reserved phase. Unused. When necessary,
+    /// include it in the sequence of phases, otherwise
+    /// it won't be iterated.
+    /// </summary>
     Phase6,
+
     Phase7,
 
     /// <summary>

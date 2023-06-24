@@ -498,8 +498,9 @@ public class Symbol {
     }
 
     /// <summary>
-    /// For a static type's method, returns a type symbol.
+    /// For a static type's method, returns a <c>ClassStaticThis</c> value symbol.
     /// For an instance method, returns a <c>ThisValue</c> symbol.
+    /// For a normal function, returns null.
     /// </summary>
     public virtual Symbol ActivationThisOrThisAsStaticType {
         get => null;
