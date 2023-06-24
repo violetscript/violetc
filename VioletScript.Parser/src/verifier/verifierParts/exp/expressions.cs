@@ -978,7 +978,7 @@ public partial class Verifier
                 NameAndTypePair? paramInferNameAndType = inferType != null && inferType.FunctionHasRequiredParameters && i < inferType.FunctionCountOfRequiredParameters ? inferType.FunctionRequiredParameters[i] : null;
                 FRequiredParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
                 var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
-                resultType_params.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
+                resultType_params.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty?.StaticType ?? this.m_ModelCore.AnyType));
             }
         }
         else if (inferType != null && inferType.FunctionHasRequiredParameters)
@@ -1004,7 +1004,7 @@ public partial class Verifier
                 }
                 FOptParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
                 var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
-                resultType_optParams.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType));
+                resultType_optParams.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty?.StaticType ?? this.m_ModelCore.AnyType));
             }
         }
         else if (inferType != null && inferType.FunctionHasOptParameters)
@@ -1022,7 +1022,7 @@ public partial class Verifier
             }
             FRestParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
             var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
-            resultType_restParam = new NameAndTypePair(name, binding.Pattern.SemanticProperty.StaticType);
+            resultType_restParam = new NameAndTypePair(name, binding.Pattern.SemanticProperty?.StaticType ?? this.m_ModelCore.AnyType);
         }
         if (common.ReturnType != null)
         {

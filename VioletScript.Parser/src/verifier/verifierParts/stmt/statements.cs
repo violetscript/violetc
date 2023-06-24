@@ -540,6 +540,11 @@ public partial class Verifier
             if (swCase.Pattern != null)
             {
                 VerifyDestructuringPattern(swCase.Pattern, false, m_Frame.Properties, Visibility.Public, null);
+                // assert(swCase.pattern.semanticProperty != null)
+                if (swCase.Pattern.SemanticProperty == null)
+                {
+                    throw new Exception("swCase.Pattern.SemanticProperty == null");
+                }
                 var gotType = swCase.Pattern.SemanticProperty.StaticType;
                 if (discriminant != null && !gotType.CanBeASubtypeOf(discriminant.StaticType))
                 {
