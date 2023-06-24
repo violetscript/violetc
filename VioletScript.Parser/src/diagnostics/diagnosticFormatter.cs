@@ -136,7 +136,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [142] = "Tuple destructuring cannot have more than $limit elements",
         [143] = "Tuple destructuring pattern must not have a rest element",
         [144] = "Rest element must be last element",
-        [145] = "Record pattern key must be an identifier",
+        [145] = "Record pattern key here must be an identifier when destructuring base type '$t'",
         [146] = "'$name' is a generic function, therefore must be argumented",
         [147] = "Assigning read-only property '$name'",
         [148] = "Destructuring assignment target must be lexical",

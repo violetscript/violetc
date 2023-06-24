@@ -111,7 +111,7 @@ public partial class Verifier
                 else
                 {
                     // VerifyError: key is not an identifier
-                    VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
+                    VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {["t"] = m_ModelCore.AnyType});
                 }
             }
         }
@@ -171,7 +171,7 @@ public partial class Verifier
                 else
                 {
                     // VerifyError: key is not an identifier
-                    VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
+                    VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {["t"] = m_ModelCore.MapType});
                 }
             }
         }
@@ -249,7 +249,7 @@ public partial class Verifier
             else
             {
                 VerifyExp(field.Key);
-                VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
+                VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {["t"] = type});
                 if (field.Subpattern != null)
                 {
                     VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, m_ModelCore.AnyType);
