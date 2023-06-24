@@ -14,7 +14,7 @@ public partial class Verifier
 {
     private void Fragmented_VerifyNondestructuringPattern3(Ast.NondestructuringPattern pattern)
     {
-        var superType = this.m_Frame.TypeFromFrame.SuperType;
+        var superType = this.m_Frame.TypeFromFrame?.SuperType;
         if (superType == null || pattern.SemanticProperty == null)
         {
             return;

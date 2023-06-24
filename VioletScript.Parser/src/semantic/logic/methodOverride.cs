@@ -22,7 +22,7 @@ public static class MethodOverride {
         if (superType == null) {
             return f.MustOverrideAMethodIssue(name);
         }
-        var superTypeMethod = superType.ResolveProperty(name);
+        var superTypeMethod = superType.ModelCore.Factory.Value(superType).ResolveProperty(name);
         if (superTypeMethod == null || !(superTypeMethod is ReferenceValue)) {
             return f.MustOverrideAMethodIssue(name);
         }

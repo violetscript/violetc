@@ -29,7 +29,7 @@ public partial class Verifier
 
     private void Fragmented_VerifyRecordDestructuringPattern3Field(Ast.RecordDestructuringPatternField field)
     {
-        var superType = this.m_Frame.TypeFromFrame.SuperType;
+        var superType = this.m_Frame.TypeFromFrame?.SuperType;
         if (superType == null || field.SemanticProperty == null)
         {
             return;

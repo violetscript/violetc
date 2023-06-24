@@ -249,6 +249,11 @@ public static class DefaultDiagnosticFormatterStatics {
 
         // warning
         [250] = "Function has no return type annotation",
+
+        [251] = "'$name' must override a method",
+        [252] = "Cannot override method '$name' as it's generic",
+        [253] = "Incompatible override: expected signature $type",
+        [254] = "Cannot override method '$name' as it's marked final",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
