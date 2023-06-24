@@ -93,7 +93,7 @@ public partial class Verifier
                 }
                 else
                 {
-                    // VerifyError: key is not an identifier
+                    // ERROR: key is not an identifier
                     VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
                 }
             }
@@ -136,7 +136,7 @@ public partial class Verifier
                 }
                 else
                 {
-                    // VerifyError: key is not an identifier
+                    // ERROR: key is not an identifier
                     VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
                 }
             }
@@ -200,11 +200,11 @@ public partial class Verifier
             }
             if (!throwawayProp.PropertyIsVisibleTo(m_Frame))
             {
-                // VerifyError: accessing private property
+                // ERROR: accessing private property
                 VerifyError(key.Span.Value.Script, 130, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
             }
             throwawayProp = throwawayProp?.EscapeAlias();
-            // VerifyError: unargumented function
+            // ERROR: unargumented function
             if (throwawayProp.TypeParameters != null)
             {
                 VerifyError(key.Span.Value.Script, 146, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });

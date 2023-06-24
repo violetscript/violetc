@@ -26,30 +26,8 @@ public partial class Verifier
             {
                 if (field.Subpattern == null)
                 {
-                    Symbol newDefinition = null;
-                    var previousDefinition = output[key.Value];
-                    if (previousDefinition != null)
-                    {
-                        // VerifyError: duplicate definition
-                        newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
-                        // assert newDefinition != null
-                        if (newDefinition == null)
-                        {
-                            throw new Exception("Duplicating definition with wrong kind.");
-                        }
-                        if (!m_Options.AllowDuplicates)
-                        {
-                            VerifyError(key.Span.Value.Script, 139, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
-                        }
-                    }
-                    else
-                    {
-                        newDefinition = m_ModelCore.Factory.VariableSlot(key.Value, readOnly, null);
-                        newDefinition.Visibility = visibility;
-                        newDefinition.ParentDefinition = parentDefinition;
-                        output[key.Value] = newDefinition;
-                    }
-                    field.SemanticProperty = newDefinition;
+                    field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, null, key.Span.Value, readOnly, visibility);
+                    field.SemanticProperty.ParentDefinition = parentDefinition;
                 }
                 else
                 {
@@ -64,7 +42,7 @@ public partial class Verifier
                 }
                 else
                 {
-                    // VerifyError: key is not an identifier
+                    // ERROR: key is not an identifier
                     VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
                 }
             }

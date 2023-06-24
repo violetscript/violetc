@@ -49,6 +49,10 @@ public partial class Verifier
         pattern.SemanticProperty = this.DefineOrReuseVariable(pattern.Name, output, type, pattern.Span.Value, readOnly, visibility);
     }
 
+    /// <summary>
+    /// Defines or re-use variable. <c>type</c> can be null
+    /// for partially defined variables.
+    /// </summary>
     private Symbol DefineOrReuseVariable(string name, Properties output, Symbol type, Span span, bool readOnly, Visibility visibility)
     {
         Symbol newDefinition = null;
@@ -74,7 +78,7 @@ public partial class Verifier
         {
             newDefinition = m_ModelCore.Factory.VariableSlot(name, readOnly, type);
             newDefinition.Visibility = visibility;
-            newDefinition.InitValue ??= type.DefaultValue;
+            newDefinition.InitValue ??= type?.DefaultValue;
             output[name] = newDefinition;
         }
         return newDefinition;
