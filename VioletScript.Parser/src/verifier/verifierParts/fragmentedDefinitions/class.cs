@@ -158,8 +158,27 @@ public partial class Verifier
             FragmentedB_VerifyTypeParameters(type.TypeParameters, defn.Generics, defn.SemanticFrame.Properties);
         }
 
+        if (type.IsValueClass)
+        {
+            this.ForbidValueClassWritableFields(defn.Block.Statements);
+        }
         Fragmented_VerifyStatementSeq(defn.Block.Statements, VerifyPhase.Phase2);
         ExitFrame();
+    }
+
+    private void ForbidValueClassWritableFields(List<Ast.Statement> list)
+    {
+        foreach (var drtv in list)
+        {
+            if (drtv is Ast.VariableDefinition varDefn && !varDefn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static) && !varDefn.ReadOnly)
+            {
+                this.VerifyError(null, 255, varDefn.Span.Value, new DiagnosticArguments {});
+            }
+            else if (drtv is Ast.IncludeStatement includeStmt)
+            {
+                this.ForbidValueClassWritableFields(includeStmt.InnerStatements);
+            }
+        }
     }
 
     private void Fragmented_VerifyClassDefinition5(Ast.ClassDefinition defn)

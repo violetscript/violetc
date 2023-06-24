@@ -9,7 +9,6 @@ Some of the notes in this document apply to verification and bytecode or code ge
 - [ ] **Code generation:** Empty programs that, for example, contain include directives whose inner statement sequence is empty or consist of other empty include directives, should not generate any activation and not be evaluated.
 - [ ] **Code generation:** When a class inherits static methods or virtual properties, `this` has to be replaced by that class in each such method. Look everywhere for `ClassStaticThis`.
 - [ ] Decorators must not be allowed in certain places, like over ordinary functions, ordinary variables and `static` variables.
-- [ ] Prohibit defining writable instance (non `static`) variables for `[Value]` classes.
 
 ### `x is y: C`
 
@@ -29,3 +28,4 @@ Some of the notes in this document apply to verification and bytecode or code ge
 - [x] `exp.<>`: verify constraints
 - [x] `v as T` or `v as? T` DO NOT turn `T` into `T?`; instead, verification for such conversion produces a `ConversionValue` with `isOptional` set to `true`, and `TypeConversions.convertExploicit(...)` will properly wrap `T` into `T?` if needed.
 - [x] Instance methods can be overriden with additional optional parameters and a contravariant return type or any return type if the original return type is any.
+- [x] Prohibit defining writable instance (non `static`) variables for `[Value]` classes.

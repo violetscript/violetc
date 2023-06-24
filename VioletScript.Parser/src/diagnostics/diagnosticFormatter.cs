@@ -254,6 +254,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [252] = "Cannot override method '$name' as it's generic",
         [253] = "Incompatible override: expected signature $type",
         [254] = "Cannot override method '$name' as it's marked final",
+        [255] = "Variables must be read-only under a value class",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
