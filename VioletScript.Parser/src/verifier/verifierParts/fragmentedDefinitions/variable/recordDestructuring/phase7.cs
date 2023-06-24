@@ -41,7 +41,7 @@ public partial class Verifier
             {
                 if (field.Subpattern == null)
                 {
-                    field.SemanticProperty.StaticType = this.m_ModelCore.AnyType;
+                    field.SemanticProperty.StaticType ??= this.m_ModelCore.AnyType;
                 }
                 else
                 {
@@ -72,7 +72,7 @@ public partial class Verifier
             {
                 if (field.Subpattern == null)
                 {
-                    field.SemanticProperty.StaticType = undefinedOrValueType;
+                    field.SemanticProperty.StaticType ??= undefinedOrValueType;
                 }
                 else
                 {
@@ -100,7 +100,7 @@ public partial class Verifier
 
                 if (field.Subpattern == null)
                 {
-                    field.SemanticProperty.StaticType = fieldType;
+                    field.SemanticProperty.StaticType ??= fieldType;
                 }
                 else
                 {

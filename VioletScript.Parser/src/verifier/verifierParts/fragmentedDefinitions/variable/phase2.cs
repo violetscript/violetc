@@ -29,18 +29,21 @@ public partial class Verifier
 
     private void Fragmented_VerifyVariableBinding2(Ast.VariableBinding binding)
     {
-        // if not in class frame or not a read-only,
-        // the binding must have a constant initial value
-        // or initializer.
-        var notInClassOrNotReadOnly = !(this.m_Frame is ClassFrame) || !binding.Pattern.SemanticProperty.ReadOnly;
-        var noInitialValueOrInit = binding.Pattern.SemanticProperty.InitValue == null && binding.Init == null;
-        if (notInClassOrNotReadOnly && noInitialValueOrInit)
+        if (binding.Pattern.SemanticProperty != null)
         {
-            VerifyError(binding.Pattern.Span.Value.Script, 244, binding.Span.Value, new DiagnosticArguments {});
+            // if not in class frame or not a read-only,
+            // the binding must have a constant initial value
+            // or initializer.
+            var notInClassOrNotReadOnly = !(this.m_Frame is ClassFrame) || !binding.Pattern.SemanticProperty.ReadOnly;
+            var noInitialValueOrInit = binding.Pattern.SemanticProperty.InitValue == null && binding.Init == null;
+            if (notInClassOrNotReadOnly && noInitialValueOrInit)
+            {
+                VerifyError(binding.Pattern.Span.Value.Script, 244, binding.Span.Value, new DiagnosticArguments {});
+            }
         }
 
         // try resolving initializer as a constant expression
-        if (binding.Init != null)
+        if (binding.Init != null && binding.Pattern.SemanticProperty != null)
         {
             var val = this.VerifyConstantExpAsValue(binding.Init, false, binding.Pattern.SemanticProperty.StaticType);
             binding.Pattern.SemanticProperty.StaticType ??= val;

@@ -42,11 +42,12 @@ public partial class Verifier
         Symbol init = null;
         if (binding.Init != null)
         {
-            var type = binding.Pattern.SemanticProperty.StaticType;
+            var type = binding.Pattern.SemanticProperty?.StaticType;
             init = type == null ? this.VerifyExpAsValue(binding.Init) : this.LimitExpType(binding.Init, type);
         }
-        // if init is a constant value, use it as initial value
-        if (init is ConstantValue && init.StaticType == binding.Pattern.SemanticProperty.StaticType)
+        // if initialiser is a constant value,
+        // use it as initial value.
+        if (init is ConstantValue && binding.Pattern.SemanticProperty != null && init.StaticType == binding.Pattern.SemanticProperty.StaticType)
         {
             binding.Pattern.SemanticProperty.InitValue = init;
         }

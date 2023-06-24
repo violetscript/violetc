@@ -46,25 +46,29 @@ public partial class Verifier
         else
         {
             VerifyDestructuringPattern(binding.Pattern, readOnly, output, visibility);
-            if (binding.Init != null)
+            if (binding.Init != null && binding.Pattern.SemanticProperty != null)
             {
                 init = LimitExpType(binding.Init, binding.Pattern.SemanticProperty.StaticType);
             }
         }
 
-        if (init is ConstantValue && init.StaticType == binding.Pattern.SemanticProperty.StaticType)
+        // constant initialiser
+        if (init is ConstantValue && binding.Pattern.SemanticProperty != null && init.StaticType == binding.Pattern.SemanticProperty.StaticType)
         {
             binding.Pattern.SemanticProperty.InitValue = init;
         }
 
-        // if not in class frame or not a read-only,
-        // the binding must have a constant initial value
-        // or initializer.
-        var notInClassOrNotReadOnly = !(this.m_Frame is ClassFrame) || !readOnly;
-        var noInitialValueOrInit = binding.Pattern.SemanticProperty.InitValue == null && binding.Init == null;
-        if (notInClassOrNotReadOnly && noInitialValueOrInit)
+        if (binding.Pattern.SemanticProperty != null)
         {
-            VerifyError(binding.Pattern.Span.Value.Script, 244, binding.Span.Value, new DiagnosticArguments {});
+            // if not in class frame or not a read-only,
+            // the binding must have a constant initial value
+            // or initializer.
+            var notInClassOrNotReadOnly = !(this.m_Frame is ClassFrame) || !readOnly;
+            var noInitialValueOrInit = binding.Pattern.SemanticProperty.InitValue == null && binding.Init == null;
+            if (notInClassOrNotReadOnly && noInitialValueOrInit)
+            {
+                VerifyError(binding.Pattern.Span.Value.Script, 244, binding.Span.Value, new DiagnosticArguments {});
+            }
         }
 
         binding.SemanticVerified = true;
@@ -126,10 +130,14 @@ public partial class Verifier
         else
         {
             VerifyDestructuringPattern(binding.Pattern, false, output, Visibility.Public, inferType ?? m_ModelCore.AnyType);
-            LimitConstantExpType(binding.Init, binding.Pattern.SemanticProperty.StaticType);
+            if (binding.Pattern.SemanticProperty != null)
+            {
+                LimitConstantExpType(binding.Init, binding.Pattern.SemanticProperty.StaticType);
+            }
         }
 
-        if (init is ConstantValue && init.StaticType == binding.Pattern.SemanticProperty.StaticType)
+        // constant initialiser
+        if (init is ConstantValue && binding.Pattern.SemanticProperty != null && init.StaticType == binding.Pattern.SemanticProperty.StaticType)
         {
             binding.Pattern.SemanticProperty.InitValue = init;
         }
@@ -171,5 +179,36 @@ public partial class Verifier
         {
             VerifyError(binding.Pattern.Span.Value.Script, 185, binding.Pattern.Span.Value, new DiagnosticArguments {});
         }
+    }
+
+    /// <summary>
+    /// Defines or re-uses a variable. <c>type</c> can be null
+    /// for partially defined variables.
+    /// Returns null if the variable is a duplicate.
+    /// </summary>
+    private Symbol DefineOrReuseVariable(string name, Properties output, Symbol type, Span span, bool readOnly, Visibility visibility)
+    {
+        Symbol newDefinition = null;
+        var previousDefinition = output[name];
+
+        if (previousDefinition != null)
+        {
+            newDefinition = previousDefinition is VariableSlot ? previousDefinition : null;
+
+            // ERROR: duplicate definition
+            if (!m_Options.AllowDuplicates || newDefinition == null)
+            {
+                VerifyError(span.Script, 139, span, new DiagnosticArguments { ["name"] = name });
+                newDefinition = null;
+            }
+        }
+        else
+        {
+            newDefinition = m_ModelCore.Factory.VariableSlot(name, readOnly, type);
+            newDefinition.Visibility = visibility;
+            newDefinition.InitValue ??= type?.DefaultValue;
+            output[name] = newDefinition;
+        }
+        return newDefinition;
     }
 }
