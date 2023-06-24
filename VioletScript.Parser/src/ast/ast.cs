@@ -14,7 +14,7 @@ public class Node {
     }
 
     /// <summary>
-    /// Returns a list of frames gathered from binding `is` operations.
+    /// Returns a list of frames gathered from binding <c>is</c> operations.
     /// </summary>
     public virtual List<Symbol> GetTypeTestFrames()
     {
@@ -192,6 +192,10 @@ public class NondestructuringPattern : DestructuringPattern {
     }
 }
 
+/// <summary>
+/// <c>{}</c>. Used to destructure from either the any type, the Map type
+/// or any type.
+/// </summary>
 public class RecordDestructuringPattern : DestructuringPattern {
     public List<RecordDestructuringPatternField> Fields;
 
@@ -226,8 +230,8 @@ public class RecordDestructuringPatternField : Node {
 }
 
 /// <summary>
-/// Use to destructure from either the any type, a tuple type or
-/// an array type.
+/// <c>[]</c>. Used to destructure from either
+/// the any type, a tuple type or an array type.
 /// </summary>
 public class ArrayDestructuringPattern : DestructuringPattern {
     /// <summary>Item. Either <c>null</c>, <c>DestructuringPattern</c> or <c>ArrayDestructuringSpread</c>.</summary>

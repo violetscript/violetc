@@ -1346,30 +1346,68 @@ public partial class Verifier
         var throwawayNonNullBase = m_ModelCore.Factory.Value(baseType.ToNonNullableType());
         exp.SemanticThrowawayNonNullBase = throwawayNonNullBase;
 
-        var proxy = InheritedProxies.Find(throwawayNonNullBase.StaticType, Operator.ProxyToGetIndex);
-
-        if (proxy == null)
+        // optional tuple access
+        if (throwawayNonNullBase.StaticType is TupleType)
         {
-            VerifyError(null, 201, exp.Span.Value, new DiagnosticArguments {["t"] = baseType.ToNonNullableType()});
-            exp.SemanticSymbol = null;
-            exp.SemanticExpResolved = true;
-            return exp.SemanticSymbol;
-        }
+            var tupleType = throwawayNonNullBase.StaticType;
+            if (!(exp.Key is Ast.NumericLiteral))
+            {
+                VerifyError(null, 247, exp.Span.Value, new DiagnosticArguments {});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+            var idx = (int) ((Ast.NumericLiteral) exp.Key).Value;
+            if (idx < 0 || idx >= tupleType.CountOfTupleElements)
+            {
+                VerifyError(null, 248, exp.Span.Value, new DiagnosticArguments {["type"] = tupleType});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
 
-        LimitExpType(exp.Key, proxy.StaticType.FunctionRequiredParameters[0].Type);
-
-        if (baseType.IncludesNull && !baseType.IncludesUndefined)
-        {
-            exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.NullType, proxy.StaticType.FunctionReturnType}));
-        }
-        else if (!baseType.IncludesNull && baseType.IncludesUndefined)
-        {
-            exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, proxy.StaticType.FunctionReturnType}));
-        }
+            exp.SemanticSymbol = this.m_ModelCore.Factory.TupleElementValue(@base, idx, tupleType);
+            if (baseType.IncludesNull && !baseType.IncludesUndefined)
+            {
+                exp.SemanticSymbol.StaticType = m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.NullType, exp.SemanticSymbol.StaticType});
+            }
+            else if (!baseType.IncludesNull && baseType.IncludesUndefined)
+            {
+                exp.SemanticSymbol.StaticType = m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, exp.SemanticSymbol.StaticType});
+            }
+            else
+            {
+                exp.SemanticSymbol.StaticType = m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, m_ModelCore.NullType, exp.SemanticSymbol.StaticType});
+            }
+        } // end optional tuple access
+        // optional proxy indexing
         else
         {
-            exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, m_ModelCore.NullType, proxy.StaticType.FunctionReturnType}));
-        }
+            var proxy = InheritedProxies.Find(throwawayNonNullBase.StaticType, Operator.ProxyToGetIndex);
+
+            if (proxy == null)
+            {
+                VerifyError(null, 201, exp.Span.Value, new DiagnosticArguments {["t"] = baseType.ToNonNullableType()});
+                exp.SemanticSymbol = null;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+
+            LimitExpType(exp.Key, proxy.StaticType.FunctionRequiredParameters[0].Type);
+
+            if (baseType.IncludesNull && !baseType.IncludesUndefined)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.NullType, proxy.StaticType.FunctionReturnType}));
+            }
+            else if (!baseType.IncludesNull && baseType.IncludesUndefined)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, proxy.StaticType.FunctionReturnType}));
+            }
+            else
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, m_ModelCore.NullType, proxy.StaticType.FunctionReturnType}));
+            }
+        } // end optional proxy indexing
 
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
