@@ -101,8 +101,68 @@ public partial class Verifier
         }
 
         // resolve signature
-        toDo();
+        method.StaticType = this.Fragmented_ResolveFunctionSignature(defn.Common, defn.Id.Span.Value);
 
         this.ExitFrame();
+    }
+
+    private Symbol Fragmented_ResolveFunctionSignature(Ast.FunctionCommon common, Span idSpan)
+    {
+        List<NameAndTypePair> @params = null;
+        List<NameAndTypePair> optParams = null;
+        NameAndTypePair? restParam = null;
+        Symbol returnType = null;
+        if (common.Params != null)
+        {
+            @params = new List<NameAndTypePair>();
+            foreach (var binding in common.Params)
+            {
+                var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
+                if (binding.Pattern.Type == null)
+                {
+                    VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
+                }
+                @params.Add(new NameAndTypePair(name, binding.Pattern.Type == null ? this.m_ModelCore.AnyType : this.VerifyTypeExp(binding.Pattern.Type) ?? this.m_ModelCore.AnyType));
+            }
+        }
+        else if (common.OptParams != null)
+        {
+            @params = new List<NameAndTypePair>();
+            foreach (var binding in common.OptParams)
+            {
+                var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
+                if (binding.Pattern.Type == null)
+                {
+                    VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
+                }
+                @params.Add(new NameAndTypePair(name, binding.Pattern.Type == null ? this.m_ModelCore.AnyType : this.VerifyTypeExp(binding.Pattern.Type) ?? this.m_ModelCore.AnyType));
+            }
+        }
+        else if (common.RestParam != null)
+        {
+            var binding = common.RestParam;
+            var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
+            var type = binding.Pattern.Type == null ? this.m_ModelCore.AnyType : this.VerifyTypeExp(binding.Pattern.Type) ?? this.m_ModelCore.AnyType;
+            if (binding.Pattern.Type == null)
+            {
+                VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
+            }
+            if (binding.Pattern.SemanticProperty != null && binding.Pattern.SemanticProperty.StaticType != m_ModelCore.AnyType && !binding.Pattern.SemanticProperty.StaticType.IsInstantiationOf(m_ModelCore.ArrayType))
+            {
+                VerifyError(binding.Pattern.Span.Value.Script, 185, binding.Pattern.Span.Value, new DiagnosticArguments {});
+                type = this.m_ModelCore.AnyType;
+            }
+            restParam = new NameAndTypePair(name, type);
+        }
+        if (common.ReturnType == null)
+        {
+            Warn(idSpan.Script, 250, idSpan, new DiagnosticArguments {});
+        }
+        else
+        {
+            returnType = this.VerifyTypeExp(common.ReturnType);
+        }
+        returnType ??= this.m_ModelCore.AnyType;
+        return this.m_ModelCore.Factory.FunctionType(@params?.ToArray(), optParams?.ToArray(), restParam, returnType);
     }
 }
