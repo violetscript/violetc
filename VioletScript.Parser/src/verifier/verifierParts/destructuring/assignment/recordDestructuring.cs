@@ -53,7 +53,7 @@ public partial class Verifier
                 // key must be an identifier
                 else
                 {
-                    VerifyError(null, 145, field.Key.Span.Value, new DiagnosticArguments {["t"] = m_ModelCore.AnyType});
+                    VerifyError(null, 145, field.Key.Span.Value, new DiagnosticArguments {});
                     VerifyExp(field.Key);
                 }
             }
@@ -88,7 +88,7 @@ public partial class Verifier
                 // key must be an identifier
                 else
                 {
-                    VerifyError(null, 145, field.Key.Span.Value, new DiagnosticArguments {["t"] = mapType});
+                    VerifyError(null, 145, field.Key.Span.Value, new DiagnosticArguments {});
                     VerifyExp(field.Key);
                 }
             }
@@ -145,7 +145,7 @@ public partial class Verifier
             // key must be an identifier
             else
             {
-                VerifyError(null, 145, field.Key.Span.Value, new DiagnosticArguments {["t"] = type});
+                VerifyError(null, 145, field.Key.Span.Value, new DiagnosticArguments {});
                 VerifyExp(field.Key);
                 if (field.Subpattern != null)
                 {
