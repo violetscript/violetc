@@ -83,7 +83,6 @@ public partial class Verifier
         for (int i = 0; i < pattern.Items.Count(); ++i)
         {
             var item = pattern.Items[i];
-            var tupleItemType = i < tupleType.TupleElementTypes.Count() ? tupleType.TupleElementTypes[i] : null;
             if (item == null)
             {
                 // ellision
@@ -95,6 +94,7 @@ public partial class Verifier
             }
             else
             {
+                var tupleItemType = i < tupleType.TupleElementTypes.Count() ? tupleType.TupleElementTypes[i] : null;
                 VerifyDestructuringPattern((Ast.DestructuringPattern) item, readOnly, output, visibility, tupleItemType ?? m_ModelCore.AnyType);
             }
         }

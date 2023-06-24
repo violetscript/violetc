@@ -12,27 +12,105 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    private void Fragmented_VerifyArrayDestructuringPattern7(Ast.ArrayDestructuringPattern pattern, Symbol init)
+    private void Fragmented_VerifyArrayDestructuringPattern7(Ast.ArrayDestructuringPattern pattern, Symbol initType)
     {
-        pattern.SemanticProperty.StaticType ??= init?.StaticType ?? this.m_ModelCore.AnyType;
+        pattern.SemanticProperty.StaticType ??= initType ?? this.m_ModelCore.AnyType;
         pattern.SemanticProperty.InitValue ??= pattern.SemanticProperty.StaticType?.DefaultValue;
 
-        foreach (var item in pattern.Items)
+        var type = pattern.SemanticProperty.StaticType;
+
+        if (type is TupleType)
         {
+            this.Fragmented_VerifyArrayDestructuringPattern7ForTuple(pattern, type);
+        }
+        else if (type.IsInstantiationOf(this.m_ModelCore.ArrayType))
+        {
+            this.Fragmented_VerifyArrayDestructuringPattern7ForArray(pattern, type);
+        }
+        else
+        {
+            if (type != m_ModelCore.AnyType)
+            {
+                this.VerifyError(pattern.Span.Value.Script, 141, pattern.Span.Value, new DiagnosticArguments { ["t"] = type });
+            }
+            this.Fragmented_VerifyArrayDestructuringPattern7ForAny(pattern);
+        }
+    }
+
+    private void Fragmented_VerifyArrayDestructuringPattern7ForTuple(Ast.ArrayDestructuringPattern pattern, Symbol tupleType)
+    {
+        if (pattern.Items.Count() > tupleType.TupleElementTypes.Count())
+        {
+            this.VerifyError(pattern.Span.Value.Script, 142, pattern.Span.Value, new DiagnosticArguments { ["limit"] = tupleType.TupleElementTypes.Count() });
+        }
+        for (int i = 0; i < pattern.Items.Count(); ++i)
+        {
+            var item = pattern.Items[i];
             if (item is Ast.ArrayDestructuringSpread spread)
             {
-                toDo();
-                this.Fragmented_VerifyDestructuringPattern7(spread.Pattern, init);
+                this.VerifyError(spread.Span.Value.Script, 143, spread.Span.Value, new DiagnosticArguments {});
+                this.Fragmented_VerifyDestructuringPattern7(spread.Pattern, this.m_ModelCore.AnyType);
                 continue;
             }
             // hole
             if (item == null)
             {
-                toDo();
                 continue;
             }
-            toDo();
-            this.Fragmented_VerifyDestructuringPattern7((Ast.DestructuringPattern) item, init);
+            var tupleItemType = i < tupleType.TupleElementTypes.Count() ? tupleType.TupleElementTypes[i] : null;
+            this.Fragmented_VerifyDestructuringPattern7((Ast.DestructuringPattern) item, tupleItemType ?? this.m_ModelCore.AnyType);
+        }
+    }
+
+    private void Fragmented_VerifyArrayDestructuringPattern7ForArray(Ast.ArrayDestructuringPattern pattern, Symbol arrayType)
+    {
+        var arrayElementType = arrayType.ArgumentTypes[0];
+        for (int i = 0; i < pattern.Items.Count(); ++i)
+        {
+            var item = pattern.Items[i];
+            if (item == null)
+            {
+                // ellision
+            }
+            else if (item is Ast.ArrayDestructuringSpread spread)
+            {
+                // a rest element must be the last element
+                if (i != pattern.Items.Count() -1)
+                {
+                    this.VerifyError(spread.Span.Value.Script, 144, spread.Span.Value, new DiagnosticArguments {});
+                }
+                this.Fragmented_VerifyDestructuringPattern7(spread.Pattern, arrayType);
+            }
+            else
+            {
+                this.Fragmented_VerifyDestructuringPattern7((Ast.DestructuringPattern) item, arrayElementType);
+            }
+        }
+    }
+
+    private void Fragmented_VerifyArrayDestructuringPattern7ForAny(Ast.ArrayDestructuringPattern pattern)
+    {
+        var anyType = m_ModelCore.AnyType;
+        for (int i = 0; i < pattern.Items.Count(); ++i)
+        {
+            var item = pattern.Items[i];
+            if (item == null)
+            {
+                // ellision
+            }
+            else if (item is Ast.ArrayDestructuringSpread spread)
+            {
+                // a rest element must be the last element
+                if (i != pattern.Items.Count() -1)
+                {
+                    this.VerifyError(spread.Span.Value.Script, 144, spread.Span.Value, new DiagnosticArguments {});
+                }
+                this.Fragmented_VerifyDestructuringPattern7(spread.Pattern, anyType);
+            }
+            else
+            {
+                this.Fragmented_VerifyDestructuringPattern7((Ast.DestructuringPattern) item, anyType);
+            }
         }
     }
 }

@@ -50,13 +50,13 @@ public partial class Verifier
         {
             binding.Pattern.SemanticProperty.InitValue = init;
         }
-        this.Fragmented_VerifyDestructuringPattern7(binding.Pattern, init);
+        this.Fragmented_VerifyDestructuringPattern7(binding.Pattern, init?.StaticType);
     }
 
-    private void Fragmented_VerifyDestructuringPattern7(Ast.DestructuringPattern pattern, Symbol init)
+    private void Fragmented_VerifyDestructuringPattern7(Ast.DestructuringPattern pattern, Symbol initType)
     {
-        return pattern is Ast.NondestructuringPattern nondestructuring ? this.Fragmented_VerifyNondestructuringPattern7(nondestructuring, init)
-            : pattern is Ast.RecordDestructuringPattern recordDestructuring ? this.Fragmented_VerifyRecordDestructuringPattern7(recordDestructuring, init) :
-                this.Fragmented_VerifyArrayDestructuringPattern7((Ast.ArrayDestructuringPattern) pattern, init);
+        return pattern is Ast.NondestructuringPattern nondestructuring ? this.Fragmented_VerifyNondestructuringPattern7(nondestructuring, initType)
+            : pattern is Ast.RecordDestructuringPattern recordDestructuring ? this.Fragmented_VerifyRecordDestructuringPattern7(recordDestructuring, initType) :
+                this.Fragmented_VerifyArrayDestructuringPattern7((Ast.ArrayDestructuringPattern) pattern, initType);
     }
 }
