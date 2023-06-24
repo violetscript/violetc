@@ -16,11 +16,11 @@ public partial class Verifier
     {
         if (phase == VerifyPhase.Phase1)
         {
-            doFooBarQuxBaz();
+            this.Fragmented_VerifyFunctionDefinition1(defn);
         }
         else if (phase == VerifyPhase.Phase2)
         {
-            doFooBarQuxBaz();
+            this.Fragmented_VerifyFunctionDefinition2(defn);
         }
         else if (phase == VerifyPhase.Phase3)
         {
@@ -72,5 +72,15 @@ public partial class Verifier
             output[name] = newDefinition;
         }
         return newDefinition;
+    }
+
+    private void Fragmented_VerifyFunctionDefinition1(Ast.FunctionDefinition defn)
+    {
+        var method = defn.SemanticMethodSlot;
+        if (method == null)
+        {
+            return;
+        }
+        toDo();
     }
 }
