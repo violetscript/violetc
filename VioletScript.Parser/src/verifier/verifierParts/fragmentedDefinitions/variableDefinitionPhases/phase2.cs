@@ -51,8 +51,17 @@ public partial class Verifier
 
     private void Fragmented_VerifyDestructuringPattern2(Ast.DestructuringPattern pattern)
     {
-        return pattern is Ast.NondestructuringPattern nondestructuring ? this.Fragmented_VerifyNondestructuringPattern2(nondestructuring)
-            : pattern is Ast.RecordDestructuringPattern recordDestructuring ? this.Fragmented_VerifyRecordDestructuringPattern2(recordDestructuring) :
-                this.Fragmented_VerifyArrayDestructuringPattern2((Ast.ArrayDestructuringPattern) pattern);
+        if (pattern is Ast.NondestructuringPattern nondestructuring)
+        {
+            this.Fragmented_VerifyNondestructuringPattern2(nondestructuring);
+        }
+        else if (pattern is Ast.RecordDestructuringPattern recordDestructuring)
+        {
+            this.Fragmented_VerifyRecordDestructuringPattern2(recordDestructuring);
+        }
+        else
+        {
+            this.Fragmented_VerifyArrayDestructuringPattern2((Ast.ArrayDestructuringPattern) pattern);
+        }
     }
 }

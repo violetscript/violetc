@@ -55,8 +55,17 @@ public partial class Verifier
         Properties output, Visibility visibility,
         Symbol parentDefinition)
     {
-        return pattern is Ast.NondestructuringPattern nondestructuring ? this.Fragmented_VerifyNondestructuringPattern1(nondestructuring, readOnly, output, visibility, parentDefinition)
-            : pattern is Ast.RecordDestructuringPattern recordDestructuring ? this.Fragmented_VerifyRecordDestructuringPattern1(recordDestructuring, readOnly, output, visibility, parentDefinition) :
-                this.Fragmented_VerifyArrayDestructuringPattern1((Ast.ArrayDestructuringPattern) pattern, readOnly, output, visibility, parentDefinition);
+        if (pattern is Ast.NondestructuringPattern nondestructuring)
+        {
+            this.Fragmented_VerifyNondestructuringPattern1(nondestructuring, readOnly, output, visibility, parentDefinition);
+        }
+        else if (pattern is Ast.RecordDestructuringPattern recordDestructuring)
+        {
+            this.Fragmented_VerifyRecordDestructuringPattern1(recordDestructuring, readOnly, output, visibility, parentDefinition);
+        }
+        else
+        {
+            this.Fragmented_VerifyArrayDestructuringPattern1((Ast.ArrayDestructuringPattern) pattern, readOnly, output, visibility, parentDefinition);
+        }
     }
 }

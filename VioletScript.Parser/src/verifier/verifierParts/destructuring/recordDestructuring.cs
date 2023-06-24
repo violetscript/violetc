@@ -128,7 +128,7 @@ public partial class Verifier
     {
         Symbol keyType = mapType.ArgumentTypes[0];
         Symbol valueType = mapType.ArgumentTypes[1];
-        // accessing keys should produce `v:undefined|V`
+        // accessing keys should produce `v: undefined | V`
         Symbol undefinedOrValueType = m_ModelCore.Factory.UnionType(new Symbol[]{m_ModelCore.UndefinedType, valueType});
 
         foreach (var field in pattern.Fields)
@@ -190,34 +190,7 @@ public partial class Verifier
         {
             if (field.Key is Ast.StringLiteral key)
             {
-                var throwawayProp = m_ModelCore.Factory.Value(type).ResolveProperty(key.Value);
-                Symbol fieldType = null;
-                if (throwawayProp == null)
-                {
-                    // VerifyError: undefined reference
-                    VerifyError(key.Span.Value.Script, 198, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value, ["t"] = type });
-                    fieldType = m_ModelCore.AnyType;
-                }
-                else
-                {
-                    // we're assuming 'throwaway' is neither a namespace, a package nor a type.
-                    if (throwawayProp is Namespace || throwawayProp is Type)
-                    {
-                        throw new Exception("Unimplemented handling of namespace/type fields on record destructuring");
-                    }
-                    if (!throwawayProp.PropertyIsVisibleTo(m_Frame))
-                    {
-                        // VerifyError: accessing private property
-                        VerifyError(key.Span.Value.Script, 130, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
-                    }
-                    throwawayProp = throwawayProp?.EscapeAlias();
-                    // VerifyError: unargumented function
-                    if (throwawayProp.TypeParameters != null)
-                    {
-                        VerifyError(key.Span.Value.Script, 146, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
-                    }
-                    fieldType = throwawayProp.StaticType;
-                }
+                var fieldType = this.VerifyRecordDestructuringCompileTimeFieldType(field, key, type);
 
                 if (field.Subpattern == null)
                 {
@@ -245,16 +218,50 @@ public partial class Verifier
                     VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, fieldType);
                 }
             }
-            // VerifyError: key is not an identifier
+            // ERROR: key is not an identifier
             else
             {
-                VerifyExp(field.Key);
                 VerifyError(field.Key.Span.Value.Script, 145, field.Key.Span.Value, new DiagnosticArguments {});
+                VerifyExp(field.Key);
+
                 if (field.Subpattern != null)
                 {
                     VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, m_ModelCore.AnyType);
                 }
             }
         }
+    }
+
+    private Symbol VerifyRecordDestructuringCompileTimeFieldType(Ast.RecordDestructuringPatternField field, Ast.StringLiteral key, Symbol type)
+    {
+        var throwawayProp = m_ModelCore.Factory.Value(type).ResolveProperty(key.Value);
+        Symbol fieldType = null;
+        if (throwawayProp == null)
+        {
+            // VerifyError: undefined reference
+            VerifyError(key.Span.Value.Script, 198, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value, ["t"] = type });
+            fieldType = m_ModelCore.AnyType;
+        }
+        else
+        {
+            // we're assuming 'throwaway' is neither a namespace, a package nor a type.
+            if (throwawayProp is Namespace || throwawayProp is Type)
+            {
+                throw new Exception("Unimplemented handling of namespace/type fields on record destructuring");
+            }
+            if (!throwawayProp.PropertyIsVisibleTo(m_Frame))
+            {
+                // VerifyError: accessing private property
+                VerifyError(key.Span.Value.Script, 130, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
+            }
+            throwawayProp = throwawayProp?.EscapeAlias();
+            // VerifyError: unargumented function
+            if (throwawayProp.TypeParameters != null)
+            {
+                VerifyError(key.Span.Value.Script, 146, key.Span.Value, new DiagnosticArguments { ["name"] = key.Value });
+            }
+            fieldType = throwawayProp.StaticType;
+        }
+        return fieldType;
     }
 }
