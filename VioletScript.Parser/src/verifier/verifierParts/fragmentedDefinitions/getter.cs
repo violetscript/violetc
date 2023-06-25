@@ -70,8 +70,10 @@ public partial class Verifier
         newDefinition.Visibility = visibility;
         output[name] = newDefinition;
         Symbol method = m_ModelCore.Factory.MethodSlot(name, null, flags);
+        method.Visibility = visibility;
         method.ParentDefinition = parentDefinition;
         method.BelongsToVirtualProperty = newDefinition;
+        method.BelongsToVirtualProperty.Getter = method;
         method.BelongsToVirtualProperty.ParentDefinition = parentDefinition;
         return method;
     }
