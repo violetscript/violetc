@@ -148,12 +148,14 @@ public partial class Verifier
     private void Record_VerifyObjectInitialiser(Ast.ObjectInitializer exp, Symbol type)
     {
         var initializedFields = new Dictionary<string, bool>();
+        var usesRest = false;
 
         foreach (var fieldOrSpread in exp.Fields)
         {
             if (fieldOrSpread is Ast.Spread spread)
             {
                 LimitExpType(spread.Expression, type);
+                usesRest = true;
                 continue;
             }
             var field = (Ast.ObjectField) fieldOrSpread;
@@ -195,12 +197,17 @@ public partial class Verifier
 
         // ensure that all required fields are specified.
         // a field is optional when it possibly contains undefined.
-        foreach (var fieldDefinition in type.RecordTypeFields)
+        // if there is at least one rest element, all fields
+        // are assumed initialised.
+        if (!usesRest)
         {
-            if (!fieldDefinition.Type.IncludesUndefined
-            && !initializedFields.ContainsKey(fieldDefinition.Name))
+            foreach (var fieldDefinition in type.RecordTypeFields)
             {
-                VerifyError(null, 189, exp.Span.Value, new DiagnosticArguments {["name"] = fieldDefinition.Name});
+                if (!fieldDefinition.Type.IncludesUndefined
+                && !initializedFields.ContainsKey(fieldDefinition.Name))
+                {
+                    VerifyError(null, 189, exp.Span.Value, new DiagnosticArguments {["name"] = fieldDefinition.Name});
+                }
             }
         }
     } // object initializer (record)
