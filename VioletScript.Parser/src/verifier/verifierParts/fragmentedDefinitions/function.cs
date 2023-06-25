@@ -234,7 +234,7 @@ public partial class Verifier
 
         this.EnterFrame(defn.SemanticActivation);
         this.Fragmented_VerifyFunctionDefinition7Params(defn.Common);
-        this.Fragmented_VerifyFunctionDefinition7Body(defn.Common);
+        this.Fragmented_VerifyFunctionDefinition7Body(defn.Common, method, defn.Id.Span.Value);
         this.ExitFrame();
     }
 
@@ -256,8 +256,10 @@ public partial class Verifier
         }
     }
 
-    private void Fragmented_VerifyFunctionDefinition7Body(Ast.FunctionCommon common)
+    private void Fragmented_VerifyFunctionDefinition7Body(Ast.FunctionCommon common, Symbol method, Span idSpan)
     {
-        toDo();
+        this.m_MethodSlotStack.Push(method);
+        this.VerifyFunctionBody(idSpan, common.Body, method);
+        this.m_MethodSlotStack.Pop();
     }
 }
