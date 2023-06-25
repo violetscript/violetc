@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using VioletScript.Parser.Diagnostic;
 
 public sealed class Script {
-    string m_FilePath;
-    string m_Content;
-    bool m_Valid = true;
-    List<int> m_LineStarts = new List<int>();
-    List<Script> m_IncludesScripts = new List<Script>();
-    List<Diagnostic> m_Diagnostics = new List<Diagnostic>();
-    List<Comment> m_Comments = new List<Comment>();
+    private string m_FilePath;
+    private string m_Content;
+    private bool m_Valid = true;
+    private List<int> m_LineStarts = new List<int>();
+    private List<Script> m_IncludesScripts = new List<Script>();
+    private List<Diagnostic> m_Diagnostics = new List<Diagnostic>();
+    private List<Comment> m_Comments = new List<Comment>();
 
     public Script(string filePath, string content) {
         m_FilePath = filePath;
