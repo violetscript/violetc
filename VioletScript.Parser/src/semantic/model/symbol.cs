@@ -515,7 +515,11 @@ public class Symbol {
         get => null;
     }
 
-    public virtual bool TypeStructurallyEquals(Symbol other) {
+    /// <summary>
+    /// Used for checking if types are similiar. This is futurely
+    /// useful for giving hints on verification errors.
+    /// </summary>
+    public virtual bool TypeStructurallySimiliar(Symbol other) {
         return false;
     }
 

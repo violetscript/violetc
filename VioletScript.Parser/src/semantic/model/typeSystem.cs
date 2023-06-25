@@ -176,7 +176,7 @@ public class AnyType : Type {
         return "*";
     }
 
-    public override bool TypeStructurallyEquals(Symbol other) {
+    public override bool TypeStructurallySimiliar(Symbol other) {
         return other is AnyType;
     }
 }
@@ -197,7 +197,7 @@ public class UndefinedType : Type {
         return "undefined";
     }
 
-    public override bool TypeStructurallyEquals(Symbol other) {
+    public override bool TypeStructurallySimiliar(Symbol other) {
         return other is UndefinedType;
     }
 }
@@ -218,7 +218,7 @@ public class NullType : Type {
         return "null";
     }
 
-    public override bool TypeStructurallyEquals(Symbol other) {
+    public override bool TypeStructurallySimiliar(Symbol other) {
         return other is NullType;
     }
 }
@@ -351,7 +351,7 @@ public class ClassType : Type {
         return FullyQualifiedName + (m_TypeParameters != null ? ".<"+ String.Join(", ", m_TypeParameters.Select(p => p.Name)) +">" : "");
     }
 
-    public override bool TypeStructurallyEquals(Symbol other) {
+    public override bool TypeStructurallySimiliar(Symbol other) {
         return this == other;
     }
 }
@@ -505,7 +505,7 @@ public class EnumType : Type {
         return Name;
     }
 
-    public override bool TypeStructurallyEquals(Symbol other) {
+    public override bool TypeStructurallySimiliar(Symbol other) {
         return this == other;
     }
 }
@@ -583,7 +583,7 @@ public class InterfaceType : Type {
         return FullyQualifiedName + (m_TypeParameters != null ? ".<"+ String.Join(", ", m_TypeParameters.Select(p => p.Name)) +">" : "");
     }
 
-    public override bool TypeStructurallyEquals(Symbol other) {
+    public override bool TypeStructurallySimiliar(Symbol other) {
         return this == other;
     }
 }
@@ -667,7 +667,7 @@ public class FunctionType : Type {
         return "(" + String.Join(", ", p) + ")" + " => " + (FunctionReturnType == ModelCore.UndefinedType ? "void" : FunctionReturnType.ToString());
     }
 
-    public override bool TypeStructurallyEquals(Symbol otherAbstract) {
+    public override bool TypeStructurallySimiliar(Symbol otherAbstract) {
         if (!(otherAbstract is FunctionType)) {
             return false;
         }
@@ -679,7 +679,7 @@ public class FunctionType : Type {
                 return false;
             }
             for (int i = 0; i != c; ++i) {
-                if (!m_RequiredParams[i].Type.TypeStructurallyEquals(other.m_RequiredParams[i].Type)) {
+                if (!m_RequiredParams[i].Type.TypeStructurallySimiliar(other.m_RequiredParams[i].Type)) {
                     return false;
                 }
             }
@@ -693,7 +693,7 @@ public class FunctionType : Type {
                 return false;
             }
             for (int i = 0; i != c; ++i) {
-                if (!m_OptParams[i].Type.TypeStructurallyEquals(other.m_OptParams[i].Type)) {
+                if (!m_OptParams[i].Type.TypeStructurallySimiliar(other.m_OptParams[i].Type)) {
                     return false;
                 }
             }
@@ -702,14 +702,14 @@ public class FunctionType : Type {
         }
 
         if (m_RestParam != null) {
-            if (other.m_RestParam == null || !m_RestParam.Value.Type.TypeStructurallyEquals(other.m_RestParam.Value.Type)) {
+            if (other.m_RestParam == null || !m_RestParam.Value.Type.TypeStructurallySimiliar(other.m_RestParam.Value.Type)) {
                 return false;
             }
         } else if (other.m_RestParam != null) {
             return false;
         }
 
-        return m_ReturnType.TypeStructurallyEquals(other.m_ReturnType);
+        return m_ReturnType.TypeStructurallySimiliar(other.m_ReturnType);
     }
 }
 
@@ -748,7 +748,7 @@ public class TupleType : Type {
         return "[" + String.Join(", ", m_Types.Select(t => t.ToString())) + "]";
     }
 
-    public override bool TypeStructurallyEquals(Symbol otherAbstract) {
+    public override bool TypeStructurallySimiliar(Symbol otherAbstract) {
         if (!(otherAbstract is TupleType)) {
             return false;
         }
@@ -758,7 +758,7 @@ public class TupleType : Type {
             return false;
         }
         for (int i = 0; i != c; ++i) {
-            if (!m_Types[i].TypeStructurallyEquals(other.m_Types[i])) {
+            if (!m_Types[i].TypeStructurallySimiliar(other.m_Types[i])) {
                 return false;
             }
         }
@@ -819,7 +819,7 @@ public class RecordType : Type {
         return "{" + String.Join(", ", m_Fields.Select(field => field.Name + ": " + field.Type.ToString())) + "}";
     }
 
-    public override bool TypeStructurallyEquals(Symbol otherAbstract) {
+    public override bool TypeStructurallySimiliar(Symbol otherAbstract) {
         if (!(otherAbstract is RecordType)) {
             return false;
         }
@@ -831,7 +831,7 @@ public class RecordType : Type {
         for (int i = 0; i != c; ++i) {
             var fieldX = m_Fields[i];
             var fieldY = other.m_Fields[i];
-            if (fieldX.Name != fieldY.Name || !fieldX.Type.TypeStructurallyEquals(fieldY.Type)) {
+            if (fieldX.Name != fieldY.Name || !fieldX.Type.TypeStructurallySimiliar(fieldY.Type)) {
                 return false;
             }
         }
@@ -885,7 +885,7 @@ public class UnionType : Type {
         return String.Join(" | ", o);
     }
 
-    public override bool TypeStructurallyEquals(Symbol otherAbstract) {
+    public override bool TypeStructurallySimiliar(Symbol otherAbstract) {
         if (!(otherAbstract is UnionType)) {
             return false;
         }
@@ -895,7 +895,7 @@ public class UnionType : Type {
             return false;
         }
         for (int i = 0; i != c; ++i) {
-            if (!m_Types[i].TypeStructurallyEquals(other.m_Types[i])) {
+            if (!m_Types[i].TypeStructurallySimiliar(other.m_Types[i])) {
                 return false;
             }
         }
@@ -1039,12 +1039,12 @@ public class TypeWithArguments : Type {
         return FullyQualifiedName + ".<" + String.Join(", ", m_ArgumentsList.Select(a => a.ToString())) + ">";
     }
 
-    public override bool TypeStructurallyEquals(Symbol otherAbstract) {
+    public override bool TypeStructurallySimiliar(Symbol otherAbstract) {
         if (!(otherAbstract is TypeWithArguments)) {
             return false;
         }
         var other = (TypeWithArguments) otherAbstract;
-        if (!m_Origin.TypeStructurallyEquals(other.m_Origin)) {
+        if (!m_Origin.TypeStructurallySimiliar(other.m_Origin)) {
             return false;
         }
         var c = m_ArgumentsList.Count();
@@ -1052,7 +1052,7 @@ public class TypeWithArguments : Type {
             return false;
         }
         for (int i = 0; i != c; ++i) {
-            if (!m_ArgumentsList[i].TypeStructurallyEquals(other.m_ArgumentsList[i])) {
+            if (!m_ArgumentsList[i].TypeStructurallySimiliar(other.m_ArgumentsList[i])) {
                 return false;
             }
         }
@@ -1135,7 +1135,7 @@ public class TypeParameter : Type {
         return m_Name;
     }
 
-    public override bool TypeStructurallyEquals(Symbol other) {
+    public override bool TypeStructurallySimiliar(Symbol other) {
         return this == other;
     }
 }
