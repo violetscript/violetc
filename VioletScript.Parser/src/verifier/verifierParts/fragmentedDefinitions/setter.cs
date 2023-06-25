@@ -77,4 +77,43 @@ public partial class Verifier
         method.BelongsToVirtualProperty.ParentDefinition = parentDefinition;
         return method;
     }
+
+    private void Fragmented_VerifySetterDefinition2(Ast.SetterDefinition defn)
+    {
+        var method = defn.SemanticMethodSlot;
+        if (method == null)
+        {
+            return;
+        }
+        var virtualProp = method.BelongsToVirtualProperty;
+        // resolve signature
+        method.StaticType = this.Fragmented_ResolveSetterSignature(defn.Common, defn.Id.Span.Value, virtualProp);
+    }
+
+    private Symbol Fragmented_ResolveSetterSignature(Ast.FunctionCommon common, Span idSpan, Symbol virtualProp)
+    {
+        // the parser already ensured the right count of parameters.
+        Symbol inferParamType = virtualProp.Getter != null && virtualProp.Getter.StaticType != null ? virtualProp.Getter.StaticType.FunctionRequiredParameters[0].Type : null;
+        var binding = common.Params[0];
+        var paramName = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
+        Symbol paramType = null;
+        if (binding.Pattern.Type == null && inferParamType == null)
+        {
+            VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
+        }
+        else
+        {
+            paramType = this.VerifyTypeExp(binding.Pattern.Type);
+        }
+        paramType ??= inferParamType;
+        if (common.ReturnType != null)
+        {
+            var ret = this.VerifyTypeExp(common.ReturnType);
+            if (ret != null && ret != this.m_ModelCore.UndefinedType)
+            {
+                VerifyError(null, 263, idSpan, new DiagnosticArguments {});
+            }
+        }
+        return this.m_ModelCore.Factory.FunctionType(new NameAndTypePair[]{new NameAndTypePair(paramName, paramType)}, null, null, this.m_ModelCore.UndefinedType);
+    }
 }
