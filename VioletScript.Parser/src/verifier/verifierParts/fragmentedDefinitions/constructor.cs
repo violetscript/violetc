@@ -76,10 +76,31 @@ public partial class Verifier
         {
             return;
         }
-        // - if does not directly inherit Object and there is no super()
+        // if class does not directly inherit Object and there is no super()
         // it is a verify error. look for super() in include directives also.
-        var classType = m_Frame.TypeFromFrame;
-        toDo();
+        var type = m_Frame.TypeFromFrame;
+        var indirectlyObject = type.SuperType != null && type.SuperType != this.m_ModelCore.ObjectType;
+        if (indirectlyObject && defn.Common.Body != null && !this.Fragmented_VerifyConstructorDefinition3CallsSuper(defn.Common.Body))
+        {
+            VerifyError(defn.Id.Span.Value.Script, 257, defn.Id.Span.Value, new DiagnosticArguments {});
+        }
+    }
+
+    private bool Fragmented_VerifyConstructorDefinition3CallsSuper(Ast.Node body)
+    {
+        if (body is Ast.Block block)
+        {
+            return block.Statements.Any(stmt => this.Fragmented_VerifyConstructorDefinition3CallsSuper(stmt));
+        }
+        if (body is Ast.SuperStatement)
+        {
+            return true;
+        }
+        if (body is Ast.IncludeStatement includeDrtv)
+        {
+            return includeDrtv.InnerStatements.Any(stmt => this.Fragmented_VerifyConstructorDefinition3CallsSuper(stmt));
+        }
+        return false;
     }
 
     private void Fragmented_VerifyConstructorDefinition7(Ast.ConstructorDefinition defn)

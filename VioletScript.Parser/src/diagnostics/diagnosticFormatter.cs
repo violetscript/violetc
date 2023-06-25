@@ -256,6 +256,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [254] = "Cannot override method '$name' as it's marked final",
         [255] = "Variables must be read-only under a value class",
         [256] = "Duplicate constructor",
+        [257] = "Constructor must call super",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
