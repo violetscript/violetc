@@ -2,7 +2,7 @@
 
 Some of the notes in this document apply to verification and bytecode or code generation.
 
-- [ ] **VioletDoc:** In the verifier, for valid annotatable definitions, parse VioletDoc comments for the items.
+- [ ] **VioletDoc:** In the verifier, for valid annotatable definitions, parse VioletDoc comments for the items. For efficiency, I guess the parser could attach any detected `/** */` comments to the annotatable definitions so that the list of comments doesn't need to be iterated for matching span.
   - [ ] _Do not_ parse VioletDoc comments applied to record fields. This is not supported in VioletDoc.
 - [ ] **Code generation:** Empty programs that, for example, contain include directives whose inner statement sequence is empty or consist of other empty include directives, should not generate any activation and not be evaluated.
 - [ ] **Code generation:** When a class inherits static methods or virtual properties, `this` has to be replaced by that class in each such method. Look everywhere for `ClassStaticThis`.

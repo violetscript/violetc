@@ -89,7 +89,7 @@ public sealed class Tokenizer {
             ch = Lookahead();
             if (SourceCharacter.IsWhitespace(ch)) {
                 Index += 1;
-            } else if (!ScanLineTerminator()) {
+            } else if (!ScanLineTerminator() && !ScanComment()) {
                 break;
             }
         }

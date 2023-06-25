@@ -147,7 +147,7 @@ public partial class Verifier
             throw new Exception("Unimplemented expression");
         }
 
-        if (writting && r.ReadOnly)
+        if (writting && r != null && r.ReadOnly)
         {
             // writing to read-only variable from 'this' is allowed in
             // in constructors.
@@ -164,7 +164,7 @@ public partial class Verifier
                 exp.SemanticSymbol = null;
             }
         }
-        else if (!writting && r.WriteOnly)
+        else if (!writting && r != null && r.WriteOnly)
         {
             VerifyError(null, 174, exp.Span.Value, new DiagnosticArguments {});
             exp.SemanticSymbol = null;
