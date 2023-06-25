@@ -8,7 +8,7 @@ Update: the type checker is done! I'll write the command as soon as possible to 
 
 Any argument starting with `"builtins:"` is used to specify a source for the standard built-in objects. It will be resolved before the rest.
 
-It will automatically add the `.vs` extension.
+VioletScript uses the extension `.vs`, which is automatically added.
 
 ```
 violetc "builtins:standard-objects" index

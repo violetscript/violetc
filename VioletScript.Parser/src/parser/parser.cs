@@ -1434,7 +1434,7 @@ internal class ParserBackend {
                 return exp;
             }
             var assignments = callExp.ArgumentsList.Where(e => e is Ast.AssignmentExpression ae && ae.Left is Ast.Identifier && ae.Compound == null).ToArray();
-            if (assignments.Count() != callExp.ArgumentsList.Count) {
+            if (assignments.Count() != callExp.ArgumentsList.Count()) {
                 return exp;
             }
             var fields = new List<Ast.Node>{};
