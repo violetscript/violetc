@@ -115,6 +115,11 @@ public sealed class Operator {
         get => m_AlwaysReturnBoolean[this] == true;
     }
 
+    public bool IsConversionProxy
+    {
+        get => this == ProxyToConvertImplicit || this == ProxyToConvertExplicit;
+    }
+
     public int ProxyNumberOfParameters {
         get {
             if (this == Operator.ProxyToGetIndex

@@ -35,19 +35,48 @@ public partial class Verifier
 
     private void Fragmented_VerifyProxyDefinition1(Ast.ProxyDefinition defn)
     {
+        // conversion proxies are defined in phase 2
+        if (defn.Operator.IsConversionProxy)
+        {
+            return;
+        }
         var type = m_Frame.TypeFromFrame;
         // do not allow duplicate proxy
+        Symbol prevProxy = type.Delegate.Proxies.ContainsKey(defn.Operator) ? type.Delegate.Proxies[defn.Operator] : null;
         toDo();
     }
 
     private void Fragmented_VerifyProxyDefinition2(Ast.ProxyDefinition defn)
     {
+        // define conversion proxies.
+        if (defn.Operator.IsConversionProxy)
+        {
+            this.Fragmented_VerifyProxyDefinition2Conversion(defn);
+            return;
+        }
         var method = defn.SemanticMethodSlot;
+        var type = m_Frame.TypeFromFrame;
         if (method == null)
         {
             return;
         }
-        var type = m_Frame.TypeFromFrame;
+        toDo();
+    }
+
+    private void Fragmented_VerifyProxyDefinition2Conversion(Ast.ProxyDefinition defn)
+    {
+        var targetType = m_Frame.TypeFromFrame;
+
+        // resolve signature
+        var conversionSignature = toDo();
+
+        // validate conversion signature
+        toDo();
+
+        // do not allow duplicate and create method and add it
+        // to set of proxies.
+        var proxiesSet = defn.Operator == Operator.ProxyToConvertExplicit ? targetType.Delegate.ExplicitConversionProxies : targetType.Delegate.ImplicitConversionProxies;
+        Symbol prevProxy = proxiesSet.ContainsKey(zxczxc) ? proxiesSet[zxczxc] : null;
         toDo();
     }
 

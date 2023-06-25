@@ -480,14 +480,16 @@ public class Symbol {
     }
 
     /// <summary>
-    /// Mapping from T to <c>convertImplicit</c> as in <c>proxy function convertImplicit(v:T):C</c>.
+    /// Mapping from T to <c>convertImplicit</c> as in <c>proxy function convertImplicit(v: T): C</c>.
+    /// This is present in a type's delegate, not in the type itself.
     /// </summary>
     public virtual Dictionary<Symbol, Symbol> ImplicitConversionProxies {
         get => new Dictionary<Symbol, Symbol>{};
     }
 
     /// <summary>
-    /// Mapping from T to <c>convertExplicit</c> as in <c>proxy function convertExplicit(v:T):C</c>.
+    /// Mapping from T to <c>convertExplicit</c> as in <c>proxy function convertExplicit(v: T): C</c>.
+    /// This is present in a type's delegate, not in the type itself.
     /// </summary>
     public virtual Dictionary<Symbol, Symbol> ExplicitConversionProxies {
         get => new Dictionary<Symbol, Symbol>{};
