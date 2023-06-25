@@ -234,6 +234,11 @@ public partial class Verifier
 
         this.EnterFrame(defn.SemanticActivation);
         this.Fragmented_VerifyFunctionDefinition7Params(defn.Common);
+        // ignore "throws" clause
+        if (defn.Common.ThrowsType != null)
+        {
+            this.VerifyTypeExp(defn.Common.ThrowsType);
+        }
         this.Fragmented_VerifyFunctionDefinition7Body(defn.Common, method, defn.Id.Span.Value);
         this.ExitFrame();
     }
