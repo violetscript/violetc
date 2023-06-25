@@ -4,6 +4,7 @@
 
 Update: the type checker is done! I'll fix any possible minor bugs and probably work on other areas. Bugs to fix and things to-do:
 
+- `dotnet run -- foo`
 - [ ] `script.IsValid` is `true` even after any syntax error.
 - [ ] `public const` is generating "Token must be inline" error. This is pretty easy to solve, but I want to resolve `script.IsValid` being `true` first.
 - [ ] Uncomment other includes in `builtins/index.vs` until the issue above is fixed.
