@@ -12,6 +12,10 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public class VerifierOptions
 {
+    /// <summary>
+    /// Allows duplicate definitions. Used internally
+    /// for standard built-in objects only.
+    /// </summary>
     public bool AllowDuplicates = false;
 }
 
