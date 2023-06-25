@@ -6,14 +6,8 @@ Update: the type checker is done! I'll write the command as soon as possible to 
 
 ## Command
 
-Any argument starting with `"builtins:"` is used to specify a source for the standard built-in objects. It will be resolved before the rest.
-
 VioletScript uses the extension `.vs`, which is automatically added.
 
 ```
-violetc "builtins:standard-objects" index
+violetc index
 ```
-
-## Built-ins
-
-When resolving the built-ins, it's allowed to duplicate definitions, so it's not recommended to use it for actual programs. It exists because of basic definitions on which the verification relies, such as `Object` and `Iterator`.
