@@ -70,6 +70,6 @@ class VioletcCli {
         foreach (var d in script.DiagnosticsFromCurrentAndIncludedScripts) {
             Console.WriteLine(d.ToString());
         }
-        return program != null && verifier.AllProgramsAreValid;
+        return script.IsValid && verifier.AllProgramsAreValid;
     }
 }
