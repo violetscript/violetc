@@ -1407,6 +1407,9 @@ internal class ParserBackend {
 
             r.InnerScript = innerScript;
             r.InnerStatements = innerStatements;
+            if (!innerScript.IsValid) {
+                this.Script.Invalidate();
+            }
             this.Script.AddIncludedScript(innerScript);
         } else {
             VerifyError(25, r.Span.Value);

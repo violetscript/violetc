@@ -31,6 +31,10 @@ public sealed class Script {
         get => m_Valid;
     }
 
+    public void Invalidate() {
+        m_Valid = false;
+    }
+
     public void AddLineStart(int index) {
         m_LineStarts.Add(index);
     }
