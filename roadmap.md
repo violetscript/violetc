@@ -6,6 +6,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
   - [ ] _Do not_ parse VioletDoc comments applied to record fields. This is not supported in VioletDoc.
 - [ ] **Code generation:** Empty programs that, for example, contain include directives whose inner statement sequence is empty or consist of other empty include directives, should not generate any activation and not be evaluated.
 - [ ] **Code generation:** When a class inherits static methods or virtual properties, `this` has to be replaced by that class in each such method. Look everywhere for `ClassStaticThis`.
+- [ ] **Code generation:** Variables with type without default value are represented in memory similiar to a Rust `Option<T>`. This is important because of constructors and `this` accessed before `super()`.
 - [ ] Decorators must not be allowed in certain places, like over ordinary functions, ordinary variables and `static` variables.
 
 ### `x is y: C`
