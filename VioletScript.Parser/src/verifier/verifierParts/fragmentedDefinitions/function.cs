@@ -232,6 +232,7 @@ public partial class Verifier
 
         this.EnterFrame(defn.SemanticActivation);
         this.Fragmented_VerifyFunctionDefinition7Params(defn.Common, defn.SemanticActivation);
+        toDo();
         this.ExitFrame();
     }
 
