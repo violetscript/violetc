@@ -219,6 +219,35 @@ public partial class Verifier
         {
             return;
         }
-        toDo();
+
+        var isClassProp = this.m_Frame is ClassFrame && !defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Static);
+        if (defn.Decorators != null && isClassProp)
+        {
+            var decoratorFnType = this.m_ModelCore.Factory.FunctionType(new NameAndTypePair[]{new NameAndTypePair("obj", this.m_Frame.TypeFromFrame), new NameAndTypePair("name", this.m_ModelCore.StringType)}, null, null, this.m_ModelCore.UndefinedType);
+            foreach (var decorator in defn.Decorators)
+            {
+                this.LimitExpType(decorator, decoratorFnType);
+            }
+        }
+
+        this.EnterFrame(defn.SemanticActivation);
+        this.Fragmented_VerifyFunctionDefinition7Params(defn.Common, defn.SemanticActivation);
+        this.ExitFrame();
+    }
+
+    private void Fragmented_VerifyFunctionDefinition7Params(Ast.FunctionCommon common, Symbol activation)
+    {
+        foreach (var binding in common.Params)
+        {
+            this.VerifyVariableBinding(binding, false, activation.Properties, Visibility.Public);
+        }
+        foreach (var binding in common.OptParams)
+        {
+            this.VerifyVariableBinding(binding, false, activation.Properties, Visibility.Public);
+        }
+        if (common.RestParam != null)
+        {
+            this.VerifyVariableBinding(common.RestParam, false, activation.Properties, Visibility.Public, null, true);
+        }
     }
 }

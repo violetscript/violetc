@@ -21,7 +21,8 @@ public partial class Verifier
         bool readOnly,
         Properties output,
         Visibility visibility,
-        Symbol inferType = null
+        Symbol inferType = null,
+        bool forRestParam = false
     )
     {
         if (binding.SemanticVerified)
@@ -32,10 +33,12 @@ public partial class Verifier
         // variable type must be inferred from the initializer.
         if (binding.Pattern.Type == null)
         {
-            // VerifyError
             if (binding.Init == null)
             {
-                VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
+                if (!forRestParam)
+                {
+                    VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
+                }
             }
             else
             {
@@ -58,7 +61,7 @@ public partial class Verifier
             binding.Pattern.SemanticProperty.InitValue = init;
         }
 
-        if (binding.Pattern.SemanticProperty != null)
+        if (binding.Pattern.SemanticProperty != null && !forRestParam)
         {
             // if not in class frame or not a read-only,
             // the binding must have a constant initial value
