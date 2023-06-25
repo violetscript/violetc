@@ -747,14 +747,22 @@ public class Symbol {
     public bool IsValidProxySignature(Operator op, Symbol enclosingType)
     {
         var proxyNumParams = op.ProxyNumberOfParameters;
+        // number of parameters.
         if (this.FunctionHasOptParameters || this.FunctionRestParameter.HasValue || this.FunctionCountOfRequiredParameters != proxyNumParams)
         {
             return false;
         }
+        // iterateKeys or iterateValues must return Generator.<T>.
+        if ((op == Operator.ProxyToIterateKeys || op == Operator.ProxyToIterateValues) && !this.FunctionReturnType.IsInstantiationOf(this.ModelCore.GeneratorType))
+        {
+            return false;
+        }
+        // has or deleteIndex must return Boolean.
         if ((op == Operator.In || op == Operator.ProxyToDeleteIndex) && this.FunctionReturnType != this.ModelCore.BooleanType)
         {
             return false;
         }
+        // setIndex must return void.
         if (op == Operator.ProxyToSetIndex && this.FunctionReturnType != this.ModelCore.UndefinedType)
         {
             return false;

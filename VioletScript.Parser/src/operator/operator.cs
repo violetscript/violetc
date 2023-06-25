@@ -4,9 +4,12 @@ using System.Collections.Generic;
 
 public sealed class Operator {
     private static readonly Dictionary<int, Operator> m_ByValue = new Dictionary<int, Operator>();
+
+    // note: could use List instead of Dictionaries here.
     private static readonly Dictionary<Operator, bool> m_Unary = new Dictionary<Operator, bool>();
     private static readonly Dictionary<Operator, bool> m_AlwaysReturnBoolean = new Dictionary<Operator, bool>();
     private static readonly Dictionary<Operator, bool> m_ProxyUsesThisLiteral = new Dictionary<Operator, bool>();
+
     private static List<Operator> m_ProxyThatMustntHaveFirstParamAsCurrentClass = new List<Operator>();
 
     public static readonly Operator Await = new Operator(0, "await");

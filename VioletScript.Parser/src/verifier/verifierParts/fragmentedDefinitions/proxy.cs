@@ -81,6 +81,7 @@ public partial class Verifier
             VerifyError(null, 259, defn.Id.Span.Value, new DiagnosticArguments {});
             method.StaticType = null;
             type.Delegate.Proxies[defn.Operator] = null;
+            defn.SemanticMethodSlot = null;
             return;
         }
     }
@@ -130,7 +131,24 @@ public partial class Verifier
             return;
         }
         var type = m_Frame.TypeFromFrame;
-        toDo();
+        // set proxy must be compatible with get proxy
+        if (defn.Operator == Operator.ProxyToSetIndex)
+        {
+            var getIdxProxy = type.Delegate.Proxies.ContainsKey(Operator.ProxyToGetIndex) ? type.Delegate.Proxies[Operator.ProxyToGetIndex] : null;
+            if (getIdxProxy != null && method.StaticType.FunctionRequiredParameters[0].Type != getIdxProxy.StaticType.FunctionRequiredParameters[0].Type)
+            {
+                VerifyError(null, 260, defn.Id.Span.Value, new DiagnosticArguments {["type"] = getIdxProxy.StaticType.FunctionRequiredParameters[0].Type});
+            }
+        }
+        // delete proxy must be compatible with get proxy
+        else if (defn.Operator == Operator.ProxyToDeleteIndex)
+        {
+            var getIdxProxy = type.Delegate.Proxies.ContainsKey(Operator.ProxyToGetIndex) ? type.Delegate.Proxies[Operator.ProxyToGetIndex] : null;
+            if (getIdxProxy == null || method.StaticType.FunctionRequiredParameters[0].Type != getIdxProxy.StaticType.FunctionRequiredParameters[0].Type)
+            {
+                VerifyError(null, 261, defn.Id.Span.Value, new DiagnosticArguments {});
+            }
+        }
     }
 
     private void Fragmented_VerifyProxyDefinition7(Ast.ProxyDefinition defn)
@@ -141,6 +159,14 @@ public partial class Verifier
             return;
         }
         var type = m_Frame.TypeFromFrame;
-        toDo();
+        this.EnterFrame(defn.Common.SemanticActivation);
+        this.Fragmented_VerifyFunctionDefinition7Params(defn.Common);
+        // ignore "throws" clause
+        if (defn.Common.ThrowsType != null)
+        {
+            this.VerifyTypeExp(defn.Common.ThrowsType);
+        }
+        this.Fragmented_VerifyFunctionDefinition7Body(defn.Common, method, defn.Id.Span.Value);
+        this.ExitFrame();
     }
 }

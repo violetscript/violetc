@@ -259,6 +259,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [257] = "Constructor must call super",
         [258] = "Duplicate proxy",
         [259] = "Illegal proxy signature",
+        [260] = "'setIndex' proxy's first parameter must be of type $type",
+        [261] = "'deleteIndex' proxy requires a matching 'getIndex' proxy",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
