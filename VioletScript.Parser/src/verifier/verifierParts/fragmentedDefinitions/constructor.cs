@@ -20,24 +20,38 @@ public partial class Verifier
         }
         else if (phase == VerifyPhase.Phase2)
         {
-            doFooBarQuxBaz();
+            this.Fragmented_VerifyConstructorDefinition2(defn);
         }
         else if (phase == VerifyPhase.Phase3)
         {
-            doFooBarQuxBaz();
+            this.Fragmented_VerifyConstructorDefinition3(defn);
         }
         // VerifyPhase.Phase7
         else if (phase == VerifyPhase.Phase7)
         {
-            doFooBarQuxBaz();
+            this.Fragmented_VerifyConstructorDefinition7(defn);
         }
     }
 
     private void Fragmented_VerifyConstructorDefinition1(Ast.ConstructorDefinition defn)
     {
-        var parentDefinition = m_Frame.TypeFromFrame;
-        // - do not allow duplicate constructor
-        toDo();
+        var type = m_Frame.TypeFromFrame;
+        // do not allow duplicate constructor.
+        if (type.ConstructorDefinition != null)
+        {
+            VerifyError(defn.Id.Span.Value.Script, 256, defn.Id.Span.Value, new DiagnosticArguments {});
+        }
+        else
+        {
+            var method = m_ModelCore.Factory.MethodSlot(type.Name, null, defn.SemanticFlags(type));
+            method.Visibility = Visibility.Public;
+            method.ParentDefinition = type;
+            type.ConstructorDefinition = method;
+
+            defn.Common.SemanticActivation = this.m_ModelCore.Factory.ActivationFrame();
+            // set `this`
+            defn.Common.SemanticActivation.ActivationThisOrThisAsStaticType = this.m_ModelCore.Factory.ThisValue(type);
+        }
     }
 
     private void Fragmented_VerifyConstructorDefinition2(Ast.ConstructorDefinition defn)
@@ -47,8 +61,12 @@ public partial class Verifier
         {
             return;
         }
-        // - resolve signature, however infer the void type.
-        toDo();
+        this.EnterFrame(defn.Common.SemanticActivation);
+
+        // resolve signature, however infer the void type.
+        method.StaticType = this.Fragmented_ResolveFunctionSignature(defn.Common, defn.Id.Span.Value, true);
+
+        this.ExitFrame();
     }
 
     private void Fragmented_VerifyConstructorDefinition3(Ast.ConstructorDefinition defn)

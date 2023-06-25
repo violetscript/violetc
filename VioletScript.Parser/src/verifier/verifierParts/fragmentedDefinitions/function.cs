@@ -106,7 +106,7 @@ public partial class Verifier
         this.ExitFrame();
     }
 
-    private Symbol Fragmented_ResolveFunctionSignature(Ast.FunctionCommon common, Span idSpan)
+    private Symbol Fragmented_ResolveFunctionSignature(Ast.FunctionCommon common, Span idSpan, bool forConstructor = false)
     {
         List<NameAndTypePair> @params = null;
         List<NameAndTypePair> optParams = null;
@@ -156,13 +156,16 @@ public partial class Verifier
         }
         if (common.ReturnType == null)
         {
-            Warn(idSpan.Script, 250, idSpan, new DiagnosticArguments {});
+            if (!forConstructor)
+            {
+                Warn(idSpan.Script, 250, idSpan, new DiagnosticArguments {});
+            }
         }
         else
         {
             returnType = this.VerifyTypeExp(common.ReturnType);
         }
-        returnType ??= this.m_ModelCore.AnyType;
+        returnType ??= forConstructor ? this.m_ModelCore.UndefinedType : this.m_ModelCore.AnyType;
         return this.m_ModelCore.Factory.FunctionType(@params?.ToArray(), optParams?.ToArray(), restParam, returnType);
     }
 
