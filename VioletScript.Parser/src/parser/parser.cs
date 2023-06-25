@@ -1762,6 +1762,16 @@ internal class ParserBackend {
         var (common, semicolonInserted) = ParseFunctionCommon(null, true, false);
         var r = FinishAnnotatableDefinition(isGetter ? new Ast.GetterDefinition(id, common) : new Ast.SetterDefinition(id, common), attribs);
 
+        if (isGetter) {
+            if (common.Params != null || common.OptParams != null || common.RestParam != null) {
+                SyntaxError(34, id.Span.Value);
+            }
+        } else {
+            if (common.OptParams != null || common.RestParam != null || common.Params == null || common.Params.Count() != 1) {
+                SyntaxError(35, id.Span.Value);
+            }
+        }
+
         if (context is InterfaceContext) {
             if (((int) attribs.Modifiers) != 0 || attribs.AccessModifier != null || (attribs.Decorators != null && attribs.Decorators.Count > 0)) {
                 SyntaxError(21, id.Span.Value);

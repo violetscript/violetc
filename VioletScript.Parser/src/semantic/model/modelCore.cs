@@ -296,6 +296,7 @@ public sealed class ModelCore {
     private Symbol DefineGlobalBuiltinClass(string name, bool isFinal = true, bool isValue = false) {
         isFinal = isFinal || isValue;
         var r = Factory.ClassType(name, isFinal, isValue);
+        r.ParentDefinition = GlobalPackage;
         r.Visibility = Visibility.Public;
         GlobalPackage.Properties[name] = r;
         return r;
@@ -303,6 +304,7 @@ public sealed class ModelCore {
 
     private Symbol DefineGlobalBuiltinInterface(string name) {
         var r = Factory.InterfaceType(name);
+        r.ParentDefinition = GlobalPackage;
         r.Visibility = Visibility.Public;
         GlobalPackage.Properties.Set(name, r);
         return r;

@@ -114,6 +114,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [31] = "",
         [32] = "Illegal break statement",
         [33] = "Illegal continue statement: no surrounding iteration statement",
+        [34] = "Getter must not have parameters",
+        [35] = "Setter must have exactly one required parameter",
 
         // # Verification Diagnostics
 

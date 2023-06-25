@@ -176,6 +176,7 @@ public partial class Verifier
         {
             return;
         }
+        // overriding and shadowing
         var subtype = this.m_Frame.TypeFromFrame;
         var superType = subtype?.SuperType;
         if (superType == null)
@@ -185,33 +186,38 @@ public partial class Verifier
         // override method
         if (defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Override))
         {
-            var overrideResult = MethodOverride.OverrideSingle(subtype, method);
-            if (overrideResult is MustOverrideAMethodIssue mustOverrideIssue)
-            {
-                this.VerifyError(defn.Id.Span.Value.Script, 251, defn.Id.Span.Value, new DiagnosticArguments {["name"] = mustOverrideIssue.Name});
-            }
-            else if (overrideResult is CannotOverrideGenericMethodIssue cantOverrideGenericIssue)
-            {
-                this.VerifyError(defn.Id.Span.Value.Script, 252, defn.Id.Span.Value, new DiagnosticArguments {["name"] = cantOverrideGenericIssue.Name});
-            }
-            else if (overrideResult is IncompatibleOverrideSignatureIssue incompatibleIssue)
-            {
-                this.VerifyError(defn.Id.Span.Value.Script, 253, defn.Id.Span.Value, new DiagnosticArguments {["type"] = incompatibleIssue.ExpectedSignature});
-            }
-            else if (overrideResult is CannotOverrideFinalMethodIssue finalIssue)
-            {
-                this.VerifyError(defn.Id.Span.Value.Script, 254, defn.Id.Span.Value, new DiagnosticArguments {["name"] = finalIssue.Name});
-            }
-            else if (overrideResult != null)
-            {
-                throw new Exception("Unimplemented.");
-            }
+            this.Fragmented_VerifyOverride(defn.Id.Span.Value, subtype, method);
             return;
         }
         var methodName = method.Name;
         if (SingleInheritanceInstancePropertiesHierarchy.HasProperty(superType, methodName))
         {
             this.VerifyError(defn.Id.Span.Value.Script, 246, defn.Id.Span.Value, new DiagnosticArguments {["name"] = methodName});
+        }
+    }
+
+    private void Fragmented_VerifyOverride(Span idSpan, Symbol subtype, Symbol method)
+    {
+        var overrideResult = MethodOverride.OverrideSingle(subtype, method);
+        if (overrideResult is MustOverrideAMethodIssue mustOverrideIssue)
+        {
+            this.VerifyError(null, 251, idSpan, new DiagnosticArguments {["name"] = mustOverrideIssue.Name});
+        }
+        else if (overrideResult is CannotOverrideGenericMethodIssue cantOverrideGenericIssue)
+        {
+            this.VerifyError(null, 252, idSpan, new DiagnosticArguments {["name"] = cantOverrideGenericIssue.Name});
+        }
+        else if (overrideResult is IncompatibleOverrideSignatureIssue incompatibleIssue)
+        {
+            this.VerifyError(null, 253, idSpan, new DiagnosticArguments {["type"] = incompatibleIssue.ExpectedSignature});
+        }
+        else if (overrideResult is CannotOverrideFinalMethodIssue finalIssue)
+        {
+            this.VerifyError(null, 254, idSpan, new DiagnosticArguments {["name"] = finalIssue.Name});
+        }
+        else if (overrideResult != null)
+        {
+            throw new Exception("Unimplemented.");
         }
     }
 
