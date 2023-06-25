@@ -47,6 +47,8 @@ public partial class Verifier
             // set `this`
             defn.SemanticActivation.ActivationThisOrThisAsStaticType = isTypeStatic ? this.m_ModelCore.Factory.ClassStaticThis(parentDefinition) : parentDefinition is Type ? this.m_ModelCore.Factory.ThisValue(parentDefinition) : null;
 
+            defn.Common.SemanticActivation = defn.SemanticActivation;
+
             if (defn.Generics != null)
             {
                 this.EnterFrame(defn.SemanticActivation);
@@ -231,13 +233,15 @@ public partial class Verifier
         }
 
         this.EnterFrame(defn.SemanticActivation);
-        this.Fragmented_VerifyFunctionDefinition7Params(defn.Common, defn.SemanticActivation);
-        toDo();
+        this.Fragmented_VerifyFunctionDefinition7Params(defn.Common);
+        this.Fragmented_VerifyFunctionDefinition7Body(defn.Common);
         this.ExitFrame();
     }
 
-    private void Fragmented_VerifyFunctionDefinition7Params(Ast.FunctionCommon common, Symbol activation)
+    private void Fragmented_VerifyFunctionDefinition7Params(Ast.FunctionCommon common)
     {
+        Symbol activation = common.SemanticActivation;
+
         foreach (var binding in common.Params)
         {
             this.VerifyVariableBinding(binding, false, activation.Properties, Visibility.Public);
@@ -250,5 +254,10 @@ public partial class Verifier
         {
             this.VerifyVariableBinding(common.RestParam, false, activation.Properties, Visibility.Public, null, true);
         }
+    }
+
+    private void Fragmented_VerifyFunctionDefinition7Body(Ast.FunctionCommon common)
+    {
+        toDo();
     }
 }
