@@ -7,6 +7,7 @@ public sealed class Operator {
     private static readonly Dictionary<Operator, bool> m_Unary = new Dictionary<Operator, bool>();
     private static readonly Dictionary<Operator, bool> m_AlwaysReturnBoolean = new Dictionary<Operator, bool>();
     private static readonly Dictionary<Operator, bool> m_ProxyUsesThisLiteral = new Dictionary<Operator, bool>();
+    private static List<Operator> m_ProxyThatMustntHaveFirstParamAsCurrentClass = new List<Operator>();
 
     public static readonly Operator Await = new Operator(0, "await");
     public static readonly Operator Yield = new Operator(1, "yield");
@@ -105,6 +106,17 @@ public sealed class Operator {
         m_ProxyUsesThisLiteral[Operator.In] = true;
         m_ProxyUsesThisLiteral[Operator.ProxyToIterateKeys] = true;
         m_ProxyUsesThisLiteral[Operator.ProxyToIterateValues] = true;
+
+        m_ProxyThatMustntHaveFirstParamAsCurrentClass = new List<Operator>{
+            Operator.ProxyToGetIndex,
+            Operator.ProxyToSetIndex,
+            Operator.ProxyToDeleteIndex,
+            Operator.In,
+            Operator.ProxyToIterateKeys,
+            Operator.ProxyToIterateValues,
+            Operator.ProxyToConvertExplicit,
+            Operator.ProxyToConvertImplicit,
+        };
     }
 
     public static Operator ValueOf(int v) {
@@ -116,15 +128,15 @@ public sealed class Operator {
     }
 
     public bool IsUnary {
-        get => m_Unary[this] == true;
+        get => m_Unary.ContainsKey(this);
     }
 
     public bool AlwaysReturnsBoolean {
-        get => m_AlwaysReturnBoolean[this] == true;
+        get => m_AlwaysReturnBoolean.ContainsKey(this);
     }
 
     public bool ProxyUsesThisLiteral {
-        get => m_ProxyUsesThisLiteral[this] == true;
+        get => m_ProxyUsesThisLiteral.ContainsKey(this);
     }
 
     public bool IsConversionProxy
@@ -153,5 +165,10 @@ public sealed class Operator {
 
     public override string ToString() {
         return m_S;
+    }
+
+    public bool ProxyMustHaveFirstParamAsCurrentClass
+    {
+        get => !m_ProxyThatMustntHaveFirstParamAsCurrentClass.Contains(this);
     }
 }

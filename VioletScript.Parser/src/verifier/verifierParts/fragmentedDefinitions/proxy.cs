@@ -75,7 +75,7 @@ public partial class Verifier
             return;
         }
         method.StaticType = this.Fragmented_ResolveFunctionSignature(defn.Common, defn.Id.Span.Value);
-        if (!method.StaticType.IsValidProxySignature(defn.Operator))
+        if (!method.StaticType.IsValidProxySignature(defn.Operator, type))
         {
             // ERROR: illegal proxy signature
             VerifyError(null, 259, defn.Id.Span.Value, new DiagnosticArguments {});

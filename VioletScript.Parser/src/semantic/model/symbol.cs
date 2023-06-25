@@ -738,14 +738,32 @@ public class Symbol {
         {
             return false;
         }
-        return !this.FunctionHasRequiredParameters || this.FunctionCountOfRequiredParameters != 1 || this.FunctionRequiredParameters[0].Type == targetType;
+        return this.FunctionCountOfRequiredParameters != 1 || this.FunctionRequiredParameters[0].Type == targetType;
     }
 
     /// <summary>
     /// Determines if a signature is valid for a non-conversion proxy definition.
     /// </summary>
-    public bool IsValidProxySignature(Operator op)
+    public bool IsValidProxySignature(Operator op, Symbol enclosingType)
     {
-        //
+        var proxyNumParams = op.ProxyNumberOfParameters;
+        if (this.FunctionHasOptParameters || this.FunctionRestParameter.HasValue || this.FunctionCountOfRequiredParameters != proxyNumParams)
+        {
+            return false;
+        }
+        if ((op == Operator.In || op == Operator.ProxyToDeleteIndex) && this.FunctionReturnType != this.ModelCore.BooleanType)
+        {
+            return false;
+        }
+        if (op == Operator.ProxyToSetIndex && this.FunctionReturnType != this.ModelCore.UndefinedType)
+        {
+            return false;
+        }
+        // most operators must have first parameter as current class type
+        if (op.ProxyMustHaveFirstParamAsCurrentClass && this.FunctionRequiredParameters[0].Type != enclosingType)
+        {
+            return false;
+        }
+        return true;
     }
 }
