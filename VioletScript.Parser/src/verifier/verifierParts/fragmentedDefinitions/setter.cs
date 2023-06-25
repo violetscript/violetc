@@ -16,20 +16,20 @@ public partial class Verifier
     {
         if (phase == VerifyPhase.Phase1)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifySetterDefinition1(defn);
         }
         else if (phase == VerifyPhase.Phase2)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifySetterDefinition2(defn);
         }
         else if (phase == VerifyPhase.Phase3)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifySetterDefinition3(defn);
         }
         // VerifyPhase.Phase7
         else if (phase == VerifyPhase.Phase7)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifySetterDefinition7(defn);
         }
     }
 }

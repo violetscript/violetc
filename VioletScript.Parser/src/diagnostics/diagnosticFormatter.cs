@@ -261,6 +261,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [259] = "Illegal proxy signature",
         [260] = "'setIndex' proxy's first parameter must be of type $type",
         [261] = "'deleteIndex' proxy requires a matching 'getIndex' proxy",
+        [262] = "Wrong virtual property visibility",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
