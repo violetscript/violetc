@@ -1572,7 +1572,7 @@ internal class ParserBackend {
     private DefinitionAttributes ParseDefinitionAttributes(DefinitionAttributes attribs) {
         var empty = attribs.HasEmptyModifiers;
         for (;;) {
-            if (!empty && TokenIsInline) SyntaxError(13, Token.Span);
+            if (!empty && !TokenIsInline) SyntaxError(13, Token.Span);
             var modifier = TakeTokenAsContextKeywordModifier(Token);
             if (modifier != null) {
                 NextToken();
