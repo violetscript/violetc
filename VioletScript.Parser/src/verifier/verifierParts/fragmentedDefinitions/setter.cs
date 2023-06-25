@@ -116,4 +116,59 @@ public partial class Verifier
         }
         return this.m_ModelCore.Factory.FunctionType(new NameAndTypePair[]{new NameAndTypePair(paramName, paramType)}, null, null, this.m_ModelCore.UndefinedType);
     }
+
+    private void Fragmented_VerifySetterDefinition3(Ast.SetterDefinition defn)
+    {
+        var method = defn.SemanticMethodSlot;
+        if (method == null)
+        {
+            return;
+        }
+        var paramType = method.StaticType.FunctionRequiredParameters[0].Type;
+        var virtualProp = method.BelongsToVirtualProperty;
+        virtualProp.StaticType ??= paramType;
+        if (virtualProp.StaticType != paramType)
+        {
+            VerifyError(null, 264, defn.Id.Span.Value, new DiagnosticArguments {});
+        }
+
+        // overriding and shadowing
+        var subtype = this.m_Frame.TypeFromFrame;
+        var superType = subtype?.SuperType;
+        if (superType == null)
+        {
+            return;
+        }
+        // override method
+        if (defn.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Override))
+        {
+            this.Fragmented_VerifyOverride(defn.Id.Span.Value, subtype, method);
+            return;
+        }
+        var methodName = virtualProp.Name;
+        if (SingleInheritanceInstancePropertiesHierarchy.HasProperty(superType, methodName) && virtualProp.Getter == null)
+        {
+            this.VerifyError(defn.Id.Span.Value.Script, 246, defn.Id.Span.Value, new DiagnosticArguments {["name"] = methodName});
+        }
+    }
+
+    private void Fragmented_VerifySetterDefinition7(Ast.SetterDefinition defn)
+    {
+        var method = defn.SemanticMethodSlot;
+        if (method == null)
+        {
+            return;
+        }
+        var activation = defn.Common.SemanticActivation;
+        this.EnterFrame(activation);
+        this.Fragmented_VerifyFunctionDefinition7Params(defn.Common);
+        this.VerifyVariableBinding(defn.Common.Params[0], false, activation.Properties, Visibility.Public, method.StaticType.FunctionRequiredParameters[0].Type);
+        // ignore "throws" clause
+        if (defn.Common.ThrowsType != null)
+        {
+            this.VerifyTypeExp(defn.Common.ThrowsType);
+        }
+        this.Fragmented_VerifyFunctionDefinition7Body(defn.Common, method, defn.Id.Span.Value);
+        this.ExitFrame();
+    }
 }

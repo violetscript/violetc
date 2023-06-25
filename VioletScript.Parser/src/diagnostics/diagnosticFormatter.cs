@@ -265,6 +265,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [261] = "'deleteIndex' proxy requires a matching 'getIndex' proxy",
         [262] = "Wrong virtual property visibility",
         [263] = "Setter must return void",
+        [264] = "Setter does not have the same type as the getter",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
