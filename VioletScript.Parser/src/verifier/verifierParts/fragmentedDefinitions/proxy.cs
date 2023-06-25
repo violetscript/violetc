@@ -43,7 +43,20 @@ public partial class Verifier
         var type = m_Frame.TypeFromFrame;
         // do not allow duplicate proxy
         Symbol prevProxy = type.Delegate.Proxies.ContainsKey(defn.Operator) ? type.Delegate.Proxies[defn.Operator] : null;
-        toDo();
+        if (prevProxy == null)
+        {
+            var proxy = m_ModelCore.Factory.MethodSlot("_", null, defn.SemanticFlags(type));
+            proxy.ParentDefinition = type;
+            type.Delegate.Proxies[defn.Operator] = proxy;
+            defn.Common.SemanticActivation = this.m_ModelCore.Factory.ActivationFrame();
+            // set `this`
+            defn.Common.SemanticActivation.ActivationThisOrThisAsStaticType = defn.Operator.ProxyUsesThisLiteral ? this.m_ModelCore.Factory.ThisValue(type) : null;
+        }
+        else
+        {
+            // ERROR: duplicate
+            VerifyError(null, 258, defn.Id.Span.Value, new DiagnosticArguments {});
+        }
     }
 
     private void Fragmented_VerifyProxyDefinition2(Ast.ProxyDefinition defn)
@@ -71,13 +84,27 @@ public partial class Verifier
         var conversionSignature = toDo();
 
         // validate conversion signature
+        Symbol fromType = null;
         toDo();
 
         // do not allow duplicate and create method and add it
         // to set of proxies.
         var proxiesSet = defn.Operator == Operator.ProxyToConvertExplicit ? targetType.Delegate.ExplicitConversionProxies : targetType.Delegate.ImplicitConversionProxies;
-        Symbol prevProxy = proxiesSet.ContainsKey(zxczxc) ? proxiesSet[zxczxc] : null;
-        toDo();
+        Symbol prevProxy = proxiesSet.ContainsKey(fromType) ? proxiesSet[fromType] : null;
+        if (prevProxy == null)
+        {
+            var proxy = m_ModelCore.Factory.MethodSlot("_", conversionSignature, defn.SemanticFlags(targetType));
+            proxy.ParentDefinition = targetType;
+            proxiesSet[fromType] = proxy;
+            defn.Common.SemanticActivation = this.m_ModelCore.Factory.ActivationFrame();
+            // set `this`
+            defn.Common.SemanticActivation.ActivationThisOrThisAsStaticType = null;
+        }
+        else
+        {
+            // ERROR: duplicate
+            VerifyError(null, 258, defn.Id.Span.Value, new DiagnosticArguments {});
+        }
     }
 
     private void Fragmented_VerifyProxyDefinition3(Ast.ProxyDefinition defn)

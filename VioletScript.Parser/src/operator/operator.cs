@@ -6,6 +6,7 @@ public sealed class Operator {
     private static readonly Dictionary<int, Operator> m_ByValue = new Dictionary<int, Operator>();
     private static readonly Dictionary<Operator, bool> m_Unary = new Dictionary<Operator, bool>();
     private static readonly Dictionary<Operator, bool> m_AlwaysReturnBoolean = new Dictionary<Operator, bool>();
+    private static readonly Dictionary<Operator, bool> m_ProxyUsesThisLiteral = new Dictionary<Operator, bool>();
 
     public static readonly Operator Await = new Operator(0, "await");
     public static readonly Operator Yield = new Operator(1, "yield");
@@ -53,7 +54,7 @@ public sealed class Operator {
     public static readonly Operator ProxyToDeleteIndex = new Operator(0x2B, "deleteIndex");
     public static readonly Operator ProxyToIterateKeys = new Operator(0x2C, "iterateKeys");
     public static readonly Operator ProxyToIterateValues = new Operator(0x2D, "iterateValues");
-    /// <summary>`in` operator. Variant also used for proxy `has` public static readonly Operator declarations.</summary>
+    /// <summary><c>in</c> operator. Variant also used for <c>has</c> proxy.</summary>
     public static readonly Operator In = new Operator(0x2E, "in");
     public static readonly Operator ProxyToConvertImplicit = new Operator(0x2F, "convertImplicit");
     public static readonly Operator ProxyToConvertExplicit = new Operator(0x30, "convertExplicit");
@@ -97,6 +98,13 @@ public sealed class Operator {
         m_AlwaysReturnBoolean[Operator.In] = true;
         m_AlwaysReturnBoolean[Operator.Is] = true;
         m_AlwaysReturnBoolean[Operator.Instanceof] = true;
+
+        m_ProxyUsesThisLiteral[Operator.ProxyToGetIndex] = true;
+        m_ProxyUsesThisLiteral[Operator.ProxyToSetIndex] = true;
+        m_ProxyUsesThisLiteral[Operator.ProxyToDeleteIndex] = true;
+        m_ProxyUsesThisLiteral[Operator.In] = true;
+        m_ProxyUsesThisLiteral[Operator.ProxyToIterateKeys] = true;
+        m_ProxyUsesThisLiteral[Operator.ProxyToIterateValues] = true;
     }
 
     public static Operator ValueOf(int v) {
@@ -113,6 +121,10 @@ public sealed class Operator {
 
     public bool AlwaysReturnsBoolean {
         get => m_AlwaysReturnBoolean[this] == true;
+    }
+
+    public bool ProxyUsesThisLiteral {
+        get => m_ProxyUsesThisLiteral[this] == true;
     }
 
     public bool IsConversionProxy
