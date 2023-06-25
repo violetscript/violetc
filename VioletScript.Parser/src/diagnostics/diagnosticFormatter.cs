@@ -258,6 +258,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [256] = "Duplicate constructor",
         [257] = "Constructor must call super",
         [258] = "Duplicate proxy",
+        [259] = "Illegal proxy signature",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

@@ -728,4 +728,24 @@ public class Symbol {
             : this is BigIntConstantValue ? this.BigIntValue
             : null;
     }
+
+    /// <summary>
+    /// Determines if a signature is valid for a conversion proxy definition.
+    /// </summary>
+    public bool IsValidProxyConversionSignature(Symbol targetType)
+    {
+        if (this.FunctionHasOptParameters || this.FunctionRestParameter.HasValue || this.FunctionReturnType != targetType)
+        {
+            return false;
+        }
+        return !this.FunctionHasRequiredParameters || this.FunctionCountOfRequiredParameters != 1 || this.FunctionRequiredParameters[0].Type == targetType;
+    }
+
+    /// <summary>
+    /// Determines if a signature is valid for a non-conversion proxy definition.
+    /// </summary>
+    public bool IsValidProxySignature(Operator op)
+    {
+        //
+    }
 }

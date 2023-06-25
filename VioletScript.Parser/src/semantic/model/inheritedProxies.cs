@@ -8,7 +8,10 @@ public static class InheritedProxies {
     public static Symbol Find(Symbol type, Operator op) {
         while (type != null) {
             if (type.Delegate != null && type.Delegate.Proxies.ContainsKey(op)) {
-                return type.Delegate.Proxies[op];
+                var proxy = type.Delegate.Proxies[op];
+                if (proxy.StaticType != null) {
+                    return proxy;
+                }
             }
             type = type.SuperType;
         }
@@ -18,7 +21,7 @@ public static class InheritedProxies {
     public static Symbol FindImplicitConversion(Symbol type, Symbol convertsTo) {
         if (convertsTo.Delegate != null) {
             var c = convertsTo.Delegate.ImplicitConversionProxies.ContainsKey(type) ? convertsTo.Delegate.ImplicitConversionProxies[type] : null;
-            if (c != null) {
+            if (c != null && c.StaticType != null) {
                 return c;
             }
         }
@@ -28,7 +31,7 @@ public static class InheritedProxies {
     public static Symbol FindExplicitConversion(Symbol type, Symbol convertsTo) {
         if (convertsTo.Delegate != null) {
             var c = convertsTo.Delegate.ExplicitConversionProxies.ContainsKey(type) ? convertsTo.Delegate.ExplicitConversionProxies[type] : null;
-            if (c != null) {
+            if (c != null && c.StaticType != null) {
                 return c;
             }
         }

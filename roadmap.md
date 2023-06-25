@@ -1,4 +1,4 @@
-# Compiler notes
+# Compiler roadmap
 
 Some of the notes in this document apply to verification and bytecode or code generation.
 
@@ -8,6 +8,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
 - [ ] **Code generation:** When a class inherits static methods or virtual properties, `this` has to be replaced by that class in each such method. Look everywhere for `ClassStaticThis`.
 - [ ] **Code generation:** Variables with type without default value are represented in memory similiar to a Rust `Option<T>`. This is important because of constructors and `this` accessed before `super()`.
 - [ ] Decorators must not be allowed in certain places, like over ordinary functions, ordinary variables and `static` variables.
+- [ ] **Language Server Protocol (LSP):** Avoid re-compiling libraries by caching only publicly-visible definitions without shipping their implementation and loading them into the semantic core for use in LSP.
 
 ### `x is y: C`
 

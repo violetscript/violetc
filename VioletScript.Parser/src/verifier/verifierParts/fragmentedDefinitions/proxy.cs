@@ -74,7 +74,15 @@ public partial class Verifier
         {
             return;
         }
-        toDo();
+        method.StaticType = this.Fragmented_ResolveFunctionSignature(defn.Common, defn.Id.Span.Value);
+        if (!method.StaticType.IsValidProxySignature(defn.Operator))
+        {
+            // ERROR: illegal proxy signature
+            VerifyError(null, 259, defn.Id.Span.Value, new DiagnosticArguments {});
+            method.StaticType = null;
+            type.Delegate.Proxies[defn.Operator] = null;
+            return;
+        }
     }
 
     private void Fragmented_VerifyProxyDefinition2Conversion(Ast.ProxyDefinition defn)
@@ -82,11 +90,16 @@ public partial class Verifier
         var targetType = m_Frame.TypeFromFrame;
 
         // resolve signature
-        var conversionSignature = toDo();
+        var conversionSignature = this.Fragmented_ResolveFunctionSignature(defn.Common, defn.Id.Span.Value);
 
         // validate conversion signature
         Symbol fromType = null;
-        toDo();
+        if (!conversionSignature.IsValidProxyConversionSignature(targetType))
+        {
+            // ERROR: illegal proxy signature
+            VerifyError(null, 259, defn.Id.Span.Value, new DiagnosticArguments {});
+            return;
+        }
 
         // do not allow duplicate and create method and add it
         // to set of proxies.
