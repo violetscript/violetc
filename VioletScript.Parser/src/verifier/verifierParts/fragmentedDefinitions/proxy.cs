@@ -48,6 +48,7 @@ public partial class Verifier
             var proxy = m_ModelCore.Factory.MethodSlot("_", null, defn.SemanticFlags(type));
             proxy.ParentDefinition = type;
             type.Delegate.Proxies[defn.Operator] = proxy;
+            defn.SemanticMethodSlot = proxy;
             defn.Common.SemanticActivation = this.m_ModelCore.Factory.ActivationFrame();
             // set `this`
             defn.Common.SemanticActivation.ActivationThisOrThisAsStaticType = defn.Operator.ProxyUsesThisLiteral ? this.m_ModelCore.Factory.ThisValue(type) : null;
@@ -96,6 +97,7 @@ public partial class Verifier
             var proxy = m_ModelCore.Factory.MethodSlot("_", conversionSignature, defn.SemanticFlags(targetType));
             proxy.ParentDefinition = targetType;
             proxiesSet[fromType] = proxy;
+            defn.SemanticMethodSlot = proxy;
             defn.Common.SemanticActivation = this.m_ModelCore.Factory.ActivationFrame();
             // set `this`
             defn.Common.SemanticActivation.ActivationThisOrThisAsStaticType = null;
