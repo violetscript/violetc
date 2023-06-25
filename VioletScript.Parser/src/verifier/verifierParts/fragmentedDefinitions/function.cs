@@ -43,16 +43,14 @@ public partial class Verifier
         defn.SemanticMethodSlot = this.DefineOrReusePartialMethod(defn.Id.Name, output, defn.Id.Span.Value, defn.SemanticVisibility, defn.SemanticFlags(parentDefinition), parentDefinition);
         if (defn.SemanticMethodSlot != null)
         {
-            defn.SemanticActivation = this.m_ModelCore.Factory.ActivationFrame();
+            defn.Common.SemanticActivation = this.m_ModelCore.Factory.ActivationFrame();
             // set `this`
-            defn.SemanticActivation.ActivationThisOrThisAsStaticType = isTypeStatic ? this.m_ModelCore.Factory.ClassStaticThis(parentDefinition) : parentDefinition is Type ? this.m_ModelCore.Factory.ThisValue(parentDefinition) : null;
-
-            defn.Common.SemanticActivation = defn.SemanticActivation;
+            defn.Common.SemanticActivation.ActivationThisOrThisAsStaticType = isTypeStatic ? this.m_ModelCore.Factory.ClassStaticThis(parentDefinition) : parentDefinition is Type ? this.m_ModelCore.Factory.ThisValue(parentDefinition) : null;
 
             if (defn.Generics != null)
             {
-                this.EnterFrame(defn.SemanticActivation);
-                defn.SemanticMethodSlot.TypeParameters = FragmentedA_VerifyTypeParameters(defn.Generics, defn.SemanticActivation.Properties, defn.SemanticMethodSlot);
+                this.EnterFrame(defn.Common.SemanticActivation);
+                defn.SemanticMethodSlot.TypeParameters = FragmentedA_VerifyTypeParameters(defn.Generics, defn.Common.SemanticActivation.Properties, defn.SemanticMethodSlot);
                 this.ExitFrame();
             }
         }
@@ -95,11 +93,11 @@ public partial class Verifier
         {
             return;
         }
-        this.EnterFrame(defn.SemanticActivation);
+        this.EnterFrame(defn.Common.SemanticActivation);
 
         if (defn.Generics != null)
         {
-            FragmentedB_VerifyTypeParameters(method.TypeParameters, defn.Generics, defn.SemanticActivation.Properties);
+            FragmentedB_VerifyTypeParameters(method.TypeParameters, defn.Generics, defn.Common.SemanticActivation.Properties);
         }
 
         // resolve signature
@@ -232,7 +230,7 @@ public partial class Verifier
             }
         }
 
-        this.EnterFrame(defn.SemanticActivation);
+        this.EnterFrame(defn.Common.SemanticActivation);
         this.Fragmented_VerifyFunctionDefinition7Params(defn.Common);
         // ignore "throws" clause
         if (defn.Common.ThrowsType != null)

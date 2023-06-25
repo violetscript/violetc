@@ -881,7 +881,6 @@ public class FunctionDefinition : AnnotatableDefinition {
     public FunctionCommon Common;
 
     public Symbol SemanticMethodSlot = null;
-    public Symbol SemanticActivation = null;
 
     public FunctionDefinition(Identifier id, Generics generics, FunctionCommon common) : base() {
         Id = id;
@@ -906,6 +905,8 @@ public class FunctionDefinition : AnnotatableDefinition {
 public class ConstructorDefinition : AnnotatableDefinition {
     public Identifier Id;
     public FunctionCommon Common;
+
+    public Symbol SemanticMethodSlot = null;
 
     public ConstructorDefinition(Identifier id, FunctionCommon common) : base() {
         Id = id;
