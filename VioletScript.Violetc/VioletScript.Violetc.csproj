@@ -11,4 +11,13 @@
   <ItemGroup>
     <ProjectReference Include="..\VioletScript.Parser\VioletScript.Parser.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <_CopyBuiltins Include="builtins\**\*.*" />
+  </ItemGroup>
+  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(_CopyBuiltins)" DestinationFolder="$(OutDir)/builtins" />
+  </Target>
+  <Target Name="CopyCustomContentOnPublish" AfterTargets="Publish">
+    <Copy SourceFiles="@(_CopyBuiltins)" DestinationFolder="$(PublishDir)/builtins" />
+  </Target>
 </Project>
