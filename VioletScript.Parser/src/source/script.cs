@@ -74,6 +74,25 @@ public sealed class Script {
         get => m_Diagnostics.GetRange(0, m_Diagnostics.Count);
     }
 
+    public List<Diagnostic> DiagnosticsFromIncludedScripts {
+        get {
+            var r = new List<Diagnostic>();
+            foreach (var incScript in this.m_IncludesScripts) {
+                r.AddRange(incScript.DiagnosticsFromIncludedScripts);
+                r.AddRange(incScript.Diagnostics);
+            }
+            return r;
+        }
+    }
+
+    public List<Diagnostic> DiagnosticsFromCurrentAndIncludedScripts {
+        get {
+            var r = this.DiagnosticsFromIncludedScripts;
+            r.AddRange(this.Diagnostics);
+            return r;
+        }
+    }
+
     public Diagnostic CollectDiagnostic(Diagnostic p) {
         m_Valid = p.IsWarning ? m_Valid : false;
         m_Diagnostics.Add(p);
@@ -82,8 +101,13 @@ public sealed class Script {
 
     public void SortDiagnostics() {
         m_Diagnostics.Sort((a, b) => a.Span.CompareTo(b.Span));
+    }
+
+    public void SortDiagnosticsForIncludedScripts() {
+        m_Diagnostics.Sort((a, b) => a.Span.CompareTo(b.Span));
         foreach (var s in m_IncludesScripts) {
             s.SortDiagnostics();
+            s.SortDiagnosticsForIncludedScripts();
         }
     }
 }

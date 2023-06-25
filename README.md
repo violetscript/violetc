@@ -11,3 +11,7 @@ VioletScript uses the extension `.vs`, which is automatically added.
 ```
 violetc index
 ```
+
+## Tasks
+
+- [ ] When packaging the compiler, it must ship with the built-in standard object sources.
