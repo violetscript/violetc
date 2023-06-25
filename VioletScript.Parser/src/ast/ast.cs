@@ -930,6 +930,8 @@ public class GetterDefinition : AnnotatableDefinition {
     public Identifier Id;
     public FunctionCommon Common;
 
+    public Symbol SemanticMethodSlot = null;
+
     public GetterDefinition(Identifier id, FunctionCommon common) : base() {
         Id = id;
         Common = common;
@@ -950,6 +952,8 @@ public class GetterDefinition : AnnotatableDefinition {
 public class SetterDefinition : AnnotatableDefinition {
     public Identifier Id;
     public FunctionCommon Common;
+
+    public Symbol SemanticMethodSlot = null;
 
     public SetterDefinition(Identifier id, FunctionCommon common) : base() {
         Id = id;
@@ -975,6 +979,8 @@ public class ProxyDefinition : AnnotatableDefinition {
     /// </summary>
     public Operator Operator;
     public FunctionCommon Common;
+
+    public Symbol SemanticMethodSlot = null;
 
     public ProxyDefinition(Identifier id, Operator op, FunctionCommon common) : base() {
         Id = id;

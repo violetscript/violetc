@@ -16,20 +16,60 @@ public partial class Verifier
     {
         if (phase == VerifyPhase.Phase1)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyProxyDefinition1(defn);
         }
         else if (phase == VerifyPhase.Phase2)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyProxyDefinition2(defn);
         }
         else if (phase == VerifyPhase.Phase3)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyProxyDefinition3(defn);
         }
         // VerifyPhase.Phase7
         else if (phase == VerifyPhase.Phase7)
         {
-            doFooBarQuxBaz();
+            Fragmented_VerifyProxyDefinition7(defn);
         }
+    }
+
+    private void Fragmented_VerifyProxyDefinition1(Ast.ProxyDefinition defn)
+    {
+        var type = m_Frame.TypeFromFrame;
+        // do not allow duplicate proxy
+        toDo();
+    }
+
+    private void Fragmented_VerifyProxyDefinition2(Ast.ProxyDefinition defn)
+    {
+        var method = defn.SemanticMethodSlot;
+        if (method == null)
+        {
+            return;
+        }
+        var type = m_Frame.TypeFromFrame;
+        toDo();
+    }
+
+    private void Fragmented_VerifyProxyDefinition3(Ast.ProxyDefinition defn)
+    {
+        var method = defn.SemanticMethodSlot;
+        if (method == null)
+        {
+            return;
+        }
+        var type = m_Frame.TypeFromFrame;
+        toDo();
+    }
+
+    private void Fragmented_VerifyProxyDefinition7(Ast.ProxyDefinition defn)
+    {
+        var method = defn.SemanticMethodSlot;
+        if (method == null)
+        {
+            return;
+        }
+        var type = m_Frame.TypeFromFrame;
+        toDo();
     }
 }
