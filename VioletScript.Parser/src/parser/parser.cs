@@ -327,8 +327,7 @@ internal class ParserBackend {
             var fields = new List<Ast.Identifier>{};
             do {
                 if (Token.Type == TToken.RCurly) break;
-                var name = ExpectIdentifier();
-                var field = (Ast.Identifier) FinishNode(new Ast.Identifier(name, Consume(TToken.Colon) ? ParseTypeExpression() : null));
+                fields.Add(this.ParseRecordTypeField());
             } while (Consume(TToken.Comma));
             Expect(TToken.RCurly);
             r = (Ast.TypeExpression) FinishNode(new Ast.RecordTypeExpression(fields));
@@ -384,6 +383,24 @@ internal class ParserBackend {
         }
 
         return r;
+    }
+
+    private Ast.Identifier ParseRecordTypeField() {
+        var name = ExpectIdentifier();
+        Span? optionalSpan = null;
+        if (this.Token.Type == TToken.QuestionMark) {
+            this.MarkLocation();
+            this.NextToken();
+            optionalSpan = this.PopLocation();
+        }
+        var fieldType = this.Consume(TToken.Colon) ? ParseTypeExpression() : null;
+        if (optionalSpan.HasValue) {
+            var undefinedType = new Ast.UndefinedTypeExpression();
+            undefinedType.Span = optionalSpan;
+            this.PushLocation(fieldType.Span.Value);
+            fieldType = (Ast.TypeExpression) this.FinishNode(new Ast.UnionTypeExpression(new List<Ast.TypeExpression>{undefinedType, fieldType}));
+        }
+        return (Ast.Identifier) FinishNode(new Ast.Identifier(name, fieldType));
     }
 
     private Ast.TypeExpression ParseParensTypeExpression() {
