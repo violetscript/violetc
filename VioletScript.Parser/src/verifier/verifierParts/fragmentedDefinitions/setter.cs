@@ -93,7 +93,7 @@ public partial class Verifier
     private Symbol Fragmented_ResolveSetterSignature(Ast.FunctionCommon common, Span idSpan, Symbol virtualProp)
     {
         // the parser already ensured the right count of parameters.
-        Symbol inferParamType = virtualProp.Getter != null && virtualProp.Getter.StaticType != null ? virtualProp.Getter.StaticType.FunctionRequiredParameters[0].Type : null;
+        Symbol inferParamType = virtualProp.Getter?.StaticType?.FunctionReturnType;
         var binding = common.Params[0];
         var paramName = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
         Symbol paramType = null;
@@ -105,7 +105,7 @@ public partial class Verifier
         {
             paramType = this.VerifyTypeExp(binding.Pattern.Type);
         }
-        paramType ??= inferParamType;
+        paramType ??= inferParamType ?? this.m_ModelCore.AnyType;
         if (common.ReturnType != null)
         {
             var ret = this.VerifyTypeExp(common.ReturnType);
