@@ -56,7 +56,7 @@ public static class InterfaceImpl {
                     if (reqProp.Getter != null && (reqProp.Getter.MethodFlags & MethodSlotFlags.OptionalInterfaceMethod) == 0) {
                         handleMissingGetter(name);
                     }
-                } else if (reqProp.Getter != null && !reqProp.Getter.StaticType.TypeStructurallyEquals(implProp.Getter.StaticType)) {
+                } else if (reqProp.Getter != null && reqProp.Getter.StaticType != implProp.Getter.StaticType) {
                     handleWrongGetterSignature(name, reqProp.Getter.StaticType);
                 }
 
@@ -65,7 +65,7 @@ public static class InterfaceImpl {
                     if (reqProp.Setter != null && (reqProp.Setter.MethodFlags & MethodSlotFlags.OptionalInterfaceMethod) == 0) {
                         handleMissingSetter(name);
                     }
-                } else if (reqProp.Setter != null && !reqProp.Setter.StaticType.TypeStructurallyEquals(implProp.Setter.StaticType)) {
+                } else if (reqProp.Setter != null && reqProp.Setter.StaticType != implProp.Setter.StaticType) {
                     handleWrongSetterSignature(name, reqProp.Setter.StaticType);
                 }
             } else {
@@ -81,13 +81,13 @@ public static class InterfaceImpl {
                         return;
                     }
                     var reqSubProp = reqProp.StaticType.ReplaceTypes(reqProp.TypeParameters, implProp.TypeParameters);
-                    if (!reqSubProp.StaticType.TypeStructurallyEquals(implProp.StaticType)) {
+                    if (reqSubProp.StaticType != implProp.StaticType) {
                         handleWrongMethodSignature(name, reqSubProp.StaticType);
                     }
                 } else if (implProp.TypeParameters != null) {
                     handleRequirementGenericsDontMatch(name);
                 } else {
-                    if (!reqProp.StaticType.TypeStructurallyEquals(implProp.StaticType)) {
+                    if (reqProp.StaticType != implProp.StaticType) {
                         handleWrongMethodSignature(name, reqProp.StaticType);
                     }
                 }
@@ -110,12 +110,12 @@ public static class InterfaceImpl {
                 return false;
             }
             for (int j = 0; j != itrfcsCount; ++j) {
-                if (!itrfcsA[j].TypeStructurallyEquals(itrfcsB[j])) {
+                if (itrfcsA[j] != itrfcsB[j]) {
                     return false;
                 }
             }
             if (pa.SuperType != null) {
-                if (pb.SuperType == null || !pa.SuperType.TypeStructurallyEquals(pb.SuperType)) {
+                if (pb.SuperType == null || pa.SuperType != pb.SuperType) {
                     return false;
                 }
             } else if (pb.SuperType != null) {

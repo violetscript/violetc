@@ -73,7 +73,7 @@ public static class MethodOverride {
             NameAndTypePair[] params1 = superTypeSignature.FunctionRequiredParameters;
             NameAndTypePair[] params2 = subtypeSignature.FunctionRequiredParameters;
             for (int i = 0; i < l; ++i) {
-                if (!params1[i].Type.TypeStructurallyEquals(params2[i].Type)) {
+                if (params1[i].Type != params2[i].Type) {
                     return false;
                 }
             }
@@ -89,7 +89,7 @@ public static class MethodOverride {
             NameAndTypePair[] params1 = superTypeSignature.FunctionOptParameters;
             NameAndTypePair[] params2 = subtypeSignature.FunctionOptParameters;
             for (int i = 0; i < l; ++i) {
-                if (!params1[i].Type.TypeStructurallyEquals(params2[i].Type)) {
+                if (params1[i].Type != params2[i].Type) {
                     return false;
                 }
             }
@@ -98,14 +98,14 @@ public static class MethodOverride {
         }
 
         if (superTypeSignature.FunctionRestParameter != null) {
-            if (subtypeSignature.FunctionRestParameter == null || !superTypeSignature.FunctionRestParameter.Value.Type.TypeStructurallyEquals(subtypeSignature.FunctionRestParameter.Value.Type)) {
+            if (subtypeSignature.FunctionRestParameter == null || superTypeSignature.FunctionRestParameter.Value.Type != subtypeSignature.FunctionRestParameter.Value.Type) {
                 return false;
             }
         } else if (subtypeSignature.FunctionRestParameter != null) {
             return false;
         }
 
-        return superTypeSignature.FunctionReturnType.TypeStructurallyEquals(subtypeSignature.FunctionReturnType)
+        return superTypeSignature.FunctionReturnType == subtypeSignature.FunctionReturnType
             || subtypeSignature.FunctionReturnType.IsSubtypeOf(superTypeSignature.FunctionReturnType)
             || subtypeSignature.FunctionReturnType is AnyType;
     }

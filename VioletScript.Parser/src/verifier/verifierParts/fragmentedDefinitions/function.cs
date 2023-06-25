@@ -29,7 +29,7 @@ public partial class Verifier
         // VerifyPhase.Phase7
         else if (phase == VerifyPhase.Phase7)
         {
-            doFooBarQuxBaz();
+            this.Fragmented_VerifyFunctionDefinition7(defn);
         }
     }
 
@@ -210,5 +210,15 @@ public partial class Verifier
         {
             this.VerifyError(defn.Id.Span.Value.Script, 246, defn.Id.Span.Value, new DiagnosticArguments {["name"] = methodName});
         }
+    }
+
+    private void Fragmented_VerifyFunctionDefinition7(Ast.FunctionDefinition defn)
+    {
+        var method = defn.SemanticMethodSlot;
+        if (method == null)
+        {
+            return;
+        }
+        toDo();
     }
 }
