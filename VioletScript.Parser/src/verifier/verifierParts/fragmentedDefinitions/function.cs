@@ -127,7 +127,7 @@ public partial class Verifier
         }
         else if (common.OptParams != null)
         {
-            @params = new List<NameAndTypePair>();
+            @optParams = new List<NameAndTypePair>();
             foreach (var binding in common.OptParams)
             {
                 var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
@@ -135,7 +135,7 @@ public partial class Verifier
                 {
                     VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
                 }
-                @params.Add(new NameAndTypePair(name, binding.Pattern.Type == null ? this.m_ModelCore.AnyType : this.VerifyTypeExp(binding.Pattern.Type) ?? this.m_ModelCore.AnyType));
+                @optParams.Add(new NameAndTypePair(name, binding.Pattern.Type == null ? this.m_ModelCore.AnyType : this.VerifyTypeExp(binding.Pattern.Type) ?? this.m_ModelCore.AnyType));
             }
         }
         else if (common.RestParam != null)

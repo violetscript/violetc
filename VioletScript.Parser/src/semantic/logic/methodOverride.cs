@@ -93,7 +93,7 @@ public static class MethodOverride {
                     return false;
                 }
             }
-        } else if (subtypeSignature.FunctionHasOptParameters && subtypeSignature.FunctionRestParameter != null) {
+        } else if (subtypeSignature.FunctionHasOptParameters && superTypeSignature.FunctionRestParameter != null) {
             return false;
         }
 
