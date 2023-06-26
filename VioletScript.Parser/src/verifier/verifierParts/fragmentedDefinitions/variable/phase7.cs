@@ -14,10 +14,9 @@ public partial class Verifier
 {
     private void Fragmented_VerifyVariableDefinition7(Ast.VariableDefinition defn)
     {
-        // if it is a program top-level variable,
-        // it has been resolved by a separate method.
-        if (defn.SemanticShadowFrame != null)
+        if (defn.SemanticAtToplevel)
         {
+            this.VerifyVariableDefinition(defn);
             return;
         }
 

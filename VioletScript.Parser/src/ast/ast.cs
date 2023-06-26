@@ -884,6 +884,12 @@ public class VariableDefinition : AnnotatableDefinition {
     /// </summary>
     public Symbol SemanticShadowFrame = null;
 
+    /// <summary>
+    /// Used internally by the verifier for tracking variables
+    /// at the top-level.
+    /// </summary>
+    public bool SemanticAtToplevel = false;
+
     public VariableDefinition(bool readOnly, List<VariableBinding> bindings) : base() {
         ReadOnly = readOnly;
         Bindings = bindings;

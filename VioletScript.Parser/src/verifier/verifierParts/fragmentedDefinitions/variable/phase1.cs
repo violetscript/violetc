@@ -20,7 +20,7 @@ public partial class Verifier
         // variable.
         if (parentDefinition == null)
         {
-            this.VerifyVariableDefinition(defn);
+            defn.SemanticAtToplevel = true;
             return;
         }
 

@@ -8,4 +8,4 @@ package q.b.f {
     }
 }
 import q.b.f.*
-const e: E = ['xx']
+const fooBarQux: E = ['xx']
