@@ -1608,15 +1608,15 @@ internal class ParserBackend {
             return ParseVariableDefinition(attribs, context, startSpan);
         if (PreviousToken.IsKeyword("function"))
             return ParseFunctionDefinition(attribs, context, startSpan);
-        if (PreviousToken.IsKeyword("namespace"))
+        if (PreviousToken.IsContextKeyword("namespace"))
             return ParseNamespaceDefinition(attribs, context, startSpan);
         if (PreviousToken.IsKeyword("class"))
             return ParseClassDefinition(attribs, context, startSpan);
         if (PreviousToken.IsKeyword("interface"))
             return ParseInterfaceDefinition(attribs, context, startSpan);
-        if (PreviousToken.IsKeyword("enum"))
+        if (PreviousToken.IsContextKeyword("enum"))
             return ParseEnumDefinition(attribs, context, startSpan);
-        if (PreviousToken.IsKeyword("type"))
+        if (PreviousToken.IsContextKeyword("type"))
             return ParseTypeDefinition(attribs, context, startSpan);
         return null;
     }
