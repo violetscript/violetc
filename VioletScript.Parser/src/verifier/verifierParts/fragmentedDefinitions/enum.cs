@@ -64,6 +64,7 @@ public partial class Verifier
             type = m_ModelCore.Factory.EnumType(defn.Id.Name, defn.IsFlags, wrapsType);
             type.ParentDefinition = m_Frame.NamespaceFromFrame ?? m_Frame.PackageFromFrame;
             type.EnumInitializeMethods();
+            type.Visibility = defn.SemanticVisibility;
             outputProps[defn.Id.Name] = type;
         }
 

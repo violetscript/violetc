@@ -1,6 +1,9 @@
 package q.b.f {
     public var x: Long = 0
+    [Flags]
+    public enum E {
+        X; Y; Z;
+    }
 }
-import b = q.b.*;
-namespace A = b.f
-type Dec = Decimal
+import q.b.f.*;
+const e: E = ['xx']
