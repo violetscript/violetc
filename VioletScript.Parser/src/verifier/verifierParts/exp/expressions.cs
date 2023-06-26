@@ -1033,9 +1033,14 @@ public partial class Verifier
             return exp.SemanticSymbol;
         }
         var elementType = type.ArgumentTypes[0];
-        foreach (var c in exp.Children)
+        foreach (var child in exp.Children)
         {
-            LimitExpType(c, elementType);
+            // limit spread type to [ChildType]
+            if (child is Ast.Spread spread) {
+                LimitExpType(spread.Expression, this.m_ModelCore.Factory.TypeWithArguments(this.m_ModelCore.ArrayType, new Symbol[]{elementType}));
+                continue;
+            }
+            LimitExpType(child, elementType);
         }
         exp.SemanticSymbol = m_ModelCore.Factory.Value(type);
         exp.SemanticExpResolved = true;
