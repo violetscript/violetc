@@ -22,7 +22,7 @@ public partial class Verifier
         if (pattern.SemanticProperty != null)
         {
             pattern.SemanticProperty.StaticType ??= type;
-            if (type != null && pattern.SemanticProperty.StaticType != null && type != pattern.SemanticProperty.StaticType)
+            if (type != null && type != pattern.SemanticProperty.StaticType)
             {
                 this.VerifyError(pattern.Span.Value.Script, 245, pattern.Span.Value, new DiagnosticArguments {});
             }
