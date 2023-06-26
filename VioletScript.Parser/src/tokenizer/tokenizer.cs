@@ -332,7 +332,7 @@ public sealed class Tokenizer {
             }
         }
         EndToken(TToken.NumericLiteral);
-        var s = Content.Substring(Token.Start + 2, Index - Token.Start + 2).Replace("_", "");
+        var s = Content.Substring(Token.Start + 2, Index - (Token.Start + 2)).Replace("_", "");
         try {
             Token.NumberValue = (double) Convert.ToInt64(s, 16);
         } catch (OverflowException) {
