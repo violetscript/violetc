@@ -359,7 +359,7 @@ public partial class Verifier
             // extend variable life
             if (r is ReferenceValueFromFrame && r.Base.FindActivation() != m_Frame.FindActivation())
             {
-                r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
+                r.Base.FindActivation()?.AddExtendedLifeVariable(r.Property);
             }
 
             var conversion = TypeConversions.ConvertImplicit(r, expectedType);

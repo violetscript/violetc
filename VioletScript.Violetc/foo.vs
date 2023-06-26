@@ -3,3 +3,5 @@ function f(): Promise.<String> {
     return '';
 }
 native function f2(): Promise.<Number>;
+var x: Number?;
+x?.toString();

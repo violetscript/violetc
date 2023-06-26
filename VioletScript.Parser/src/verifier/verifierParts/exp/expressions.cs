@@ -323,7 +323,7 @@ public partial class Verifier
             // extend variable life
             if (r is ReferenceValueFromFrame && r.Base.FindActivation() != m_Frame.FindActivation())
             {
-                r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
+                r.Base.FindActivation()?.AddExtendedLifeVariable(r.Property);
             }
 
             if (id.Type != null)
@@ -397,7 +397,7 @@ public partial class Verifier
             // extend variable life
             if (r is ReferenceValueFromFrame && r.Base.FindActivation() != m_Frame.FindActivation())
             {
-                r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
+                r.Base.FindActivation()?.AddExtendedLifeVariable(r.Property);
             }
 
             exp.SemanticSymbol = r;
@@ -482,7 +482,7 @@ public partial class Verifier
             // extend variable life
             if (r is ReferenceValueFromFrame && r.Base.FindActivation() != m_Frame.FindActivation())
             {
-                r.Base.FindActivation().AddExtendedLifeVariable(r.Property);
+                r.Base.FindActivation()?.AddExtendedLifeVariable(r.Property);
             }
 
             exp.SemanticExpResolved = true;
