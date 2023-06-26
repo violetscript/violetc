@@ -254,13 +254,19 @@ public partial class Verifier
     {
         Symbol activation = common.SemanticActivation;
 
-        foreach (var binding in common.Params)
+        if (common.Params != null)
         {
-            this.VerifyVariableBinding(binding, false, activation.Properties, Visibility.Public);
+            foreach (var binding in common.Params)
+            {
+                this.VerifyVariableBinding(binding, false, activation.Properties, Visibility.Public);
+            }
         }
-        foreach (var binding in common.OptParams)
+        if (common.OptParams != null)
         {
-            this.VerifyVariableBinding(binding, false, activation.Properties, Visibility.Public);
+            foreach (var binding in common.OptParams)
+            {
+                this.VerifyVariableBinding(binding, false, activation.Properties, Visibility.Public);
+            }
         }
         if (common.RestParam != null)
         {
