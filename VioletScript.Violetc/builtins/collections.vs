@@ -41,4 +41,15 @@ public final class Array.<T> {
     public static native function from(argument: Iterator.<T>): [T];
 
     public native function push(...arguments: [T]): Int;
+
+    public proxy function add(a: [T], b: [T]): [T] (
+        a.concat(b)
+    );
+
+    /**
+     * The `concat` method is used to merge two or more arrays.
+     * This method does not modify the existing arrays and returns
+     * a new array.
+     */
+    public native function concat(...arrays: [[T]]): [T];
 }

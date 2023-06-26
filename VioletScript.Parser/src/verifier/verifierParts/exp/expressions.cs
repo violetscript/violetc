@@ -1439,7 +1439,7 @@ public partial class Verifier
 
     private Symbol VerifyParensExp(Ast.ParensExpression exp, Symbol expectedType, bool instantiatingGeneric, bool writting)
     {
-        exp.SemanticSymbol = VerifyExp(exp, expectedType, instantiatingGeneric, writting);
+        exp.SemanticSymbol = VerifyExp(exp.Expression, expectedType, instantiatingGeneric, writting);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // parentheses expression
@@ -1535,6 +1535,11 @@ public partial class Verifier
             return exp.SemanticSymbol;
         }
         Symbol right = null;
+
+        // =
+        // &&=
+        // ||=
+        // ^^=
         if (exp.Compound == null || exp.Compound == Operator.LogicalAnd || exp.Compound == Operator.LogicalXor || exp.Compound == Operator.LogicalOr)
         {
             right = LimitExpType(exp.Right, left.StaticType);
@@ -1548,6 +1553,9 @@ public partial class Verifier
         {
             // unsupported operator
             VerifyError(null, 178, exp.Span.Value, new DiagnosticArguments {["t"] = left.StaticType, ["op"] = exp.Compound});
+
+            VerifyExpAsValue(exp.Right);
+
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
