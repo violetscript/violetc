@@ -120,3 +120,21 @@ public class BigInt {
 
     public native override function toString(radix: Int? = null): String;
 }
+
+[Value]
+public class String {
+    public native function String(argument: *);
+
+    public native proxy function add(a: String, b: String): String;
+    public native proxy function lt(a: String, b: String): Boolean;
+    public native proxy function gt(a: String, b: String): Boolean;
+    public native proxy function le(a: String, b: String): Boolean;
+    public native proxy function ge(a: String, b: String): Boolean;
+}
+
+[Value]
+public class Boolean {
+    public native function Boolean(argument: *);
+
+    public override native function toString(): String;
+}

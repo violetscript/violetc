@@ -19,7 +19,7 @@ public partial class Verifier
         var returnType = methodSlot.StaticType.FunctionReturnType;
         if (methodSlot.UsesAwait)
         {
-            returnType = methodSlot.FunctionReturnType.ArgumentTypes[0];
+            returnType = methodSlot.StaticType.FunctionReturnType.ArgumentTypes[0];
         }
         else if (methodSlot.UsesYield)
         {

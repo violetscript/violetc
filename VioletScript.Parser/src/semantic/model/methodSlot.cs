@@ -6,13 +6,13 @@ using VioletScript.Parser.Semantic.Logic;
 
 [Flags]
 public enum MethodSlotFlags {
-    UsesYield,
-    UsesAwait,
-    Override,
-    Final,
-    Native,
-    OptionalInterfaceMethod,
-    Constructor,
+    UsesYield = 1,
+    UsesAwait = 2,
+    Override = 4,
+    Final = 8,
+    Native = 16,
+    OptionalInterfaceMethod = 32,
+    Constructor = 64,
 }
 
 public class MethodSlot : Symbol {
@@ -59,28 +59,43 @@ public class NormalMethodSlot : MethodSlot {
     }
 
     public override bool UsesYield {
-        get => (m_Flags & MethodSlotFlags.UsesYield) != 0;
-        set => m_Flags |= MethodSlotFlags.UsesYield;
+        get => m_Flags.HasFlag(MethodSlotFlags.UsesYield);
+        set {
+            var flag = MethodSlotFlags.UsesYield;
+            m_Flags = value ? m_Flags | flag : m_Flags.HasFlag(flag) ? m_Flags ^ flag : m_Flags;
+        }
     }
 
     public override bool UsesAwait {
-        get => (m_Flags & MethodSlotFlags.UsesAwait) != 0;
-        set => m_Flags |= MethodSlotFlags.UsesAwait;
+        get => m_Flags.HasFlag(MethodSlotFlags.UsesAwait);
+        set {
+            var flag = MethodSlotFlags.UsesAwait;
+            m_Flags = value ? m_Flags | flag : m_Flags.HasFlag(flag) ? m_Flags ^ flag : m_Flags;
+        }
     }
 
     public override bool HasOverrideModifier {
         get => (m_Flags & MethodSlotFlags.Override) != 0;
-        set => m_Flags |= MethodSlotFlags.Override;
+        set {
+            var flag = MethodSlotFlags.Override;
+            m_Flags = value ? m_Flags | flag : m_Flags.HasFlag(flag) ? m_Flags ^ flag : m_Flags;
+        }
     }
 
     public override bool IsFinal {
         get => (m_Flags & MethodSlotFlags.Final) != 0;
-        set => m_Flags |= MethodSlotFlags.Final;
+        set {
+            var flag = MethodSlotFlags.Final;
+            m_Flags = value ? m_Flags | flag : m_Flags.HasFlag(flag) ? m_Flags ^ flag : m_Flags;
+        }
     }
 
     public override bool IsNative {
         get => (m_Flags & MethodSlotFlags.Native) != 0;
-        set => m_Flags |= MethodSlotFlags.Native;
+        set {
+            var flag = MethodSlotFlags.Native;
+            m_Flags = value ? m_Flags | flag : m_Flags.HasFlag(flag) ? m_Flags ^ flag : m_Flags;
+        }
     }
 
     public override Symbol[] TypeParameters {

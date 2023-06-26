@@ -1001,8 +1001,8 @@ public class ProxyDefinition : AnnotatableDefinition {
 }
 
 public class FunctionCommon : Node {
-    public bool UsesAwait;
-    public bool UsesYield;
+    public bool UsesAwait = false;
+    public bool UsesYield = false;
     public List<VariableBinding> Params;
     public List<VariableBinding> OptParams;
     public VariableBinding RestParam;

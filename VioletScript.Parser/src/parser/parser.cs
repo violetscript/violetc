@@ -1703,6 +1703,7 @@ internal class ParserBackend {
             if (((int) attribs.Modifiers) != 0 || attribs.AccessModifier != null || (attribs.Decorators != null && attribs.Decorators.Count > 0)) {
                 SyntaxError(21, id.Span.Value);
             }
+            ((Ast.FunctionDefinition) r).AccessModifier = Ast.AnnotatableDefinitionAccessModifier.Public;
         } else {
             if (attribs.Modifiers.HasFlag(Ast.AnnotatableDefinitionModifier.Native)) {
                 // native function must not have body

@@ -937,7 +937,7 @@ public class TypeWithArguments : Type {
     }
 
     public override Symbol SuperType {
-        get => m_Origin.SuperType.ReplaceTypes(m_Origin.TypeParameters, m_ArgumentsList);
+        get => m_Origin.SuperType?.ReplaceTypes(m_Origin.TypeParameters, m_ArgumentsList);
     }
 
     public override Symbol[] ImplementsInterfaces {

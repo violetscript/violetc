@@ -1,6 +1,7 @@
 include './globalConstants';
+include './globalFunctions';
 include './object';
-include './iterator';
-include './number';
-include './string';
+include './primitiveTypes';
+include './collections';
+include './function';
 include './errors';
