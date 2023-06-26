@@ -32,7 +32,12 @@ public partial class Verifier
     /// namespace aliases and type aliases.
     /// This list is consumed by <c>VerifyPrograms</c>.
     /// </summary>
-    private List<Ast.Statement> m_ImportOrAliasDirectives = null;
+    private Stack<List<Ast.Statement>> m_ImportOrAliasDirectivesStack = new Stack<List<Ast.Statement>>();
+
+    private List<Ast.Statement> m_ImportOrAliasDirectives
+    {
+        get => m_ImportOrAliasDirectivesStack.Peek();
+    }
 
     /// <summary>
     /// List of type expressions with arguments.

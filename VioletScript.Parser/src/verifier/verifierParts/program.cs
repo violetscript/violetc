@@ -60,7 +60,7 @@ public partial class Verifier
     private void verifyProgramPackages(List<Ast.PackageDefinition> packageDefinitions, VerifyPhase[] phases)
     {
         this.m_TypeExpsWithArguments = new List<Ast.TypeExpressionWithArguments>();
-        this.m_ImportOrAliasDirectives = new List<Ast.Statement>();
+        this.m_ImportOrAliasDirectivesStack.Push(new List<Ast.Statement>());
 
         foreach (var phase in phases)
         {
@@ -95,7 +95,7 @@ public partial class Verifier
         }
 
         this.m_TypeExpsWithArguments = new List<Ast.TypeExpressionWithArguments>();
-        this.m_ImportOrAliasDirectives = new List<Ast.Statement>();
+        this.m_ImportOrAliasDirectivesStack.Push(new List<Ast.Statement>());
 
         foreach (var phase in phases)
         {
@@ -160,7 +160,7 @@ public partial class Verifier
             }
         }
         m_ImportOrAliasDirectives.Clear();
-        m_ImportOrAliasDirectives = null;
+        m_ImportOrAliasDirectivesStack.Pop();
     }
 
     private void VerifyAllTypeExpsWithArgs()

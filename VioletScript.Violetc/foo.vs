@@ -1,3 +1,5 @@
-var x = 0
-[Allow(shadow)]
-var x = ''
+package q.b.f {
+    public var x: Long = 0
+}
+import b = q.b.*;
+b.f.x
