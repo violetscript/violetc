@@ -155,8 +155,9 @@ public partial class Verifier
         }
         if (m_ImportOrAliasDirectives.Count() != 0)
         {
-            foreach (var drtv in m_ImportOrAliasDirectives)
+            for (int j = 0; j < m_ImportOrAliasDirectives.Count(); ++j)
             {
+                var drtv = m_ImportOrAliasDirectives[j];
                 Fragmented_VerifyStatement(drtv, VerifyPhase.ImportOrAliasPhase2);
             }
         }
