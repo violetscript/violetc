@@ -316,7 +316,11 @@ public class ClassType : Type {
 
     public override Symbol[] DirectSuperTypes {
         get {
-            var r = new List<Symbol>{SuperType};
+            var r = new List<Symbol>{};
+            if (SuperType != null)
+            {
+                r.Add(SuperType);
+            }
             foreach (var itrfc in ImplementsInterfaces) {
                 r.Add(itrfc);
             }
