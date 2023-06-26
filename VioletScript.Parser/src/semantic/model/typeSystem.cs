@@ -1040,6 +1040,9 @@ public class TypeWithArguments : Type {
     }
 
     public override string ToString() {
+        if (this.IsInstantiationOf(this.ModelCore.ArrayType)) {
+            return "[" + this.m_ArgumentsList[0].ToString() + "]";
+        }
         return FullyQualifiedName + ".<" + String.Join(", ", m_ArgumentsList.Select(a => a.ToString())) + ">";
     }
 

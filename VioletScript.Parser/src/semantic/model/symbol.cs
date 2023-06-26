@@ -55,7 +55,7 @@ public class Symbol {
     }
 
     public virtual string FullyQualifiedName {
-        get => (ParentDefinition != null && ParentDefinition.Name != null ? ParentDefinition.FullyQualifiedName + "." : "") + Name;
+        get => (ParentDefinition != null && ParentDefinition.Name != null && ParentDefinition != this.ModelCore.GlobalPackage ? ParentDefinition.FullyQualifiedName + "." : "") + Name;
     }
 
     public virtual Symbol SuperType {
