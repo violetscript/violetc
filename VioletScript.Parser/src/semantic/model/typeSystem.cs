@@ -1155,7 +1155,7 @@ public struct RequiredOrOptOrRestParam
 
     public static List<RequiredOrOptOrRestParam> FromType(Symbol type)
     {
-        return FromLists(type.FunctionRequiredParameters.ToList(), type.FunctionOptParameters.ToList(), type.FunctionRestParameter);
+        return FromLists(type.FunctionRequiredParameters?.ToList(), type.FunctionOptParameters?.ToList(), type.FunctionRestParameter);
     }
 
     public static List<RequiredOrOptOrRestParam> FromLists

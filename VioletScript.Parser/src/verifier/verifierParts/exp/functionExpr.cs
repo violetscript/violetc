@@ -184,6 +184,8 @@ public partial class Verifier
             resultType_returnType
         );
 
+        methodSlot.StaticType = resultType;
+
         // if identifier was defined, assign its static type.
         if (exp.Id != null)
         {
