@@ -46,7 +46,7 @@ public partial class Verifier
         if (binding.Init != null && binding.Pattern.SemanticProperty != null)
         {
             var val = this.VerifyConstantExpAsValue(binding.Init, false, binding.Pattern.SemanticProperty.StaticType);
-            binding.Pattern.SemanticProperty.StaticType ??= val;
+            binding.Pattern.SemanticProperty.StaticType ??= val?.StaticType;
         }
 
         this.Fragmented_VerifyDestructuringPattern2(binding.Pattern);
