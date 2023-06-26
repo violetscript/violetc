@@ -506,7 +506,7 @@ public class EnumType : Type {
     }
 
     public override string ToString() {
-        return Name;
+        return this.FullyQualifiedName;
     }
 
     public override bool TypeStructurallySimiliar(Symbol other) {

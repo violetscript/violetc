@@ -1,11 +1,15 @@
 package q.b.f {
-    public var x: Long = 0
     [Flags]
     public enum E {
         X
         Y
         Z
+        public function f(): void {
+            trace(this.include('xx'));
+        }
     }
 }
 import q.b.f.*
-const fooBarQux: E = ['xx']
+const fooBarQux: E = ['x']
+fooBarQux.f();
+0 + 10

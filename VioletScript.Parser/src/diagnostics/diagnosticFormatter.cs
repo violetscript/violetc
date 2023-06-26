@@ -26,8 +26,7 @@ public interface IDiagnosticFormatter {
         var line = p.Span.FirstLine.ToString();
         var column = (p.Span.FirstColumn + 1).ToString();
         var k = p.KindString;
-        var k2 = p.IsWarning ? "Warning" : "Error";
-        return $"{file}:{line}:{column}: {k}: {k2} #{p.Id.ToString()}: {msg}";
+        return $"{file}:{line}:{column}: {k} #{p.Id.ToString()}: {msg}";
     }
 
     string FormatRelative(Diagnostic p, string basePath) {
@@ -37,8 +36,7 @@ public interface IDiagnosticFormatter {
         var line = p.Span.FirstLine.ToString();
         var column = (p.Span.FirstColumn + 1).ToString();
         var k = p.KindString;
-        var k2 = p.IsWarning ? "Warning" : "Error";
-        return $"{file}:{line}:{column}: {k}: {k2} #{p.Id.ToString()}: {msg}";
+        return $"{file}:{line}:{column}: {k} #{p.Id.ToString()}: {msg}";
     }
 
     string FormatArguments(Diagnostic p) {
