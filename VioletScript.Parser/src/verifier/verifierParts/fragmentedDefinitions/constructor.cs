@@ -48,6 +48,7 @@ public partial class Verifier
             method.ParentDefinition = type;
             type.ConstructorDefinition = method;
 
+            defn.SemanticMethodSlot = method;
             defn.Common.SemanticActivation = this.m_ModelCore.Factory.ActivationFrame();
             // set `this`
             defn.Common.SemanticActivation.ActivationThisOrThisAsStaticType = this.m_ModelCore.Factory.ThisValue(type);

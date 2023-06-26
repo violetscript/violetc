@@ -1,3 +1,4 @@
-function f.<T: RegExp>(...arguments: [*]): void {
+class C {
+    var x: Number = 0
 }
-f.<Number>(); // ERROR! argument type must be a subtype of RegExp
+<C/>
