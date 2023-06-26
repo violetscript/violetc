@@ -760,6 +760,11 @@ public class AnnotatableDefinition : Statement {
     /// allowed warnings or errors.
     /// </summary>
     public CallExpression AllowAttribute = null;
+    /// <summary>Null or an <c>Warn</c> node.
+    /// It is a call consisting of arguments known as
+    /// required warnings.
+    /// </summary>
+    public CallExpression WarnAttribute = null;
     /// <summary>Null or a meta-data node.</summary>
     public ObjectInitializer Metadata = null;
     public AnnotatableDefinitionModifier Modifiers;
@@ -773,6 +778,9 @@ public class AnnotatableDefinition : Statement {
 
     public bool HasAllowAttribute(string allowed) =>
         this.AllowAttribute != null ? this.AllowAttribute.ArgumentsList.Any(arg => arg is Ast.Identifier id && id.Name == allowed) : false;
+
+    public bool HasWarnAttribute(string warning) =>
+        this.WarnAttribute != null ? this.WarnAttribute.ArgumentsList.Any(arg => arg is Ast.Identifier id && id.Name == warning) : false;
 }
 
 [Flags]

@@ -1649,6 +1649,17 @@ internal class ParserBackend {
                 attribs.Decorators.Remove(allowDec.First());
                 node.AllowAttribute = (Ast.CallExpression) allowDec.First();
             }
+            // separate Warn
+            var warnDec = attribs.Decorators
+                .Where(e => e is Ast.CallExpression d_asCe
+                    && d_asCe.Base is Ast.Identifier d_asId
+                    && d_asId.Name == "Warn"
+                    && d_asId.Type == null)
+                .ToArray();
+            if (warnDec.Count() > 0) {
+                attribs.Decorators.Remove(warnDec.First());
+                node.WarnAttribute = (Ast.CallExpression) warnDec.First();
+            }
         }
         node.Decorators = attribs.Decorators != null && attribs.Decorators.Count() > 0 ? attribs.Decorators : null;
         FinishNode(node);
