@@ -9,7 +9,7 @@ public sealed class Operator {
     private static readonly Dictionary<Operator, bool> m_Unary = new Dictionary<Operator, bool>();
     private static readonly Dictionary<Operator, bool> m_AlwaysReturnBoolean = new Dictionary<Operator, bool>();
     private static readonly Dictionary<Operator, bool> m_ProxyUsesThisLiteral = new Dictionary<Operator, bool>();
-
+    private static List<Operator> m_IsRelativityOperator = new List<Operator>{};
     private static List<Operator> m_ProxyThatMustntHaveFirstParamAsCurrentClass = new List<Operator>();
 
     public static readonly Operator Await = new Operator(0, "await");
@@ -120,6 +120,19 @@ public sealed class Operator {
             Operator.ProxyToConvertExplicit,
             Operator.ProxyToConvertImplicit,
         };
+
+        m_IsRelativityOperator = new List<Operator>{
+            Operator.Equals,
+            Operator.NotEquals,
+            Operator.StrictEquals,
+            Operator.StrictNotEquals,
+            Operator.Lt,
+            Operator.Gt,
+            Operator.Le,
+            Operator.Ge,
+            Operator.Instanceof,
+            Operator.Is,
+        };
     }
 
     public static Operator ValueOf(int v) {
@@ -140,6 +153,10 @@ public sealed class Operator {
 
     public bool ProxyUsesThisLiteral {
         get => m_ProxyUsesThisLiteral.ContainsKey(this);
+    }
+
+    public bool IsRelativityOperator {
+        get => m_IsRelativityOperator.Contains(this);
     }
 
     public bool IsConversionProxy

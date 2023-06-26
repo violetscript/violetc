@@ -772,6 +772,11 @@ public class Symbol {
         {
             return false;
         }
+        // comparisons must have parameters of same type
+        if (op.IsRelativityOperator && this.FunctionRequiredParameters[1].Type != enclosingType)
+        {
+            return false;
+        }
         return true;
     }
 }
