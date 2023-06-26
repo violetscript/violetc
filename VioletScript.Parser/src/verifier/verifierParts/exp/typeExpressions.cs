@@ -146,7 +146,7 @@ public partial class Verifier
             // VerifyError: undefined reference
             if (reportDiagnostics)
             {
-                VerifyError(null, 128, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+                ReportNameNotFound(id.Name, exp.Span.Value, null);
             }
             exp.SemanticSymbol = null;
             exp.SemanticResolved = true;
@@ -282,7 +282,7 @@ public partial class Verifier
             // VerifyError: undefined reference
             if (reportDiagnostics)
             {
-                VerifyError(memberTe.Id.Span.Value.Script, 128, memberTe.Id.Span.Value, new DiagnosticArguments { ["name"] = memberTe.Id.Name });
+                ReportNameNotFound(memberTe.Id.Name, memberTe.Id.Span.Value, @base);
             }
             exp.SemanticSymbol = null;
             exp.SemanticResolved = true;

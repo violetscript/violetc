@@ -27,13 +27,14 @@ public partial class Verifier
     private Stack<Symbol> m_MethodSlotStack = new Stack<Symbol>();
     private bool m_Valid = true;
 
+    private Stack<List<Ast.Statement>> m_ImportOrAliasDirectivesStack = new Stack<List<Ast.Statement>>();
+
     /// <summary>
     /// List of import directives, use namespace directives,
     /// namespace aliases and type aliases.
     /// This list is consumed by <c>VerifyPrograms</c>.
+    /// This is equivalent to <c>m_ImportOrAliasDirectivesStack.Peek()</c>.
     /// </summary>
-    private Stack<List<Ast.Statement>> m_ImportOrAliasDirectivesStack = new Stack<List<Ast.Statement>>();
-
     private List<Ast.Statement> m_ImportOrAliasDirectives
     {
         get => m_ImportOrAliasDirectivesStack.Peek();

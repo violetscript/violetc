@@ -284,7 +284,7 @@ public partial class Verifier
         if (r == null)
         {
             // VerifyError: undefined reference
-            VerifyError(null, 128, exp.Span.Value, new DiagnosticArguments { ["name"] = id.Name });
+            ReportNameNotFound(id.Name, exp.Span.Value, null);
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
@@ -366,7 +366,7 @@ public partial class Verifier
         if (r == null)
         {
             // VerifyError: undefined reference
-            VerifyError(null, 198, memb.Id.Span.Value, new DiagnosticArguments { ["t"] = @base.StaticType, ["name"] = memb.Id.Name });
+            ReportNameNotFound(memb.Id.Name, memb.Id.Span.Value, @base);
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
@@ -454,7 +454,7 @@ public partial class Verifier
         if (r == null)
         {
             // VerifyError: undefined reference
-            VerifyError(null, 198, memb.Id.Span.Value, new DiagnosticArguments { ["t"] = throwawayNonNullBase.StaticType, ["name"] = memb.Id.Name });
+            ReportNameNotFound(memb.Id.Name, memb.Id.Span.Value, throwawayNonNullBase);
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
@@ -966,7 +966,7 @@ public partial class Verifier
         if (r == null)
         {
             // VerifyError: undefined property
-            VerifyError(null, 198, attr.Id.Span.Value, new DiagnosticArguments {["t"] = markupResult.StaticType, ["name"] = attr.Id.Name});
+            ReportNameNotFound(attr.Id.Name, attr.Id.Span.Value, markupResult);
             return;
         }
         if (!r.PropertyIsVisibleTo(m_Frame))

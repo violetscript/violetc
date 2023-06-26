@@ -2,4 +2,5 @@ package q.b.f {
     public var x: Long = 0
 }
 import b = q.b.*;
-b.f.x
+namespace A = b.f.x
+type Dec = Decimal

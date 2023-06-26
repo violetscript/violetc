@@ -280,6 +280,12 @@ public static class DefaultDiagnosticFormatterStatics {
 
         // warning
         [265] = "Shadowing definition '$name'; if this is intended, use [Allow(shadow)]",
+
+        // undefined property on base package
+        [266] = "'$name' not found on base package $base",
+
+        // undefined property on base namespace
+        [267] = "'$name' not found on base namespace $base",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {
