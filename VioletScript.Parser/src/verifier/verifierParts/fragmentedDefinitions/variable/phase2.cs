@@ -44,13 +44,6 @@ public partial class Verifier
             }
         }
 
-        // try resolving initializer as a constant expression
-        if (binding.Init != null && binding.Pattern.SemanticProperty != null)
-        {
-            var val = this.VerifyConstantExpAsValue(binding.Init, false, binding.Pattern.SemanticProperty.StaticType);
-            binding.Pattern.SemanticProperty.StaticType ??= val?.StaticType;
-        }
-
         this.Fragmented_VerifyDestructuringPattern2(binding.Pattern);
     }
 
