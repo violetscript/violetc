@@ -932,15 +932,15 @@ public partial class Verifier
         {
             MarkupInitializer_VerifyAttr(attr, resultValue);
         }
-        if (exp.Children != null && exp.Children.Count() > 0)
+        // ensure IMarkupContainer is implemented.
+        Symbol childType = type.GetIMarkupContainerChildType();
+        if (childType == null)
         {
-            // verify children and ensure IMarkupContainer is implemented.
-            Symbol childType = type.GetIMarkupContainerChildType();
-            if (childType == null)
-            {
-                VerifyError(null, 194, exp.Id.Span.Value, new DiagnosticArguments {["t"] = type});
-            }
-            childType ??= this.m_ModelCore.AnyType;
+            VerifyError(null, 194, exp.Id.Span.Value, new DiagnosticArguments {["t"] = type});
+        }
+        childType ??= this.m_ModelCore.AnyType;
+        if (exp.Children != null)
+        {
             foreach (var child in exp.Children)
             {
                 // limit spread type to [ChildType]
