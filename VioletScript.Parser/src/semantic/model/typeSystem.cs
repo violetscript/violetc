@@ -875,7 +875,7 @@ public class UnionType : Type {
 
     public override string ToString() {
         if (m_Types.Count() == 2 && m_Types[0] == ModelCore.NullType) {
-            return m_Types[1].ToString() + "?";
+            return (m_Types[0] is FunctionType ? "(" + m_Types[1].ToString() + ")" : m_Types[1].ToString()) + "?";
         }
         var o = new List<string>{};
         foreach (var t in m_Types) {
