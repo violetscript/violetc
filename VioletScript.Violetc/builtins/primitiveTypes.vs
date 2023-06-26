@@ -130,6 +130,10 @@ public class String {
     public native proxy function gt(a: String, b: String): Boolean;
     public native proxy function le(a: String, b: String): Boolean;
     public native proxy function ge(a: String, b: String): Boolean;
+
+    public native function get isEmpty(): Boolean;
+
+    public native function get length(): Int;
 }
 
 [Value]

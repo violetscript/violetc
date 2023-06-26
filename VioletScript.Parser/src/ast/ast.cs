@@ -765,6 +765,10 @@ public class AnnotatableDefinition : Statement {
     /// required warnings.
     /// </summary>
     public CallExpression WarnAttribute = null;
+    /// <summary>Null or a <c>FFI</c> node.
+    /// Used for foreign function interface.
+    /// </summary>
+    public CallExpression FfiAttribute = null;
     /// <summary>Null or a meta-data node.</summary>
     public ObjectInitializer Metadata = null;
     public AnnotatableDefinitionModifier Modifiers;

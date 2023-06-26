@@ -1630,7 +1630,6 @@ internal class ParserBackend {
                 .Where(e => e is Ast.CallExpression d_asCe
                     && d_asCe.Base is Ast.Identifier d_asId
                     && d_asId.Name == "Metadata"
-                    && d_asId.Type == null
                     && d_asCe.ArgumentsList.Count() == 1
                     && d_asCe.ArgumentsList[0] is Ast.ObjectInitializer)
                 .ToArray();
@@ -1642,8 +1641,7 @@ internal class ParserBackend {
             var allowDec = attribs.Decorators
                 .Where(e => e is Ast.CallExpression d_asCe
                     && d_asCe.Base is Ast.Identifier d_asId
-                    && d_asId.Name == "Allow"
-                    && d_asId.Type == null)
+                    && d_asId.Name == "Allow")
                 .ToArray();
             if (allowDec.Count() > 0) {
                 attribs.Decorators.Remove(allowDec.First());
@@ -1653,12 +1651,21 @@ internal class ParserBackend {
             var warnDec = attribs.Decorators
                 .Where(e => e is Ast.CallExpression d_asCe
                     && d_asCe.Base is Ast.Identifier d_asId
-                    && d_asId.Name == "Warn"
-                    && d_asId.Type == null)
+                    && d_asId.Name == "Warn")
                 .ToArray();
             if (warnDec.Count() > 0) {
                 attribs.Decorators.Remove(warnDec.First());
                 node.WarnAttribute = (Ast.CallExpression) warnDec.First();
+            }
+            // separate FFI
+            var ffiDec = attribs.Decorators
+                .Where(e => e is Ast.CallExpression d_asCe
+                    && d_asCe.Base is Ast.Identifier d_asId
+                    && d_asId.Name == "FFI")
+                .ToArray();
+            if (ffiDec.Count() > 0) {
+                attribs.Decorators.Remove(ffiDec.First());
+                node.FfiAttribute = (Ast.CallExpression) ffiDec.First();
             }
         }
         node.Decorators = attribs.Decorators != null && attribs.Decorators.Count() > 0 ? attribs.Decorators : null;
