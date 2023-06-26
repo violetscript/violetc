@@ -1,4 +1,4 @@
 class C {
     var x: Number = 0
 }
-<C/>
+<C x={y}/>

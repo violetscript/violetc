@@ -935,14 +935,20 @@ public partial class Verifier
         if (exp.Children != null && exp.Children.Count() > 0)
         {
             // verify children and ensure IMarkupContainer is implemented.
-            Symbol childType = type.GetIMarkupContainerChildType() ?? m_ModelCore.AnyType;
+            Symbol childType = type.GetIMarkupContainerChildType();
             if (childType == null)
             {
                 VerifyError(null, 194, exp.Id.Span.Value, new DiagnosticArguments {["t"] = type});
             }
+            childType ??= this.m_ModelCore.AnyType;
             foreach (var child in exp.Children)
             {
-                // limit child type to IMarkupContainer argument type
+                // limit spread type to [ChildType]
+                if (child is Ast.Spread spread) {
+                    LimitExpType(spread.Expression, this.m_ModelCore.Factory.TypeWithArguments(this.m_ModelCore.ArrayType, new Symbol[]{childType}));
+                    continue;
+                }
+                // limit child type to ChildType
                 LimitExpType(child, childType);
             }
         }
