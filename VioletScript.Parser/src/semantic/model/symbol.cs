@@ -787,4 +787,13 @@ public class Symbol {
         }
         return true;
     }
+
+    /// <summary>
+    /// Used by variable definitions on variable slots
+    /// to indicate a variable can be shadowed.
+    /// </summary>
+    public virtual bool AllowsShadowing {
+        get => false;
+        set {}
+    }
 }

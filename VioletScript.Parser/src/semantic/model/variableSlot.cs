@@ -14,6 +14,7 @@ public class NormalVariableSlot : VariableSlot {
     private Symbol m_InitValue = null;
     private Visibility m_Visibility = Visibility.Internal;
     private Symbol m_Parent = null;
+    private bool m_AllowsShadowing = false;
 
     public NormalVariableSlot(string name, bool readOnly, Symbol staticType) {
         m_Name = name;
@@ -56,6 +57,13 @@ public class NormalVariableSlot : VariableSlot {
 
     public override bool IsInstantiated {
         get => false;
+    }
+
+    public override bool AllowsShadowing {
+        get => m_AllowsShadowing;
+        set {
+            m_AllowsShadowing = value;
+        }
     }
 }
 

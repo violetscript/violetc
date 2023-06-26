@@ -215,14 +215,15 @@ public partial class Verifier
             newDefinition = m_ModelCore.Factory.VariableSlot(name, readOnly, type);
             newDefinition.Visibility = visibility;
             newDefinition.InitValue ??= type?.DefaultValue;
+            newDefinition.AllowsShadowing = canShadow;
 
             // shadowing
             if (newDefinition.ParentDefinition == null && m_Frame != null)
             {
                 var shadowed = m_Frame.Properties[name];
-                if (shadowed != null && !canShadow)
+                if (shadowed != null && !shadowed.AllowsShadowing)
                 {
-                    Warn(null, 265, span, new DiagnosticArguments {["name"] = name});
+                    VerifyError(null, 265, span, new DiagnosticArguments {["name"] = name});
                 }
             }
 
