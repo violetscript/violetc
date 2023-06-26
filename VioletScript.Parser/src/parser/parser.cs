@@ -386,6 +386,7 @@ internal class ParserBackend {
     }
 
     private Ast.Identifier ParseRecordTypeField() {
+        this.MarkLocation();
         var name = ExpectIdentifier();
         Span? optionalSpan = null;
         if (this.Token.Type == TToken.QuestionMark) {
