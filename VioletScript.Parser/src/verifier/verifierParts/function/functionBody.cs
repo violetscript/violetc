@@ -25,6 +25,7 @@ public partial class Verifier
         {
             returnType = m_ModelCore.UndefinedType;
         }
+
         if (body is Ast.Expression exprBody)
         {
             LimitExpType(exprBody, returnType);
@@ -33,6 +34,12 @@ public partial class Verifier
         {
             // VerifyError: not all code paths return
             VerifyError(null, 223, functionSpan, new DiagnosticArguments {});
+        }
+
+        // block body
+        if (body is Ast.Statement stmt)
+        {
+            VerifyStatement(stmt);
         }
     }
 }

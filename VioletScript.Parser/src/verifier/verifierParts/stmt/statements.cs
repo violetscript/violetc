@@ -466,11 +466,23 @@ public partial class Verifier
             VerifyStatement(stmt.Body);
             return;
         }
+
+        // right object is any
+        var rightIsAny = right.StaticType == this.m_ModelCore.AnyType;
+
+        // right object is directly Iterator.<T> or
+        // directly implements Iterator.<T>
+        // it may also be the raw Iterator.<T> itself, that is,
+        // the one from the enclosing class definition, extracting
+        // the type parameter rather than argument.
         var iteratorItemType = right.StaticType.GetIteratorItemType();
+
+        // right object has an iterator proxy
         Symbol proxy = iteratorItemType == null
             ? InheritedProxies.Find(right.StaticType, Operator.ProxyToIterateValues)
             : null;
-        if (iteratorItemType == null && proxy == null)
+
+        if (iteratorItemType == null && proxy == null && !rightIsAny)
         {
             // VerifyError: cannot iterate type
             VerifyError(null, 220, stmt.Right.Span.Value, new DiagnosticArguments {["t"] = right.StaticType});
@@ -481,8 +493,11 @@ public partial class Verifier
             VerifyStatement(stmt.Body);
             return;
         }
+
+        // determine item type
         var itemType = iteratorItemType == null
             ? proxy.StaticType.FunctionReturnType.ArgumentTypes[0]
+            : rightIsAny ? this.m_ModelCore.AnyType
             : iteratorItemType;
 
         stmt.SemanticFrame = m_ModelCore.Factory.Frame();

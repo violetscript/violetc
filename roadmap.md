@@ -37,4 +37,4 @@ Some of the notes in this document apply to verification and bytecode or code ge
 
 ### C# Notes
 
-- Careful when writting C# code: write flag values manually for `[Flags]` enums.
+- Careful when writting C# code: write flag values manually for `[Flags]` enums, as C# does not increment its counter correctly for flags.

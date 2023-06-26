@@ -666,6 +666,14 @@ public class Symbol {
 
     public Symbol GetIteratorItemType()
     {
+        if (this == this.ModelCore.IteratorType)
+        {
+            return this.TypeParameters[0];
+        }
+        if (this.IsInstantiationOf(this.ModelCore.IteratorType))
+        {
+            return this.ArgumentTypes[0];
+        }
         foreach (var itrfc in ImplementsInterfaces)
         {
             if (itrfc.IsInstantiationOf(this.ModelCore.IteratorType))

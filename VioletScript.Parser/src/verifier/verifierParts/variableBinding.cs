@@ -39,7 +39,7 @@ public partial class Verifier
         {
             if (binding.Init == null)
             {
-                if (!forRequiredOrRestParam || inferType == null)
+                if (!forRequiredOrRestParam && inferType == null)
                 {
                     VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
                 }
