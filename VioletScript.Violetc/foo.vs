@@ -1,3 +1,3 @@
-function trace.<T>(...arguments: [*]): void {
+function f.<T: RegExp>(...arguments: [*]): void {
 }
-trace.<Number>();
+f.<Number>(); // ERROR! argument type must be a subtype of RegExp

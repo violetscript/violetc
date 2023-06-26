@@ -436,7 +436,7 @@ public sealed class Tokenizer {
         if (ch == '\x2F') {
             var start = Index;
             Index += 2;
-            while (!SourceCharacter.IsLineTerminator(Lookahead())) {
+            while (!SourceCharacter.IsLineTerminator(Lookahead()) && !AtEof) {
                 Index += 1;
             }
             var content = Content.Substring(start + 2, Index - (start + 2));
