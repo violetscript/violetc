@@ -68,7 +68,7 @@ class VioletcCli {
         script.SortDiagnosticsForIncludedScripts();
 
         foreach (var d in script.DiagnosticsFromCurrentAndIncludedScripts) {
-            Console.WriteLine(d.ToString());
+            Console.WriteLine(d.ToRelativeString(Path.GetDirectoryName(script.FilePath)));
         }
         return script.IsValid && verifier.AllProgramsAreValid;
     }

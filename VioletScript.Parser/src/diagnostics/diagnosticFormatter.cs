@@ -30,6 +30,17 @@ public interface IDiagnosticFormatter {
         return $"{file}:{line}:{column}: {k}: {k2} #{p.Id.ToString()}: {msg}";
     }
 
+    string FormatRelative(Diagnostic p, string basePath) {
+        var msg = FormatArguments(p);
+        msg = msg.Substring(0, 1).ToUpper() + msg.Substring(1);
+        String file = Path.GetRelativePath(basePath, p.Span.Script.FilePath);
+        var line = p.Span.FirstLine.ToString();
+        var column = (p.Span.FirstColumn + 1).ToString();
+        var k = p.KindString;
+        var k2 = p.IsWarning ? "Warning" : "Error";
+        return $"{file}:{line}:{column}: {k}: {k2} #{p.Id.ToString()}: {msg}";
+    }
+
     string FormatArguments(Diagnostic p) {
         var regex = new Regex(@"\$(\$|[a-z0-9_\-]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         return regex.Replace(ResolveId(p.Id), delegate(Match m) {

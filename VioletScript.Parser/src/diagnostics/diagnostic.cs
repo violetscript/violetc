@@ -2,6 +2,7 @@ namespace VioletScript.Parser.Diagnostic;
 
 using VioletScript.Parser.Source;
 using System.Collections.Generic;
+using System.IO;
 using DiagnosticArguments = Dictionary<string, object>;
 
 public sealed class Diagnostic {
@@ -42,6 +43,10 @@ public sealed class Diagnostic {
 
     public override string ToString() {
         return DefaultDiagnosticFormatterStatics.Formatter.Format(this);
+    }
+
+    public string ToRelativeString(string basePath) {
+        return DefaultDiagnosticFormatterStatics.Formatter.FormatRelative(this, basePath);
     }
 }
 
