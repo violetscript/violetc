@@ -277,6 +277,9 @@ public static class DefaultDiagnosticFormatterStatics {
         [262] = "Wrong virtual property visibility",
         [263] = "Setter must return void",
         [264] = "Setter does not have the same type as the getter",
+
+        // warning
+        [265] = "Shadowing definition '$name'; if this is intended, use [Allow(shadow)]",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

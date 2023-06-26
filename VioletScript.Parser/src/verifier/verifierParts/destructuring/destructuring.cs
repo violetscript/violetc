@@ -24,7 +24,8 @@ public partial class Verifier
         bool readOnly,
         Properties output,
         Visibility visibility,
-        Symbol inferredType = null
+        Symbol inferredType = null,
+        bool canShadow = false
     )
     {
         if (pattern.SemanticProperty != null)
@@ -33,15 +34,15 @@ public partial class Verifier
         }
         if (pattern is Ast.NondestructuringPattern bp)
         {
-            VerifyNondestructuringPattern(bp, readOnly, output, visibility, inferredType);
+            VerifyNondestructuringPattern(bp, readOnly, output, visibility, inferredType, canShadow);
         }
         else if (pattern is Ast.ArrayDestructuringPattern arrayP)
         {
-            VerifyArrayDestructuringPattern(arrayP, readOnly, output, visibility, inferredType);
+            VerifyArrayDestructuringPattern(arrayP, readOnly, output, visibility, inferredType, canShadow);
         }
         else
         {
-            VerifyRecordDestructuringPattern((Ast.RecordDestructuringPattern) pattern, readOnly, output, visibility, inferredType);
+            VerifyRecordDestructuringPattern((Ast.RecordDestructuringPattern) pattern, readOnly, output, visibility, inferredType, canShadow);
         }
     }
 }

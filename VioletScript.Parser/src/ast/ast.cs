@@ -754,18 +754,25 @@ public class Statement : Node {
 
 public class AnnotatableDefinition : Statement {
     /// <summary>Possibly null list of decorators.</summary>
-    public List<Expression> Decorators;
+    public List<Expression> Decorators = null;
+    /// <summary>Null or an <c>Allow</c> node.
+    /// It is a call consisting of arguments known as
+    /// allowed warnings or errors.
+    /// </summary>
+    public CallExpression AllowAttribute = null;
     /// <summary>Null or a meta-data node.</summary>
-    public ObjectInitializer Metadata;
+    public ObjectInitializer Metadata = null;
     public AnnotatableDefinitionModifier Modifiers;
     public AnnotatableDefinitionAccessModifier? AccessModifier;
 
-    public Visibility SemanticVisibility
-    {
+    public Visibility SemanticVisibility {
         get => this.AccessModifier == AnnotatableDefinitionAccessModifier.Public ? Visibility.Public
             :  this.AccessModifier == AnnotatableDefinitionAccessModifier.Private ? Visibility.Private
             :  this.AccessModifier == AnnotatableDefinitionAccessModifier.Protected ? Visibility.Protected : Visibility.Internal;
     }
+
+    public bool HasAllowAttribute(string allowed) =>
+        this.AllowAttribute != null ? this.AllowAttribute.ArgumentsList.Any(arg => arg is Ast.Identifier id && id.Name == allowed) : false;
 }
 
 [Flags]

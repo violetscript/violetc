@@ -187,7 +187,7 @@ public partial class Verifier
         defn.SemanticShadowFrame = shadowFrame;
         foreach (var binding in defn.Bindings)
         {
-            VerifyVariableBinding(binding, defn.ReadOnly, shadowFrame.Properties, Visibility.Public);
+            VerifyVariableBinding(binding, defn.ReadOnly, shadowFrame.Properties, Visibility.Public, null, false, defn.HasAllowAttribute("shadow"));
         }
     } // variable definition
 

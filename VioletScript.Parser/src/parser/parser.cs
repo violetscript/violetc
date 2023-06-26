@@ -1635,7 +1635,17 @@ internal class ParserBackend {
                     && d_asCe.ArgumentsList[0] is Ast.ObjectInitializer);
             if (d.Count() > 0) {
                 attribs.Decorators.Remove(d.First());
-                node.Metadata = (Ast.ObjectInitializer) ((Ast.CallExpression) attribs.Decorators.First()).ArgumentsList[0];
+                node.Metadata = (Ast.ObjectInitializer) ((Ast.CallExpression) d.First()).ArgumentsList[0];
+            }
+            // separate Allow
+            var allowDec = attribs.Decorators
+                .Where(e => e is Ast.CallExpression d_asCe
+                    && d_asCe.Base is Ast.Identifier d_asId
+                    && d_asId.Name == "Allow"
+                    && d_asId.Type == null);
+            if (allowDec.Count() > 0) {
+                attribs.Decorators.Remove(allowDec.First());
+                node.AllowAttribute = (Ast.CallExpression) allowDec.First();
             }
         }
         node.Decorators = attribs.Decorators != null && attribs.Decorators.Count() > 0 ? attribs.Decorators : null;

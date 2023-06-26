@@ -26,7 +26,8 @@ public partial class Verifier
         Properties output,
         Visibility visibility,
         Symbol inferType = null,
-        bool forRequiredOrRestParam = false
+        bool forRequiredOrRestParam = false,
+        bool canShadow = false
     )
     {
         if (binding.SemanticVerified)
@@ -48,11 +49,11 @@ public partial class Verifier
             {
                 init = VerifyExp(binding.Init);
             }
-            VerifyDestructuringPattern(binding.Pattern, readOnly, output, visibility, inferType != null ? inferType : init != null ? init.StaticType : m_ModelCore.AnyType);
+            VerifyDestructuringPattern(binding.Pattern, readOnly, output, visibility, inferType != null ? inferType : init != null ? init.StaticType : m_ModelCore.AnyType, canShadow);
         }
         else
         {
-            VerifyDestructuringPattern(binding.Pattern, readOnly, output, visibility);
+            VerifyDestructuringPattern(binding.Pattern, readOnly, output, visibility, null, canShadow);
             if (binding.Init != null && binding.Pattern.SemanticProperty != null)
             {
                 init = LimitExpType(binding.Init, binding.Pattern.SemanticProperty.StaticType);
@@ -193,7 +194,7 @@ public partial class Verifier
     /// for partially defined variables.
     /// Returns null if the variable is a duplicate.
     /// </summary>
-    private Symbol DefineOrReuseVariable(string name, Properties output, Symbol type, Span span, bool readOnly, Visibility visibility)
+    private Symbol DefineOrReuseVariable(string name, Properties output, Symbol type, Span span, bool readOnly, Visibility visibility, bool canShadow = false)
     {
         Symbol newDefinition = null;
         var previousDefinition = output[name];
@@ -205,7 +206,7 @@ public partial class Verifier
             // ERROR: duplicate definition
             if (!m_Options.AllowDuplicates || newDefinition == null)
             {
-                VerifyError(span.Script, 139, span, new DiagnosticArguments { ["name"] = name });
+                VerifyError(null, 139, span, new DiagnosticArguments { ["name"] = name });
                 newDefinition = null;
             }
         }
@@ -214,6 +215,17 @@ public partial class Verifier
             newDefinition = m_ModelCore.Factory.VariableSlot(name, readOnly, type);
             newDefinition.Visibility = visibility;
             newDefinition.InitValue ??= type?.DefaultValue;
+
+            // shadowing
+            if (newDefinition.ParentDefinition == null && m_Frame.ParentFrame != null)
+            {
+                var shadowed = m_Frame.ParentFrame.Properties[name];
+                if (shadowed != null && !canShadow)
+                {
+                    Warn(null, 265, span, new DiagnosticArguments {["name"] = name});
+                }
+            }
+
             output[name] = newDefinition;
         }
         return newDefinition;

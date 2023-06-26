@@ -22,7 +22,8 @@ public partial class Verifier
         bool readOnly,
         Properties output,
         Visibility visibility,
-        Symbol inferredType = null
+        Symbol inferredType = null,
+        bool canShadow = false
     )
     {
         Symbol type = null;
@@ -51,15 +52,15 @@ public partial class Verifier
 
         if (type == m_ModelCore.AnyType)
         {
-            VerifyRecordDestructuringPatternForAny(pattern, readOnly, output, visibility);
+            VerifyRecordDestructuringPatternForAny(pattern, readOnly, output, visibility, canShadow);
         }
         else if (type.IsInstantiationOf(m_ModelCore.MapType))
         {
-            VerifyRecordDestructuringPatternForMap(pattern, readOnly, output, visibility, type);
+            VerifyRecordDestructuringPatternForMap(pattern, readOnly, output, visibility, type, canShadow);
         }
         else
         {
-            VerifyRecordDestructuringPatternForCompileTime(pattern, readOnly, output, visibility, type);
+            VerifyRecordDestructuringPatternForCompileTime(pattern, readOnly, output, visibility, type, canShadow);
         }
     }
 
@@ -68,7 +69,8 @@ public partial class Verifier
         Ast.RecordDestructuringPattern pattern,
         bool readOnly,
         Properties output,
-        Visibility visibility
+        Visibility visibility,
+        bool canShadow = false
     )
     {
         foreach (var field in pattern.Fields)
@@ -77,7 +79,7 @@ public partial class Verifier
             {
                 if (field.Subpattern == null)
                 {
-                    field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, this.m_ModelCore.AnyType, key.Span.Value, readOnly, visibility);
+                    field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, this.m_ModelCore.AnyType, key.Span.Value, readOnly, visibility, canShadow);
                 }
                 else
                 {
@@ -106,7 +108,8 @@ public partial class Verifier
         bool readOnly,
         Properties output,
         Visibility visibility,
-        Symbol mapType
+        Symbol mapType,
+        bool canShadow = false
     )
     {
         Symbol keyType = mapType.ArgumentTypes[0];
@@ -120,11 +123,11 @@ public partial class Verifier
             {
                 if (field.Subpattern == null)
                 {
-                    field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, undefinedOrValueType, key.Span.Value, readOnly, visibility);
+                    field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, undefinedOrValueType, key.Span.Value, readOnly, visibility, canShadow);
                 }
                 else
                 {
-                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, undefinedOrValueType);
+                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, undefinedOrValueType, canShadow);
                 }
             }
             else
@@ -132,7 +135,7 @@ public partial class Verifier
                 LimitExpType(field.Key, keyType);
                 if (field.Subpattern != null)
                 {
-                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, undefinedOrValueType);
+                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, undefinedOrValueType, canShadow);
                 }
                 else
                 {
@@ -149,7 +152,8 @@ public partial class Verifier
         bool readOnly,
         Properties output,
         Visibility visibility,
-        Symbol type
+        Symbol type,
+        bool canShadow = false
     )
     {
         foreach (var field in pattern.Fields)
@@ -160,11 +164,11 @@ public partial class Verifier
 
                 if (field.Subpattern == null)
                 {
-                    field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, fieldType, key.Span.Value, readOnly, visibility);
+                    field.SemanticProperty = this.DefineOrReuseVariable(key.Value, output, fieldType, key.Span.Value, readOnly, visibility, canShadow);
                 }
                 else
                 {
-                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, fieldType);
+                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, fieldType, canShadow);
                 }
             }
             // ERROR: key is not an identifier
@@ -175,7 +179,7 @@ public partial class Verifier
 
                 if (field.Subpattern != null)
                 {
-                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, m_ModelCore.AnyType);
+                    VerifyDestructuringPattern(field.Subpattern, readOnly, output, visibility, m_ModelCore.AnyType, canShadow);
                 }
             }
         }

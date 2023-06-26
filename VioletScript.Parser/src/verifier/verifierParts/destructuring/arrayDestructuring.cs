@@ -22,7 +22,8 @@ public partial class Verifier
         bool readOnly,
         Properties output,
         Visibility visibility,
-        Symbol inferredType = null
+        Symbol inferredType = null,
+        bool canShadow = false
     )
     {
         Symbol type = null;
@@ -51,11 +52,11 @@ public partial class Verifier
 
         if (type is TupleType)
         {
-            VerifyArrayDestructuringPatternForTuple(pattern, readOnly, output, visibility, type);
+            VerifyArrayDestructuringPatternForTuple(pattern, readOnly, output, visibility, type, canShadow);
         }
         else if (type.IsInstantiationOf(m_ModelCore.ArrayType))
         {
-            VerifyArrayDestructuringPatternForArray(pattern, readOnly, output, visibility, type);
+            VerifyArrayDestructuringPatternForArray(pattern, readOnly, output, visibility, type, canShadow);
         }
         else
         {
@@ -63,7 +64,7 @@ public partial class Verifier
             {
                 VerifyError(pattern.Span.Value.Script, 141, pattern.Span.Value, new DiagnosticArguments { ["t"] = type });
             }
-            VerifyArrayDestructuringPatternForAny(pattern, readOnly, output, visibility);
+            VerifyArrayDestructuringPatternForAny(pattern, readOnly, output, visibility, canShadow);
         }
     }
 
@@ -73,7 +74,8 @@ public partial class Verifier
         bool readOnly,
         Properties output,
         Visibility visibility,
-        Symbol tupleType
+        Symbol tupleType,
+        bool canShadow = false
     )
     {
         if (pattern.Items.Count() > tupleType.TupleElementTypes.Count())
@@ -106,7 +108,8 @@ public partial class Verifier
         bool readOnly,
         Properties output,
         Visibility visibility,
-        Symbol arrayType
+        Symbol arrayType,
+        bool canShadow = false
     )
     {
         var arrayElementType = arrayType.ArgumentTypes[0];
@@ -138,7 +141,8 @@ public partial class Verifier
         Ast.ArrayDestructuringPattern pattern,
         bool readOnly,
         Properties output,
-        Visibility visibility
+        Visibility visibility,
+        bool canShadow = false
     )
     {
         var anyType = m_ModelCore.AnyType;
@@ -156,11 +160,11 @@ public partial class Verifier
                 {
                     VerifyError(spread.Span.Value.Script, 144, spread.Span.Value, new DiagnosticArguments {});
                 }
-                VerifyDestructuringPattern(spread.Pattern, readOnly, output, visibility, anyType);
+                VerifyDestructuringPattern(spread.Pattern, readOnly, output, visibility, anyType, canShadow);
             }
             else
             {
-                VerifyDestructuringPattern((Ast.DestructuringPattern) item, readOnly, output, visibility, anyType);
+                VerifyDestructuringPattern((Ast.DestructuringPattern) item, readOnly, output, visibility, anyType, canShadow);
             }
         }
     }

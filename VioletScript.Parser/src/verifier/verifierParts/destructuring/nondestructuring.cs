@@ -22,7 +22,8 @@ public partial class Verifier
         bool readOnly,
         Properties output,
         Visibility visibility,
-        Symbol inferredType = null
+        Symbol inferredType = null,
+        bool canShadow = false
     )
     {
         Symbol type = null;
@@ -46,6 +47,6 @@ public partial class Verifier
         }
 
         type ??= m_ModelCore.AnyType;
-        pattern.SemanticProperty = this.DefineOrReuseVariable(pattern.Name, output, type, pattern.Span.Value, readOnly, visibility);
+        pattern.SemanticProperty = this.DefineOrReuseVariable(pattern.Name, output, type, pattern.Span.Value, readOnly, visibility, canShadow);
     }
 }
