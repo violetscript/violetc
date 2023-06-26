@@ -61,7 +61,7 @@ public static class TypeReplacement {
                         optParams.Add(p.ReplaceTypes(typeParameters, argumentsList));
                     }
                 }
-                return symbolToReplace.ModelCore.InternFunctionType(@params.ToArray(), optParams.ToArray(), restParam, returnType);
+                return symbolToReplace.ModelCore.InternFunctionType(@params?.ToArray(), optParams?.ToArray(), restParam, returnType);
             }
             if (symbolToReplace is TupleType) {
                 return symbolToReplace.ModelCore.InternTupleType(

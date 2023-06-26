@@ -1,3 +1,3 @@
-function trace(arguments: [*]): void {
+function trace.<T>(...arguments: [*]): void {
 }
-trace('hi');
+trace.<Number>();

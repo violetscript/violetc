@@ -217,7 +217,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [207] = "Cannot call value of type '$t'",
         [208] = "Cannot use 'this' literal at this context",
         [209] = "Conditional expression types are incompatible: '$c' and '$a'",
-        [210] = "Cannot instantiate item",
+        [210] = "Cannot add type arguments to item",
         [211] = "Cannot construct type '$t'",
         [212] = "Cannot use 'new' operator with this item",
         [213] = "Cannot use 'super' expression here",
