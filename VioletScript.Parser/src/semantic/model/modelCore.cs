@@ -129,6 +129,7 @@ public sealed class ModelCore {
 
     public Symbol TypeAttachedDecoratorType = null;
 
+    private List<Symbol> m_NumericTypes = null;
     private Dictionary<int, List<Symbol>> m_InternedRecordTypesByFieldCount = new Dictionary<int, List<Symbol>>{};
     private Dictionary<int, List<Symbol>> m_InternedTupleTypesByItemCount = new Dictionary<int, List<Symbol>>{};
     private Dictionary<int, List<Symbol>> m_InternedUnionTypesByMCount = new Dictionary<int, List<Symbol>>{};
@@ -178,6 +179,19 @@ public sealed class ModelCore {
 
         this.BigIntType = DefineGlobalBuiltinClass("BigInt", true, true);
         this.BigIntType.DontInit = true;
+
+        this.m_NumericTypes = new List<Symbol> {
+            this.NumberType,
+            this.IntType,
+            this.LongType,
+            this.ByteType,
+            this.ShortType,
+            this.BigIntType,
+            this.DecimalType,
+        };
+        foreach (var numType in this.m_NumericTypes) {
+            this.initNumericOperators(numType);
+        }
 
         this.IteratorType = DefineGlobalBuiltinInterface("Iterator");
         this.IteratorType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
@@ -598,15 +612,43 @@ public sealed class ModelCore {
     }
 
     public bool IsNumericType(Symbol type) {
-        return type == NumberType || type == DecimalType
-            || type == ByteType || type == ShortType
-            || type == IntType || type == LongType
-            || type == BigIntType;
+        return this.m_NumericTypes.Contains(type);
     }
 
     public bool IsIntegerType(Symbol type) {
         return type == ByteType || type == ShortType
             || type == IntType || type == LongType
             || type == BigIntType;
+    }
+
+    private void initNumericOperators(Symbol type) {
+        var proxies = new Operator[] {
+            Operator.Positive,
+            Operator.Negate,
+            Operator.BitwiseNot,
+            Operator.Lt,
+            Operator.Gt,
+            Operator.Le,
+            Operator.Ge,
+            Operator.Add,
+            Operator.Subtract,
+            Operator.Multiply,
+            Operator.Divide,
+            Operator.Remainder,
+            Operator.Pow,
+            Operator.LeftShift,
+            Operator.RightShift,
+            Operator.UnsignedRightShift,
+            Operator.BitwiseAnd,
+            Operator.BitwiseXor,
+            Operator.BitwiseOr,
+        };
+        var unarySignature = this.Factory.FunctionType(new NameAndTypePair[] {new NameAndTypePair("a", type)}, null, null, type);
+        var binarySignature = this.Factory.FunctionType(new NameAndTypePair[] {new NameAndTypePair("a", type), new NameAndTypePair("b", type)}, null, null, type);
+        var comparisonSignature = this.Factory.FunctionType(new NameAndTypePair[] {new NameAndTypePair("a", type), new NameAndTypePair("b", type)}, null, null, this.BooleanType);
+        foreach (var op in proxies) {
+            var proxy = this.Factory.MethodSlot("", op.IsUnary ? unarySignature : op.AlwaysReturnsBoolean ? comparisonSignature : binarySignature, MethodSlotFlags.Native);
+            type.Delegate.Proxies[op] = proxy;
+        }
     }
 }

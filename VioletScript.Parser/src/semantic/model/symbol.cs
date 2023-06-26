@@ -757,8 +757,8 @@ public class Symbol {
         {
             return false;
         }
-        // has or deleteIndex must return Boolean.
-        if ((op == Operator.In || op == Operator.ProxyToDeleteIndex) && this.FunctionReturnType != this.ModelCore.BooleanType)
+        // has, deleteIndex and comparisons must return Boolean.
+        if (op.AlwaysReturnsBoolean && this.FunctionReturnType != this.ModelCore.BooleanType)
         {
             return false;
         }

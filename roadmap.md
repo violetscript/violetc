@@ -6,6 +6,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
   - [ ] _Do not_ parse VioletDoc comments applied to record fields. This is not supported in VioletDoc.
 - [ ] **Code generation:** Empty programs that, for example, contain include directives whose inner statement sequence is empty or consist of other empty include directives, should not generate any activation and not be evaluated.
 - [ ] **Code generation:** An expression whose associated symbol is a constant value should not be evaluated or processed at runtime. `exp.semanticSymbol.isConstantValue`.
+- [ ] **Code generation:** Since the operator proxies for all numeric types is defined in the semantic model core and not in the standard built-in sources, the generated code should not be based on any proxy definition for them; the purpose of this is to avoid polluting the sources of the standard built-in objects. All of the following unary and binary operators are supported for all numeric types: `+ - ~ < > <= >= + - * / % ** << >> >>> & ^ |`
 - [ ] **Code generation:** When a class inherits static methods or virtual properties, `this` has to be replaced by that class in each such method. Look everywhere for `ClassStaticThis`.
 - [ ] **Code generation:** Variables without constant initial value are represented in memory similiar to a Rust `Option<T>`. This is important because of constructors and `this` accessed before `super()`.
 - [ ] Decorators must not be allowed in certain places, like over ordinary functions, ordinary variables and `static` variables.

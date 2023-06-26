@@ -66,7 +66,7 @@ public static class MethodOverride {
 
     private static bool IsOverrideSignatureCompatible(Symbol superTypeSignature, Symbol subtypeSignature) {
         if (superTypeSignature.FunctionHasRequiredParameters) {
-            if (!subtypeSignature.FunctionHasRequiredParameters || superTypeSignature.FunctionCountOfRequiredParameters != subtypeSignature.FunctionCountOfRequiredParameters) {
+            if (superTypeSignature.FunctionCountOfRequiredParameters != subtypeSignature.FunctionCountOfRequiredParameters) {
                 return false;
             }
             int l = superTypeSignature.FunctionCountOfRequiredParameters;
@@ -82,7 +82,7 @@ public static class MethodOverride {
         }
 
         if (superTypeSignature.FunctionHasOptParameters) {
-            if (!subtypeSignature.FunctionHasOptParameters || superTypeSignature.FunctionCountOfOptParameters > subtypeSignature.FunctionCountOfOptParameters) {
+            if (superTypeSignature.FunctionCountOfOptParameters > subtypeSignature.FunctionCountOfOptParameters) {
                 return false;
             }
             int l = superTypeSignature.FunctionCountOfOptParameters;
@@ -93,7 +93,7 @@ public static class MethodOverride {
                     return false;
                 }
             }
-        } else if (subtypeSignature.FunctionHasOptParameters && superTypeSignature.FunctionRestParameter != null) {
+        } else if (subtypeSignature.FunctionHasOptParameters && (superTypeSignature.FunctionRestParameter != null || subtypeSignature.FunctionRestParameter != null)) {
             return false;
         }
 
@@ -101,8 +101,6 @@ public static class MethodOverride {
             if (subtypeSignature.FunctionRestParameter == null || superTypeSignature.FunctionRestParameter.Value.Type != subtypeSignature.FunctionRestParameter.Value.Type) {
                 return false;
             }
-        } else if (subtypeSignature.FunctionRestParameter != null) {
-            return false;
         }
 
         return superTypeSignature.FunctionReturnType == subtypeSignature.FunctionReturnType

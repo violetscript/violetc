@@ -15,4 +15,14 @@ public class Number {
     public native override function toString(radix: Int? = null): String;
 
     public native function toExponential(fractionDigits: Int? = null): String;
+
+    /**
+     * @throws {RangeError} If `digits` is not between `1` and `100` (inclusive).
+     */
+    public native function toFixed(digits: Int? = null): String;
+
+    /**
+     * @throws {RangeError} If `precision` is not between `1` and `100` (inclusive).
+     */
+    public native function toPrecision(precision: Int? = null): String;
 }
