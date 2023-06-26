@@ -724,7 +724,7 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
-        LimitExpType(exp.Left, proxy.FunctionRequiredParameters[0].Type);
+        LimitExpType(exp.Left, proxy.StaticType.FunctionRequiredParameters[0].Type);
         exp.SemanticSymbol = m_ModelCore.Factory.Value(m_ModelCore.BooleanType);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
@@ -817,8 +817,8 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
-        LimitExpType(exp.Right, proxy.FunctionRequiredParameters[1].Type);
-        exp.SemanticSymbol = m_ModelCore.Factory.Value(proxy.FunctionReturnType);
+        LimitExpType(exp.Right, proxy.StaticType.FunctionRequiredParameters[1].Type);
+        exp.SemanticSymbol = m_ModelCore.Factory.Value(proxy.StaticType.FunctionReturnType);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // binary expression (proxy-supported)

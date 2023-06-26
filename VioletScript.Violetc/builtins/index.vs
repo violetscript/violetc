@@ -5,4 +5,5 @@ include './primitiveTypes';
 include './collections';
 include './regexp';
 include './function';
+include './promise';
 include './errors';
