@@ -18,7 +18,7 @@ public partial class Verifier
         {
             var type = this.VerifyTypeExp(pattern.Type);
             pattern.SemanticProperty.StaticType ??= type;
-            if (type != null && type != pattern.SemanticProperty.StaticType)
+            if (type != null && pattern.SemanticProperty.StaticType != null && type != pattern.SemanticProperty.StaticType)
             {
                 this.VerifyError(pattern.Span.Value.Script, 245, pattern.Span.Value, new DiagnosticArguments {});
             }
