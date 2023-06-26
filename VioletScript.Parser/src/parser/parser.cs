@@ -1151,7 +1151,7 @@ internal class ParserBackend {
                         argumentsList.Add(ParseExpression(true, OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction));
                     } while (Consume(TToken.Comma));
                     Expect(TToken.RParen);
-                    r = FinishExp(new Ast.CallExpression(r, argumentsList));
+                    r = FinishExp(new Ast.CallExpression(r, argumentsList, true));
                 } else if (Consume(TToken.LSquare)) {
                     var exp = ParseExpression();
                     Expect(TToken.RSquare);
