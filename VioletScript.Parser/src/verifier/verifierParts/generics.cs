@@ -213,7 +213,7 @@ public partial class Verifier
                         }
                     }
                     // VerifyError: missing class constraint
-                    if (argument.SuperType != null && !argument.IsSubtypeOf(@param.SuperType))
+                    if (@param.SuperType != null && !argument.IsSubtypeOf(@param.SuperType))
                     {
                         VerifyError(null, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = @param.SuperType });
                     }
