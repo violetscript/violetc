@@ -258,7 +258,7 @@ public partial class Verifier
         {
             foreach (var binding in common.Params)
             {
-                this.VerifyVariableBinding(binding, false, activation.Properties, Visibility.Public);
+                this.VerifyVariableBinding(binding, false, activation.Properties, Visibility.Public, null, true);
             }
         }
         if (common.OptParams != null)

@@ -1,5 +1,3 @@
-var o: {x: Number} = {};
-var {x} = o;
+function trace(arguments: [*]): void {
+}
 trace('hi');
-
-var fn: (...arguments: [Number]) => void = (x: Number) => {};

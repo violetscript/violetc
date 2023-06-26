@@ -15,6 +15,10 @@ public partial class Verifier
     // verify a variable binding; ensure:
     // - destructuring pattern is valid.
     // - it has an initializer if it is read-only.
+    //
+    // the `forRequiredOrRestParam` parameter is used for
+    // not requiring an initializer for certain bindings,
+    // such as a function required parameter or rest parameter.
     private void VerifyVariableBinding
     (
         Ast.VariableBinding binding,
@@ -22,7 +26,7 @@ public partial class Verifier
         Properties output,
         Visibility visibility,
         Symbol inferType = null,
-        bool forRestParam = false
+        bool forRequiredOrRestParam = false
     )
     {
         if (binding.SemanticVerified)
@@ -35,7 +39,7 @@ public partial class Verifier
         {
             if (binding.Init == null)
             {
-                if (!forRestParam || inferType == null)
+                if (!forRequiredOrRestParam || inferType == null)
                 {
                     VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
                 }
@@ -61,7 +65,7 @@ public partial class Verifier
             binding.Pattern.SemanticProperty.InitValue = init;
         }
 
-        if (binding.Pattern.SemanticProperty != null && !forRestParam)
+        if (binding.Pattern.SemanticProperty != null && !forRequiredOrRestParam)
         {
             // if not in class frame or not a read-only,
             // the binding must have a constant initial value
