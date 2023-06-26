@@ -78,7 +78,7 @@ public interface IDiagnosticFormatter {
         if (arg is Token) {
             return DefaultDiagnosticFormatterStatics.TokenTypesAsArguments.ContainsKey((Token) arg) ? DefaultDiagnosticFormatterStatics.TokenTypesAsArguments[(Token) arg] : "undefined";
         }
-        return (string) arg;
+        return arg == null ? "null" : arg.ToString();
     }
 
     string ResolveId(int id) {

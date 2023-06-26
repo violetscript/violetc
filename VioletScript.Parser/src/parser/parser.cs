@@ -666,7 +666,7 @@ internal class ParserBackend {
                 Expect(TToken.FatArrow);
                 return ParseArrowFunctionExpression(null, null, null);
             }
-            if (minPrecedence.ValueOf() <= OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction.ValueOf() && Consume(TToken.RParen)) {
+            if (minPrecedence.ValueOf() <= OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction.ValueOf()) {
                 return ParseParensExpOrArrowF();
             } else {
                 var exp = ParseExpression();
