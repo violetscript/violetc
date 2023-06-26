@@ -42,7 +42,7 @@ public final class Array.<T> {
 
     public native function push(...arguments: [T]): Int;
 
-    public proxy function add(a: [T], b: [T]): [T] (
+    proxy function add(a: [T], b: [T]): [T] (
         a.concat(b)
     );
 

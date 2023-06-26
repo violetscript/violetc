@@ -121,19 +121,57 @@ public class BigInt {
     public native override function toString(radix: Int? = null): String;
 }
 
+/**
+ * The `String` type represents a sequence of UTF-16
+ * Code Units.
+ */
 [Value]
 public class String {
     public native function String(argument: *);
 
-    public native proxy function add(a: String, b: String): String;
-    public native proxy function lt(a: String, b: String): Boolean;
-    public native proxy function gt(a: String, b: String): Boolean;
-    public native proxy function le(a: String, b: String): Boolean;
-    public native proxy function ge(a: String, b: String): Boolean;
+    native proxy function add(a: String, b: String): String;
+    native proxy function lt(a: String, b: String): Boolean;
+    native proxy function gt(a: String, b: String): Boolean;
+    native proxy function le(a: String, b: String): Boolean;
+    native proxy function ge(a: String, b: String): Boolean;
+
+    proxy function iterateValues(): Generator.<String> {
+        for each (const codePoint in this.codePoints()) {
+            yield String.fromCodePoint(codePoint);
+        }
+    }
+
+    public static native function fromCodePoint(...codePoints: [Int]): String;
+
+    public static native function fromCharCode(...charCodes: [Int]): String;
 
     public native function get isEmpty(): Boolean;
 
+    /**
+     * Returns the number of characters in UTF-16 Code Units.
+     */
     public native function get length(): Int;
+
+    /**
+     * Replaces parameter sequences in a string by given arguments.
+     * # Example
+     * ```
+     * '$a $$'.apply({ a: 10 })
+     * '$1 $2'.apply(['one', 'two'])
+     * '$<hyphens-n_Underscores>'.apply({ 'hyphens-n_Underscores': 10 })
+     * ```
+     */
+    public native function apply(arguments: Map.<String, *> | [*]): String;
+
+    public function codePoints(): CodePointIterator (
+        new CodePointIterator(this)
+    );
+}
+
+public final class CodePointIterator implements Iterator.<Int> {
+    public native function CodePointIterator(string: String);
+
+    public native function next(): {done: Boolean, value?: Int};
 }
 
 [Value]

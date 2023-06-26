@@ -1903,7 +1903,8 @@ internal class ParserBackend {
         if (common.UsesAwait) {
             SyntaxError(26, id.Span.Value);
         }
-        if (common.UsesYield) {
+        // only iterateKeys() and iterateValues() can yield
+        if (common.UsesYield && @operator != Operator.ProxyToIterateKeys && @operator != Operator.ProxyToIterateValues) {
             SyntaxError(27, id.Span.Value);
         }
 
