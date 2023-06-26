@@ -107,6 +107,6 @@ public static class MethodOverride {
 
         return superTypeSignature.FunctionReturnType == subtypeSignature.FunctionReturnType
             || subtypeSignature.FunctionReturnType.IsSubtypeOf(superTypeSignature.FunctionReturnType)
-            || subtypeSignature.FunctionReturnType is AnyType;
+            || superTypeSignature.FunctionReturnType is AnyType;
     }
 }

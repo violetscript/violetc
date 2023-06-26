@@ -12,5 +12,7 @@ public class Number {
 
     public native function Number(argument: *);
 
-    public native override function toString(radix: undefined | Int = undefined): String;
+    public native override function toString(radix: Int? = null): String;
+
+    public native function toExponential(fractionDigits: Int? = null): String;
 }

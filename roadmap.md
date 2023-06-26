@@ -7,8 +7,9 @@ Some of the notes in this document apply to verification and bytecode or code ge
 - [ ] **Code generation:** Empty programs that, for example, contain include directives whose inner statement sequence is empty or consist of other empty include directives, should not generate any activation and not be evaluated.
 - [ ] **Code generation:** An expression whose associated symbol is a constant value should not be evaluated or processed at runtime. `exp.semanticSymbol.isConstantValue`.
 - [ ] **Code generation:** When a class inherits static methods or virtual properties, `this` has to be replaced by that class in each such method. Look everywhere for `ClassStaticThis`.
-- [ ] **Code generation:** Variables with type without default value are represented in memory similiar to a Rust `Option<T>`. This is important because of constructors and `this` accessed before `super()`.
+- [ ] **Code generation:** Variables without constant initial value are represented in memory similiar to a Rust `Option<T>`. This is important because of constructors and `this` accessed before `super()`.
 - [ ] Decorators must not be allowed in certain places, like over ordinary functions, ordinary variables and `static` variables.
+- [ ] **Code generation:** Since method overrides can specify additional optional parameters or an additional rest parameter and a subtype return type or a type different from an original `*` return type, conversions may be necessary in different senses in the override implementation and overrides may need to be invoked with more arguments.
 - [ ] **Language Server Protocol (LSP):** Avoid re-compiling libraries by caching only publicly-visible definitions without shipping their implementation and loading them into the semantic core for use in LSP.
 
 ### `x is y: C`
