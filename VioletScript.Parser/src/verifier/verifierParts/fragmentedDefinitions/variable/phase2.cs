@@ -31,12 +31,14 @@ public partial class Verifier
     {
         if (binding.Pattern.SemanticProperty != null)
         {
-            // if not in class frame or not a read-only,
+            // if not in class frame,
             // the binding must have a constant initial value
             // or initializer.
-            var notInClassOrNotReadOnly = !(this.m_Frame is ClassFrame) || !binding.Pattern.SemanticProperty.ReadOnly;
+            // futurely an error will also occur for class
+            // variables that are not initialized by the constructor.
+            var notInClass = !(this.m_Frame is ClassFrame);
             var noInitialValueOrInit = binding.Pattern.SemanticProperty.InitValue == null && binding.Init == null;
-            if (notInClassOrNotReadOnly && noInitialValueOrInit)
+            if (notInClass && noInitialValueOrInit)
             {
                 VerifyError(binding.Pattern.Span.Value.Script, 244, binding.Span.Value, new DiagnosticArguments {});
             }
