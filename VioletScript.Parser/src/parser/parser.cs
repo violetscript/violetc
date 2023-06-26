@@ -1632,7 +1632,8 @@ internal class ParserBackend {
                     && d_asId.Name == "Metadata"
                     && d_asId.Type == null
                     && d_asCe.ArgumentsList.Count() == 1
-                    && d_asCe.ArgumentsList[0] is Ast.ObjectInitializer);
+                    && d_asCe.ArgumentsList[0] is Ast.ObjectInitializer)
+                .ToArray();
             if (d.Count() > 0) {
                 attribs.Decorators.Remove(d.First());
                 node.Metadata = (Ast.ObjectInitializer) ((Ast.CallExpression) d.First()).ArgumentsList[0];
@@ -1642,7 +1643,8 @@ internal class ParserBackend {
                 .Where(e => e is Ast.CallExpression d_asCe
                     && d_asCe.Base is Ast.Identifier d_asId
                     && d_asId.Name == "Allow"
-                    && d_asId.Type == null);
+                    && d_asId.Type == null)
+                .ToArray();
             if (allowDec.Count() > 0) {
                 attribs.Decorators.Remove(allowDec.First());
                 node.AllowAttribute = (Ast.CallExpression) allowDec.First();

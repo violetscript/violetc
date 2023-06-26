@@ -217,9 +217,9 @@ public partial class Verifier
             newDefinition.InitValue ??= type?.DefaultValue;
 
             // shadowing
-            if (newDefinition.ParentDefinition == null && m_Frame.ParentFrame != null)
+            if (newDefinition.ParentDefinition == null && m_Frame != null)
             {
-                var shadowed = m_Frame.ParentFrame.Properties[name];
+                var shadowed = m_Frame.Properties[name];
                 if (shadowed != null && !canShadow)
                 {
                     Warn(null, 265, span, new DiagnosticArguments {["name"] = name});
