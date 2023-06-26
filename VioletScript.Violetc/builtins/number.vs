@@ -34,6 +34,7 @@ public class Decimal {
     public native override function toString(radix: Int? = null): String;
 }
 
+/*
 [Value]
 public class Byte {
     public static const MIN_VALUE: Byte = 0;
@@ -120,3 +121,4 @@ public class BigInt {
 
     public native override function toString(radix: Int? = null): String;
 }
+*/
