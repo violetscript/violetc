@@ -1159,7 +1159,7 @@ internal class ParserBackend {
                     DuplicateLocation();
                     DuplicateLocation();
                     var optChain = FinishExp(new Ast.OptionalChainingPlaceholder());
-                    optChain = FinishExp(new Ast.IndexExpression(optChain, id));
+                    optChain = FinishExp(new Ast.MemberExpression(optChain, id));
                     optChain = ParseSubexpressions(optChain, true, OperatorPrecedence.Postfix);
                     r = FinishExp(new Ast.OptChainingExpression(r, optChain));
                 }
