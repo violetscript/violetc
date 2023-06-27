@@ -8,6 +8,9 @@ include './regexp';
 include './function';
 include './promise';
 include './errors';
+include './math';
+include './reflect';
+// intl and temporal are for later
 */
 class C.<T> {
     function C() {}
