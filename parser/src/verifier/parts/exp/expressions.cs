@@ -148,7 +148,10 @@ public partial class Verifier
         }
         else if (exp is Ast.OptionalChainingPlaceholder)
         {
-            exp.SemanticSymbol = m_ModelCore.Factory.NullConstantValue(m_ModelCore.NullType);
+            if (exp.SemanticSymbol == null)
+            {
+                exp.SemanticSymbol = m_ModelCore.Factory.NullConstantValue(m_ModelCore.NullType);
+            }
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }

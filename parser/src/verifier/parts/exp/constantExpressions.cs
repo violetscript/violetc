@@ -20,7 +20,7 @@ public partial class Verifier
         bool instantiatingGeneric = false
     )
     {
-        if (exp.SemanticConstantExpResolved)
+        if (exp.SemanticConstantExpResolved || exp.SemanticExpResolved)
         {
             return exp.SemanticSymbol;
         }
@@ -1766,7 +1766,7 @@ public partial class Verifier
         Symbol expectedType = null
     )
     {
-        if (exp.SemanticConstantExpResolved)
+        if (exp.SemanticConstantExpResolved || exp.SemanticExpResolved)
         {
             return exp.SemanticSymbol;
         }

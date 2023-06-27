@@ -44,9 +44,6 @@ public partial class Verifier
         chainingPlaceholder.SemanticSymbol = optChaining.SemanticNonNullBase;
         chainingPlaceholder.SemanticExpResolved = true;
 
-        // Console.WriteLine(((Ast.OptionalChainingPlaceholder) ((Ast.MemberExpression) optChaining.OptChain).Base).SemanticSymbol);
-        // Console.WriteLine(chainingPlaceholder.SemanticSymbol);
-
         var r = VerifyExpAsValue(optChaining.OptChain);
         optChaining.SemanticOptNonNullUnifiedResult = r;
 
