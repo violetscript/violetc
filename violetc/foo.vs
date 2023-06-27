@@ -1,3 +1,2 @@
-var x: {x?: Number}? = {}
-//x?.toString().toString()
-x?.fooQuxxzx
+var a: [String, Number] = ['', 0]
+var [x, y] = a

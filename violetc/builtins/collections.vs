@@ -42,6 +42,10 @@ public final class Array.<T> {
 
     public native function push(...arguments: [T]): Int;
 
+    proxy native function getIndex(i: Int): undefined | T;
+
+    proxy native function setIndex(i: Int, v: T): void;
+
     proxy function add(a: [T], b: [T]): [T] (
         a.concat(b)
     );
