@@ -3,6 +3,7 @@
 [VioletScript](https://violetscript.github.io) compiler implemented in .NET. Currently it does not generate any code; code generation will be worked on anytime. You can currently use it to type check.
 
 - Debug it with `dotnet run -- someScript`
+- Currently writing built-ins for the primitive String type
 - [ ] Currrent bug to fix: type substitution of generic method under a generic class is not replacing signature correctly
 
 ## Command
