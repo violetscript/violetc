@@ -750,18 +750,6 @@ internal class ParserBackend {
                     @base = FinishExp(new Ast.MemberExpression(@base, id));
                 }
             }
-            else if (Token.Type == TToken.QuestionDot) {
-                PushLocation(@base.Span.Value);
-                NextToken();
-                if (Consume(TToken.LSquare)) {
-                    var exp = ParseExpression();
-                    Expect(TToken.RSquare);
-                    @base = FinishExp(new Ast.IndexExpression(@base, exp, true));
-                } else {
-                    var id = ParseIdentifier(true);
-                    @base = FinishExp(new Ast.MemberExpression(@base, id, true));
-                }
-            }
             else if (Token.Type == TToken.LSquare && InlineOrAtHigherIndentLine) {
                 PushLocation(@base.Span.Value);
                 NextToken();
@@ -1151,14 +1139,21 @@ internal class ParserBackend {
                         argumentsList.Add(ParseExpression(true, OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction));
                     } while (Consume(TToken.Comma));
                     Expect(TToken.RParen);
-                    r = FinishExp(new Ast.CallExpression(r, argumentsList, true));
+                    DuplicateLocation();
+                    var optChain = FinishExp(new Ast.OptionalChainingPlaceholder());
+                    optChain = ParseSubexpressions(optChain, true, OperatorPrecedence.Postfix);
+                    r = FinishExp(new Ast.OptCallExpression(r, argumentsList, optChain));
                 } else if (Consume(TToken.LSquare)) {
                     var exp = ParseExpression();
                     Expect(TToken.RSquare);
-                    r = FinishExp(new Ast.IndexExpression(r, exp, true));
+                    var optChain = FinishExp(new Ast.OptionalChainingPlaceholder());
+                    optChain = ParseSubexpressions(optChain, true, OperatorPrecedence.Postfix);
+                    r = FinishExp(new Ast.OptIndexExpression(r, exp, optChain));
                 } else {
                     var id = ParseIdentifier(true);
-                    r = FinishExp(new Ast.MemberExpression(r, id, true));
+                    var optChain = FinishExp(new Ast.OptionalChainingPlaceholder());
+                    optChain = ParseSubexpressions(optChain, true, OperatorPrecedence.Postfix);
+                    r = FinishExp(new Ast.OptMemberExpression(r, id, optChain));
                 }
             } else break;
         }
@@ -1412,7 +1407,7 @@ internal class ParserBackend {
     private static bool IsExpAValidDecorator(Ast.Expression exp) {
         if (exp is Ast.ArrayInitializer && ((Ast.ArrayInitializer) exp).Type == null)
             return true;
-        if (exp is Ast.IndexExpression exp_asIe && !exp_asIe.Optional) {
+        if (exp is Ast.IndexExpression exp_asIe) {
             return IsExpAValidDecorator(exp_asIe.Base);
         }
         return false;

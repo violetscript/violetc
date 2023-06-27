@@ -446,7 +446,7 @@ public partial class Verifier
         }
 
         var throwawayNonNullBase = m_ModelCore.Factory.Value(baseType.ToNonNullableType());
-        memb.SemanticThrowawayNonNullBase = throwawayNonNullBase;
+        memb.SemanticNonNullBase = throwawayNonNullBase;
 
         var r = throwawayNonNullBase.ResolveProperty(memb.Id.Name);
         memb.SemanticOptNonNullUnifiedSymbol = r;
@@ -1119,7 +1119,7 @@ public partial class Verifier
         }
 
         var throwawayNonNullBase = m_ModelCore.Factory.Value(baseType.ToNonNullableType());
-        exp.SemanticThrowawayNonNullBase = throwawayNonNullBase;
+        exp.SemanticNonNullBase = throwawayNonNullBase;
 
         // optional tuple access
         if (throwawayNonNullBase.StaticType is TupleType)
@@ -1299,7 +1299,7 @@ public partial class Verifier
         }
 
         var throwawayNonNullBase = m_ModelCore.Factory.Value(baseType.ToNonNullableType());
-        exp.SemanticThrowawayNonNullBase = throwawayNonNullBase;
+        exp.SemanticNonNullBase = throwawayNonNullBase;
 
         if (throwawayNonNullBase.StaticType is FunctionType)
         {

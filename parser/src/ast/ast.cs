@@ -484,95 +484,145 @@ public class MarkupAttribute : Node {
 }
 
 /// <summary>
-/// Member expression. If the base object is a package, then the member may be a subpackage. 
+/// Member expression. If the base object is a package, then the member may be a subpackage.
+/// </summary>
+public class MemberExpression : Expression {
+    public Expression Base;
+    public Identifier Id;
+
+    public MemberExpression(Expression @base, Identifier id) : base() {
+        Base = @base;
+        Id = id;
+    }
+}
+
+/// <summary>
+/// Expression meant to be used as a base for
+/// optional chaining operators.
+/// </summary>
+public class OptionalChainingPlaceholder : Expression {
+}
+
+/// <summary>
+/// Optional member expression (<c>?.x</c>).
 /// </summary>
 /// <remarks>
 /// <para>Optional member access:</para>
 ///
 /// <list type="bullet">
-/// <item>If the member access is optional (using <c>?.</c> syntax),
-/// the member result type unifies with either null or undefined or both, and the <c>SemanticThrowawayNonNullBase</c>
+/// <item>The member result type unifies with either null or undefined or both, and the <c>SemanticNonNullBase</c>
 /// and <c>SemanticOptNonNullUnifiedSymbol</c> properties of this node are assigned to some symbol.</item>
-/// <item>If the base includes undefined but not null, the result unifies with undefined as <c>undefined|R</c>.</item>
-/// <item>If the base includes null but not undefined, the result unifies with null as <c>null|R</c>.</item>
-/// <item>If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined|null|R</c>.</item>
+/// <item>If the base includes undefined but not null, the result unifies with undefined as <c>undefined | R</c>.</item>
+/// <item>If the base includes null but not undefined, the result unifies with null as <c>null | R</c>.</item>
+/// <item>If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined | null | R</c>.</item>
 /// </list>
 /// </remarks>
-public class MemberExpression : Expression {
+public class OptMemberExpression : Expression {
     public Expression Base;
     public Identifier Id;
-    public bool Optional;
 
     /// <summary>
-    /// If this is an optional member, this stores
-    /// a throw-away non-null value corresponding to the base value;
+    /// Optional chaining operators.
+    /// </summary>
+    public Expression OptChain;
+
+    /// <summary>
+    /// A throwaway non-null value corresponding to the base value;
     /// that is, it is a value of type <c>Base.SemanticSymbol.ToNonNullableType()</c>.
     /// </summary>
-    public Symbol SemanticThrowawayNonNullBase = null;
+    public Symbol SemanticNonNullBase = null;
 
     /// <summary>
-    /// If this is an optional member, this stores
-    /// the resolved symbol without unifying it to null or undefined types.
+    /// Stores the resolved symbol without unifying it
+    /// to null or undefined types.
     /// </summary>
     public Symbol SemanticOptNonNullUnifiedSymbol = null;
 
-    public MemberExpression(Expression @base, Identifier id, bool optional = false) : base() {
+    public OptMemberExpression(Expression @base, Identifier id, Expression optChain) : base() {
         Base = @base;
         Id = id;
-        Optional = optional;
+        OptChain = optChain;
     }
 }
 
 /// <summary>
 /// Index expression.
 /// </summary>
+public class IndexExpression : Expression {
+    public Expression Base;
+    public Expression Key;
+
+    public IndexExpression(Expression @base, Expression key) : base() {
+        Base = @base;
+        Key = key;
+    }
+}
+
+/// <summary>
+/// Optional index expression (<c>?.[k]</c>).
+/// </summary>
 /// <remarks>
 /// <para>Optional indexing:</para>
 ///
 /// <list type="bullet">
-/// <item>If the index access is optional (using <c>?.[k]</c> syntax),
-/// the result type unifies with either null or undefined or both, and the <c>SemanticThrowawayNonNullBase</c>
+/// <item>The result type unifies with either null or undefined or both, and the <c>SemanticNonNullBase</c>
 /// property of this node are assigned to some symbol.</item>
-/// <item>If the base includes undefined but not null, the result unifies with undefined as <c>undefined|R</c>.</item>
-/// <item>If the base includes null but not undefined, the result unifies with null as <c>null|R</c>.</item>
-/// <item>If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined|null|R</c>.</item>
+/// <item>If the base includes undefined but not null, the result unifies with undefined as <c>undefined | R</c>.</item>
+/// <item>If the base includes null but not undefined, the result unifies with null as <c>null | R</c>.</item>
+/// <item>If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined | null | R</c>.</item>
 /// </list>
 /// </remarks>
-public class IndexExpression : Expression {
+public class OptIndexExpression : Expression {
     public Expression Base;
     public Expression Key;
-    public bool Optional;
 
     /// <summary>
-    /// If this is an optional index, this stores
-    /// a throw-away non-null value corresponding to the base value;
+    /// Optional chaining operators.
+    /// </summary>
+    public Expression OptChain;
+
+    /// <summary>
+    /// A throwaway non-null value corresponding to the base value;
     /// that is, it is a value of type <c>Base.SemanticSymbol.ToNonNullableType()</c>.
     /// </summary>
-    public Symbol SemanticThrowawayNonNullBase = null;
+    public Symbol SemanticNonNullBase = null;
 
-    public IndexExpression(Expression @base, Expression key, bool optional = false) : base() {
+    public OptIndexExpression(Expression @base, Expression key, Expression optChain) : base() {
         Base = @base;
         Key = key;
-        Optional = optional;
+        OptChain = optChain;
     }
 }
 
 public class CallExpression : Expression {
     public Expression Base;
     public List<Expression> ArgumentsList;
-    public bool Optional;
 
-    /// <summary>
-    /// If this is an optional call, this stores
-    /// a throw-away non-null value corresponding to the base value;
-    /// that is, it is a value of type <c>Base.SemanticSymbol.ToNonNullableType()</c>.
-    /// </summary>
-    public Symbol SemanticThrowawayNonNullBase = null;
-
-    public CallExpression(Expression @base, List<Expression> argumentsList, bool optional = false) : base() {
+    public CallExpression(Expression @base, List<Expression> argumentsList) : base() {
         Base = @base;
         ArgumentsList = argumentsList;
-        Optional = optional;
+    }
+}
+
+public class OptCallExpression : Expression {
+    public Expression Base;
+    public List<Expression> ArgumentsList;
+
+    /// <summary>
+    /// Optional chaining operators.
+    /// </summary>
+    public Expression OptChain;
+
+    /// <summary>
+    /// A throwaway non-null value corresponding to the base value;
+    /// that is, it is a value of type <c>Base.SemanticSymbol.ToNonNullableType()</c>.
+    /// </summary>
+    public Symbol SemanticNonNullBase = null;
+
+    public OptCallExpression(Expression @base, List<Expression> argumentsList, Expression optChain) : base() {
+        Base = @base;
+        ArgumentsList = argumentsList;
+        OptChain = optChain;
     }
 }
 

@@ -26,7 +26,6 @@ Some of the notes in this document apply to verification and bytecode or code ge
 
 - [ ] Generic Type Inference; e.g. `a.map(...);` rather than `a.map.<R>(...);`.
 - [ ] `o?.k > 0 ? x : y`: using optional access in a condition
-- [ ] Optional chaining with optional access
 
 ### Done
 
