@@ -142,6 +142,12 @@ public partial class Verifier
         {
             r = VerifySuperExp(superExp);
         }
+        else if (exp is Ast.OptionalChainingPlaceholder)
+        {
+            exp.SemanticSymbol = m_ModelCore.Factory.NullConstantValue(m_ModelCore.NullType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
         else
         {
             throw new Exception("Unimplemented expression");

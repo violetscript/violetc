@@ -1146,11 +1146,13 @@ internal class ParserBackend {
                 } else if (Consume(TToken.LSquare)) {
                     var exp = ParseExpression();
                     Expect(TToken.RSquare);
+                    DuplicateLocation();
                     var optChain = FinishExp(new Ast.OptionalChainingPlaceholder());
                     optChain = ParseSubexpressions(optChain, true, OperatorPrecedence.Postfix);
                     r = FinishExp(new Ast.OptIndexExpression(r, exp, optChain));
                 } else {
                     var id = ParseIdentifier(true);
+                    DuplicateLocation();
                     var optChain = FinishExp(new Ast.OptionalChainingPlaceholder());
                     optChain = ParseSubexpressions(optChain, true, OperatorPrecedence.Postfix);
                     r = FinishExp(new Ast.OptMemberExpression(r, id, optChain));
