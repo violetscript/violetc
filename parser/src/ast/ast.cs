@@ -277,6 +277,10 @@ public class Expression : Node {
     /// Internally used by the verifier.
     /// </summary>
     public bool SemanticConstantExpResolved = false;
+
+    public virtual OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
+        return null;
+    }
 }
 
 public class Identifier : Expression {
@@ -311,6 +315,10 @@ public class UnaryExpression : Expression {
     public UnaryExpression(Operator op, Expression operand) : base() {
         Operator = op;
         Operand = operand;
+    }
+
+    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
+        return this.Operand.FindOptionalChainingPlaceholder();
     }
 }
 
@@ -494,6 +502,10 @@ public class MemberExpression : Expression {
         Base = @base;
         Id = id;
     }
+
+    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
+        return this.Base.FindOptionalChainingPlaceholder();
+    }
 }
 
 /// <summary>
@@ -501,6 +513,9 @@ public class MemberExpression : Expression {
 /// optional chaining operators.
 /// </summary>
 public class OptionalChainingPlaceholder : Expression {
+    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
+        return this;
+    }
 }
 
 /// <summary>
@@ -543,6 +558,10 @@ public class OptMemberExpression : Expression {
         Id = id;
         OptChain = optChain;
     }
+
+    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
+        return this.Base.FindOptionalChainingPlaceholder();
+    }
 }
 
 /// <summary>
@@ -555,6 +574,10 @@ public class IndexExpression : Expression {
     public IndexExpression(Expression @base, Expression key) : base() {
         Base = @base;
         Key = key;
+    }
+
+    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
+        return this.Base.FindOptionalChainingPlaceholder();
     }
 }
 
@@ -592,6 +615,10 @@ public class OptIndexExpression : Expression {
         Key = key;
         OptChain = optChain;
     }
+
+    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
+        return this.Base.FindOptionalChainingPlaceholder();
+    }
 }
 
 public class CallExpression : Expression {
@@ -601,6 +628,10 @@ public class CallExpression : Expression {
     public CallExpression(Expression @base, List<Expression> argumentsList) : base() {
         Base = @base;
         ArgumentsList = argumentsList;
+    }
+
+    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
+        return this.Base.FindOptionalChainingPlaceholder();
     }
 }
 
@@ -623,6 +654,10 @@ public class OptCallExpression : Expression {
         Base = @base;
         ArgumentsList = argumentsList;
         OptChain = optChain;
+    }
+
+    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
+        return this.Base.FindOptionalChainingPlaceholder();
     }
 }
 
@@ -702,6 +737,10 @@ public class ParensExpression : Expression {
 
     public ParensExpression(Expression expression) : base() {
         Expression = expression;
+    }
+
+    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
+        return this.Expression.FindOptionalChainingPlaceholder();
     }
 }
 

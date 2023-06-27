@@ -28,7 +28,7 @@ public partial class Verifier
         {
             return VerifyConstantLexicalReference(id, faillible, expectedType, instantiatingGeneric);
         }
-        else if (exp is Ast.MemberExpression memb && !memb.Optional)
+        else if (exp is Ast.MemberExpression memb)
         {
             return VerifyConstantMemberExp(memb, faillible, expectedType, instantiatingGeneric);
         }
