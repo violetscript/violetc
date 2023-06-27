@@ -151,6 +151,11 @@ public partial class Verifier
         {
             VerifyTypeDefinition(typeDefn);
         }
+        else if (stmt is Ast.PackageDefinition pkgDefn)
+        {
+            // ignore package in this context, since it
+            // is a syntax error.
+        }
         else
         {
             throw new Exception("Unimplemented directive or statement");

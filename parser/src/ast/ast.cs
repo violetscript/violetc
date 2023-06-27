@@ -730,24 +730,25 @@ public class SuperExpression : Expression {
 }
 
 public class Program : Node {
-    public List<PackageDefinition> Packages;
     /// <summary>
-    /// Optional sequence of statements.
+    /// Sequence of statements.
     /// </summary>
     public List<Statement> Statements;
 
     /// <summary>
-    /// If there is any statement, there is a main lexical frame.
+    /// Main lexical frame.
     /// </summary>
     public Symbol SemanticFrame = null;
 
-    public Program(List<PackageDefinition> packages, List<Statement> statements) : base() {
-        Packages = packages;
+    public Program(List<Statement> statements) : base() {
         Statements = statements;
     }
 }
 
-public class PackageDefinition: Node {
+/// <summary>
+/// Packages are only allowed in the top-level context.
+/// </summary>
+public class PackageDefinition: Statement {
     /// <summary>
     /// Dot-delimited identifier, empty for <c>package {}</c>.
     /// </summary>
@@ -1580,12 +1581,6 @@ public class SwitchTypeCase : Node {
 public class IncludeStatement : Statement {
     public string Source;
     public Script InnerScript = null;
-
-    /// <summary>
-    /// Package definitions. This is only available when the
-    /// the script is included from a top-level context.
-    /// </summary>
-    public List<PackageDefinition> InnerPackages = new List<PackageDefinition> {};
 
     public List<Statement> InnerStatements = new List<Statement> {};
 

@@ -1274,6 +1274,7 @@ internal class ParserBackend {
         bool semicolonInserted = false;
         if (Token.Type == TToken.Keyword) {
             switch (Token.StringValue) {
+                case "package": return ParsePackageStatement(context);
                 case "super": return ParseSuperStatement(context);
                 case "import": return ParseImportStatement();
                 case "if": return ParseIfStatement(context.RetainLabelsOnly);
@@ -1341,6 +1342,24 @@ internal class ParserBackend {
         return null;
     }
 
+    private (Ast.Statement node, bool semicolonInserted) ParsePackageStatement(Context context) {
+        var atTopLevel = context is TopLevelContext;
+        MarkLocation();
+        NextToken();
+        var id = new List<string>{};
+        if (Consume(TToken.Identifier)) {
+            id.Add(PreviousToken.StringValue);
+            while (Consume(TToken.Dot)) {
+                id.Add(ExpectIdentifier(true));
+            }
+        }
+        var r = ((Ast.PackageDefinition) FinishNode(new Ast.PackageDefinition(id.ToArray(), ParsePackageBlock())));
+        if (!atTopLevel) {
+            SyntaxError(36, r.Span.Value);
+        }
+        return (r, true);
+    }
+
     private (Ast.Statement node, bool semicolonInserted) ParseIncludeStatement(Context context, Span startSpan) {
         PushLocation(startSpan);
         var src = Token.StringValue;
@@ -1374,18 +1393,6 @@ internal class ParserBackend {
                 tokenizer.Tokenize();
                 var innerParser = new ParserBackend(innerScript, tokenizer);
                 innerParser.FunctionStack = this.FunctionStack;
-                while (innerParser.Token.IsKeyword("package") && context is TopLevelContext) {
-                    innerParser.MarkLocation();
-                    innerParser.NextToken();
-                    var id = new List<string>{};
-                    if (innerParser.Consume(TToken.Identifier)) {
-                        id.Add(innerParser.PreviousToken.StringValue);
-                        while (innerParser.Consume(TToken.Dot)) {
-                            id.Add(innerParser.ExpectIdentifier(true));
-                        }
-                    }
-                    r.InnerPackages.Add((Ast.PackageDefinition) innerParser.FinishNode(new Ast.PackageDefinition(id.ToArray(), innerParser.ParsePackageBlock())));
-                }
                 while (innerParser.Token.Type != TToken.Eof) {
                     var stmt = innerParser.ParseOptStatement(context);
                     if (stmt != null) innerStatements.Add(stmt.Value.node);
@@ -2175,13 +2182,21 @@ internal class ParserBackend {
             return ParseBlock(context);
         }
         MarkLocation();
+        this.ParseSemicolon();
         var statements = new List<Ast.Statement>{};
+        var foundAnotherPackage = false;
         while (Token.Type != TToken.Eof) {
+            foundAnotherPackage = Token.IsKeyword("package");
+            if (foundAnotherPackage) {
+                break;
+            }
             var (stmt, semicolonInserted) = ParseStatement(context);
             statements.Add(stmt);
             if (!semicolonInserted) break;
         }
-        Expect(TToken.Eof);
+        if (!foundAnotherPackage) {
+            Expect(TToken.Eof);
+        }
         return (Ast.Block) FinishStatement(new Ast.Block(statements));
     }
 
@@ -2523,29 +2538,15 @@ internal class ParserBackend {
 
     public Ast.Program ParseProgram() {
         MarkLocation();
-        var packages = new List<Ast.PackageDefinition>{};
-        while (Token.IsKeyword("package")) {
-            MarkLocation();
-            NextToken();
-            var id = new List<string>{};
-            if (Consume(TToken.Identifier)) {
-                id.Add(PreviousToken.StringValue);
-                while (Consume(TToken.Dot)) {
-                    id.Add(ExpectIdentifier(true));
-                }
-            }
-            packages.Add((Ast.PackageDefinition) FinishNode(new Ast.PackageDefinition(id.ToArray(), ParsePackageBlock())));
-        }
-        List<Ast.Statement> statements = null;
+        List<Ast.Statement> statements = new List<Ast.Statement>{};
         Context topLevelContext = new TopLevelContext();
         while (Token.Type != TToken.Eof) {
             var (stmt, semicolonInserted) = ParseStatement(topLevelContext);
-            statements ??= new List<Ast.Statement>{};
             statements.Add(stmt);
             if (!semicolonInserted) break;
         }
         Expect(TToken.Eof);
-        return (Ast.Program) FinishNode(new Ast.Program(packages, statements));
+        return (Ast.Program) FinishNode(new Ast.Program(statements));
     }
 }
 

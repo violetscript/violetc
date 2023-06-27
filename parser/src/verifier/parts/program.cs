@@ -27,7 +27,6 @@ public partial class Verifier
 
         foreach (var program in programs)
         {
-            packageDefinitions.AddRange(program.Packages);
             packageDefinitions.AddRange(this.collectPackageDefinitionsFromDirectives(program.Statements));
         }
 
@@ -88,10 +87,7 @@ public partial class Verifier
     {
         foreach (var program in programs)
         {
-            if (program.Statements != null)
-            {
-                program.SemanticFrame = m_ModelCore.Factory.Frame();
-            }
+            program.SemanticFrame = m_ModelCore.Factory.Frame();
         }
 
         this.m_TypeExpsWithArguments = new List<Ast.TypeExpressionWithArguments>();
@@ -101,13 +97,9 @@ public partial class Verifier
         {
             foreach (var program in programs)
             {
-                // verify main program's directives if any
-                if (program.Statements != null)
-                {
-                    EnterFrame(program.SemanticFrame);
-                    Fragmented_VerifyStatementSeq(program.Statements, phase);
-                    ExitFrame();
-                }
+                EnterFrame(program.SemanticFrame);
+                Fragmented_VerifyStatementSeq(program.Statements, phase);
+                ExitFrame();
             }
             // phase 1 = resolve import and alias directives.
             if (phase == VerifyPhase.Phase1)
@@ -132,8 +124,11 @@ public partial class Verifier
         {
             if (drtv is Ast.IncludeStatement incDrtv)
             {
-                r.AddRange(incDrtv.InnerPackages);
                 r.AddRange(collectPackageDefinitionsFromDirectives(incDrtv.InnerStatements));
+            }
+            else if (drtv is Ast.PackageDefinition pkgDefn)
+            {
+                r.Add(pkgDefn);
             }
         }
         return r;
@@ -249,6 +244,10 @@ public partial class Verifier
         else if (stmt is Ast.TypeDefinition typeDefn)
         {
             Fragmented_VerifyTypeDefinition(typeDefn, phase);
+        }
+        else if (stmt is Ast.PackageDefinition)
+        {
+            // ignore package in this context
         }
         else
         {

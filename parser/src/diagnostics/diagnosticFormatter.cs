@@ -125,6 +125,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [33] = "Illegal continue statement: no surrounding iteration statement",
         [34] = "Getter must not have parameters",
         [35] = "Setter must have exactly one required parameter",
+        [36] = "Package is not allowed here",
 
         // # Verification Diagnostics
 
