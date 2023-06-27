@@ -536,7 +536,9 @@ public class OptChainingExpression : Expression {
     public Expression Base;
 
     /// <summary>
-    /// Optional chaining operators.
+    /// Optional chaining operators. The base
+    /// of them all is the <c>OptionalChainingPlaceholder</c>
+    /// node.
     /// </summary>
     public Expression OptChain;
 

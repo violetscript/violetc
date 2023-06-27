@@ -1,2 +1,3 @@
 var x: {x?: Number}? = {}
-x?.toString()
+//x?.toString().toString()
+x?.fooQuxxzx

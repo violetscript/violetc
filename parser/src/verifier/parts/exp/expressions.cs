@@ -291,6 +291,7 @@ public partial class Verifier
     {
         var exp = id;
         var r = m_Frame.ResolveProperty(id.Name);
+
         if (r == null)
         {
             // VerifyError: undefined reference
@@ -364,6 +365,10 @@ public partial class Verifier
         var @base = VerifyExp(memb.Base, null, false);
         if (@base == null)
         {
+            if (memb.Id.Name == "fooQuxxzx")
+            {
+                //Console.WriteLine(memb.Base.SemanticSymbol == null);
+            }
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
