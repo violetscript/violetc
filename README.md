@@ -3,7 +3,6 @@
 [VioletScript](https://violetscript.github.io) compiler implemented in .NET. Currently it does not generate any code; code generation will be worked on anytime. You can currently use it to type check.
 
 - Debug it with `dotnet run -- someScript`
-- [ ] Fix current exception
 
 ## Command
 
@@ -12,3 +11,7 @@ VioletScript uses the extension `.vs`, which is automatically added.
 ```
 violetc index
 ```
+
+## Known bugs
+
+- Extending or implementing a generic type before it's defined may cause a .NET exception due to how the compiler resolves types. In the moment just define them in an order that makes sense.

@@ -1,8 +1,8 @@
 include './globalConstants';
 include './globalFunctions';
 include './object';
-include './primitiveTypes';
 include './collections';
+include './primitiveTypes';
 include './regexp';
 include './function';
 include './promise';
