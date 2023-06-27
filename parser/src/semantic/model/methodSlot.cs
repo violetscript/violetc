@@ -202,7 +202,7 @@ public class MethodSlotFromTypeWithArgs : MethodSlot {
     private Symbol m_Type;
     private Symbol m_BelongsToVirtualProp = null;
     private List<Symbol> m_OverridenBy = null;
-    private Symbol[] m_TypeParameters = null;
+    // private Symbol[] m_TypeParameters = null;
 
     public MethodSlotFromTypeWithArgs(Symbol[] paramTypeTParams, Symbol[] paramTypeArgs, Symbol origin, Symbol type) {
         m_ParamTypeTParams = paramTypeTParams;
@@ -285,6 +285,10 @@ public class MethodSlotFromTypeWithArgs : MethodSlot {
     }
 
     public override Symbol[] TypeParameters {
+        get => this.m_Origin.TypeParameters;
+        /*
+        // this is commented because it's wrong and
+        // causes bug with type replacement.
         get {
             if (m_TypeParameters != null) {
                 return m_TypeParameters;
@@ -306,6 +310,7 @@ public class MethodSlotFromTypeWithArgs : MethodSlot {
             m_TypeParameters = r.ToArray();
             return m_TypeParameters;
         }
+        */
     }
 
     public override Symbol[] MethodOverridenBy {

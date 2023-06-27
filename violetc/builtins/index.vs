@@ -1,4 +1,3 @@
-/*
 include './globalConstants';
 include './globalFunctions';
 include './object';
@@ -14,9 +13,3 @@ include './reflect';
 include './observable';
 include './intl';
 include './temporal';
-*/
-class C.<T> {
-    function C() {}
-    function f.<W>(arg: W): void {}
-}
-new C.<Int>().f.<Int>('')
