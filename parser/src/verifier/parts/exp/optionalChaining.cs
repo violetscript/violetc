@@ -20,17 +20,9 @@ public partial class Verifier
     )
     {
         Ast.Expression exp = optChaining;
-        var @base = VerifyExp(optChaining.Base, null, false);
+        var @base = VerifyExpAsValue(optChaining.Base, null, false);
         if (@base == null)
         {
-            exp.SemanticSymbol = null;
-            exp.SemanticExpResolved = true;
-            return exp.SemanticSymbol;
-        }
-        if (!(@base is Value))
-        {
-            // ERROR: optional member must have a value base
-            VerifyError(null, 169, optChaining.Base.Span.Value, new DiagnosticArguments {});
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
@@ -50,9 +42,10 @@ public partial class Verifier
 
         var chainingPlaceholder = optChaining.OptChain.FindOptionalChainingPlaceholder();
         chainingPlaceholder.SemanticSymbol = optChaining.SemanticNonNullBase;
-        Console.WriteLine(chainingPlaceholder == ((Ast.MemberExpression) optChaining.OptChain).Base);
-        // Console.WriteLine(optChaining.SemanticNonNullBase);
         chainingPlaceholder.SemanticExpResolved = true;
+
+        // Console.WriteLine(((Ast.OptionalChainingPlaceholder) ((Ast.MemberExpression) optChaining.OptChain).Base).SemanticSymbol);
+        // Console.WriteLine(chainingPlaceholder.SemanticSymbol);
 
         var r = VerifyExpAsValue(optChaining.OptChain);
         optChaining.SemanticOptNonNullUnifiedResult = r;
