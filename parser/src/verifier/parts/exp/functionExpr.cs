@@ -79,7 +79,7 @@ public partial class Verifier
                 var binding = common.Params[i];
                 NameAndTypePair? paramInferNameAndType = inferType != null && inferType.FunctionHasRequiredParameters && i < inferType.FunctionCountOfRequiredParameters ? inferType.FunctionRequiredParameters[i] : null;
                 FRequiredParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
-                var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
+                var name = paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
                 resultType_params.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty?.StaticType ?? this.m_ModelCore.AnyType));
             }
         }
@@ -105,7 +105,7 @@ public partial class Verifier
                     paramInferNameAndType = inferType != null && inferType.FunctionHasOptParameters && i < inferType.FunctionCountOfOptParameters ? inferType.FunctionOptParameters[i] : null;
                 }
                 FOptParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
-                var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
+                var name = paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
                 resultType_optParams.Add(new NameAndTypePair(name, binding.Pattern.SemanticProperty?.StaticType ?? this.m_ModelCore.AnyType));
             }
         }
@@ -123,7 +123,7 @@ public partial class Verifier
                 paramInferNameAndType = inferType != null ? inferType.FunctionRestParameter : null;
             }
             FRestParam_VerifyVariableBinding(binding, activation.Properties, paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Type : null);
-            var name = binding.Pattern is Ast.NondestructuringPattern p ? p.Name : paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : "_";
+            var name = paramInferNameAndType.HasValue ? paramInferNameAndType.Value.Name : binding.Pattern is Ast.NondestructuringPattern p ? p.Name : "_";
             resultType_restParam = new NameAndTypePair(name, binding.Pattern.SemanticProperty?.StaticType ?? this.m_ModelCore.AnyType);
         }
         if (common.ReturnType != null)
