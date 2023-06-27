@@ -4,8 +4,6 @@
 
 - Debug it with `dotnet run -- someScript`
 
-NOTE: currently it won't compile as I'm quickly improving the resolution for optional chaining operators. It might get back to working state soon.
-
 ## Command
 
 VioletScript uses the extension `.vs`, which is automatically added.
