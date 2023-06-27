@@ -163,11 +163,6 @@ public partial class Verifier
         this.EnterFrame(activation);
         this.Fragmented_VerifyFunctionDefinition7Params(defn.Common);
         this.VerifyVariableBinding(defn.Common.Params[0], false, activation.Properties, Visibility.Public, method.StaticType.FunctionRequiredParameters[0].Type);
-        // ignore "throws" clause
-        if (defn.Common.ThrowsType != null)
-        {
-            this.VerifyTypeExp(defn.Common.ThrowsType);
-        }
         this.Fragmented_VerifyFunctionDefinition7Body(defn.Common, method, defn.Id.Span.Value);
         this.ExitFrame();
     }

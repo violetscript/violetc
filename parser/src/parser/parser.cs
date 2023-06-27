@@ -889,7 +889,7 @@ internal class ParserBackend {
             : ParseExpression(true, OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction);
         FunctionStack.Pop();
         DuplicateLocation();
-        var common = (Ast.FunctionCommon) FinishNode(new Ast.FunctionCommon(sf.UsesAwait, sf.UsesYield, @params, optParams, restParam, returnType, null, body));
+        var common = (Ast.FunctionCommon) FinishNode(new Ast.FunctionCommon(sf.UsesAwait, sf.UsesYield, @params, optParams, restParam, returnType, body));
         return FinishExp(new Ast.FunctionExpression(null, common));
     }
 
@@ -1224,30 +1224,16 @@ internal class ParserBackend {
         } while (Consume(TToken.Comma));
         Expect(TToken.RParen);
         var returnType = Consume(TToken.Colon) ? ParseTypeExpression() : null;
-        Ast.TypeExpression throwsType = null;
         for (;;) {
-            if (ConsumeKeyword("throws")) {
-                if (throwsType != null) SyntaxError(8, PreviousToken.Span);
-                throwsType = ParseTypeExpression();
-                if (Token.Type == TToken.Comma) {
-                    PushLocation(throwsType.Span.Value);
-                    var types = new List<Ast.TypeExpression>{};
-                    while (Consume(TToken.Comma)) {
-                        types.Add(ParseTypeExpression());
-                    }
-                    throwsType = (Ast.TypeExpression) FinishNode(new Ast.UnionTypeExpression(types));
-                }
-            } else {
-                var (gotWhereClause, generics2) = ParseOptGenericBounds(generics);
-                generics = generics2;
-                if (!gotWhereClause) break;
-            }
+            var (gotWhereClause, generics2) = ParseOptGenericBounds(generics);
+            generics = generics2;
+            if (!gotWhereClause) break;
         }
         var sf = new StackFunction();
         FunctionStack.Push(sf);
         var (body, semicolonInserted) = ParseFunctionBody(sf, forFunctionDefinition, isConstructor);
         FunctionStack.Pop();
-        return ((Ast.FunctionCommon) FinishNode(new Ast.FunctionCommon(sf.UsesAwait, sf.UsesYield, @params, optParams, restParam, returnType, throwsType, body)), semicolonInserted);
+        return ((Ast.FunctionCommon) FinishNode(new Ast.FunctionCommon(sf.UsesAwait, sf.UsesYield, @params, optParams, restParam, returnType, body)), semicolonInserted);
     }
 
     private (Ast.Node body, bool semicolonInserted) ParseFunctionBody(StackFunction stackFunction, bool forFunctionDefinition, bool isConstructor) {

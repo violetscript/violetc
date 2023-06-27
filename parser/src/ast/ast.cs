@@ -1032,7 +1032,6 @@ public class FunctionCommon : Node {
     public List<VariableBinding> OptParams;
     public VariableBinding RestParam;
     public TypeExpression ReturnType;
-    public TypeExpression ThrowsType;
     public Node Body;
 
     public Symbol SemanticActivation = null;
@@ -1044,7 +1043,6 @@ public class FunctionCommon : Node {
         List<VariableBinding> optParams,
         VariableBinding restParam,
         TypeExpression returnType,
-        TypeExpression throwsType,
         Node body
     ) : base() {
         UsesAwait = usesAwait;
@@ -1053,7 +1051,6 @@ public class FunctionCommon : Node {
         OptParams = optParams;
         RestParam = restParam;
         ReturnType = returnType;
-        ThrowsType = throwsType;
         Body = body;
     }
 }

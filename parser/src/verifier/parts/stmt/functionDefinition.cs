@@ -103,12 +103,6 @@ public partial class Verifier
             signatureType_returnType = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.GeneratorType, new Symbol[]{signatureType_returnType});
         }
 
-        // ignore "throws" clause
-        if (common.ThrowsType != null)
-        {
-            VerifyTypeExp(common.ThrowsType);
-        }
-
         // get result type
         signatureType = m_ModelCore.Factory.FunctionType
         (

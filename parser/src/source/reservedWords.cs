@@ -8,7 +8,7 @@ public static class ReservedWords {
         [3] = new List<string> {"for", "new", "try", "use", "var",},
         [4] = new List<string> {"case", "else", "null", "this", "true", "void", "with",},
         [5] = new List<string> {"await", "break", "catch", "class", "const", "false", "super", "throw", "where", "while", "yield",},
-        [6] = new List<string> {"delete", "import", "public", "return", "switch", "throws", "typeof",},
+        [6] = new List<string> {"delete", "import", "public", "return", "switch", "typeof",},
         [7] = new List<string> {"default", "extends", "finally", "package", "private",},
         [8] = new List<string> {"continue", "function", "internal",},
         [9] = new List<string> {"interface", "protected",},

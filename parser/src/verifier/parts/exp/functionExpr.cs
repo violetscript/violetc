@@ -140,12 +140,6 @@ public partial class Verifier
             resultType_returnType = inferType?.FunctionReturnType ?? m_ModelCore.AnyType;
         }
 
-        // ignore "throws" clause
-        if (common.ThrowsType != null)
-        {
-            VerifyTypeExp(common.ThrowsType);
-        }
-
         // if there is an inferred type and parameters were omitted,
         // add them to the resulting type if applicable.
         // this is done except if the expected type was an union with
