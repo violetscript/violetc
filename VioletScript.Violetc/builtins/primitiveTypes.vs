@@ -166,6 +166,16 @@ public class String {
     public function codePoints(): CodePointIterator (
         new CodePointIterator(this)
     );
+
+    public native function charAt(index: Int): String;
+
+    public native function charCodeAt(index: Int): Int;
+
+    public native function codePointAt(index: Int): Int;
+
+    public function concat(...strings: [String]): String (
+        ([this, ...strings]: [String]).reduce.<String>((a, b) => a + b)
+    );
 }
 
 public final class CodePointIterator implements Iterator.<Int> {

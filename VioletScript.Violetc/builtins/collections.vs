@@ -52,4 +52,10 @@ public final class Array.<T> {
      * a new array.
      */
     public native function concat(...arrays: [[T]]): [T];
+
+    /**
+     * @throws {TypeError} If `initialValue` is not provided and the array is empty or
+     * if `U` and `T` are incompatible types.
+     */
+    public native function reduce.<U>(callbackFn: (accumulator: U, currentValue: T) => U, initialValue: undefined | U = undefined): U;
 }
