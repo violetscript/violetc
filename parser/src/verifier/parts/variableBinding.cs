@@ -221,7 +221,7 @@ public partial class Verifier
             if (newDefinition.ParentDefinition == null && m_Frame != null)
             {
                 var shadowed = m_Frame.Properties[name];
-                if (shadowed != null && !shadowed.AllowsShadowing)
+                if (shadowed != null && !shadowed.AllowsShadowing && !this.m_StrictnessFlags.Peek().HasFlag(Ast.ProgramStrictnessFlags.UseShadowing))
                 {
                     VerifyError(null, 265, span, new DiagnosticArguments {["name"] = name});
                 }

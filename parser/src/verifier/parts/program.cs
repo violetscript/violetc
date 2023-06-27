@@ -67,7 +67,9 @@ public partial class Verifier
             {
                 // verify package definition
                 EnterFrame(packageDefn.SemanticFrame);
+                this.m_StrictnessFlags.Push(packageDefn.Block.StrictnessFlags);
                 Fragmented_VerifyStatementSeq(packageDefn.Block.Statements, phase);
+                this.m_StrictnessFlags.Pop();
                 ExitFrame();
             }
             // phase 1 = resolve import and alias directives.
@@ -98,7 +100,9 @@ public partial class Verifier
             foreach (var program in programs)
             {
                 EnterFrame(program.SemanticFrame);
+                this.m_StrictnessFlags.Push(program.StrictnessFlags);
                 Fragmented_VerifyStatementSeq(program.Statements, phase);
+                this.m_StrictnessFlags.Pop();
                 ExitFrame();
             }
             // phase 1 = resolve import and alias directives.
@@ -188,7 +192,9 @@ public partial class Verifier
         }
         else if (stmt is Ast.IncludeStatement incDrtv)
         {
+            this.m_StrictnessFlags.Push(incDrtv.StrictnessFlags);
             Fragmented_VerifyStatementSeq(incDrtv.InnerStatements, phase);
+            this.m_StrictnessFlags.Pop();
         }
         else if (!(stmt is Ast.AnnotatableDefinition))
         {

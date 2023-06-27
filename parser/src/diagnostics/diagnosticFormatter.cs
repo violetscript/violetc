@@ -276,7 +276,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [262] = "Wrong virtual property visibility",
         [263] = "Setter must return void",
         [264] = "Setter does not have the same type as the getter",
-        [265] = "Shadowing definition '$name'; if this is intended, use [Allow(shadow)] on previous variable",
+        [265] = "Shadowing definition '$name'; if this is intended, either use 'use shadowing' or use [Allow(shadow)] on previous variable",
 
         // undefined property on base package
         [266] = "'$name' not found on base package $base",

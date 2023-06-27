@@ -22,7 +22,9 @@ public partial class Verifier
         // block statement
         else if (stmt is Ast.Block block)
         {
+            this.m_StrictnessFlags.Push(block.StrictnessFlags);
             VerifyBlock(block);
+            this.m_StrictnessFlags.Pop();
         }
         // variable definition
         else if (stmt is Ast.VariableDefinition varDefn)
@@ -109,7 +111,9 @@ public partial class Verifier
         // include directive
         else if (stmt is Ast.IncludeStatement incStmt)
         {
+            this.m_StrictnessFlags.Push(incStmt.StrictnessFlags);
             VerifyStatementSeq(incStmt.InnerStatements);
+            this.m_StrictnessFlags.Pop();
         }
         // use namespace directive
         else if (stmt is Ast.UseNamespaceStatement usens)

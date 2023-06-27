@@ -1353,6 +1353,7 @@ internal class ParserBackend {
             }
         }
         var r = ((Ast.PackageDefinition) FinishNode(new Ast.PackageDefinition(id.ToArray(), ParsePackageBlock())));
+        r.Block.ConsumeStrictnessPragmas();
         var atTopLevelOrPackage = context is TopLevelContext || context is PackageContext;
         if (!atTopLevelOrPackage) {
             SyntaxError(36, r.Span.Value);
@@ -1366,6 +1367,7 @@ internal class ParserBackend {
         NextToken();
         var semicolonInserted = ParseSemicolon();
         var r = (Ast.IncludeStatement) FinishStatement(new Ast.IncludeStatement(src));
+        r.ConsumeStrictnessPragmas();
 
         if (Script.FilePath != null) {
             var resolvedPath = Path.Combine(Path.GetDirectoryName(Script.FilePath), src);
@@ -2171,7 +2173,9 @@ internal class ParserBackend {
             if (!semicolonInserted) break;
         }
         Expect(TToken.RCurly);
-        return (Ast.Block) FinishStatement(new Ast.Block(statements));
+        var r = (Ast.Block) FinishStatement(new Ast.Block(statements));
+        r.ConsumeStrictnessPragmas();
+        return r;
     }
 
     // a package block can omit the curly brackets.
@@ -2539,7 +2543,9 @@ internal class ParserBackend {
             if (!semicolonInserted) break;
         }
         Expect(TToken.Eof);
-        return (Ast.Program) FinishNode(new Ast.Program(statements));
+        var r = FinishNode(new Ast.Program(statements));
+        r.ConsumeStrictnessPragmas();
+        return (Ast.Program) r;
     }
 }
 

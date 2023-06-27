@@ -29,6 +29,8 @@ public partial class Verifier
 
     private Stack<List<Ast.Statement>> m_ImportOrAliasDirectivesStack = new Stack<List<Ast.Statement>>();
 
+    private Stack<Ast.ProgramStrictnessFlags> m_StrictnessFlags = new Stack<Ast.ProgramStrictnessFlags>();
+
     /// <summary>
     /// List of import directives, use namespace directives,
     /// namespace aliases and type aliases.
@@ -65,6 +67,11 @@ public partial class Verifier
     public ModelCore ModelCore
     {
         get => m_ModelCore;
+    }
+
+    public Verifier()
+    {
+        this.m_StrictnessFlags.Push(0);
     }
 
     private Diagnostic SyntaxError(Script script, int id, Span span, DiagnosticArguments args = null)

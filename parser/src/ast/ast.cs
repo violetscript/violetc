@@ -16,9 +16,39 @@ public class Node {
     /// <summary>
     /// Returns a list of frames gathered from binding <c>is</c> operations.
     /// </summary>
-    public virtual List<Symbol> GetTypeTestFrames()
-    {
+    public virtual List<Symbol> GetTypeTestFrames() {
         return new List<Symbol>{};
+    }
+
+    /// <summary>
+    /// Consumes pragmas in the form of string literals
+    /// in the top of a statement sequence.
+    /// </summary>
+    public void ConsumeStrictnessPragmas() {
+        if (this is Ast.Block block) {
+            block.StrictnessFlags |= consumeStrictnessPragmasFromSeq(block.Statements);
+        } else if (this is Ast.IncludeStatement incStmt) {
+            incStmt.StrictnessFlags |= consumeStrictnessPragmasFromSeq(incStmt.InnerStatements);
+        } else if (this is Ast.Program program) {
+            program.StrictnessFlags |= consumeStrictnessPragmasFromSeq(program.Statements);
+        }
+    }
+
+    private static ProgramStrictnessFlags consumeStrictnessPragmasFromSeq(List<Ast.Statement> seq) {
+        int i = 0, l = seq.Count();
+        ProgramStrictnessFlags flags = 0;
+        for (; i < l; ++i) {
+            if (seq[i] is Ast.ExpressionStatement exprStmt && exprStmt.Expression is StringLiteral literal) {
+                var str = literal.Value;
+                if (str == "use shadowing") {
+                    flags |= ProgramStrictnessFlags.UseShadowing;
+                }
+            } else {
+                break;
+            }
+        }
+        seq.RemoveRange(0, i);
+        return flags;
     }
 }
 
@@ -740,9 +770,16 @@ public class Program : Node {
     /// </summary>
     public Symbol SemanticFrame = null;
 
+    public ProgramStrictnessFlags StrictnessFlags = 0;
+
     public Program(List<Statement> statements) : base() {
         Statements = statements;
     }
+}
+
+[Flags]
+public enum ProgramStrictnessFlags {
+    UseShadowing = 1,
 }
 
 /// <summary>
@@ -1246,6 +1283,7 @@ public class EmptyStatement : Statement {
 
 public class Block : Statement {
     public List<Statement> Statements;
+    public ProgramStrictnessFlags StrictnessFlags = 0;
 
     public Symbol SemanticFrame = null;
 
@@ -1581,8 +1619,8 @@ public class SwitchTypeCase : Node {
 public class IncludeStatement : Statement {
     public string Source;
     public Script InnerScript = null;
-
     public List<Statement> InnerStatements = new List<Statement> {};
+    public ProgramStrictnessFlags StrictnessFlags = 0;
 
     public IncludeStatement(string source) : base() {
         Source = source;
