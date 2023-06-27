@@ -207,6 +207,10 @@ public class ClassStaticThis : Value {
     }
 }
 
+/// <summary>
+/// Reference value from either a namespace base
+/// or a package base.
+/// </summary>
 public class ReferenceValueFromNamespace : Value {
     private Symbol m_Base;
     private Symbol m_Property;

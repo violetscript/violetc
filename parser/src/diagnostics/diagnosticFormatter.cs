@@ -216,7 +216,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [207] = "Cannot call value of type '$t'",
         [208] = "Cannot use 'this' literal at this context",
         [209] = "Conditional expression types are incompatible: '$c' and '$a'",
-        [210] = "Cannot add type arguments to item",
+        [210] = "$item is not generic",
         [211] = "Cannot construct type '$t'",
         [212] = "Cannot use 'new' operator with this item",
         [213] = "Cannot use 'super' expression here",
@@ -283,6 +283,8 @@ public static class DefaultDiagnosticFormatterStatics {
 
         // undefined property on base namespace
         [267] = "'$name' not found on base namespace $base",
+
+        [268] = "Item is not generic"
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

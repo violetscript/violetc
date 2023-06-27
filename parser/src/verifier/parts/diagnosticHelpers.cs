@@ -35,4 +35,16 @@ public partial class Verifier
             VerifyError(null, 128, span, new DiagnosticArguments { ["name"] = name });
         }
     }
+
+    private void ReportNotGeneric(Symbol item, Span span)
+    {
+        if (item is ReferenceValue || item is ReferenceValueFromType || item is ReferenceValueFromNamespace)
+        {
+            VerifyError(null, 210, span, new DiagnosticArguments {["item"] = item.Property});
+        }
+        else
+        {
+            VerifyError(null, 268, span, new DiagnosticArguments {});
+        }
+    }
 }

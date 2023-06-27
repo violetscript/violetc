@@ -1253,7 +1253,7 @@ public partial class Verifier
         else
         {
             // VerifyError: cannot instantiate item
-            VerifyError(null, 210, exp.Span.Value, new DiagnosticArguments {});
+            ReportNotGeneric(@base, exp.Span.Value);
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
