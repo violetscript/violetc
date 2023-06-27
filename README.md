@@ -12,6 +12,8 @@ VioletScript uses the extension `.vs`, which is automatically added.
 violetc index
 ```
 
-## Known bugs
+## Known Bugs and Limitations
 
 - Extending or implementing a generic type before it's defined may cause a .NET exception due to how the compiler resolves types. In the moment just define them in an order that makes sense.
+- You can do `o?.x`, but not yet chain it like `o?.f()` or `o?.x.y`.
+- Type arguments are not inferred (`C.<T>` vs `C` or `fn.<T>()` vs `fn()`).

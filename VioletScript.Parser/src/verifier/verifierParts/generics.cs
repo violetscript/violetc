@@ -190,6 +190,7 @@ public partial class Verifier
 
         if (surroundingTypeExp != null)
         {
+            // assert
             if (m_TypeExpsWithArguments == null)
             {
                 throw new Exception("Program verification must be done through verifyPrograms()");

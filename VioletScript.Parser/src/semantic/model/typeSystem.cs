@@ -46,8 +46,7 @@ public static class TypeReplacement {
             if (symbolToReplace is FunctionType) {
                 List<NameAndTypePair> @params = null;
                 List<NameAndTypePair> optParams = null;
-                NameAndTypePair? restParam = symbolToReplace.FunctionRestParameter != null
-                    ? symbolToReplace.FunctionRestParameter.Value.ReplaceTypes(typeParameters, argumentsList) : null;
+                NameAndTypePair? restParam = symbolToReplace.FunctionRestParameter?.ReplaceTypes(typeParameters, argumentsList);
                 Symbol returnType = symbolToReplace.FunctionReturnType.ReplaceTypes(typeParameters, argumentsList);
                 if (symbolToReplace.FunctionHasRequiredParameters) {
                     @params = new List<NameAndTypePair>{};

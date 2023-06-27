@@ -26,7 +26,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
 
 - [ ] Generic Type Inference; e.g. `a.map(...);` rather than `a.map.<R>(...);`.
 - [ ] `o?.k > 0 ? x : y`: using optional access in a condition
-- [ ] Omit `!` directly after an optional access, e.g., `o?.x!.y` versus `o?.x.y`. Doing this _however_ must not eliminate `undefined` and/or `null` from `o!.x`'s type. This may also require touching the code generation.
+- [ ] Optional chaining with optional access
 
 ### Done
 
