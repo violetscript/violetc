@@ -234,4 +234,37 @@ public partial class Verifier
             return m_ModelCore.InternMethodSlotWithTypeArgs(genericTypeOrF, arguments);
         }
     }
+
+    private void VerifyAllTypeExpsWithArgs()
+    {
+        foreach (var gi in m_TypeExpsWithArguments)
+        {
+            var typeParameters = gi.Base.SemanticSymbol.TypeParameters;
+            var arguments = gi.ArgumentsList.Select(te => te.SemanticSymbol).ToArray();
+
+            for (int i = 0; i < arguments.Count(); ++i)
+            {
+                var argument = arguments[i];
+                var argumentExp = gi.ArgumentsList[i];
+                foreach (var @param in typeParameters)
+                {
+                    foreach (var constraintItrfc in @param.ImplementsInterfaces)
+                    {
+                        // VerifyError: missing interface constraint
+                        if (!argument.IsSubtypeOf(constraintItrfc))
+                        {
+                            VerifyError(null, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = constraintItrfc });
+                        }
+                    }
+                    // VerifyError: missing class constraint
+                    if (@param.SuperType != null && !argument.IsSubtypeOf(@param.SuperType))
+                    {
+                        VerifyError(null, 136, argumentExp.Span.Value, new DiagnosticArguments { ["t"] = @param.SuperType });
+                    }
+                }
+            }
+        }
+        m_TypeExpsWithArguments.Clear();
+        m_TypeExpsWithArguments = null;
+    }
 }
