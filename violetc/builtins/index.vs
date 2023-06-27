@@ -4,13 +4,16 @@ include './globalFunctions';
 include './object';
 include './collections';
 include './primitiveTypes';
+include './bytearray';
 include './regexp';
 include './function';
 include './promise';
 include './errors';
 include './math';
 include './reflect';
-// intl and temporal are for later
+include './observable';
+include './intl';
+include './temporal';
 */
 class C.<T> {
     function C() {}
