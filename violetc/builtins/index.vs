@@ -13,5 +13,3 @@ include './reflect';
 include './observable';
 include './intl';
 include './temporal';
-package a.b;
-package a.c;

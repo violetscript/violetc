@@ -129,6 +129,7 @@ public partial class Verifier
             else if (drtv is Ast.PackageDefinition pkgDefn)
             {
                 r.Add(pkgDefn);
+                r.AddRange(collectPackageDefinitionsFromDirectives(pkgDefn.Block.Statements));
             }
         }
         return r;

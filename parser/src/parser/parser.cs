@@ -1343,7 +1343,6 @@ internal class ParserBackend {
     }
 
     private (Ast.Statement node, bool semicolonInserted) ParsePackageStatement(Context context) {
-        var atTopLevel = context is TopLevelContext;
         MarkLocation();
         NextToken();
         var id = new List<string>{};
@@ -1354,7 +1353,8 @@ internal class ParserBackend {
             }
         }
         var r = ((Ast.PackageDefinition) FinishNode(new Ast.PackageDefinition(id.ToArray(), ParsePackageBlock())));
-        if (!atTopLevel) {
+        var atTopLevelOrPackage = context is TopLevelContext || context is PackageContext;
+        if (!atTopLevelOrPackage) {
             SyntaxError(36, r.Span.Value);
         }
         return (r, true);
@@ -2184,19 +2184,12 @@ internal class ParserBackend {
         MarkLocation();
         this.ParseSemicolon();
         var statements = new List<Ast.Statement>{};
-        var foundAnotherPackage = false;
         while (Token.Type != TToken.Eof) {
-            foundAnotherPackage = Token.IsKeyword("package");
-            if (foundAnotherPackage) {
-                break;
-            }
             var (stmt, semicolonInserted) = ParseStatement(context);
             statements.Add(stmt);
             if (!semicolonInserted) break;
         }
-        if (!foundAnotherPackage) {
-            Expect(TToken.Eof);
-        }
+        Expect(TToken.Eof);
         return (Ast.Block) FinishStatement(new Ast.Block(statements));
     }
 
