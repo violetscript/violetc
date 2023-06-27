@@ -1140,22 +1140,28 @@ internal class ParserBackend {
                     } while (Consume(TToken.Comma));
                     Expect(TToken.RParen);
                     DuplicateLocation();
+                    DuplicateLocation();
                     var optChain = FinishExp(new Ast.OptionalChainingPlaceholder());
+                    optChain = FinishExp(new Ast.CallExpression(optChain, argumentsList));
                     optChain = ParseSubexpressions(optChain, true, OperatorPrecedence.Postfix);
-                    r = FinishExp(new Ast.OptCallExpression(r, argumentsList, optChain));
+                    r = FinishExp(new Ast.OptChainingExpression(r, optChain));
                 } else if (Consume(TToken.LSquare)) {
                     var exp = ParseExpression();
                     Expect(TToken.RSquare);
                     DuplicateLocation();
+                    DuplicateLocation();
                     var optChain = FinishExp(new Ast.OptionalChainingPlaceholder());
+                    optChain = FinishExp(new Ast.IndexExpression(optChain, exp));
                     optChain = ParseSubexpressions(optChain, true, OperatorPrecedence.Postfix);
-                    r = FinishExp(new Ast.OptIndexExpression(r, exp, optChain));
+                    r = FinishExp(new Ast.OptChainingExpression(r, optChain));
                 } else {
                     var id = ParseIdentifier(true);
                     DuplicateLocation();
+                    DuplicateLocation();
                     var optChain = FinishExp(new Ast.OptionalChainingPlaceholder());
+                    optChain = FinishExp(new Ast.IndexExpression(optChain, id));
                     optChain = ParseSubexpressions(optChain, true, OperatorPrecedence.Postfix);
-                    r = FinishExp(new Ast.OptMemberExpression(r, id, optChain));
+                    r = FinishExp(new Ast.OptChainingExpression(r, optChain));
                 }
             } else break;
         }

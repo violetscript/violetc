@@ -519,22 +519,21 @@ public class OptionalChainingPlaceholder : Expression {
 }
 
 /// <summary>
-/// Optional member expression (<c>?.x</c>).
+/// Optional chaining expression (<c>?.x</c>, <c>?.[k]</c> or <c>?.()</c>).
 /// </summary>
 /// <remarks>
-/// <para>Optional member access:</para>
+/// <para>Optional chaining:</para>
 ///
 /// <list type="bullet">
-/// <item>The member result type unifies with either null or undefined or both, and the <c>SemanticNonNullBase</c>
-/// and <c>SemanticOptNonNullUnifiedSymbol</c> properties of this node are assigned to some symbol.</item>
+/// <item>The result type unifies with either null or undefined or both, and the <c>SemanticNonNullBase</c>
+/// and <c>SemanticOptNonNullUnifiedResult</c> properties of this node are assigned to some symbol.</item>
 /// <item>If the base includes undefined but not null, the result unifies with undefined as <c>undefined | R</c>.</item>
 /// <item>If the base includes null but not undefined, the result unifies with null as <c>null | R</c>.</item>
 /// <item>If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined | null | R</c>.</item>
 /// </list>
 /// </remarks>
-public class OptMemberExpression : Expression {
+public class OptChainingExpression : Expression {
     public Expression Base;
-    public Identifier Id;
 
     /// <summary>
     /// Optional chaining operators.
@@ -551,11 +550,10 @@ public class OptMemberExpression : Expression {
     /// Stores the resolved symbol without unifying it
     /// to null or undefined types.
     /// </summary>
-    public Symbol SemanticOptNonNullUnifiedSymbol = null;
+    public Symbol SemanticOptNonNullUnifiedResult = null;
 
-    public OptMemberExpression(Expression @base, Identifier id, Expression optChain) : base() {
+    public OptChainingExpression(Expression @base, Expression optChain) : base() {
         Base = @base;
-        Id = id;
         OptChain = optChain;
     }
 
@@ -581,46 +579,6 @@ public class IndexExpression : Expression {
     }
 }
 
-/// <summary>
-/// Optional index expression (<c>?.[k]</c>).
-/// </summary>
-/// <remarks>
-/// <para>Optional indexing:</para>
-///
-/// <list type="bullet">
-/// <item>The result type unifies with either null or undefined or both, and the <c>SemanticNonNullBase</c>
-/// property of this node are assigned to some symbol.</item>
-/// <item>If the base includes undefined but not null, the result unifies with undefined as <c>undefined | R</c>.</item>
-/// <item>If the base includes null but not undefined, the result unifies with null as <c>null | R</c>.</item>
-/// <item>If the base includes both undefined and null, the result unifies first with undefined and then null, as <c>undefined | null | R</c>.</item>
-/// </list>
-/// </remarks>
-public class OptIndexExpression : Expression {
-    public Expression Base;
-    public Expression Key;
-
-    /// <summary>
-    /// Optional chaining operators.
-    /// </summary>
-    public Expression OptChain;
-
-    /// <summary>
-    /// A throwaway non-null value corresponding to the base value;
-    /// that is, it is a value of type <c>Base.SemanticSymbol.ToNonNullableType()</c>.
-    /// </summary>
-    public Symbol SemanticNonNullBase = null;
-
-    public OptIndexExpression(Expression @base, Expression key, Expression optChain) : base() {
-        Base = @base;
-        Key = key;
-        OptChain = optChain;
-    }
-
-    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
-        return this.Base.FindOptionalChainingPlaceholder();
-    }
-}
-
 public class CallExpression : Expression {
     public Expression Base;
     public List<Expression> ArgumentsList;
@@ -628,32 +586,6 @@ public class CallExpression : Expression {
     public CallExpression(Expression @base, List<Expression> argumentsList) : base() {
         Base = @base;
         ArgumentsList = argumentsList;
-    }
-
-    public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {
-        return this.Base.FindOptionalChainingPlaceholder();
-    }
-}
-
-public class OptCallExpression : Expression {
-    public Expression Base;
-    public List<Expression> ArgumentsList;
-
-    /// <summary>
-    /// Optional chaining operators.
-    /// </summary>
-    public Expression OptChain;
-
-    /// <summary>
-    /// A throwaway non-null value corresponding to the base value;
-    /// that is, it is a value of type <c>Base.SemanticSymbol.ToNonNullableType()</c>.
-    /// </summary>
-    public Symbol SemanticNonNullBase = null;
-
-    public OptCallExpression(Expression @base, List<Expression> argumentsList, Expression optChain) : base() {
-        Base = @base;
-        ArgumentsList = argumentsList;
-        OptChain = optChain;
     }
 
     public override OptionalChainingPlaceholder FindOptionalChainingPlaceholder() {

@@ -142,17 +142,9 @@ public partial class Verifier
         {
             r = VerifySuperExp(superExp);
         }
-        else if (exp is Ast.OptMemberExpression optMember)
+        else if (exp is Ast.OptChainingExpression optChaining)
         {
-            r = VerifyOptMemberExp(optMember, expectedType, instantiatingGeneric);
-        }
-        else if (exp is Ast.OptIndexExpression optIdx)
-        {
-            r = VerifyOptIndexExp(optIdx);
-        }
-        else if (exp is Ast.OptCallExpression optCall)
-        {
-            r = VerifyOptCallExp(optCall);
+            r = VerifyOptChainingExp(optChaining, expectedType, instantiatingGeneric);
         }
         else if (exp is Ast.OptionalChainingPlaceholder)
         {
