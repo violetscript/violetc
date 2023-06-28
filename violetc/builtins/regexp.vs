@@ -34,5 +34,5 @@ public class TextMatchResult {
     public var indices: [{start: Int, end: Int}]?;
 }
 
-public final class RegExp implements IPattern {
+public final class RegExp implements ITextPattern {
 }

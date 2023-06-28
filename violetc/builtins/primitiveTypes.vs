@@ -322,7 +322,7 @@ public class String {
         for (;;) {
             const match = this.match(pattern);
             if (match != null) {
-                yield match;
+                yield match!;
             }
         }
     }
