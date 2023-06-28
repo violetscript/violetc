@@ -301,12 +301,31 @@ public class String {
     public native function codePointAt(index: Int): Int;
 
     public function concat(...strings: [String]): String (
-        ([this, ...strings]: [String]).reduce.<String>((a, b) => a + b)
+        ([this, ...strings]: [String]).join('')
     );
 
     public function repeat(count: Int): String (
         Array.<String>.from(Int.range(0, Int.max(0, count)).map.<String>(_ => this)).join('')
     );
+
+    public native function replace(pattern: String | ITextPattern, replacement: String | (match: String, captures: [String], offset: Int, string: String, groups: undefined | Map.<String, String>) => String): String;
+
+    /**
+     * @throws {TypeError} If the `pattern` is a regex that does not have
+     * the global (`g`) flag set.
+     */
+    public native function replaceAll(pattern: String | ITextPattern, replacement: String | (match: String, captures: [String], offset: Int, string: String, groups: undefined | Map.<String, String>) => String): String;
+
+    public native function match(pattern: ITextPattern): TextMatchResult?;
+
+    public function matchAll(pattern: ITextPattern): Generator.<TextMatchResult> {
+        for (;;) {
+            const match = this.match(pattern);
+            if (match != null) {
+                yield match;
+            }
+        }
+    }
 }
 
 public final class CodePointIterator implements Iterator.<Int> {
