@@ -290,6 +290,7 @@ public static class DefaultDiagnosticFormatterStatics {
 
         [268] = "Item is not generic",
         [269] = "Non-null destructuring from a base of type $type",
+        [270] = "Assignment not allowed here",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

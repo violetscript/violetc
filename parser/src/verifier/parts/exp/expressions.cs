@@ -17,7 +17,8 @@ public partial class Verifier
         Ast.Expression exp,
         Symbol expectedType = null,
         bool instantiatingGeneric = false,
-        bool writting = false
+        bool writting = false,
+        bool checkUndesiredAssign = true
     )
     {
         if (exp.SemanticExpResolved)
@@ -120,7 +121,7 @@ public partial class Verifier
         }
         else if (exp is Ast.ParensExpression parensExp)
         {
-            r = VerifyParensExp(parensExp, expectedType, instantiatingGeneric, writting);
+            r = VerifyParensExp(parensExp, expectedType, instantiatingGeneric, writting, checkUndesiredAssign);
         }
         else if (exp is Ast.ListExpression listExp)
         {
@@ -132,6 +133,10 @@ public partial class Verifier
         }
         else if (exp is Ast.AssignmentExpression assignExp)
         {
+            if (checkUndesiredAssign)
+            {
+                VerifyError(null, 270, exp.Span.Value, new DiagnosticArguments {});
+            }
             r = VerifyAssignmentExp(assignExp);
         }
         else if (exp is Ast.NewExpression newExp)
@@ -197,14 +202,15 @@ public partial class Verifier
         Ast.Expression exp,
         Symbol expectedType = null,
         bool instantiatingGeneric = false,
-        bool writting = false
+        bool writting = false,
+        bool checkUndesiredAssign = true
     )
     {
         if (exp.SemanticExpResolved)
         {
             return exp.SemanticSymbol;
         }
-        var r = VerifyExp(exp, expectedType, instantiatingGeneric, writting);
+        var r = VerifyExp(exp, expectedType, instantiatingGeneric, writting, checkUndesiredAssign);
         if (r == null)
         {
             return null;
@@ -230,14 +236,15 @@ public partial class Verifier
     (
         Ast.Expression exp,
         Symbol expectedType,
-        bool writting = false
+        bool writting = false,
+        bool checkUndesiredAssign = true
     )
     {
         if (exp.SemanticExpResolved)
         {
             return exp.SemanticSymbol;
         }
-        var r = VerifyExpAsValue(exp, expectedType, false, writting);
+        var r = VerifyExpAsValue(exp, expectedType, false, writting, checkUndesiredAssign);
         if (r == null)
         {
             return null;
@@ -259,14 +266,15 @@ public partial class Verifier
     (
         Ast.Expression exp,
         Symbol expectedType,
-        bool writting = false
+        bool writting = false,
+        bool checkUndesiredAssign = true
     )
     {
         if (exp.SemanticExpResolved)
         {
             return exp.SemanticSymbol;
         }
-        var r = VerifyExpAsValue(exp, expectedType, false, writting);
+        var r = VerifyExpAsValue(exp, expectedType, false, writting, checkUndesiredAssign);
         if (r == null)
         {
             return null;
@@ -1177,9 +1185,9 @@ public partial class Verifier
         return exp.SemanticSymbol;
     } // conditional expression
 
-    private Symbol VerifyParensExp(Ast.ParensExpression exp, Symbol expectedType, bool instantiatingGeneric, bool writting)
+    private Symbol VerifyParensExp(Ast.ParensExpression exp, Symbol expectedType, bool instantiatingGeneric, bool writting, bool checkUndesiredAssign)
     {
-        exp.SemanticSymbol = VerifyExp(exp.Expression, expectedType, instantiatingGeneric, writting);
+        exp.SemanticSymbol = VerifyExp(exp.Expression, expectedType, instantiatingGeneric, writting, checkUndesiredAssign);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;
     } // parentheses expression
@@ -1269,7 +1277,7 @@ public partial class Verifier
         var left = VerifyExpAsValue((Ast.Expression) exp.Left, null, false, true);
         if (left == null)
         {
-            VerifyExpAsValue(exp.Right);
+            VerifyExpAsValue(exp.Right, null, false, false, false);
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
@@ -1282,7 +1290,7 @@ public partial class Verifier
         // ^^=
         if (exp.Compound == null || exp.Compound == Operator.LogicalAnd || exp.Compound == Operator.LogicalXor || exp.Compound == Operator.LogicalOr)
         {
-            right = LimitExpType(exp.Right, left.StaticType);
+            right = LimitExpType(exp.Right, left.StaticType, false, false);
             exp.SemanticSymbol = right != null ? m_ModelCore.Factory.Value(left.StaticType) : null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
@@ -1294,13 +1302,13 @@ public partial class Verifier
             // unsupported operator
             VerifyError(null, 178, exp.Span.Value, new DiagnosticArguments {["t"] = left.StaticType, ["op"] = exp.Compound});
 
-            VerifyExpAsValue(exp.Right);
+            VerifyExpAsValue(exp.Right, null, false, false, false);
 
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
-        LimitExpType(exp.Right, proxy.StaticType.FunctionRequiredParameters[1].Type);
+        LimitExpType(exp.Right, proxy.StaticType.FunctionRequiredParameters[1].Type, false, false);
         exp.SemanticSymbol = proxy == null ? null : m_ModelCore.Factory.Value(proxy.StaticType.FunctionReturnType);
         exp.SemanticExpResolved = true;
         return exp.SemanticSymbol;

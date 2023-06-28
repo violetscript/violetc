@@ -17,7 +17,7 @@ public partial class Verifier
         // expression statement
         if (stmt is Ast.ExpressionStatement expStmt)
         {
-            VerifyExp(expStmt.Expression);
+            VerifyExp(expStmt.Expression, null, false, false, false);
         }
         // block statement
         else if (stmt is Ast.Block block)
@@ -398,7 +398,7 @@ public partial class Verifier
         }
         if (stmt.Update != null)
         {
-            VerifyExpAsValue(stmt.Update);
+            VerifyExpAsValue(stmt.Update, null, false, false, false);
         }
         ttFrames ??= new List<Symbol>();
         EnterFrames(ttFrames);
