@@ -328,8 +328,6 @@ public class String {
     }
 }
 
-''.replaceAll(/(?:)/g, (m, c, {index}) => '')
-
 public final class CodePointIterator implements Iterator.<Int> {
     public native function CodePointIterator(string: String);
 

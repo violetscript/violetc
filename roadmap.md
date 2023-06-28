@@ -5,6 +5,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
 - [ ] **VioletDoc:** In the verifier, for valid annotatable definitions, parse VioletDoc comments for the items. For efficiency, I guess the parser could attach any detected `/** */` comments to the annotatable definitions so that the list of comments doesn't need to be iterated for matching span.
   - [ ] _Do not_ parse VioletDoc comments applied to record fields. This is not supported in VioletDoc.
 - [ ] **VioletDoc:** When generating documentation for built-ins, the `global` reference (which is the top-level package) has to be documented manually, since it is not defined by any source.
+- [ ] **VioletDoc:** Apply doc comments to enum variants.
 - [ ] **Code generation:** Remember that an expression's result may have been wrapped into a `ConversionValue` by the type checker, so access it carefully during codegen.
 - [ ] **Code generation:** Empty programs that, for example, contain include directives whose inner statement sequence is empty or consist of other empty include directives, should not generate any activation and not be evaluated.
 - [ ] **Code generation:** An expression whose associated symbol is a constant value should not be evaluated or processed at runtime. `exp.semanticSymbol.isConstantValue`.

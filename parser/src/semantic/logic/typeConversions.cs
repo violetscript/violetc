@@ -8,7 +8,14 @@ using VioletScript.Parser.Semantic.Model;
 public enum ConversionFromTo {
     ToUserImplicit,
     ToNumTypeWithWiderRange,
+
+    /// <summary>
+    /// Conversion from non-union type to union type.
+    /// NOTE that the conversion base may also be "another"
+    /// implicit conversion.
+    /// </summary>
     NonUnionToCompatUnion,
+
     UnionToCompatUnion,
     FromRecordToEqvRecord,
     FromAny,
@@ -132,8 +139,13 @@ public static class TypeConversions {
             return null;
         }
         if (toType is UnionType) {
-            if (!(fromType is UnionType) && toType.UnionMemberTypes.Contains(fromType)) {
-                return f.ConversionValue(value, toType, ConversionFromTo.NonUnionToCompatUnion);
+            if (!(fromType is UnionType)) {
+                foreach (var memberType in toType.UnionMemberTypes) {
+                    var subconversion = TypeConversions.ConvertImplicit(value, memberType);
+                    if (subconversion != null) {
+                        return f.ConversionValue(subconversion, toType, ConversionFromTo.NonUnionToCompatUnion);
+                    }
+                }
             }
             if (fromType is UnionType) {
                 Symbol u_fromType = fromType;
