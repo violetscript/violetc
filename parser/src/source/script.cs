@@ -13,7 +13,7 @@ public sealed class Script {
     private List<Comment> m_Comments = new List<Comment>();
 
     public Script(string filePath, string content) {
-        m_FilePath = Path.GetFullPath(filePath);
+        m_FilePath = filePath == "" ? "" : Path.GetFullPath(filePath);
         m_Content = content;
         m_LineStarts.Add(0);
         m_LineStarts.Add(0);

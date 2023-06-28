@@ -1390,28 +1390,24 @@ internal class ParserBackend {
         r.ConsumeStrictnessPragmas();
 
         if (Script.FilePath != null) {
-            var resolvedPath = Path.Combine(Path.GetDirectoryName(Script.FilePath), src);
-
-            // directory/index.vs
-            try {
-                resolvedPath = File.GetAttributes(resolvedPath).HasFlag(FileAttributes.Directory) ? Path.Combine(resolvedPath, "./index.vs") : resolvedPath;
-            } catch {
-            }
-
-            resolvedPath = Path.GetFullPath(Path.ChangeExtension(resolvedPath, ".vs"));
-
             string innerSource = "";
             Script innerScript = null;
             var innerStatements = new List<Ast.Statement>{};
-
-            try {
-                innerSource = File.ReadAllText(resolvedPath);
-                if (this.AlreadyIncludedFilePaths.Contains(resolvedPath)) {
-                    VerifyError(39, r.Span.Value, new DiagnosticArguments {["path"] = resolvedPath});
-                    innerSource = "";
+            var resolvedPath = "";
+            if (src.StartsWith(".")) {
+                resolvedPath = this.ResolveIncludePath(src);
+                try {
+                    innerSource = File.ReadAllText(resolvedPath);
+                    if (this.AlreadyIncludedFilePaths.Contains(resolvedPath)) {
+                        VerifyError(39, r.Span.Value, new DiagnosticArguments {["path"] = resolvedPath});
+                        innerSource = "";
+                    }
+                } catch (IOException) {
+                    VerifyError(25, r.Span.Value);
                 }
-            } catch (IOException) {
-                VerifyError(25, r.Span.Value);
+            }
+            else {
+                VerifyError(40, r.Span.Value);
             }
             innerScript = new Script(resolvedPath, innerSource);
             try {
@@ -1441,6 +1437,17 @@ internal class ParserBackend {
         }
 
         return (r, semicolonInserted);
+    }
+
+    private string ResolveIncludePath(string src) {
+        var resolvedPath = Path.Combine(Path.GetDirectoryName(Script.FilePath), src);
+        // directory/index.vs
+        try {
+            resolvedPath = File.GetAttributes(resolvedPath).HasFlag(FileAttributes.Directory) ? Path.Combine(resolvedPath, "./index.vs") : resolvedPath;
+        } catch {
+        }
+        resolvedPath = Path.GetFullPath(Path.ChangeExtension(resolvedPath, ".vs"));
+        return resolvedPath;
     }
 
     private bool TokenIsInline {

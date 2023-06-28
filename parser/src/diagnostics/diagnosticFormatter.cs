@@ -129,6 +129,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [37] = "Return not allowed on top-level",
         [38] = "Await not allowed on top-level",
         [39] = "The source '$path' has already been included before",
+        [40] = "Include source not starting with '.' is reserved",
 
         // # Verification Diagnostics
 
