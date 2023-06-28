@@ -120,7 +120,7 @@ public partial class Verifier
         bool canShadow = false
     )
     {
-        var arrayElementType = arrayType.ArgumentTypes[0];
+        var arrayElementType = this.m_ModelCore.Factory.UnionType(new Symbol[]{this.m_ModelCore.UndefinedType, arrayType.ArgumentTypes[0]});
         for (int i = 0; i < pattern.Items.Count(); ++i)
         {
             var item = pattern.Items[i];

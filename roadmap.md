@@ -34,6 +34,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
 ### Future Features
 
 - [ ] Implicit conversion between function types with only differing parameter names (`ConversionFromTo.ToFunctionWithDifferentParamNames`).
+- [ ] `!` in array destructuring. Useful since you can't destructure from `undefined | T`.
 
 ### Done
 
