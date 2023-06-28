@@ -29,7 +29,7 @@ public partial class Verifier
         }
         else
         {
-            var proxy = type.Delegate.Proxies.ContainsKey(Operator.ProxyToGetIndex) ? type.Delegate.Proxies[Operator.ProxyToGetIndex] : null;
+            var proxy = type.Delegate != null && type.Delegate.Proxies.ContainsKey(Operator.ProxyToGetIndex) ? type.Delegate.Proxies[Operator.ProxyToGetIndex] : null;
             if (proxy != null && this.m_ModelCore.IsNumericType(proxy.StaticType.FunctionRequiredParameters[0].Type))
             {
                 this.Fragmented_VerifyArrayDestructuringPattern7ForProxy(pattern, proxy);
