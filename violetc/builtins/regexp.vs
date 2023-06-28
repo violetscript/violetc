@@ -7,7 +7,7 @@ package;
 public interface ITextPattern {
 }
 
-public class TextMatchResult {
+public class TextMatch {
     public var index: Int;
     public var input: String;
 

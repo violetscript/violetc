@@ -21,12 +21,12 @@ public partial class Verifier
             var functionTypes = expectedType.UnionMemberTypes.Where(t => t is FunctionType);
             inferType = functionTypes.FirstOrDefault();
         }
-        inferType = inferType ?? (expectedType is FunctionType ? expectedType : null);
+        inferType ??= (expectedType is FunctionType ? expectedType : null);
 
         // if expected type is an union with more than one function type,
         // then do not infer signature types.
         int nOfInferFunctionTypes = expectedType is UnionType
-            ? expectedType.UnionMemberTypes.Select(t => t is FunctionType).Count()
+            ? expectedType.UnionMemberTypes.Where(t => t is FunctionType).Count()
             : expectedType is FunctionType
             ? 1
             : 0;
