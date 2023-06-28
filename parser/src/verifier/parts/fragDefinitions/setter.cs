@@ -101,7 +101,7 @@ public partial class Verifier
         {
             VerifyError(binding.Pattern.Span.Value.Script, 138, binding.Pattern.Span.Value, new DiagnosticArguments {});
         }
-        else
+        else if (binding.Pattern.Type != null)
         {
             paramType = this.VerifyTypeExp(binding.Pattern.Type);
         }

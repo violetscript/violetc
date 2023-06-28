@@ -142,8 +142,8 @@ public partial class Verifier
                 if (faillible)
                 {
                     VerifyError(null, 162, spread.Span.Value, new DiagnosticArguments {});
+                    VerifyConstantExp(spread.Expression, faillible);
                 }
-                VerifyConstantExp(spread.Expression, faillible);
                 validated = false;
                 continue;
             }
@@ -535,7 +535,10 @@ public partial class Verifier
         var left = VerifyConstantExp(exp.Left, faillible, expectedType);
         if (left == null)
         {
-            VerifyConstantExp(exp.Right, faillible);
+            if (faillible)
+            {
+                VerifyConstantExp(exp.Right, faillible);
+            }
             exp.SemanticSymbol = null;
             exp.SemanticConstantExpResolved = true;
             return exp.SemanticSymbol;
@@ -1665,6 +1668,11 @@ public partial class Verifier
         var test = LimitConstantExpType(exp.Test, m_ModelCore.BooleanType, faillible);
         if (test == null)
         {
+            if (faillible)
+            {
+                VerifyConstantExp(exp.Consequent, faillible, expectedType);
+                VerifyConstantExp(exp.Alternative, faillible, expectedType);
+            }
             exp.SemanticSymbol = null;
             exp.SemanticConstantExpResolved = true;
             return exp.SemanticSymbol;

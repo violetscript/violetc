@@ -40,11 +40,26 @@ public final class Generator.<T> implements Iterator.<T> {
 public final class Array.<T> {
     public static native function from(argument: Iterator.<T>): [T];
 
+    /**
+     * Indicates the number of elements. If `length`
+     * is reassigned to a number greater than or equals to the current
+     * `length`, it will produce no effect.
+     */
+    public native function get length(): Int;
+
+    public native function set length(value);
+
     public native function push(...arguments: [T]): Int;
 
     proxy native function getIndex(i: Int): undefined | T;
 
     proxy native function setIndex(i: Int, v: T): void;
+
+    proxy function iterateValues(): Generator.<T> {
+        for (var i: Int = 0; i < this.length; ++i) {
+            yield this[i];
+        }
+    }
 
     proxy function add(a: [T], b: [T]): [T] (
         a.concat(b)
@@ -62,6 +77,15 @@ public final class Array.<T> {
      * if `U` and `T` are incompatible types.
      */
     public native function reduce.<U>(callbackFn: (accumulator: U, currentValue: T) => U, initialValue: undefined | U = undefined): U;
+
+    public function join(sep: String = ', '): String {
+        var r = '', first = true;
+        for each (var el in this) {
+            r += (first ? '' : sep) + String(el);
+            first = false;
+        }
+        return r;
+    }
 }
 
 public final class ByteArray {

@@ -25,6 +25,23 @@ public class Number {
      * @throws {RangeError} If `precision` is not between `1` and `100` (inclusive).
      */
     public native function toPrecision(precision: Int? = null): String;
+
+    /**
+     * Returns a range iterator. If `step >= 0`, it is similiar
+     * to `for (var i = from; i < to; i += step)`; otherwise
+     * `for (var i = from; i > to; i += step)`.
+     */
+    public static function range(from: Number, to: Number, step: Number = 1): Generator.<Number> {
+        if (step < 0) {
+            for (var i = from; i > to; i += step) {
+                yield i;
+            }
+            return;
+        }
+        for (var i = from; i < to; i += step) {
+            yield i;
+        }
+    }
 }
 
 [Value]
@@ -32,6 +49,23 @@ public class Decimal {
     public native function Decimal(argument: *);
 
     public native override function toString(radix: Int? = null): String;
+
+    /**
+     * Returns a range iterator. If `step >= 0`, it is similiar
+     * to `for (var i = from; i < to; i += step)`; otherwise
+     * `for (var i = from; i > to; i += step)`.
+     */
+    public static function range(from: Decimal, to: Decimal, step: Decimal = 1): Generator.<Decimal> {
+        if (step < 0) {
+            for (var i = from; i > to; i += step) {
+                yield i;
+            }
+            return;
+        }
+        for (var i = from; i < to; i += step) {
+            yield i;
+        }
+    }
 }
 
 [Value]
@@ -55,6 +89,23 @@ public class Byte {
      * @throws {RangeError} If `precision` is not between `1` and `100` (inclusive).
      */
     public native function toPrecision(precision: Int? = null): String;
+
+    /**
+     * Returns a range iterator. If `step >= 0`, it is similiar
+     * to `for (var i = from; i < to; i += step)`; otherwise
+     * `for (var i = from; i > to; i += step)`.
+     */
+    public static function range(from: Byte, to: Byte, step: Byte = 1): Generator.<Byte> {
+        if (step < 0) {
+            for (var i = from; i > to; i += step) {
+                yield i;
+            }
+            return;
+        }
+        for (var i = from; i < to; i += step) {
+            yield i;
+        }
+    }
 }
 
 [Value]
@@ -78,6 +129,23 @@ public class Short {
      * @throws {RangeError} If `precision` is not between `1` and `100` (inclusive).
      */
     public native function toPrecision(precision: Int? = null): String;
+
+    /**
+     * Returns a range iterator. If `step >= 0`, it is similiar
+     * to `for (var i = from; i < to; i += step)`; otherwise
+     * `for (var i = from; i > to; i += step)`.
+     */
+    public static function range(from: Short, to: Short, step: Short = 1): Generator.<Short> {
+        if (step < 0) {
+            for (var i = from; i > to; i += step) {
+                yield i;
+            }
+            return;
+        }
+        for (var i = from; i < to; i += step) {
+            yield i;
+        }
+    }
 }
 
 [Value]
@@ -101,6 +169,23 @@ public class Int {
      * @throws {RangeError} If `precision` is not between `1` and `100` (inclusive).
      */
     public native function toPrecision(precision: Int? = null): String;
+
+    /**
+     * Returns a range iterator. If `step >= 0`, it is similiar
+     * to `for (var i = from; i < to; i += step)`; otherwise
+     * `for (var i = from; i > to; i += step)`.
+     */
+    public static function range(from: Int, to: Int, step: Int = 1): Generator.<Int> {
+        if (step < 0) {
+            for (var i = from; i > to; i += step) {
+                yield i;
+            }
+            return;
+        }
+        for (var i = from; i < to; i += step) {
+            yield i;
+        }
+    }
 }
 
 [Value]
@@ -112,6 +197,23 @@ public class Long {
     public native function Long(argument: *);
 
     public native override function toString(radix: Int? = null): String;
+
+    /**
+     * Returns a range iterator. If `step >= 0`, it is similiar
+     * to `for (var i = from; i < to; i += step)`; otherwise
+     * `for (var i = from; i > to; i += step)`.
+     */
+    public static function range(from: Long, to: Long, step: Long = 1): Generator.<Long> {
+        if (step < 0) {
+            for (var i = from; i > to; i += step) {
+                yield i;
+            }
+            return;
+        }
+        for (var i = from; i < to; i += step) {
+            yield i;
+        }
+    }
 }
 
 [Value]
@@ -119,6 +221,23 @@ public class BigInt {
     public native function BigInt(argument: *);
 
     public native override function toString(radix: Int? = null): String;
+
+    /**
+     * Returns a range iterator. If `step >= 0`, it is similiar
+     * to `for (var i = from; i < to; i += step)`; otherwise
+     * `for (var i = from; i > to; i += step)`.
+     */
+    public static function range(from: BigInt, to: BigInt, step: BigInt = 1): Generator.<BigInt> {
+        if (step < 0) {
+            for (var i = from; i > to; i += step) {
+                yield i;
+            }
+            return;
+        }
+        for (var i = from; i < to; i += step) {
+            yield i;
+        }
+    }
 }
 
 /**
@@ -140,6 +259,10 @@ public class String {
             yield String.fromCodePoint(codePoint);
         }
     }
+
+    proxy function getIndex(index: Int): String (
+        index < 0 || index >= this.length ? '' : String.fromCodePoint(this.codePointAt(index))
+    );
 
     public static native function fromCodePoint(...codePoints: [Int]): String;
 
@@ -175,6 +298,10 @@ public class String {
 
     public function concat(...strings: [String]): String (
         ([this, ...strings]: [String]).reduce.<String>((a, b) => a + b)
+    );
+
+    public function repeat(count: Int): String (
+        Array.<String>.from(Int.range(0, count).map.<String>(_ => this)).join('')
     );
 }
 
