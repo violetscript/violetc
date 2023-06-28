@@ -525,7 +525,12 @@ internal class ParserBackend {
         if (!(Token.Type == TToken.Identifier || Token.Type == TToken.LCurly || Token.Type == TToken.LSquare)) {
             ThrowUnexpected();
         }
-        return ConvertExpressionIntoDestructuringPattern(ParseOptPrimaryExpression());
+        var p = ParseOptPrimaryExpression();
+        if (this.Consume(TToken.ExclamationMark)) {
+            PushLocation(p.Span.Value);
+            p = this.FinishExp(new Ast.UnaryExpression(Operator.NonNull, p));
+        }
+        return ConvertExpressionIntoDestructuringPattern(p);
     }
 
     private Ast.DestructuringPattern ConvertExpressionIntoDestructuringPattern(Ast.Expression e) {
