@@ -170,6 +170,10 @@ public class Int {
      */
     public native function toPrecision(precision: Int? = null): String;
 
+    public static native function min(...values: [Int]): Int;
+
+    public static native function max(...values: [Int]): Int;
+
     /**
      * Returns a range iterator. If `step >= 0`, it is similiar
      * to `for (var i = from; i < to; i += step)`; otherwise
@@ -301,7 +305,7 @@ public class String {
     );
 
     public function repeat(count: Int): String (
-        Array.<String>.from(Int.range(0, count).map.<String>(_ => this)).join('')
+        Array.<String>.from(Int.range(0, Int.max(0, count)).map.<String>(_ => this)).join('')
     );
 }
 
