@@ -1,18 +1,19 @@
 # VioletScript Compiler
 
-[VioletScript](https://violetscript.github.io) compiler implemented in .NET. Currently it does not generate any code; code generation will be worked on anytime. You can currently use it to type check.
+[VioletScript](https://violetscript.github.io) compiler implemented in .NET. Currently it does not generate any code; code generation will be worked on anytime, among other things. You can currently use it to type check.
 
-- Debug it with `dotnet run -- someScript`
+- Debug type checker with `dotnet run -- someScript`
 
-First roadmap goals:
+Current goals:
 
 - VioletDoc HTML generated docs
-- Standard objects implementation in a systems language
-- Native code generation
+- Standard objects implementation in C++ (many things will be unimplemented too at first, probably `Intl`...)
+- Transpile to C++
 
-Second roadmap goals:
+Future goals:
 
 - Language Server Protocol
+- Use with Godot Engine
 
 ## Command
 
@@ -29,6 +30,6 @@ violetc index
 
 ## Codegen Goal
 
-Probably C++. C++ supports exceptions, so it should be more straightforward, and I won't need to generate bytecode like WASM manually.
+C++.
 
 [Ideas noted.](cpp-target.md)
