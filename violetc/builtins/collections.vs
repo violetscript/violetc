@@ -63,3 +63,6 @@ public final class Array.<T> {
      */
     public native function reduce.<U>(callbackFn: (accumulator: U, currentValue: T) => U, initialValue: undefined | U = undefined): U;
 }
+
+public final class ByteArray {
+}

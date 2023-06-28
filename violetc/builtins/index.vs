@@ -3,7 +3,6 @@ include './globalFunctions';
 include './object';
 include './collections';
 include './primitiveTypes';
-include './bytearray';
 include './regexp';
 include './function';
 include './promise';
