@@ -592,6 +592,8 @@ internal class ParserBackend {
                         if (stackFunction.UsesYield) {
                             SyntaxError(6, r.Span.Value);
                         } else stackFunction.UsesAwait = true;
+                    } else if (this.FunctionStack.Count() == 0) {
+                        SyntaxError(38, r.Span.Value);
                     }
                 } else if (filter.Value.@operator == Operator.Yield) {
                     var stackFunction = StackFunction;
@@ -2346,7 +2348,11 @@ internal class ParserBackend {
             exp = ParseOptExpression();
             semicolonInserted = exp != null ? ParseSemicolon() : semicolonInserted;
         }
-        return (FinishStatement(new Ast.ReturnStatement(exp)), semicolonInserted);
+        var r = FinishStatement(new Ast.ReturnStatement(exp));
+        if (this.FunctionStack.Count() == 0) {
+            SyntaxError(37, r.Span.Value);
+        }
+        return (r, semicolonInserted);
     }
 
     private (Ast.Statement node, bool semicolonInserted) ParseThrowStatement() {

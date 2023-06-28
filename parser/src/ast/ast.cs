@@ -429,6 +429,10 @@ public class FunctionExpression : Expression {
     }
 }
 
+/// <summary>
+/// Object initialiser. For anything other than <c>Map</c>,
+/// the spreads are evaluated before the fields.
+/// </summary>
 public class ObjectInitializer : Expression {
     /// <summary>List of <c>ObjectField</c> and <c>Spread</c></summary>
     public List<Node> Fields;

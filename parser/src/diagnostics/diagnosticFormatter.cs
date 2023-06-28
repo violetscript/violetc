@@ -126,6 +126,8 @@ public static class DefaultDiagnosticFormatterStatics {
         [34] = "Getter must not have parameters",
         [35] = "Setter must have exactly one required parameter",
         [36] = "Package is not allowed here",
+        [37] = "Return not allowed on top-level",
+        [38] = "Await not allowed on top-level",
 
         // # Verification Diagnostics
 
