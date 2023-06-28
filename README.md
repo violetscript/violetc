@@ -30,3 +30,5 @@ violetc index
 ## Codegen Goal
 
 Probably C++. C++ supports exceptions, so it should be more straightforward, and I won't need to generate bytecode like WASM manually.
+
+[Ideas noted.](cpp-target.md)

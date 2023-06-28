@@ -1,4 +1,4 @@
-# C++ Plans
+# C++ Target
 
 - _Call stack debug information:_ Source function names may be a little different even when debugging a .
   - I'm not sure a stack of debug information is safe as it can get incorrect after the exception is handled and program resumes using that same information stack.
