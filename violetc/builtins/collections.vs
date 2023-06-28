@@ -78,14 +78,12 @@ public final class Array.<T> {
      */
     public native function reduce.<U>(callbackFn: (accumulator: U, currentValue: T) => U, initialValue: undefined | U = undefined): U;
 
-    public function join(sep: String = ', '): String {
-        var r = '', first = true;
-        for each (var el in this) {
-            r += (first ? '' : sep) + String(el);
-            first = false;
-        }
-        return r;
-    }
+    /**
+     * @internal This method must be efficient
+     * when concatenating multiple elements
+     * and each is converted to string similiar to `String(v)`.
+     */
+    public native function join(sep: String = ', '): String;
 }
 
 public final class ByteArray {
