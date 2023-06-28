@@ -2410,7 +2410,7 @@ internal class ParserBackend {
         Expect(TToken.Semicolon);
         var test = Token.Type != TToken.Semicolon ? ParseExpression() : null;
         Expect(TToken.Semicolon);
-        var update = Token.Type != TToken.Semicolon ? ParseExpression() : null;
+        var update = Token.Type != TToken.RParen ? ParseExpression() : null;
         Expect(TToken.RParen);
         var bodyContext = context.RetainLabelsOnly;
         bodyContext.InIterationStatement = true;

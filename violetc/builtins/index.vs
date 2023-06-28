@@ -1,4 +1,3 @@
-/*
 include './globalConstants';
 include './globalFunctions';
 include './object';
@@ -13,5 +12,3 @@ include './reflect';
 include './observable';
 include './intl';
 include './temporal';
-*/
-for(;;);
