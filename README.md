@@ -22,3 +22,4 @@ violetc index
 Probably C++. C++ supports exceptions, so it should be more straightforward, and I won't need to generate bytecode like WASM manually.
 
 - _Call stack debug information:_ I probably need a stack of debug information containing call locations. It can't be program-static due to concurrency and code suspension, so I guess I could pass this debug stack to every function manually only when debugging a VioletScript program and, when you don't need it, an optimization flag can be used to disable this debug information stack and not pass it to functions and their calls.
+  - I'm not sure a stack of debug information is safe as it can get incorrect after the exception is handled and program resumes using that same information stack.
