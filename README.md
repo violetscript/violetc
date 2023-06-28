@@ -7,6 +7,10 @@
 Currently improving:
 
 - Adding support for `!` inside destructuring patterns.
+  - [x] Done for record fields
+  - [ ] Done for records
+  - [ ] Done for arrays
+  - [ ] Done for nondestructuring
   - [ ] After done, add docs for that.
 
 First roadmap goals:

@@ -286,7 +286,8 @@ public static class DefaultDiagnosticFormatterStatics {
         // undefined property on base namespace
         [267] = "'$name' not found on base namespace $base",
 
-        [268] = "Item is not generic"
+        [268] = "Item is not generic",
+        [269] = "Non-null destructuring from a base of type $type",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

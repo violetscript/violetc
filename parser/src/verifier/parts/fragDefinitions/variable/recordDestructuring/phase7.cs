@@ -41,6 +41,7 @@ public partial class Verifier
             {
                 if (field.Subpattern == null)
                 {
+                    // any '!' suffix has no type checking on any
                     if (field.SemanticProperty != null)
                     {
                         field.SemanticProperty.StaticType ??= this.m_ModelCore.AnyType;
@@ -48,12 +49,16 @@ public partial class Verifier
                 }
                 else
                 {
+                    // any '!' suffix has no type checking on any
                     this.Fragmented_VerifyDestructuringPattern7(field.Subpattern, this.m_ModelCore.AnyType);
                 }
             }
             else
             {
                 this.VerifyExp(field.Key);
+
+                // any '!' suffix has no type checking on any
+
                 if (field.Subpattern != null)
                 {
                     this.Fragmented_VerifyDestructuringPattern7(field.Subpattern, m_ModelCore.AnyType);
@@ -75,9 +80,15 @@ public partial class Verifier
             {
                 if (field.Subpattern == null)
                 {
+                    var uOrN = undefinedOrValueType;
+                    // ! assertion
+                    if (field.KeySuffix == '!')
+                    {
+                        uOrN = this.DestructuringNonNullAssertion(uOrN, field.Span.Value);
+                    }
                     if (field.SemanticProperty != null)
                     {
-                        field.SemanticProperty.StaticType ??= undefinedOrValueType;
+                        field.SemanticProperty.StaticType ??= uOrN;
                     }
                 }
                 else
@@ -90,7 +101,13 @@ public partial class Verifier
                 this.LimitExpType(field.Key, keyType);
                 if (field.Subpattern != null)
                 {
-                    this.Fragmented_VerifyDestructuringPattern7(field.Subpattern, undefinedOrValueType);
+                    var uOrN = undefinedOrValueType;
+                    // ! assertion
+                    if (field.KeySuffix == '!')
+                    {
+                        uOrN = this.DestructuringNonNullAssertion(uOrN, field.Span.Value);
+                    }
+                    this.Fragmented_VerifyDestructuringPattern7(field.Subpattern, uOrN);
                 }
             }
         }
@@ -103,6 +120,11 @@ public partial class Verifier
             if (field.Key is Ast.StringLiteral key)
             {
                 var fieldType = this.VerifyRecordDestructuringCompileTimeFieldType(field, key, type);
+                // ! assertion
+                if (field.KeySuffix == '!')
+                {
+                    fieldType = this.DestructuringNonNullAssertion(fieldType, field.Span.Value);
+                }
 
                 if (field.Subpattern == null)
                 {

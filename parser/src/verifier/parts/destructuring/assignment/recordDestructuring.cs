@@ -45,6 +45,7 @@ public partial class Verifier
         {
             if (field.Subpattern == null)
             {
+                // any '!' suffix has no type checking on any
                 if (field.Key is Ast.StringLiteral key)
                 {
                     field.SemanticFrameAssignedReference = AssignmentRecordDestructuringLexicalRef(key.Value, field.Span.Value);
@@ -60,6 +61,7 @@ public partial class Verifier
             else
             {
                 VerifyExp(field.Key);
+                // any '!' suffix has no type checking on any
                 VerifyAssignmentDestructuringPattern(field.Subpattern, m_ModelCore.AnyType);
             }
         }
@@ -74,15 +76,22 @@ public partial class Verifier
 
         foreach (var field in pattern.Fields)
         {
+            var uOrN = undefinedOrValueType;
+            // ! assertion
+            if (field.KeySuffix == '!')
+            {
+                uOrN = this.DestructuringNonNullAssertion(uOrN, field.Span.Value);
+            }
+
             if (field.Subpattern == null)
             {
                 if (field.Key is Ast.StringLiteral key)
                 {
                     field.SemanticFrameAssignedReference = AssignmentRecordDestructuringLexicalRef(key.Value, field.Span.Value);
                     // ensure the lexical reference has the correct type
-                    if (field.SemanticFrameAssignedReference != null && field.SemanticFrameAssignedReference.StaticType != undefinedOrValueType)
+                    if (field.SemanticFrameAssignedReference != null && field.SemanticFrameAssignedReference.StaticType != uOrN)
                     {
-                        VerifyError(null, 149, field.Key.Span.Value, new DiagnosticArguments { ["e"] = undefinedOrValueType });
+                        VerifyError(null, 149, field.Key.Span.Value, new DiagnosticArguments { ["e"] = uOrN });
                     }
                 }
                 // key must be an identifier
@@ -95,7 +104,7 @@ public partial class Verifier
             else
             {
                 LimitExpType(field.Key, keyType);
-                VerifyAssignmentDestructuringPattern(field.Subpattern, undefinedOrValueType);
+                VerifyAssignmentDestructuringPattern(field.Subpattern, uOrN);
             }
         }
     }
@@ -135,11 +144,24 @@ public partial class Verifier
                     fieldType = throwawayProp.StaticType;
                 }
 
-                field.SemanticFrameAssignedReference = AssignmentRecordDestructuringLexicalRef(key.Value, field.Span.Value);
-                // ensure the lexical reference has the correct type
-                if (field.SemanticFrameAssignedReference != null && field.SemanticFrameAssignedReference.StaticType != fieldType)
+                // ! assertion
+                if (field.KeySuffix == '!')
                 {
-                    VerifyError(null, 149, field.Key.Span.Value, new DiagnosticArguments { ["e"] = fieldType });
+                    fieldType = this.DestructuringNonNullAssertion(fieldType, field.Span.Value);
+                }
+
+                if (field.Subpattern == null)
+                {
+                    field.SemanticFrameAssignedReference = AssignmentRecordDestructuringLexicalRef(key.Value, field.Span.Value);
+                    // ensure the lexical reference has the correct type
+                    if (field.SemanticFrameAssignedReference != null && field.SemanticFrameAssignedReference.StaticType != fieldType)
+                    {
+                        VerifyError(null, 149, field.Key.Span.Value, new DiagnosticArguments { ["e"] = fieldType });
+                    }
+                }
+                else
+                {
+                    VerifyAssignmentDestructuringPattern(field.Subpattern, fieldType);
                 }
             }
             // key must be an identifier
