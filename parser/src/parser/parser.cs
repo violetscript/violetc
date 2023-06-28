@@ -537,7 +537,7 @@ internal class ParserBackend {
     private Ast.DestructuringPattern OptConvertExpressionIntoDestructuringPattern(Ast.Expression e) {
         if (e is Ast.Identifier e_asId) {
             PushLocation(e_asId.Span.Value);
-            return (Ast.DestructuringPattern) FinishNode(new Ast.NondestructuringPattern(e_asId.Name, e_asId.Type), e_asId.Span.Value);
+            return (Ast.DestructuringPattern) FinishNode(new Ast.NondestructuringPattern(e_asId.Name, e_asId.Type, null), e_asId.Span.Value);
         } else if (e is Ast.ArrayInitializer e_asAi) {
             PushLocation(e_asAi.Span.Value);
             var items = new List<Ast.Node>{};
@@ -552,7 +552,7 @@ internal class ParserBackend {
                     items.Add(ConvertExpressionIntoDestructuringPattern((Ast.Expression) item));
                 }
             }
-            return (Ast.DestructuringPattern) FinishNode(new Ast.ArrayDestructuringPattern(items, e_asAi.Type));
+            return (Ast.DestructuringPattern) FinishNode(new Ast.ArrayDestructuringPattern(items, e_asAi.Type, null));
         } else if (e is Ast.ObjectInitializer e_asOi) {
             PushLocation(e_asOi.Span.Value);
             var fields = new List<Ast.RecordDestructuringPatternField>{};
@@ -563,10 +563,16 @@ internal class ParserBackend {
                     var field_asOf = (Ast.ObjectField) field;
                     var subpattern = field_asOf.Value != null ? ConvertExpressionIntoDestructuringPattern(field_asOf.Value) : null;
                     PushLocation(field.Span.Value);
-                    fields.Add((Ast.RecordDestructuringPatternField) FinishNode(new Ast.RecordDestructuringPatternField(field_asOf.Key, subpattern), field.Span.Value));
+                    fields.Add((Ast.RecordDestructuringPatternField) FinishNode(new Ast.RecordDestructuringPatternField(field_asOf.Key, subpattern, field_asOf.KeySuffix), field.Span.Value));
                 }
             }
-            return (Ast.DestructuringPattern) FinishNode(new Ast.RecordDestructuringPattern(fields, e_asOi.Type));
+            return (Ast.DestructuringPattern) FinishNode(new Ast.RecordDestructuringPattern(fields, e_asOi.Type, null));
+        } else if (e is Ast.UnaryExpression unary && unary.Operator == Operator.NonNull) {
+            var p = this.OptConvertExpressionIntoDestructuringPattern(unary.Operand);
+            if (p != null) {
+                p.Suffix = '!';
+                return p;
+            }
         }
         return null;
     }
@@ -687,9 +693,11 @@ internal class ParserBackend {
                     MarkLocation();
                     Ast.Expression key = null;
                     Ast.Expression value = null;
+                    char? suffix = null;
                     if (Consume(TToken.Identifier)) {
                         PushLocation(PreviousToken.Span);
                         key = FinishExp(new Ast.StringLiteral(PreviousToken.StringValue));
+                        suffix = this.Consume(TToken.ExclamationMark) ? '!' : null;
                         value = Consume(TToken.Colon) ? ParseExpression(true, OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction) : null;
                     } else {
                         if (Consume(TToken.LSquare)) {
@@ -702,11 +710,14 @@ internal class ParserBackend {
                             Expect(TToken.StringLiteral);
                             PushLocation(PreviousToken.Span);
                             key = FinishExp(new Ast.StringLiteral(PreviousToken.StringValue));
+                            suffix = this.Consume(TToken.ExclamationMark) ? '!' : null;
                         }
                         Expect(TToken.Colon);
                         value = ParseExpression(true, OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction);
                     }
-                    fields.Add(FinishNode(new Ast.ObjectField(key, value)));
+                    var field = new Ast.ObjectField(key, value);
+                    field.KeySuffix = suffix;
+                    fields.Add(FinishNode(field));
                 }
             } while (Consume(TToken.Comma));
             Expect(TToken.RCurly);

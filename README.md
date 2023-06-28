@@ -4,6 +4,11 @@
 
 - Debug it with `dotnet run -- someScript`
 
+Currently improving:
+
+- Adding support for `!` inside destructuring patterns.
+  - [ ] After done, add docs for that.
+
 First roadmap goals:
 
 - VioletDoc HTML generated docs

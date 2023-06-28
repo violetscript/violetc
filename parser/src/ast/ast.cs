@@ -192,13 +192,21 @@ public class DestructuringPattern : Node {
     public TypeExpression Type;
 
     /// <summary>
+    /// Either null or <c>'!'</c>.
+    /// Allows to destructure by asserting
+    /// non-null and/or non-undefined (<c>'!'</c>).
+    /// </summary>
+    public char? Suffix;
+
+    /// <summary>
     /// For a binding, indicates a variable slot.
     /// For an assignment, <c>SemanticProperty</c> is null.
     /// </summary>
     public Symbol SemanticProperty = null;
 
-    public DestructuringPattern(TypeExpression type) : base() {
+    public DestructuringPattern(TypeExpression type, char? suffix) : base() {
         Type = type;
+        Suffix = suffix;
     }
 }
 
@@ -213,7 +221,7 @@ public class NondestructuringPattern : DestructuringPattern {
     /// </summary>
     public Symbol SemanticFrameAssignedReference = null;
 
-    public NondestructuringPattern(string name, TypeExpression type) : base(type) {
+    public NondestructuringPattern(string name, TypeExpression type, char? suffix) : base(type, suffix) {
         m_Name = name;
     }
 
@@ -229,7 +237,7 @@ public class NondestructuringPattern : DestructuringPattern {
 public class RecordDestructuringPattern : DestructuringPattern {
     public List<RecordDestructuringPatternField> Fields;
 
-    public RecordDestructuringPattern(List<RecordDestructuringPatternField> fields, TypeExpression type) : base(type) {
+    public RecordDestructuringPattern(List<RecordDestructuringPatternField> fields, TypeExpression type, char? suffix) : base(type, suffix) {
         Fields = fields;
     }
 }
@@ -242,6 +250,12 @@ public class RecordDestructuringPatternField : Node {
     public Expression Key;
     /// <summary>Optional pattern.</summary>
     public DestructuringPattern Subpattern;
+    /// <summary>
+    /// Either null or <c>'!'</c>.
+    /// Allows to destructure by asserting
+    /// non-null and/or non-undefined (<c>'!'</c>).
+    /// </summary>
+    public char? KeySuffix;
 
     /// <summary>
     /// Semantic property. This is null if there is a subpattern.
@@ -253,9 +267,10 @@ public class RecordDestructuringPatternField : Node {
     /// </summary>
     public Symbol SemanticFrameAssignedReference = null;
 
-    public RecordDestructuringPatternField(Expression key, DestructuringPattern subpattern) : base() {
+    public RecordDestructuringPatternField(Expression key, DestructuringPattern subpattern, char? keySuffix) : base() {
         Key = key;
         Subpattern = subpattern;
+        KeySuffix = keySuffix;
     }
 }
 
@@ -273,7 +288,7 @@ public class ArrayDestructuringPattern : DestructuringPattern {
     /// <summary>Items. Each item is either <c>null</c>, <c>DestructuringPattern</c> or <c>ArrayDestructuringSpread</c>.</summary>
     public List<Node> Items;
 
-    public ArrayDestructuringPattern(List<Node> items, TypeExpression type) : base(type) {
+    public ArrayDestructuringPattern(List<Node> items, TypeExpression type, char? suffix) : base(type, suffix) {
         Items = items;
     }
 }
@@ -456,6 +471,11 @@ public class ObjectField : Node {
     /// it is constructed as a <c>StringLiteral</c> node.
     /// </summary>
     public Expression Key;
+    /// <summary>
+    /// Either null or <c>'!'</c>. Used by record destructuring
+    /// patterns only. This will have no effect on an object initialiser.
+    /// </summary>
+    public char? KeySuffix = null;
     /// <summary>
     /// Value, optional for shorthand fields.
     /// </summary>
