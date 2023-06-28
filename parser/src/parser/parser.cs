@@ -1079,7 +1079,7 @@ internal class ParserBackend {
             } else if (Token.Type == TToken.Assign && minPrecedence.ValueOf() <= OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction.ValueOf()) {
                 PushLocation(r.Span.Value);
                 NextToken();
-                var leftAsPattern = Token.Type == TToken.LSquare || Token.Type == TToken.LCurly ? OptConvertExpressionIntoDestructuringPattern(r) : null;
+                var leftAsPattern = r is Ast.ArrayInitializer || r is Ast.ObjectInitializer ? OptConvertExpressionIntoDestructuringPattern(r) : null;
                 var left = (Ast.Node) leftAsPattern ?? r;
                 r = FinishExp(new Ast.AssignmentExpression(left, null, ParseExpression(allowIn, OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction)));
             } else if (Token.Type == TToken.CompoundAssignment && minPrecedence.ValueOf() <= OperatorPrecedence.AssignmentOrConditionalOrYieldOrFunction.ValueOf()) {
