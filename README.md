@@ -12,6 +12,7 @@ Current goals:
 
 Future goals:
 
+- Package Manager
 - Language Server Protocol
 - Use with Godot Engine
 
