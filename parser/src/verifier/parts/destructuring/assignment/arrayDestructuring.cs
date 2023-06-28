@@ -35,11 +35,19 @@ public partial class Verifier
         }
         else
         {
-            if (type != m_ModelCore.AnyType)
+            var proxy = type.Delegate.Proxies.ContainsKey(Operator.ProxyToGetIndex) ? type.Delegate.Proxies[Operator.ProxyToGetIndex] : null;
+            if (proxy != null && this.m_ModelCore.IsNumericType(proxy.StaticType.FunctionRequiredParameters[0].Type))
             {
-                VerifyError(null, 141, pattern.Span.Value, new DiagnosticArguments { ["t"] = type });
+                VerifyAssignmentArrayDestructuringPatternForProxy(pattern, proxy);
             }
-            VerifyAssignmentArrayDestructuringPatternForAny(pattern);
+            else
+            {
+                if (type != m_ModelCore.AnyType)
+                {
+                    VerifyError(null, 141, pattern.Span.Value, new DiagnosticArguments { ["t"] = type });
+                }
+                VerifyAssignmentArrayDestructuringPatternForAny(pattern);
+            }
         }
     }
 
@@ -95,6 +103,37 @@ public partial class Verifier
                     VerifyError(null, 144, spread.Span.Value, new DiagnosticArguments {});
                 }
                 VerifyAssignmentDestructuringPattern(spread.Pattern, arrayType);
+            }
+            else
+            {
+                VerifyAssignmentDestructuringPattern((Ast.DestructuringPattern) item, arrayElementType);
+            }
+        }
+    }
+
+    private void VerifyAssignmentArrayDestructuringPatternForProxy
+    (
+        Ast.ArrayDestructuringPattern pattern,
+        Symbol proxy
+    )
+    {
+        var arrayElementType = proxy.StaticType.FunctionReturnType;
+        for (int i = 0; i < pattern.Items.Count(); ++i)
+        {
+            var item = pattern.Items[i];
+            if (item == null)
+            {
+                // ellision
+            }
+            else if (item is Ast.ArrayDestructuringSpread spread)
+            {
+                // a rest element must be the last element
+                if (i != pattern.Items.Count() - 1)
+                {
+                    VerifyError(null, 144, spread.Span.Value, new DiagnosticArguments {});
+                }
+                // for a proxy destructuring, the rest will be a [T] type.
+                VerifyAssignmentDestructuringPattern(spread.Pattern, this.m_ModelCore.Factory.TypeWithArguments(this.m_ModelCore.ArrayType, new Symbol[]{arrayElementType}));
             }
             else
             {

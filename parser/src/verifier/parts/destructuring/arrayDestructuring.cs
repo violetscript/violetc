@@ -60,11 +60,19 @@ public partial class Verifier
         }
         else
         {
-            if (type != m_ModelCore.AnyType)
+            var proxy = type.Delegate.Proxies.ContainsKey(Operator.ProxyToGetIndex) ? type.Delegate.Proxies[Operator.ProxyToGetIndex] : null;
+            if (proxy != null && this.m_ModelCore.IsNumericType(proxy.StaticType.FunctionRequiredParameters[0].Type))
             {
-                VerifyError(pattern.Span.Value.Script, 141, pattern.Span.Value, new DiagnosticArguments { ["t"] = type });
+                VerifyArrayDestructuringPatternForProxy(pattern, readOnly, output, visibility, proxy, canShadow);
             }
-            VerifyArrayDestructuringPatternForAny(pattern, readOnly, output, visibility, canShadow);
+            else
+            {
+                if (type != m_ModelCore.AnyType)
+                {
+                    VerifyError(pattern.Span.Value.Script, 141, pattern.Span.Value, new DiagnosticArguments { ["t"] = type });
+                }
+                VerifyArrayDestructuringPatternForAny(pattern, readOnly, output, visibility, canShadow);
+            }
         }
     }
 
@@ -128,6 +136,41 @@ public partial class Verifier
                     VerifyError(spread.Span.Value.Script, 144, spread.Span.Value, new DiagnosticArguments {});
                 }
                 VerifyDestructuringPattern(spread.Pattern, readOnly, output, visibility, arrayType);
+            }
+            else
+            {
+                VerifyDestructuringPattern((Ast.DestructuringPattern) item, readOnly, output, visibility, arrayElementType);
+            }
+        }
+    }
+
+    private void VerifyArrayDestructuringPatternForProxy
+    (
+        Ast.ArrayDestructuringPattern pattern,
+        bool readOnly,
+        Properties output,
+        Visibility visibility,
+        Symbol proxy,
+        bool canShadow = false
+    )
+    {
+        var arrayElementType = proxy.StaticType.FunctionReturnType;
+        for (int i = 0; i < pattern.Items.Count(); ++i)
+        {
+            var item = pattern.Items[i];
+            if (item == null)
+            {
+                // ellision
+            }
+            else if (item is Ast.ArrayDestructuringSpread spread)
+            {
+                // a rest element must be the last element
+                if (i != pattern.Items.Count() -1)
+                {
+                    VerifyError(spread.Span.Value.Script, 144, spread.Span.Value, new DiagnosticArguments {});
+                }
+                // for a proxy destructuring, the rest will be a [T] type.
+                VerifyDestructuringPattern(spread.Pattern, readOnly, output, visibility, this.m_ModelCore.Factory.TypeWithArguments(this.m_ModelCore.ArrayType, new Symbol[]{arrayElementType}));
             }
             else
             {

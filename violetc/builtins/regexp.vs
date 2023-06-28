@@ -32,6 +32,10 @@ public class TextMatch {
      * bounds of the entire match.
      */
     public var indices: [{start: Int, end: Int}]?;
+
+    proxy function getIndex(index: Int): String (
+        index == 0 ? this.match : index < 0 ? '' : (this.captures[index - 1] ?? '')!
+    );
 }
 
 public final class RegExp implements ITextPattern {

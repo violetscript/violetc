@@ -261,8 +261,14 @@ public class RecordDestructuringPatternField : Node {
 
 /// <summary>
 /// <c>[]</c>. Used to destructure from either
-/// the any type, a tuple type or an array type.
+/// the any type, a tuple type, an array type or a type with
+/// indexing proxy that uses any number type.
 /// </summary>
+/// <remarks>
+/// If it uses a proxy, any rest pattern will destructure from a new array (<c>[T]</c>)
+/// the code generation should increment a counter that is
+/// assignable to the numeric type.
+/// </remarks>
 public class ArrayDestructuringPattern : DestructuringPattern {
     /// <summary>Items. Each item is either <c>null</c>, <c>DestructuringPattern</c> or <c>ArrayDestructuringSpread</c>.</summary>
     public List<Node> Items;

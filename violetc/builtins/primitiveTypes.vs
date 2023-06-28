@@ -308,13 +308,13 @@ public class String {
         Array.<String>.from(Int.range(0, Int.max(0, count)).map.<String>(_ => this)).join('')
     );
 
-    public native function replace(pattern: String | ITextPattern, replacement: String | (match: String, captures: [String], matchObject: TextMatch) => String): String;
+    public native function replace(pattern: String | ITextPattern, replacement: String | (match: TextMatch) => String): String;
 
     /**
      * @throws {TypeError} If the `pattern` is a regex that does not have
      * the global (`g`) flag set.
      */
-    public native function replaceAll(pattern: String | ITextPattern, replacement: String | (match: String, captures: [String], matchObject: TextMatch) => String): String;
+    public native function replaceAll(pattern: String | ITextPattern, replacement: String | (match: TextMatch) => String): String;
 
     public native function match(pattern: ITextPattern): TextMatch?;
 
