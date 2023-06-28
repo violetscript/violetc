@@ -13,7 +13,7 @@ public sealed class Script {
     private List<Comment> m_Comments = new List<Comment>();
 
     public Script(string filePath, string content) {
-        m_FilePath = filePath;
+        m_FilePath = Path.GetFullPath(filePath);
         m_Content = content;
         m_LineStarts.Add(0);
         m_LineStarts.Add(0);
@@ -61,6 +61,9 @@ public sealed class Script {
     public List<Script> IncludesScripts {
         get => m_IncludesScripts.GetRange(0, m_IncludesScripts.Count);
     }
+
+    public bool IncludesScriptByFilePath(string filePath) =>
+        this.FilePath == filePath || m_IncludesScripts.Any(script => script.IncludesScriptByFilePath(filePath));
 
     public void AddIncludedScript(Script script) {
         m_IncludesScripts.Add(script);

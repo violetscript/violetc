@@ -68,12 +68,14 @@ internal class ParserBackend {
     public TokenData PreviousToken;
     private Stack<(int line, int index)> Locations = new Stack<(int line, int index)>();
     private Stack<StackFunction> FunctionStack = new Stack<StackFunction>();
+    private List<String> AlreadyIncludedFilePaths = new List<String>{};
 
     public ParserBackend(Script script, Tokenizer tokenizer) {
         Script = script;
         Tokenizer = tokenizer;
         Token = Tokenizer.Token;
         PreviousToken = new TokenData(script);
+        this.AlreadyIncludedFilePaths.Add(this.Script.FilePath);
     }
 
     public StackFunction StackFunction {
@@ -1396,7 +1398,7 @@ internal class ParserBackend {
             } catch {
             }
 
-            resolvedPath = Path.ChangeExtension(resolvedPath, ".vs");
+            resolvedPath = Path.GetFullPath(Path.ChangeExtension(resolvedPath, ".vs"));
 
             string innerSource = "";
             Script innerScript = null;
@@ -1404,6 +1406,10 @@ internal class ParserBackend {
 
             try {
                 innerSource = File.ReadAllText(resolvedPath);
+                if (this.AlreadyIncludedFilePaths.Contains(resolvedPath)) {
+                    VerifyError(39, r.Span.Value, new DiagnosticArguments {["path"] = resolvedPath});
+                    innerSource = "";
+                }
             } catch (IOException) {
                 VerifyError(25, r.Span.Value);
             }
@@ -1412,6 +1418,8 @@ internal class ParserBackend {
                 var tokenizer = new Tokenizer(innerScript);
                 tokenizer.Tokenize();
                 var innerParser = new ParserBackend(innerScript, tokenizer);
+                this.AlreadyIncludedFilePaths.Add(innerScript.FilePath);
+                innerParser.AlreadyIncludedFilePaths = this.AlreadyIncludedFilePaths;
                 innerParser.FunctionStack = this.FunctionStack;
                 while (innerParser.Token.Type != TToken.Eof) {
                     var stmt = innerParser.ParseOptStatement(context);
