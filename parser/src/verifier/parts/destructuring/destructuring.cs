@@ -32,6 +32,13 @@ public partial class Verifier
         {
             return;
         }
+
+        // ! assertion
+        if (pattern.Suffix == '!' && inferredType != null)
+        {
+            inferredType = this.DestructuringNonNullAssertion(inferredType, pattern.Span.Value);
+        }
+
         if (pattern is Ast.NondestructuringPattern bp)
         {
             VerifyNondestructuringPattern(bp, readOnly, output, visibility, inferredType, canShadow);

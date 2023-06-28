@@ -55,6 +55,12 @@ public partial class Verifier
 
     private void Fragmented_VerifyDestructuringPattern7(Ast.DestructuringPattern pattern, Symbol initType)
     {
+        // ! assertion
+        if (pattern.Suffix == '!' && initType != null)
+        {
+            initType = this.DestructuringNonNullAssertion(initType, pattern.Span.Value);
+        }
+
         if (pattern is Ast.NondestructuringPattern nondestructuring)
         {
             this.Fragmented_VerifyNondestructuringPattern7(nondestructuring, initType);
