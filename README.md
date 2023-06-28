@@ -4,6 +4,16 @@
 
 - Debug it with `dotnet run -- someScript`
 
+First roadmap goals:
+
+- VioletDoc HTML generated docs
+- Standard objects implementation in a systems language
+- Native code generation
+
+Second roadmap goals:
+
+- Language Server Protocol
+
 ## Command
 
 VioletScript uses the extension `.vs`, which is automatically added.
