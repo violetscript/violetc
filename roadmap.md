@@ -3,7 +3,7 @@
 Some of the notes in this document apply to verification and bytecode or code generation.
 
 - [ ] **VioletDoc:** In the verifier, for valid annotatable definitions, parse VioletDoc comments for the items. For efficiency, I guess the parser could attach any detected `/** */` comments to the annotatable definitions so that the list of comments doesn't need to be iterated for matching span.
-  - [ ] _Do not_ parse VioletDoc comments applied to record fields. This is not supported in VioletDoc.
+  - [ ] VioletDoc comments applied to record fields from a record alias contribute `@field` tags to the alias (`@field {x} d`). It will also work for subfields.
 - [ ] **VioletDoc:** When generating documentation for built-ins, the `global` reference (which is the top-level package) has to be documented manually, since it is not defined by any source.
 - [ ] **VioletDoc:** Apply doc comments to enum variants.
 - [ ] **Code generation:** Remember that an expression's result may have been wrapped into a `ConversionValue` by the type checker, so access it carefully during codegen.
