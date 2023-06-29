@@ -508,31 +508,31 @@ public final class WeakMap.<K, V> implements Iterable.<[K, V]> {
  * Holds key-value pairs and remembers the original insertion
  * order of the keys.
  */
-public final class Set.<V> implements Iterable.<V> {
-    public native function Set(values: Iterable.<V>? = null);
-    public native function iterator(): Iterator.<V>;
+public final class Set.<T> implements Iterable.<T> {
+    public native function Set(values: Iterable.<T>? = null);
+    public native function iterator(): Iterator.<T>;
 
-    proxy function iterateValues(): Iterator.<V> (
+    proxy function iterateValues(): Iterator.<T> (
         this.iterator()
     );
 
-    proxy native function has(value: V): Boolean;
-    public native function add(value: V): Set.<V>;
-    public native function #delete(value: V): Boolean;
+    proxy native function has(value: T): Boolean;
+    public native function add(value: T): Set.<T>;
+    public native function #delete(value: T): Boolean;
 
-    public function entries(): Iterator.<V> (
+    public function entries(): Iterator.<T> (
         this.iterator()
     );
 
-    public function keys(): Iterator.<V> {
+    public function keys(): Iterator.<T> (
         this.iterator()
-    }
+    );
 
-    public function values(): Iterator.<V> {
+    public function values(): Iterator.<T> (
         this.iterator()
-    }
+    );
 
-    public function forEach(callbackFn: (value: V, set: Set.<V>) => void): void {
+    public function forEach(callbackFn: (value: T, set: Set.<T>) => void): void {
         for each (const v in this) {
             callbackFn(v, this);
         }
@@ -546,15 +546,15 @@ public final class Set.<V> implements Iterable.<V> {
  * Holds key-value pairs and remembers the original insertion
  * order of the keys.
  */
-public final class WeakSet.<V> implements Iterable.<V> {
-    public native function WeakSet(values: Iterable.<V>? = null);
-    public native function iterator(): Iterator.<V>;
+public final class WeakSet.<T> implements Iterable.<T> {
+    public native function WeakSet(values: Iterable.<T>? = null);
+    public native function iterator(): Iterator.<T>;
 
-    proxy function iterateValues(): Iterator.<V> (
+    proxy function iterateValues(): Iterator.<T> (
         this.iterator()
     );
 
-    proxy native function has(value: V): Boolean;
-    public native function add(value: V): WeakSet.<V>;
-    public native function #delete(value: V): Boolean;
+    proxy native function has(value: T): Boolean;
+    public native function add(value: T): WeakSet.<T>;
+    public native function #delete(value: T): Boolean;
 }

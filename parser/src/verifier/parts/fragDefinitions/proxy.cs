@@ -80,7 +80,7 @@ public partial class Verifier
             // ERROR: illegal proxy signature
             VerifyError(null, 259, defn.Id.Span.Value, new DiagnosticArguments {});
             method.StaticType = null;
-            type.Delegate.Proxies[defn.Operator] = null;
+            type.Delegate.Proxies.Remove(defn.Operator);
             defn.SemanticMethodSlot = null;
             return;
         }
