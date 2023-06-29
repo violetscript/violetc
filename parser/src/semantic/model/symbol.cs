@@ -617,10 +617,16 @@ public class Symbol {
             ||  this is AnyType;
     }
 
+    /// <summary>
+    /// Determines if type can be used for an array
+    /// initialiser. The original (non-argumented) Array type
+    /// is also included.
+    /// </summary>
     public bool TypeCanUseArrayInitializer
     {
         get =>  this.IsInstantiationOf(this.ModelCore.ArrayType)
             ||  this.IsInstantiationOf(this.ModelCore.SetType)
+            ||  this == this.ModelCore.ArrayType
             ||  this.IsFlagsEnum
             ||  this is TupleType
             ||  this is AnyType;
