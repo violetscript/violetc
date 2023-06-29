@@ -63,7 +63,7 @@ public final class Array.<T> implements Iterable.<T> {
 
     proxy native function getIndex(i: Int): undefined | T;
 
-    proxy native function setIndex(i: Int, v: T): void;
+    proxy native function setIndex(i: Int, v: undefined | T): void;
 
     proxy native function equals(a: [T], b: [T]): Boolean;
 
@@ -452,4 +452,16 @@ public interface IDataOutput {
 public final class Map.<K, V> implements Iterable.<[K, V]> {
     public native function Map(entries: Iterable.<[K, V]>? = null);
     public native function iterator(): Iterator.<[K, V]>;
+
+    proxy function iterateKeys(): Generator.<K> {
+        for each (const [k, v] in this) {
+            yield k;
+        }
+    }
+
+    proxy native function iterateValues(): Generator.<[K, V]>;
+    proxy native function has(key: K): Boolean;
+    proxy native function getIndex(key: K): undefined | V;
+    proxy native function setIndex(key: K, value: undefined | V): void;
+    proxy native function deleteIndex(key: K): Boolean;
 }

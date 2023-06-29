@@ -275,7 +275,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [257] = "Constructor must call super",
         [258] = "Duplicate proxy",
         [259] = "Illegal proxy signature",
-        [260] = "'setIndex' proxy's first parameter must be of type $type",
+        [260] = "'setIndex' proxy's signature is incompatible with 'getIndex'",
         [261] = "'deleteIndex' proxy requires a matching 'getIndex' proxy",
         [262] = "Wrong virtual property visibility",
         [263] = "Setter must return void",
@@ -291,6 +291,7 @@ public static class DefaultDiagnosticFormatterStatics {
         [268] = "Item is not generic",
         [269] = "Non-null destructuring from a base of type $type",
         [270] = "Assignment not allowed here",
+        [271] = "Proxy must not be defined in different subtype",
     };
 
     public static readonly Dictionary<Token, string> TokenTypesAsArguments = new Dictionary<Token, string> {

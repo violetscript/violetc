@@ -135,9 +135,9 @@ public partial class Verifier
         if (defn.Operator == Operator.ProxyToSetIndex)
         {
             var getIdxProxy = type.Delegate.Proxies.ContainsKey(Operator.ProxyToGetIndex) ? type.Delegate.Proxies[Operator.ProxyToGetIndex] : null;
-            if (getIdxProxy != null && method.StaticType.FunctionRequiredParameters[0].Type != getIdxProxy.StaticType.FunctionRequiredParameters[0].Type)
+            if (getIdxProxy != null && (method.StaticType.FunctionRequiredParameters[0].Type != getIdxProxy.StaticType.FunctionRequiredParameters[0].Type || method.StaticType.FunctionRequiredParameters[1].Type != getIdxProxy.StaticType.FunctionReturnType))
             {
-                VerifyError(null, 260, defn.Id.Span.Value, new DiagnosticArguments {["type"] = getIdxProxy.StaticType.FunctionRequiredParameters[0].Type});
+                VerifyError(null, 260, defn.Id.Span.Value, new DiagnosticArguments {});
             }
         }
         // delete proxy must be compatible with get proxy
@@ -148,6 +148,13 @@ public partial class Verifier
             {
                 VerifyError(null, 261, defn.Id.Span.Value, new DiagnosticArguments {});
             }
+        }
+
+        // do not allow to define get/set proxy in different subtype
+        var isGetOrSet = defn.Operator == Operator.ProxyToGetIndex || defn.Operator == Operator.ProxyToSetIndex;
+        if (isGetOrSet && type.SuperType != null && (InheritedProxies.Find(type.SuperType, Operator.ProxyToGetIndex) != null || InheritedProxies.Find(type.SuperType, Operator.ProxyToSetIndex) != null))
+        {
+            VerifyError(null, 271, defn.Id.Span.Value, new DiagnosticArguments {});
         }
     }
 

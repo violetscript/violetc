@@ -12,12 +12,12 @@ using DiagnosticArguments = Dictionary<string, object>;
 
 public partial class Verifier
 {
-    private void VerifySimpleVariableDeclaration(Ast.SimpleVariableDeclaration svd, Symbol inferType = null)
+    private void VerifySimpleVariableDeclaration(Ast.SimpleVariableDeclaration svd, Symbol inferType = null, bool forIteratorAssignedVar = false)
     {
         var output = m_Frame.Properties;
         foreach (var binding in svd.Bindings)
         {
-            VerifyVariableBinding(binding, svd.ReadOnly, output, Visibility.Public, inferType);
+            VerifyVariableBinding(binding, svd.ReadOnly, output, Visibility.Public, inferType, false, false, forIteratorAssignedVar);
         }
     }
 }

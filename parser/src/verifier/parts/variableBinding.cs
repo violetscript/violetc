@@ -27,7 +27,8 @@ public partial class Verifier
         Visibility visibility,
         Symbol inferType = null,
         bool forRequiredOrRestParam = false,
-        bool canShadow = false
+        bool canShadow = false,
+        bool forIteratorAssignedVar = false
     )
     {
         if (binding.SemanticVerified)
@@ -66,7 +67,7 @@ public partial class Verifier
             binding.Pattern.SemanticProperty.InitValue = init;
         }
 
-        if (binding.Pattern.SemanticProperty != null && !forRequiredOrRestParam)
+        if (binding.Pattern.SemanticProperty != null && !forRequiredOrRestParam && !forIteratorAssignedVar)
         {
             // if not in class frame,
             // the binding must have a constant initial value

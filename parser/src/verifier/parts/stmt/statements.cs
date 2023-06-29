@@ -441,7 +441,7 @@ public partial class Verifier
         EnterFrame(stmt.SemanticFrame);
         if (stmt.Left is Ast.SimpleVariableDeclaration)
         {
-            VerifySimpleVariableDeclaration((Ast.SimpleVariableDeclaration) stmt.Left, itemType);
+            VerifySimpleVariableDeclaration((Ast.SimpleVariableDeclaration) stmt.Left, itemType, true);
             var pattern = ((Ast.SimpleVariableDeclaration) stmt.Left).Bindings[0].Pattern;
             if (pattern.SemanticProperty.StaticType != itemType)
             {
@@ -513,7 +513,7 @@ public partial class Verifier
         EnterFrame(stmt.SemanticFrame);
         if (stmt.Left is Ast.SimpleVariableDeclaration)
         {
-            VerifySimpleVariableDeclaration((Ast.SimpleVariableDeclaration) stmt.Left, itemType);
+            VerifySimpleVariableDeclaration((Ast.SimpleVariableDeclaration) stmt.Left, itemType, true);
             var pattern = ((Ast.SimpleVariableDeclaration) stmt.Left).Bindings[0].Pattern;
             if (pattern.SemanticProperty.StaticType != itemType)
             {
