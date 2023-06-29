@@ -445,6 +445,11 @@ public interface IDataOutput {
     function writeUnsignedLong(value: BigInt): void;
 }
 
+/**
+ * Holds key-value pairs and remembers the original insertion
+ * order of the keys.
+ */
 public final class Map.<K, V> implements Iterable.<[K, V]> {
+    public native function Map(entries: Iterable.<[K, V]>? = null);
     public native function iterator(): Iterator.<[K, V]>;
 }
