@@ -19,7 +19,8 @@ Some of the notes in this document apply to verification and bytecode or code ge
 - [ ] **Code generation:** FFI names for functions are automatically chosen based on parent definition (`fn.parentDefinition.fullyQualifiedName`), replacing dots by `_`. For getters and setters, there's either a `get_` or `set_` prefix before the item name (parent's name appears before that prefix followed by `_`).
 - [ ] **Code generation:** In an object initialiser for any type other than `Map`, spreads must be evaluated before the fields (so one loop for spreads and one loop for fields, don't forget).
 - [ ] **Code generation:** When iterating arrays (the `Array.<T>` type) in `for each`, do not use their iterator, for optimization purposes; generate some `for (...; i < array.length; ++i)` loop (do not cache the length too on that loop to not crash on array length modification).~
-- [ ] **Code generation:** AOT array indexing and index assignment should generate fast access code.
+- [ ] **Code generation:** AOT array indexing and index assignment should generate fast access code, specially:
+  - Given `array[i] = v` where v is an implicit conversion from `T` to `undefined | T`.
 - [ ] **Language Server Protocol (LSP):** Avoid re-compiling libraries by caching only publicly-visible definitions without shipping their implementation and loading them into the semantic core for use in LSP.
 
 ### `x is y: C`
