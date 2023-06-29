@@ -48,3 +48,8 @@ int main() {
     com::q::C::f(0);
 }
 ```
+
+## Name Clash
+
+- Things starting with like `com::` go fine; others may need some prefix or suffix.
+- Names that are reserved words in C++ (like `for`) need some prefix or suffix too.
