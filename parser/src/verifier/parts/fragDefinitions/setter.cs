@@ -127,6 +127,8 @@ public partial class Verifier
         var paramType = method.StaticType.FunctionRequiredParameters[0].Type;
         var virtualProp = method.BelongsToVirtualProperty;
         virtualProp.StaticType ??= paramType;
+        var methodName = virtualProp.Name;
+
         if (virtualProp.StaticType != paramType)
         {
             VerifyError(null, 264, defn.Id.Span.Value, new DiagnosticArguments {});
@@ -134,6 +136,14 @@ public partial class Verifier
 
         // overriding and shadowing
         var subtype = this.m_Frame.TypeFromFrame;
+        if (subtype != null && subtype.IsInterfaceType)
+        {
+            if (InterfaceInheritanceInstancePropertiesHierarchy.HasProperty(subtype, methodName))
+            {
+                this.VerifyError(defn.Id.Span.Value.Script, 246, defn.Id.Span.Value, new DiagnosticArguments {["name"] = methodName});
+            }
+            return;
+        }
         var superType = subtype?.SuperType;
         if (superType == null)
         {
@@ -145,7 +155,6 @@ public partial class Verifier
             this.Fragmented_VerifyOverride(defn.Id.Span.Value, subtype, method);
             return;
         }
-        var methodName = virtualProp.Name;
         if (SingleInheritanceInstancePropertiesHierarchy.HasProperty(superType, methodName) && virtualProp.Getter == null)
         {
             this.VerifyError(defn.Id.Span.Value.Script, 246, defn.Id.Span.Value, new DiagnosticArguments {["name"] = methodName});

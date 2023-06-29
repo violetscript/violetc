@@ -99,9 +99,18 @@ public partial class Verifier
         }
         var virtualProp = method.BelongsToVirtualProperty;
         virtualProp.StaticType ??= method.StaticType.FunctionReturnType;
+        var methodName = virtualProp.Name;
 
         // overriding and shadowing
         var subtype = this.m_Frame.TypeFromFrame;
+        if (subtype != null && subtype.IsInterfaceType)
+        {
+            if (InterfaceInheritanceInstancePropertiesHierarchy.HasProperty(subtype, methodName))
+            {
+                this.VerifyError(defn.Id.Span.Value.Script, 246, defn.Id.Span.Value, new DiagnosticArguments {["name"] = methodName});
+            }
+            return;
+        }
         var superType = subtype?.SuperType;
         if (superType == null)
         {
@@ -113,7 +122,6 @@ public partial class Verifier
             this.Fragmented_VerifyOverride(defn.Id.Span.Value, subtype, method);
             return;
         }
-        var methodName = virtualProp.Name;
         if (SingleInheritanceInstancePropertiesHierarchy.HasProperty(superType, methodName))
         {
             this.VerifyError(defn.Id.Span.Value.Script, 246, defn.Id.Span.Value, new DiagnosticArguments {["name"] = methodName});

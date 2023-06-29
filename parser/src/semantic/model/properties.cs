@@ -121,6 +121,30 @@ public static class SingleInheritanceInstancePropertiesHierarchy {
 }
 
 /// <summary>
+/// Iteration for inherited interfaces.
+/// </summary>
+public static class InterfaceInheritanceInstancePropertiesHierarchy {
+    public static IEnumerable<(string Name, Symbol Symbol, Symbol DefinedByType)> Iterate(Symbol type) {
+        if (!type.IsInterfaceType) {
+            yield break;
+        }
+        foreach (var type2 in type.SuperTypes) {
+            if (type2.Delegate == null) {
+                continue;
+            }
+            foreach (var (name3, type3) in type2.Delegate.Properties) {
+                yield return (name3, type3, type2);
+            }
+        }
+    }
+
+    public static bool HasProperty(Symbol type, string name)
+    {
+        return InterfaceInheritanceInstancePropertiesHierarchy.Iterate(type).Any(prop => prop.Name == name);
+    }
+}
+
+/// <summary>
 /// Provides iterator for static properties from a class.
 /// </summary>
 public static class StaticPropertiesHierarchy {
