@@ -82,11 +82,9 @@ public final class Array.<T> implements Iterable.<T> {
      */
     public native function atStrict(index: Int): T;
 
-    proxy function iterateValues(): Iterator.<T> {
-        for (var i: Int = 0; i < this.length; ++i) {
-            yield this.atStrict(i);
-        }
-    }
+    proxy function iterateValues(): Iterator.<T> (
+        this.iterator()
+    );
 
     proxy function add(a: [T], b: [T]): [T] (
         a.concat(b)
@@ -242,11 +240,9 @@ public final class ByteArray implements IDataInput, IDataOutput, Iterable.<Byte>
     proxy native function getIndex(index: Int): Byte;
     proxy native function setIndex(index: Int, value: Byte): void;
 
-    proxy function iterateValues(): Iterator.<Byte> {
-        for (var i: Int = 0; i < this.length; ++i) {
-            yield this[i];
-        }
-    }
+    proxy function iterateValues(): Iterator.<Byte> (
+        this.iterator()
+    );
 
     proxy native function equals(a: ByteArray, b: ByteArray): Boolean;
     proxy native function notEquals(a: ByteArray, b: ByteArray): Boolean;
@@ -451,11 +447,9 @@ public final class Map.<K, V> implements Iterable.<[K, V]> {
     public native function Map(entries: Iterable.<[K, V]>? = null);
     public native function iterator(): Iterator.<[K, V]>;
 
-    proxy function iterateKeys(): Iterator.<K> {
-        for each (const [k, v] in this) {
-            yield k;
-        }
-    }
+    proxy function iterateKeys(): Iterator.<K> (
+        this.keys()
+    );
 
     proxy native function iterateValues(): Iterator.<[K, V]>;
     proxy native function has(key: K): Boolean;
@@ -466,4 +460,69 @@ public final class Map.<K, V> implements Iterable.<[K, V]> {
     public function entries(): Iterator.<[K, V]> (
         this.iterator()
     );
+
+    public function keys(): Iterator.<K> {
+        for each (const [k, v] in this) {
+            yield k;
+        }
+    }
+
+    public function values(): Iterator.<V> {
+        for each (const [, v] in this) {
+            yield v;
+        }
+    }
+
+    public function forEach(callbackFn: (value: V, key: K, map: Map.<K, V>) => void): void {
+        for each (const [k, v] in this) {
+            callbackFn(v, k, this);
+        }
+    }
+
+    public native function get size(): Int;
+    public native function clear(): void;
+}
+
+/**
+ * Holds key-value pairs and remembers the original insertion
+ * order of the keys. The key is a weak reference.
+ */
+public final class WeakMap.<K, V> implements Iterable.<[K, V]> {
+    public native function WeakMap(entries: Iterable.<[K, V]>? = null);
+    public native function iterator(): Iterator.<[K, V]>;
+
+    proxy function iterateKeys(): Iterator.<K> (
+        this.keys()
+    );
+
+    proxy native function iterateValues(): Iterator.<[K, V]>;
+    proxy native function has(key: K): Boolean;
+    proxy native function getIndex(key: K): undefined | V;
+    proxy native function setIndex(key: K, value: undefined | V): void;
+    proxy native function deleteIndex(key: K): Boolean;
+
+    public function entries(): Iterator.<[K, V]> (
+        this.iterator()
+    );
+
+    public function keys(): Iterator.<K> {
+        for each (const [k, v] in this) {
+            yield k;
+        }
+    }
+
+    public function values(): Iterator.<V> {
+        for each (const [, v] in this) {
+            yield v;
+        }
+    }
+
+    public function forEach(callbackFn: (value: V, key: K, map: WeakMap.<K, V>) => void): void {
+        for each (const [k, v] in this) {
+            callbackFn(v, k, this);
+        }
+    }
+
+    public native function get size(): Int;
+    public native function clear(): void;
 }
