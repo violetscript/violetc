@@ -55,6 +55,14 @@ public final class Array.<T> {
 
     proxy native function setIndex(i: Int, v: T): void;
 
+    proxy native function equals(a: [T], b: [T]): Boolean;
+
+    proxy native function notEquals(a: [T], b: [T]): Boolean;
+
+    proxy function has(v: T): Boolean (
+        this.indexOf(v) != -1
+    );
+
     /**
      * If index is out of bounds, throws an exception;
      * otherwise, returns the element at that index.
@@ -162,6 +170,46 @@ public final class Array.<T> {
     public native function join(sep: String = ', '): String;
 
     public native function slice(from: Int, to: Int? = null): [T];
+
+    public native function indexOf(value: T, startIndex: Int? = null): Int;
+
+    public native function lastIndexOf(value: T, startIndex: Int? = null): Int;
+
+    /**
+     * Reverses the array in-place.
+     */
+    public native function reverse(): [T];
+
+    /**
+     * Sorts the array in place. The default sorting behavior, if
+     * `compareFn` is not specified, should be ascending order
+     * for number types and the string type.
+     */
+    public native function sort(compareFn: ((a: T, b: T) => Int)? = null): [T];
+
+    /**
+     * The copying version of the `reverse()` method.
+     * Returns a new array with elements in reversed order.
+     */
+    public function toReversed(): [T] (
+        this.slice(0).reverse()
+    );
+
+    /**
+     * The copying version of the `sort()` method.
+     * Returns a new array with sorted elements.
+     */
+    public function toSorted(compareFn: ((a: T, b: T) => Int)? = null): [T] (
+        this.slice(0).sort(compareFn)
+    );
+
+    // deepEquals() for later
+
+    public native function insertAt(index: Int, value: T): void;
+
+    public native function removeAt(index: Int): undefined | T;
+
+    public native function splice(start: Int, deleteCount: Int = Infinity, ...items: [T]): [T];
 }
 
 public final class ByteArray {
