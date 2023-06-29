@@ -968,7 +968,7 @@ public class TypeWithArguments : Type {
         get => m_ArgumentsList.ToArray();
     }
 
-    public override bool IsInstantiated {
+    public override bool IsArgumented {
         get => true;
     }
 
@@ -1039,7 +1039,7 @@ public class TypeWithArguments : Type {
     }
 
     public override string ToString() {
-        if (this.IsInstantiationOf(this.ModelCore.ArrayType)) {
+        if (this.IsArgumentationOf(this.ModelCore.ArrayType)) {
             return "[" + this.m_ArgumentsList[0].ToString() + "]";
         }
         return FullyQualifiedName + ".<" + String.Join(", ", m_ArgumentsList.Select(a => a.ToString())) + ">";

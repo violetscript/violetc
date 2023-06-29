@@ -15,7 +15,7 @@ Use this document for tracking nodes to visit.
   - [ ] Parentheses
   - [ ] Union
   - [ ] Member
-  - [ ] Generic instantiation
+  - [ ] Generic argumentation
   - [ ] Nullable
   - [ ] Non-nullable
   - [ ] Typed type expression
@@ -57,7 +57,7 @@ Use this document for tracking nodes to visit.
   - [ ] Conditional
   - [ ] Parentheses
   - [ ] List
-  - [ ] Generic instantiation
+  - [ ] Generic argumentation
   - [ ] Assignment
   - [ ] New
   - [ ] Super

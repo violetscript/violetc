@@ -54,7 +54,7 @@ public partial class Verifier
         {
             VerifyRecordDestructuringPatternForAny(pattern, readOnly, output, visibility, canShadow);
         }
-        else if (type.IsInstantiationOf(m_ModelCore.MapType))
+        else if (type.IsArgumentationOf(m_ModelCore.MapType))
         {
             VerifyRecordDestructuringPatternForMap(pattern, readOnly, output, visibility, type, canShadow);
         }

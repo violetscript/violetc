@@ -29,7 +29,7 @@ public partial class Verifier
         {
             VerifyAssignmentRecordDestructuringPatternForAny(pattern, type);
         }
-        else if (type.IsInstantiationOf(m_ModelCore.MapType))
+        else if (type.IsArgumentationOf(m_ModelCore.MapType))
         {
             VerifyAssignmentRecordDestructuringPatternForMap(pattern, type);
         }

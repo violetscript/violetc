@@ -231,7 +231,7 @@ public class Symbol {
         get => new Symbol[]{};
     }
 
-    public virtual bool IsInstantiated {
+    public virtual bool IsArgumented {
         get => false;
     }
 
@@ -329,7 +329,7 @@ public class Symbol {
     public virtual void AddMethodOverrider(Symbol method) {
     }
 
-    public virtual bool IsInstantiatedGenericMethod {
+    public virtual bool IsArgumentedGenericMethod {
         get => false;
     }
 
@@ -495,7 +495,7 @@ public class Symbol {
         get => new Dictionary<Symbol, Symbol>{};
     }
 
-    public bool IsInstantiationOf(Symbol parameterized) {
+    public bool IsArgumentationOf(Symbol parameterized) {
         return OriginalDefinition == parameterized;
     }
 
@@ -610,7 +610,7 @@ public class Symbol {
 
     public bool TypeCanUseObjectInitializer
     {
-        get =>  this.IsInstantiationOf(this.ModelCore.MapType)
+        get =>  this.IsArgumentationOf(this.ModelCore.MapType)
             ||  this.IsFlagsEnum
             ||  this is RecordType
             || (this.IsClassType && !this.DontInit)
@@ -624,8 +624,8 @@ public class Symbol {
     /// </summary>
     public bool TypeCanUseArrayInitializer
     {
-        get =>  this.IsInstantiationOf(this.ModelCore.ArrayType)
-            ||  this.IsInstantiationOf(this.ModelCore.SetType)
+        get =>  this.IsArgumentationOf(this.ModelCore.ArrayType)
+            ||  this.IsArgumentationOf(this.ModelCore.SetType)
             ||  this == this.ModelCore.ArrayType
             ||  this.IsFlagsEnum
             ||  this is TupleType
@@ -662,7 +662,7 @@ public class Symbol {
     {
         foreach (var itrfc in ImplementsInterfaces)
         {
-            if (itrfc.IsInstantiationOf(this.ModelCore.IMarkupContainerType))
+            if (itrfc.IsArgumentationOf(this.ModelCore.IMarkupContainerType))
             {
                 return itrfc.ArgumentTypes[0];
             }
@@ -672,7 +672,8 @@ public class Symbol {
 
     /// <summary>
     /// Get item type of iterator. The base type can be
-    /// either an Iterator or an Iterable.
+    /// either an Iterator, an Iterable or the original
+    /// non-argumented Iterator.
     /// </summary>
     public Symbol GetIteratorItemType()
     {
@@ -680,15 +681,15 @@ public class Symbol {
         {
             return this.TypeParameters[0];
         }
-        if (this.IsInstantiationOf(this.ModelCore.IteratorType) || this.IsInstantiationOf(this.ModelCore.IterableType))
+        if (this.IsArgumentationOf(this.ModelCore.IteratorType) || this.IsArgumentationOf(this.ModelCore.IterableType))
         {
             return this.ArgumentTypes[0];
         }
-        foreach (var itrfc in ImplementsInterfaces)
+        foreach (var superType in this.SuperTypes)
         {
-            if (itrfc.IsInstantiationOf(this.ModelCore.IteratorType) || itrfc.IsInstantiationOf(this.ModelCore.IterableType))
+            if (superType.IsArgumentationOf(this.ModelCore.IteratorType) || superType.IsArgumentationOf(this.ModelCore.IterableType))
             {
-                return itrfc.ArgumentTypes[0];
+                return superType.ArgumentTypes[0];
             }
         }
         return null;
@@ -771,7 +772,7 @@ public class Symbol {
             return false;
         }
         // iterateKeys or iterateValues must return Generator.<T>.
-        if ((op == Operator.ProxyToIterateKeys || op == Operator.ProxyToIterateValues) && !this.FunctionReturnType.IsInstantiationOf(this.ModelCore.GeneratorType))
+        if ((op == Operator.ProxyToIterateKeys || op == Operator.ProxyToIterateValues) && !this.FunctionReturnType.IsArgumentationOf(this.ModelCore.GeneratorType))
         {
             return false;
         }

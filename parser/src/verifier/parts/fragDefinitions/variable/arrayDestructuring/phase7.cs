@@ -23,7 +23,7 @@ public partial class Verifier
         {
             this.Fragmented_VerifyArrayDestructuringPattern7ForTuple(pattern, type);
         }
-        else if (type.IsInstantiationOf(this.m_ModelCore.ArrayType))
+        else if (type.IsArgumentationOf(this.m_ModelCore.ArrayType))
         {
             this.Fragmented_VerifyArrayDestructuringPattern7ForArray(pattern, type);
         }

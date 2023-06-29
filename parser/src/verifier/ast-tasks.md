@@ -13,7 +13,7 @@
   - [x] Parentheses
   - [x] Union
   - [x] Member
-  - [x] Generic instantiation
+  - [x] Generic argumentation
   - [x] Nullable
   - [x] Non-nullable
   - [x] Typed type expression
@@ -100,7 +100,7 @@
   - [x] Conditional
   - [x] Parentheses
   - [x] List
-  - [x] Generic instantiation
+  - [x] Generic argumentation
   - [x] Assignment
     - [x] When verifying left-hand side, pass `writting = true`.
   - [x] New

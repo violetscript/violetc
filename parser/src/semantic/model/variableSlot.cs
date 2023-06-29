@@ -55,7 +55,7 @@ public class NormalVariableSlot : VariableSlot {
         return FullyQualifiedName;
     }
 
-    public override bool IsInstantiated {
+    public override bool IsArgumented {
         get => false;
     }
 
@@ -80,7 +80,7 @@ public class VariableSlotFromTypeWithArgs : VariableSlot {
         m_Type = type;
     }
 
-    public override bool IsInstantiated {
+    public override bool IsArgumented {
         get => true;
     }
 

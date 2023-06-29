@@ -29,7 +29,7 @@ public partial class Verifier
         {
             VerifyAssignmentArrayDestructuringPatternForTuple(pattern, type);
         }
-        else if (type.IsInstantiationOf(m_ModelCore.ArrayType))
+        else if (type.IsArgumentationOf(m_ModelCore.ArrayType))
         {
             VerifyAssignmentArrayDestructuringPatternForArray(pattern, type);
         }

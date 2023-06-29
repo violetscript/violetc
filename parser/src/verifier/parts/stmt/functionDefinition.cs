@@ -94,11 +94,11 @@ public partial class Verifier
 
         // - if the function uses 'await', automatically wrap its return to Promise.
         // - if the function uses 'yield', automatically wrap its return to Generator.
-        if (common.UsesAwait && !signatureType_returnType.IsInstantiationOf(m_ModelCore.PromiseType))
+        if (common.UsesAwait && !signatureType_returnType.IsArgumentationOf(m_ModelCore.PromiseType))
         {
             signatureType_returnType = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.PromiseType, new Symbol[]{signatureType_returnType});
         }
-        else if (common.UsesYield && !signatureType_returnType.IsInstantiationOf(m_ModelCore.GeneratorType))
+        else if (common.UsesYield && !signatureType_returnType.IsArgumentationOf(m_ModelCore.GeneratorType))
         {
             signatureType_returnType = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.GeneratorType, new Symbol[]{signatureType_returnType});
         }

@@ -61,7 +61,7 @@ public class NormalVirtualSlot : VirtualSlot {
         return FullyQualifiedName;
     }
 
-    public override bool IsInstantiated {
+    public override bool IsArgumented {
         get => false;
     }
 }
@@ -81,7 +81,7 @@ public class VirtualSlotFromTypeWithArgs : VirtualSlot {
         m_Type = type;
     }
 
-    public override bool IsInstantiated {
+    public override bool IsArgumented {
         get => true;
     }
 

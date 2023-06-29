@@ -216,7 +216,7 @@ public static class TypeConversions {
         if (toType.IsSubtypeOf(fromType)) {
             return f.ConversionValue(value, toType, ConversionFromTo.ToContravariantType, isOptional);
         }
-        if (fromType.IsInstantiationOf(mc.ArrayType) && toType.IsInstantiationOf(mc.ArrayType)) {
+        if (fromType.IsArgumentationOf(mc.ArrayType) && toType.IsArgumentationOf(mc.ArrayType)) {
             if (fromType.ArgumentTypes[0].IsSubtypeOf(toType.ArgumentTypes[0])) {
                 return f.ConversionValue(value, toType, ConversionFromTo.ToCovariantArray);
             }

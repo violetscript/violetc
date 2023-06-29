@@ -54,7 +54,7 @@ public partial class Verifier
         {
             VerifyArrayDestructuringPatternForTuple(pattern, readOnly, output, visibility, type, canShadow);
         }
-        else if (type.IsInstantiationOf(m_ModelCore.ArrayType))
+        else if (type.IsArgumentationOf(m_ModelCore.ArrayType))
         {
             VerifyArrayDestructuringPatternForArray(pattern, readOnly, output, visibility, type, canShadow);
         }

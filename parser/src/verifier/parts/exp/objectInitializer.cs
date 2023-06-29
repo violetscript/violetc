@@ -54,7 +54,7 @@ public partial class Verifier
         {
             Any_VerifyObjectInitialiser(exp);
         }
-        else if (type.IsInstantiationOf(m_ModelCore.MapType))
+        else if (type.IsArgumentationOf(m_ModelCore.MapType))
         {
             Map_VerifyObjectInitialiser(exp, type);
         }

@@ -139,9 +139,9 @@ public sealed class ModelCore {
     private Dictionary<int, List<Symbol>> m_InternedUnionTypesByMCount = new Dictionary<int, List<Symbol>>{};
     private Dictionary<int, List<Symbol>> m_InternedFuncTypesByReqParamCount = new Dictionary<int, List<Symbol>>{};
     private Dictionary<Symbol, List<Symbol>> m_InternedTypesWithArgumentsByOrigin = new Dictionary<Symbol, List<Symbol>>{};
-    private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedInstantiatedVarSlotsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
-    private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedVirtualSlotFromTypeWithArgssByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
-    private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedMethodSlotFromTypeWithArgssByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
+    private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedVarSlotsFromTypeWithArgsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
+    private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedVirtualSlotFromTypeWithArgsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
+    private Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>> m_InternedMethodSlotFromTypeWithArgsByOrigin = new Dictionary<Symbol, Dictionary<Symbol[], List<Symbol>>>{};
     private Dictionary<Symbol, List<Symbol>> m_InternedMethodSlotsWithTypeArgsByOrigin = new Dictionary<Symbol, List<Symbol>>{};
 
     public ModelCore() {
@@ -515,10 +515,10 @@ public sealed class ModelCore {
     }
 
     public Symbol InternVariableSlotFromTypeWithArgs(Symbol origin, Symbol[] relTypeParams, Symbol[] argumentsList) {
-        if (!m_InternedInstantiatedVarSlotsByOrigin.ContainsKey(origin)) {
-            m_InternedInstantiatedVarSlotsByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
+        if (!m_InternedVarSlotsFromTypeWithArgsByOrigin.ContainsKey(origin)) {
+            m_InternedVarSlotsFromTypeWithArgsByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
         }
-        var list1 = m_InternedInstantiatedVarSlotsByOrigin[origin];
+        var list1 = m_InternedVarSlotsFromTypeWithArgsByOrigin[origin];
         if (!list1.ContainsKey(relTypeParams)) {
             list1[relTypeParams] = new List<Symbol>{};
         }
@@ -542,10 +542,10 @@ public sealed class ModelCore {
     }
 
     public Symbol InternVirtualSlotFromTypeWithArgs(Symbol origin, Symbol[] relTypeParams, Symbol[] argumentsList) {
-        if (!m_InternedVirtualSlotFromTypeWithArgssByOrigin.ContainsKey(origin)) {
-            m_InternedVirtualSlotFromTypeWithArgssByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
+        if (!m_InternedVirtualSlotFromTypeWithArgsByOrigin.ContainsKey(origin)) {
+            m_InternedVirtualSlotFromTypeWithArgsByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
         }
-        var list1 = m_InternedVirtualSlotFromTypeWithArgssByOrigin[origin];
+        var list1 = m_InternedVirtualSlotFromTypeWithArgsByOrigin[origin];
         if (!list1.ContainsKey(relTypeParams)) {
             list1[relTypeParams] = new List<Symbol>{};
         }
@@ -569,10 +569,10 @@ public sealed class ModelCore {
     }
 
     public Symbol InternMethodSlotFromTypeWithArgs(Symbol origin, Symbol[] relTypeParams, Symbol[] argumentsList) {
-        if (!m_InternedMethodSlotFromTypeWithArgssByOrigin.ContainsKey(origin)) {
-            m_InternedMethodSlotFromTypeWithArgssByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
+        if (!m_InternedMethodSlotFromTypeWithArgsByOrigin.ContainsKey(origin)) {
+            m_InternedMethodSlotFromTypeWithArgsByOrigin[origin] = new Dictionary<Symbol[], List<Symbol>>{};
         }
-        var list1 = m_InternedMethodSlotFromTypeWithArgssByOrigin[origin];
+        var list1 = m_InternedMethodSlotFromTypeWithArgsByOrigin[origin];
         if (!list1.ContainsKey(relTypeParams)) {
             list1[relTypeParams] = new List<Symbol>{};
         }

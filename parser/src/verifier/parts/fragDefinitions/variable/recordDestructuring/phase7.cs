@@ -23,7 +23,7 @@ public partial class Verifier
         {
             Fragmented_VerifyRecordDestructuringPattern7ForAny(pattern);
         }
-        else if (type.IsInstantiationOf(m_ModelCore.MapType))
+        else if (type.IsArgumentationOf(m_ModelCore.MapType))
         {
             Fragmented_VerifyRecordDestructuringPattern7ForMap(pattern, type);
         }

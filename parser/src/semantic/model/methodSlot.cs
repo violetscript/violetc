@@ -138,7 +138,7 @@ public class MethodSlotWithTypeArgs : MethodSlot {
         m_Type = type;
     }
 
-    public override bool IsInstantiatedGenericMethod {
+    public override bool IsArgumentedGenericMethod {
         get => true;
     }
 
@@ -220,7 +220,7 @@ public class MethodSlotFromTypeWithArgs : MethodSlot {
         }
     }
 
-    public override bool IsInstantiated {
+    public override bool IsArgumented {
         get => true;
     }
 

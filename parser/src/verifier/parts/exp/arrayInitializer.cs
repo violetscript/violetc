@@ -46,11 +46,11 @@ public partial class Verifier
         {
             Any_VerifyArrayInitialiser(exp);
         }
-        else if (type == m_ModelCore.ArrayType || type.IsInstantiationOf(m_ModelCore.ArrayType))
+        else if (type == m_ModelCore.ArrayType || type.IsArgumentationOf(m_ModelCore.ArrayType))
         {
             Array_VerifyArrayInitialiser(exp, type);
         }
-        else if (type.IsInstantiationOf(m_ModelCore.SetType))
+        else if (type.IsArgumentationOf(m_ModelCore.SetType))
         {
             Set_VerifyArrayInitialiser(exp, type);
         }

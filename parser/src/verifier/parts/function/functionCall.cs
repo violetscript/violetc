@@ -37,7 +37,7 @@ public partial class Verifier
             }
             else if (restType != null)
             {
-                restTypeElementType ??= restType.IsInstantiationOf(m_ModelCore.ArrayType)
+                restTypeElementType ??= restType.IsArgumentationOf(m_ModelCore.ArrayType)
                     ? restType.ArgumentTypes[0] : m_ModelCore.AnyType;
                 LimitExpType(arguments[i], restTypeElementType);
             }

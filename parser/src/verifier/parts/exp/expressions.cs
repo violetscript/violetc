@@ -479,7 +479,7 @@ public partial class Verifier
         if (exp.Operator == Operator.Yield)
         {
             var generatorType = CurrentMethodSlot.StaticType.FunctionReturnType;
-            if (!generatorType.IsInstantiationOf(m_ModelCore.GeneratorType))
+            if (!generatorType.IsArgumentationOf(m_ModelCore.GeneratorType))
             {
                 throw new Exception("Internal verify error");
             }
@@ -503,7 +503,7 @@ public partial class Verifier
 
         if (exp.Operator == Operator.Await)
         {
-            if (!operand.StaticType.IsInstantiationOf(m_ModelCore.PromiseType))
+            if (!operand.StaticType.IsArgumentationOf(m_ModelCore.PromiseType))
             {
                 VerifyError(null, 173, exp.Operand.Span.Value, new DiagnosticArguments {});
                 exp.SemanticSymbol = null;
@@ -944,7 +944,7 @@ public partial class Verifier
 
     private Symbol VerifyMarkupListInitializer(Ast.MarkupListInitializer exp, Symbol type)
     {
-        if (type == null || !type.IsInstantiationOf(m_ModelCore.ArrayType))
+        if (type == null || !type.IsArgumentationOf(m_ModelCore.ArrayType))
         {
             VerifyError(null, 200, exp.Span.Value, new DiagnosticArguments {});
             exp.SemanticSymbol = null;
