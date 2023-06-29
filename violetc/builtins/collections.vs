@@ -212,5 +212,69 @@ public final class Array.<T> {
     public native function splice(start: Int, deleteCount: Int = Infinity, ...items: [T]): [T];
 }
 
-public final class ByteArray {
+/**
+ * Represents a growable array of bytes.
+ * Byte order is determined by the `endian` property,
+ * which is `'littleEndian'` by default.
+ */
+public final class ByteArray implements IDataInput, IDataOutput {
+    public native function ByteArray();
+    public static native function from(argument: ByteArray | [Byte] | Iterator.<Byte>): ByteArray;
+    public static native function withCapacity(initialCapacity: Int): ByteArray;
+    public static native function withZeroes(length: Int): ByteArray;
+
+    /**
+     * Indexing. If index is out of bounds, it has no effect or yields 0.
+     */
+    proxy native function getIndex(index: Int): Byte;
+    proxy native function setIndex(index: Int, value: Byte): void;
+
+    proxy function iterateValues(): Generator.<Byte> {
+        for (var i: Int = 0; i < this.length; ++i) {
+            yield this[i];
+        }
+    }
+
+    /**
+     * Indicates number of bytes. If reassigned to a higher value,
+     * it has no effect.
+     */
+    public native function get length(): Int;
+    public native function set length(value);
+
+    public native function get endian(): Endian;
+    public native function set endian(value);
+
+    public native function get position(): Int;
+    public native function set position(value);
+
+    public native function get bytesAvailable(): Int;
+    public native function get hasBytesAvailable(): Boolean;
+}
+
+public enum Endian {
+    LITTLE_ENDIAN;
+    BIG_ENDIAN;
+}
+
+/**
+ * Provides a set of methods for reading binary data.
+ */
+public interface IDataInput {
+    function get endian(): Endian;
+    function set endian(value);
+
+    function get bytesAvailable(): Int;
+    function get hasBytesAvailable(): Boolean;
+}
+
+/**
+ * Provides a set of methods for writing binary data.
+ */
+public interface IDataOutput {
+    function get endian(): Endian;
+    function set endian(value);
+
+    function get bytesAvailable(): Int;
+    function get hasBytesAvailable(): Boolean;
 }
