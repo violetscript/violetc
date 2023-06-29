@@ -12,7 +12,3 @@ include './reflect';
 include './observable';
 include './intl';
 include './temporal';
-[Flags]
-enum E {X;}
-const e: E = {}
-'x' in e

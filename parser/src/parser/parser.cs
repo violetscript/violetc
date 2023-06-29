@@ -1039,10 +1039,14 @@ internal class ParserBackend {
                     [Operator.Gt] = new OperatorFilter(Operator.Gt, OperatorPrecedence.Relational, OperatorPrecedence.Shift),
                     [Operator.Le] = new OperatorFilter(Operator.Le, OperatorPrecedence.Relational, OperatorPrecedence.Shift),
                     [Operator.Ge] = new OperatorFilter(Operator.Ge, OperatorPrecedence.Relational, OperatorPrecedence.Shift),
-                    [Operator.In] = new OperatorFilter(Operator.In, OperatorPrecedence.Relational, OperatorPrecedence.Shift),
                 };
             }
             return m_BinaryOperatorFiltersByOperator.ContainsKey(Token.Operator) ? m_BinaryOperatorFiltersByOperator[Token.Operator] : null;
+        }
+        else if (Token.Type == TToken.Keyword) {
+            if (this.Token.IsKeyword("in")) {
+                return new OperatorFilter(Operator.In, OperatorPrecedence.Relational, OperatorPrecedence.Shift);
+            }
         }
         return null;
     }
