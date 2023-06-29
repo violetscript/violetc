@@ -1039,6 +1039,7 @@ internal class ParserBackend {
                     [Operator.Gt] = new OperatorFilter(Operator.Gt, OperatorPrecedence.Relational, OperatorPrecedence.Shift),
                     [Operator.Le] = new OperatorFilter(Operator.Le, OperatorPrecedence.Relational, OperatorPrecedence.Shift),
                     [Operator.Ge] = new OperatorFilter(Operator.Ge, OperatorPrecedence.Relational, OperatorPrecedence.Shift),
+                    [Operator.In] = new OperatorFilter(Operator.In, OperatorPrecedence.Relational, OperatorPrecedence.Shift),
                 };
             }
             return m_BinaryOperatorFiltersByOperator.ContainsKey(Token.Operator) ? m_BinaryOperatorFiltersByOperator[Token.Operator] : null;
@@ -1061,6 +1062,12 @@ internal class ParserBackend {
                 PushLocation(r.Span.Value);
                 NextToken();
                 r = FinishExp(new Ast.BinaryExpression(filter.Value.@operator, r, ParseExpression(allowIn, filter.Value.nextPrecedence)));
+            // 'not in'
+            } else if (minPrecedence.ValueOf() <= OperatorPrecedence.Relational.ValueOf() && this.Token.IsKeyword("not")) {
+                PushLocation(r.Span.Value);
+                NextToken();
+                ExpectKeyword("in");
+                r = FinishExp(new Ast.BinaryExpression(Operator.In, r, ParseExpression(allowIn, OperatorPrecedence.Shift), true));
             } else if (Token.Type == TToken.ExclamationMark && minPrecedence.ValueOf() <= OperatorPrecedence.Postfix.ValueOf() && PreviousToken.LastLine == Token.FirstLine) {
                 PushLocation(r.Span.Value);
                 NextToken();
