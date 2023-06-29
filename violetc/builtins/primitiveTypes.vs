@@ -294,6 +294,10 @@ public class String {
         new CodePointIterator(this)
     );
 
+    public function rightCodePoints(): RightCodePointIterator (
+        new RightCodePointIterator(this)
+    );
+
     public native function charAt(index: Int): String;
 
     public native function charCodeAt(index: Int): Int;
@@ -326,10 +330,40 @@ public class String {
             }
         }
     }
+
+    public native function reverse(): String;
+
+    public native function split(pattern: String | ITextPattern): [String];
+
+    public native function indexOf(substring: String, startIndex: Int? = null): Int;
+
+    public native function lastIndexOf(substring: String, startIndex: Int? = null): Int;
+
+    public native function trim(): String;
+
+    public native function trimLeft(): String;
+
+    public native function trimRight(): String;
+
+    public native function startsWith(str: String): Boolean;
+
+    public native function endsWith(str: String): Boolean;
+
+    public native function slice(from: Int, to: Int? = null): String;
+
+    public native function substr(from: Int, length: Int? = null): String;
+
+    public native function substring(from: Int, to: Int? = null): String;
 }
 
 public final class CodePointIterator implements Iterator.<Int> {
     public native function CodePointIterator(string: String);
+
+    public native function next(): {done: Boolean, value?: Int};
+}
+
+public final class RightCodePointIterator implements Iterator.<Int> {
+    public native function RightCodePointIterator(string: String);
 
     public native function next(): {done: Boolean, value?: Int};
 }

@@ -55,15 +55,46 @@ public final class Array.<T> {
 
     proxy native function setIndex(i: Int, v: T): void;
 
+    /**
+     * If index is out of bounds, throws an exception;
+     * otherwise, returns the element at that index.
+     * This is not the same as `array[i]!` as it allows
+     * accessing `undefined` or `null` values.
+     * @hidden
+     */
+    public native function atStrict(index: Int): T;
+
     proxy function iterateValues(): Generator.<T> {
         for (var i: Int = 0; i < this.length; ++i) {
-            yield this[i]!;
+            yield this.atStrict(i)!;
         }
     }
 
     proxy function add(a: [T], b: [T]): [T] (
         a.concat(b)
     );
+
+    public function get isEmpty(): Boolean (
+        this.length == 0
+    );
+
+    public function get first(): undefined | T (
+        this[0]
+    );
+
+    public function set first(value) {
+        if (this.isEmpty) return;
+        this[0] = value;
+    }
+
+    public function get last(): undefined | T (
+        this.isEmpty ? undefined : this[this.length - 1]
+    );
+
+    public function set last(value) {
+        if (this.isEmpty) return;
+        this[this.length - 1] = value;
+    }
 
     /**
      * The `concat` method is used to merge two or more arrays.
@@ -78,12 +109,59 @@ public final class Array.<T> {
      */
     public native function reduce.<U>(callbackFn: (accumulator: U, currentValue: T) => U, initialValue: undefined | U = undefined): U;
 
+    // reduceRight is for later for now.
+
+    public function filter(callbackFn: (item: T, index: Int, array: [T]) => Boolean): [T] {
+        const r: [T] = [];
+        for (var i: Int = 0; i < this.length; ++i) {
+            const item = this.atStrict(i);
+            if (callbackFn(item, i, this)) {
+                r.push(item);
+            }
+        }
+        return r;
+    }
+
+    public function map.<R>(callbackFn: (item: T, index: Int, array: [T]) => R): [R] {
+        const r: [R] = [];
+        for (var i: Int = 0; i < this.length; ++i) {
+            r.push(callbackFn(this.atStrict(i), i, this));
+        }
+        return r;
+    }
+
+    public function some(callbackFn: (item: T, index: Int, array: [T]) => Boolean): Boolean {
+        for (var i: Int = 0; i < this.length; ++i) {
+            if (callbackFn(this.atStrict(i), i, this)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function every(callbackFn: (item: T, index: Int, array: [T]) => Boolean): Boolean {
+        for (var i: Int = 0; i < this.length; ++i) {
+            if (!callbackFn(this.atStrict(i), i, this)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function forEach(callbackFn: (item: T, index: Int, array: [T]) => void): void {
+        for (var i: Int = 0; i < this.length; ++i) {
+            callbackFn(this.atStrict(i), i, this);
+        }
+    }
+
     /**
      * @internal This method must be efficient
      * when concatenating multiple elements
      * and each is converted to string similiar to `String(v)`.
      */
     public native function join(sep: String = ', '): String;
+
+    public native function slice(from: Int, to: Int? = null): [T];
 }
 
 public final class ByteArray {

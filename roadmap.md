@@ -17,7 +17,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
 - [ ] **Code generation:** Since method overrides can specify additional optional parameters or an additional rest parameter and a subtype return type or a type different from an original `*` return type, conversions may be necessary in different senses in the override implementation and overrides may need to be invoked with more arguments.
 - [ ] **Code generation:** FFI names for functions are automatically chosen based on parent definition (`fn.parentDefinition.fullyQualifiedName`), replacing dots by `_`. For getters and setters, there's either a `get_` or `set_` prefix before the item name (parent's name appears before that prefix followed by `_`).
 - [ ] **Code generation:** In an object initialiser for any type other than `Map`, spreads must be evaluated before the fields (so one loop for spreads and one loop for fields, don't forget).
-- [ ] **Code generation:** When iterating arrays (the `Array.<T>` type) in `for each`, do not use their iterator proxy, both because of optimization and because it asserts the value as non-null and/or non-undefined (`el!`) which can cause `ReferenceError` for causes where element type allows null or undefined.
+- [ ] **Code generation:** When iterating arrays (the `Array.<T>` type) in `for each`, do not use their iterator proxy, for optimization purposes.
 - [ ] **Language Server Protocol (LSP):** Avoid re-compiling libraries by caching only publicly-visible definitions without shipping their implementation and loading them into the semantic core for use in LSP.
 
 ### `x is y: C`
