@@ -451,7 +451,10 @@ public final class Map.<K, V> implements Iterable.<[K, V]> {
         this.keys()
     );
 
-    proxy native function iterateValues(): Iterator.<[K, V]>;
+    proxy function iterateValues(): Iterator.<[K, V]> (
+        this.iterator()
+    );
+
     proxy native function has(key: K): Boolean;
     proxy native function getIndex(key: K): undefined | V;
     proxy native function setIndex(key: K, value: undefined | V): void;
@@ -491,38 +494,67 @@ public final class WeakMap.<K, V> implements Iterable.<[K, V]> {
     public native function WeakMap(entries: Iterable.<[K, V]>? = null);
     public native function iterator(): Iterator.<[K, V]>;
 
-    proxy function iterateKeys(): Iterator.<K> (
-        this.keys()
+    proxy function iterateValues(): Iterator.<[K, V]> (
+        this.iterator()
     );
 
-    proxy native function iterateValues(): Iterator.<[K, V]>;
     proxy native function has(key: K): Boolean;
     proxy native function getIndex(key: K): undefined | V;
     proxy native function setIndex(key: K, value: undefined | V): void;
     proxy native function deleteIndex(key: K): Boolean;
+}
 
-    public function entries(): Iterator.<[K, V]> (
+/**
+ * Holds key-value pairs and remembers the original insertion
+ * order of the keys.
+ */
+public final class Set.<V> implements Iterable.<V> {
+    public native function Set(values: Iterable.<V>? = null);
+    public native function iterator(): Iterator.<V>;
+
+    proxy function iterateValues(): Iterator.<V> (
         this.iterator()
     );
 
-    public function keys(): Iterator.<K> {
-        for each (const [k, v] in this) {
-            yield k;
-        }
+    proxy native function has(value: V): Boolean;
+    public native function add(value: V): Set.<V>;
+    public native function #delete(value: V): Boolean;
+
+    public function entries(): Iterator.<V> (
+        this.iterator()
+    );
+
+    public function keys(): Iterator.<V> {
+        this.iterator()
     }
 
     public function values(): Iterator.<V> {
-        for each (const [, v] in this) {
-            yield v;
-        }
+        this.iterator()
     }
 
-    public function forEach(callbackFn: (value: V, key: K, map: WeakMap.<K, V>) => void): void {
-        for each (const [k, v] in this) {
-            callbackFn(v, k, this);
+    public function forEach(callbackFn: (value: V, set: Set.<V>) => void): void {
+        for each (const v in this) {
+            callbackFn(v, this);
         }
     }
 
     public native function get size(): Int;
     public native function clear(): void;
+}
+
+/**
+ * Holds key-value pairs and remembers the original insertion
+ * order of the keys.
+ */
+public final class WeakSet.<V> implements Iterable.<V> {
+    public native function WeakSet(values: Iterable.<V>? = null);
+    public native function iterator(): Iterator.<V>;
+
+    proxy function iterateValues(): Iterator.<V> (
+        this.iterator()
+    );
+
+    proxy native function has(value: V): Boolean;
+    public native function add(value: V): WeakSet.<V>;
+    public native function #delete(value: V): Boolean;
 }
