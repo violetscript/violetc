@@ -7,7 +7,6 @@
 Current goals:
 
 - Planning basic standard objects:
-  - [x] Set and weak set (collections)
   - [ ] Regex
   - [ ] Promise
   - [ ] Errors

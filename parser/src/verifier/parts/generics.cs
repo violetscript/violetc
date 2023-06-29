@@ -34,6 +34,10 @@ public partial class Verifier
                     break;
                 }
                 var p = reusedTypeParams[i];
+                if (paramNode.Id.Name != p.Name)
+                {
+                    throw new Exception("Defining " + parentTypeOrMethod.ToString() + " with wrong generic parameter name: expected " + p.Name + "; got " + paramNode.Id.Name);
+                }
                 paramNode.SemanticSymbol = p;
                 propsOutput[p.Name] = p;
                 i += 1;
@@ -66,7 +70,7 @@ public partial class Verifier
         var r = typeParameters;
         foreach (var paramNode in generics.Params)
         {
-            // T:Cons
+            // T: Constraint
             if (paramNode.DefaultIsBound != null)
             {
                 Symbol defaultBound = VerifyTypeExp(paramNode.DefaultIsBound);
