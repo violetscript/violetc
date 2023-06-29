@@ -771,8 +771,8 @@ public class Symbol {
         {
             return false;
         }
-        // iterateKeys or iterateValues must return Generator.<T>.
-        if ((op == Operator.ProxyToIterateKeys || op == Operator.ProxyToIterateValues) && !this.FunctionReturnType.IsArgumentationOf(this.ModelCore.GeneratorType))
+        // iterateKeys or iterateValues must return Iterator.<T>.
+        if ((op == Operator.ProxyToIterateKeys || op == Operator.ProxyToIterateValues) && !this.FunctionReturnType.IsArgumentationOf(this.ModelCore.IteratorType))
         {
             return false;
         }

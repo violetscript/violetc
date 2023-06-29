@@ -31,7 +31,7 @@ public class Number {
      * to `for (var i = from; i < to; i += step)`; otherwise
      * `for (var i = from; i > to; i += step)`.
      */
-    public static function range(from: Number, to: Number, step: Number = 1): Generator.<Number> {
+    public static function range(from: Number, to: Number, step: Number = 1): Iterator.<Number> {
         if (step < 0) {
             for (var i = from; i > to; i += step) {
                 yield i;
@@ -55,7 +55,7 @@ public class Decimal {
      * to `for (var i = from; i < to; i += step)`; otherwise
      * `for (var i = from; i > to; i += step)`.
      */
-    public static function range(from: Decimal, to: Decimal, step: Decimal = 1): Generator.<Decimal> {
+    public static function range(from: Decimal, to: Decimal, step: Decimal = 1): Iterator.<Decimal> {
         if (step < 0) {
             for (var i = from; i > to; i += step) {
                 yield i;
@@ -95,7 +95,7 @@ public class Byte {
      * to `for (var i = from; i < to; i += step)`; otherwise
      * `for (var i = from; i > to; i += step)`.
      */
-    public static function range(from: Byte, to: Byte, step: Byte = 1): Generator.<Byte> {
+    public static function range(from: Byte, to: Byte, step: Byte = 1): Iterator.<Byte> {
         if (step < 0) {
             for (var i = from; i > to; i += step) {
                 yield i;
@@ -135,7 +135,7 @@ public class Short {
      * to `for (var i = from; i < to; i += step)`; otherwise
      * `for (var i = from; i > to; i += step)`.
      */
-    public static function range(from: Short, to: Short, step: Short = 1): Generator.<Short> {
+    public static function range(from: Short, to: Short, step: Short = 1): Iterator.<Short> {
         if (step < 0) {
             for (var i = from; i > to; i += step) {
                 yield i;
@@ -179,7 +179,7 @@ public class Int {
      * to `for (var i = from; i < to; i += step)`; otherwise
      * `for (var i = from; i > to; i += step)`.
      */
-    public static function range(from: Int, to: Int, step: Int = 1): Generator.<Int> {
+    public static function range(from: Int, to: Int, step: Int = 1): Iterator.<Int> {
         if (step < 0) {
             for (var i = from; i > to; i += step) {
                 yield i;
@@ -207,7 +207,7 @@ public class Long {
      * to `for (var i = from; i < to; i += step)`; otherwise
      * `for (var i = from; i > to; i += step)`.
      */
-    public static function range(from: Long, to: Long, step: Long = 1): Generator.<Long> {
+    public static function range(from: Long, to: Long, step: Long = 1): Iterator.<Long> {
         if (step < 0) {
             for (var i = from; i > to; i += step) {
                 yield i;
@@ -231,7 +231,7 @@ public class BigInt {
      * to `for (var i = from; i < to; i += step)`; otherwise
      * `for (var i = from; i > to; i += step)`.
      */
-    public static function range(from: BigInt, to: BigInt, step: BigInt = 1): Generator.<BigInt> {
+    public static function range(from: BigInt, to: BigInt, step: BigInt = 1): Iterator.<BigInt> {
         if (step < 0) {
             for (var i = from; i > to; i += step) {
                 yield i;
@@ -258,7 +258,7 @@ public class String {
     native proxy function le(a: String, b: String): Boolean;
     native proxy function ge(a: String, b: String): Boolean;
 
-    proxy function iterateValues(): Generator.<String> {
+    proxy function iterateValues(): Iterator.<String> {
         for each (const codePoint in this.codePoints()) {
             yield String.fromCodePoint(codePoint);
         }
@@ -322,7 +322,7 @@ public class String {
 
     public native function match(pattern: ITextPattern): TextMatch?;
 
-    public function matchAll(pattern: ITextPattern): Generator.<TextMatch> {
+    public function matchAll(pattern: ITextPattern): Iterator.<TextMatch> {
         for (;;) {
             const match = this.match(pattern);
             if (match != null) {

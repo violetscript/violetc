@@ -159,14 +159,14 @@ public partial class Verifier
         }
 
         // - if the function uses 'await', automatically wrap its return to Promise.
-        // - if the function uses 'yield', automatically wrap its return to Generator.
+        // - if the function uses 'yield', automatically wrap its return to Iterator.
         if (common.UsesAwait && !resultType_returnType.IsArgumentationOf(m_ModelCore.PromiseType))
         {
             resultType_returnType = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.PromiseType, new Symbol[]{resultType_returnType});
         }
-        else if (common.UsesYield && !resultType_returnType.IsArgumentationOf(m_ModelCore.GeneratorType))
+        else if (common.UsesYield && !resultType_returnType.IsArgumentationOf(m_ModelCore.IteratorType))
         {
-            resultType_returnType = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.GeneratorType, new Symbol[]{resultType_returnType});
+            resultType_returnType = m_ModelCore.Factory.TypeWithArguments(m_ModelCore.IteratorType, new Symbol[]{resultType_returnType});
         }
 
         // get result type

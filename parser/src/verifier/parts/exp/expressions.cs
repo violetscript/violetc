@@ -479,7 +479,7 @@ public partial class Verifier
         if (exp.Operator == Operator.Yield)
         {
             var generatorType = CurrentMethodSlot.StaticType.FunctionReturnType;
-            if (!generatorType.IsArgumentationOf(m_ModelCore.GeneratorType))
+            if (!generatorType.IsArgumentationOf(m_ModelCore.IteratorType))
             {
                 throw new Exception("Internal verify error");
             }
@@ -580,6 +580,18 @@ public partial class Verifier
             {
                 VerifyError(null, 170, exp.Span.Value, new DiagnosticArguments {["t"] = operand.StaticType});
             }
+
+            // non-null over an indexing will yield the same index value
+            // symbol from the base, however will mutate its static type
+            // to not include null or undefined.
+            if (operand is IndexValue)
+            {
+                operand.StaticType = operand.StaticType.ToNonNullableType();
+                exp.SemanticSymbol = operand;
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+
             exp.SemanticSymbol = m_ModelCore.Factory.Value(operand.StaticType.ToNonNullableType());
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;

@@ -11,7 +11,7 @@ public interface Iterator.<T> extends Iterable.<T> {
      * Returns another iterator that yields the results
      * of invoking a function on each item of the current iterator.
      */
-    function map.<R>(callbackFn: (item: T) => R): Generator.<R> {
+    function map.<R>(callbackFn: (item: T) => R): Iterator.<R> {
         for each (const item in this) {
             yield callbackFn(item);
         }
@@ -82,7 +82,7 @@ public final class Array.<T> implements Iterable.<T> {
      */
     public native function atStrict(index: Int): T;
 
-    proxy function iterateValues(): Generator.<T> {
+    proxy function iterateValues(): Iterator.<T> {
         for (var i: Int = 0; i < this.length; ++i) {
             yield this.atStrict(i);
         }
@@ -242,7 +242,7 @@ public final class ByteArray implements IDataInput, IDataOutput, Iterable.<Byte>
     proxy native function getIndex(index: Int): Byte;
     proxy native function setIndex(index: Int, value: Byte): void;
 
-    proxy function iterateValues(): Generator.<Byte> {
+    proxy function iterateValues(): Iterator.<Byte> {
         for (var i: Int = 0; i < this.length; ++i) {
             yield this[i];
         }
@@ -273,11 +273,9 @@ public final class ByteArray implements IDataInput, IDataOutput, Iterable.<Byte>
      */
     public native function clear(keepCapacity: Boolean = false): void;
 
-    public function values(): Generator.<Byte> {
-        for (var i: Int = 0; i < this.length; ++i) {
-            yield this[i];
-        }
-    }
+    public function values(): Iterator.<Byte> (
+        this.iterator()
+    );
 
     public native function readFloat(): Number;
     public native function readDouble(): Number;
@@ -453,15 +451,19 @@ public final class Map.<K, V> implements Iterable.<[K, V]> {
     public native function Map(entries: Iterable.<[K, V]>? = null);
     public native function iterator(): Iterator.<[K, V]>;
 
-    proxy function iterateKeys(): Generator.<K> {
+    proxy function iterateKeys(): Iterator.<K> {
         for each (const [k, v] in this) {
             yield k;
         }
     }
 
-    proxy native function iterateValues(): Generator.<[K, V]>;
+    proxy native function iterateValues(): Iterator.<[K, V]>;
     proxy native function has(key: K): Boolean;
     proxy native function getIndex(key: K): undefined | V;
     proxy native function setIndex(key: K, value: undefined | V): void;
     proxy native function deleteIndex(key: K): Boolean;
+
+    public function entries(): Iterator.<[K, V]> (
+        this.iterator()
+    );
 }
