@@ -1,6 +1,10 @@
 package;
 
-public interface Iterator.<T> {
+public interface Iterable.<T> {
+    function iterator(): Iterator.<T>;
+}
+
+public interface Iterator.<T> extends Iterable.<T> {
     function next(): {done: Boolean, value?: T};
 
     /**
@@ -34,11 +38,17 @@ public interface Iterator.<T> {
 }
 
 public final class Generator.<T> implements Iterator.<T> {
+    function iterator(): Iterator.<T> {
+        return this;
+    }
+
     public native function next(): {done: Boolean, value?: T};
 }
 
-public final class Array.<T> {
-    public static native function from(argument: Iterator.<T>): [T];
+public final class Array.<T> implements Iterable.<T> {
+    public static native function from(argument: Iterable.<T>): [T];
+
+    public native function iterator(): Iterator.<T>;
 
     /**
      * Indicates the number of elements. If `length`
@@ -213,15 +223,18 @@ public final class Array.<T> {
 }
 
 /**
- * Represents a growable array of bytes.
+ * Represents a growable array of bytes for working with
+ * binary data.
  * Byte order is determined by the `endian` property,
  * which is `'littleEndian'` by default.
  */
-public final class ByteArray implements IDataInput, IDataOutput {
+public final class ByteArray implements IDataInput, IDataOutput, Iterable.<Byte> {
     public native function ByteArray();
-    public static native function from(argument: ByteArray | [Byte] | Iterator.<Byte>): ByteArray;
+    public static native function from(argument: Iterable.<Byte>): ByteArray;
     public static native function withCapacity(initialCapacity: Int): ByteArray;
     public static native function withZeroes(length: Int): ByteArray;
+
+    public native function iterator(): Iterator.<Byte>;
 
     /**
      * Indexing. If index is out of bounds, it has no effect or yields 0.
@@ -430,4 +443,8 @@ public interface IDataOutput {
      * @throws {IOError}
      */
     function writeUnsignedLong(value: BigInt): void;
+}
+
+public final class Map.<K, V> implements Iterable.<[K, V]> {
+    public native function iterator(): Iterator.<[K, V]>;
 }

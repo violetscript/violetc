@@ -359,6 +359,10 @@ public class String {
 public final class CodePointIterator implements Iterator.<Int> {
     public native function CodePointIterator(string: String);
 
+    function iterator(): Iterator.<Int> {
+        return this;
+    }
+
     public native function next(): {done: Boolean, value?: Int};
     public native function nextCodePoint(): Int;
 
@@ -386,18 +390,22 @@ public final class CodePointIterator implements Iterator.<Int> {
     /**
      * @param length Length in Code Points.
      */
-    public native funcion skip(length: Int): void;
+    public native function skip(length: Int): void;
 
     /**
      * @param length Length in Code Points.
      */
-    public native funcion backward(length: Int = 1): void;
+    public native function backward(length: Int = 1): void;
 
     public native function clone(): CodePointIterator;
 }
 
 public final class RightCodePointIterator implements Iterator.<Int> {
     public native function RightCodePointIterator(string: String);
+
+    function iterator(): Iterator.<Int> {
+        return this;
+    }
 
     public native function next(): {done: Boolean, value?: Int};
     public native function nextCodePoint(): Int;
@@ -432,7 +440,7 @@ public final class RightCodePointIterator implements Iterator.<Int> {
     /**
      * @param length Length in Code Points.
      */
-    public native funcion skip(length: Int): void;
+    public native function skip(length: Int): void;
 
     public native function clone(): RightCodePointIterator;
 }

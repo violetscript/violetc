@@ -670,19 +670,23 @@ public class Symbol {
         return null;
     }
 
+    /// <summary>
+    /// Get item type of iterator. The base type can be
+    /// either an Iterator or an Iterable.
+    /// </summary>
     public Symbol GetIteratorItemType()
     {
         if (this == this.ModelCore.IteratorType)
         {
             return this.TypeParameters[0];
         }
-        if (this.IsInstantiationOf(this.ModelCore.IteratorType))
+        if (this.IsInstantiationOf(this.ModelCore.IteratorType) || this.IsInstantiationOf(this.ModelCore.IterableType))
         {
             return this.ArgumentTypes[0];
         }
         foreach (var itrfc in ImplementsInterfaces)
         {
-            if (itrfc.IsInstantiationOf(this.ModelCore.IteratorType))
+            if (itrfc.IsInstantiationOf(this.ModelCore.IteratorType) || itrfc.IsInstantiationOf(this.ModelCore.IterableType))
             {
                 return itrfc.ArgumentTypes[0];
             }

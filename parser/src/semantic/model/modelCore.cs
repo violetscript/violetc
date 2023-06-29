@@ -81,6 +81,10 @@ public sealed class ModelCore {
     /// <summary>
     /// Built-in object.
     /// </summary>
+    public Symbol IterableType = null;
+    /// <summary>
+    /// Built-in object.
+    /// </summary>
     public Symbol FunctionType = null;
     /// <summary>
     /// Built-in object.
@@ -195,6 +199,9 @@ public sealed class ModelCore {
 
         this.IteratorType = DefineGlobalBuiltinInterface("Iterator");
         this.IteratorType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
+
+        this.IterableType = DefineGlobalBuiltinInterface("Iterable");
+        this.IterableType.TypeParameters = new Symbol[]{Factory.TypeParameter("T")};
 
         this.BindingType = DefineGlobalBuiltinClass("Binding", true);
 

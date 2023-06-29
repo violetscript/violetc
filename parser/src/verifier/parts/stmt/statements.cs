@@ -479,8 +479,8 @@ public partial class Verifier
         // right object is any
         var rightIsAny = right.StaticType == this.m_ModelCore.AnyType;
 
-        // right object is directly Iterator.<T> or
-        // directly implements Iterator.<T>
+        // right object is directly Iterable.<T> or Iterator.<T> or
+        // directly implements Iterable.<T> or Iterator.<T>.
         // it may also be the raw Iterator.<T> itself, that is,
         // the one from the enclosing class definition, extracting
         // the type parameter rather than argument.
