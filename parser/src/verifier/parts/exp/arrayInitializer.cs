@@ -46,7 +46,7 @@ public partial class Verifier
         {
             Any_VerifyArrayInitialiser(exp);
         }
-        else if (type.IsInstantiationOf(m_ModelCore.ArrayType))
+        else if (type == m_ModelCore.ArrayType || type.IsInstantiationOf(m_ModelCore.ArrayType))
         {
             Array_VerifyArrayInitialiser(exp, type);
         }
@@ -87,7 +87,8 @@ public partial class Verifier
 
     private void Array_VerifyArrayInitialiser(Ast.ArrayInitializer exp, Symbol type)
     {
-        var elementType = type.ArgumentTypes[0];
+        var isOriginalType = type == this.m_ModelCore.ArrayType;
+        var elementType = isOriginalType ? type.TypeParameters[0] : type.ArgumentTypes[0];
         Symbol spreadUnionType = null;
  
         foreach (var itemOrHole in exp.Items)

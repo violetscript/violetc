@@ -66,7 +66,7 @@ public final class Array.<T> {
 
     proxy function iterateValues(): Generator.<T> {
         for (var i: Int = 0; i < this.length; ++i) {
-            yield this.atStrict(i)!;
+            yield this.atStrict(i);
         }
     }
 
