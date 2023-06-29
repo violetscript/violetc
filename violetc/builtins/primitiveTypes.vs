@@ -281,7 +281,7 @@ public class String {
 
     /**
      * Replaces parameter sequences in a string by given arguments.
-     * # Example
+     * @example
      * ```
      * '$a $$'.apply({ a: 10 })
      * '$1 $2'.apply(['one', 'two'])
@@ -360,12 +360,81 @@ public final class CodePointIterator implements Iterator.<Int> {
     public native function CodePointIterator(string: String);
 
     public native function next(): {done: Boolean, value?: Int};
+    public native function nextCodePoint(): Int;
+
+    proxy function getIndex(i: Int): Int (
+        this.peek(i)
+    );
+
+    public native function get index(): Int;
+    public native function set index(value);
+
+    public native function get hasRemaining(): Boolean;
+    public native function get isEmpty(): Boolean;
+
+    /**
+     * @param pos Zero-based position relative to current index.
+     * If negative, it refers to a backward Code Point.
+     */
+    public native function peek(pos: Int): Int;
+
+    /**
+     * @param length Length in Code Points.
+     */
+    public native function peekSeq(length: Int): String;
+
+    /**
+     * @param length Length in Code Points.
+     */
+    public native funcion skip(length: Int): void;
+
+    /**
+     * @param length Length in Code Points.
+     */
+    public native funcion backward(length: Int = 1): void;
+
+    public native function clone(): CodePointIterator;
 }
 
 public final class RightCodePointIterator implements Iterator.<Int> {
     public native function RightCodePointIterator(string: String);
 
     public native function next(): {done: Boolean, value?: Int};
+    public native function nextCodePoint(): Int;
+
+    proxy function getIndex(i: Int): Int (
+        this.peek(i)
+    );
+
+    public native function get index(): Int;
+    public native function set index(value);
+
+    public native function get hasRemaining(): Boolean;
+    public native function get isEmpty(): Boolean;
+
+    /**
+     * @param pos Zero-based position relative to current index.
+     * If negative, it refers to a Code Point in the opposite
+     * direction.
+     */
+    public native function peek(pos: Int): Int;
+
+    /**
+     * Peeks non-inverted sequence.
+     * @param length Length in Code Points.
+     * @example
+     * ```
+     * 'violetscript'.rightCodePoints().peekSeq(6) == 'script'
+     * ```
+     */
+    public native function peekSeq(length: Int): String;
+
+    /**
+     * @param length Length in Code Points.
+     */
+    public native funcion skip(length: Int): void;
+
+    public native function clone(): RightCodePointIterator;
 }
 
 [Value]

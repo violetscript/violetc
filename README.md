@@ -6,6 +6,14 @@
 
 Current goals:
 
+- Planning basic standard objects:
+  - [ ] Map and weak map (collections)
+  - [ ] Set and weak set (collections)
+  - [ ] Regex
+  - [ ] Promise
+  - [ ] Errors
+  - [ ] Reflect
+  - [ ] Math
 - VioletDoc HTML generated docs
 - Standard objects implementation in C++ (many things will be unimplemented too at first, probably `Intl`...)
 - Transpile to C++
