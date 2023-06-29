@@ -7,7 +7,8 @@
 Current goals:
 
 - Planning basic standard objects:
-  - [ ] Set and weak set (collections)
+  - [x] Set and weak set (collections)
+    - [ ] Type checker is crashing on them.
   - [ ] Regex
   - [ ] Promise
   - [ ] Errors
