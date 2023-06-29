@@ -35,6 +35,7 @@ Use this document for tracking nodes to visit.
     - [ ] Post-increment
     - [ ] Post-decrement
   - [ ] Binary
+    - [ ] `not in`
   - [ ] Type binary (`as is instanceof`)
   - [ ] Default
   - [ ] Function
@@ -42,12 +43,11 @@ Use this document for tracking nodes to visit.
   - [ ] Array initializer
   - [ ] Markup initializer
   - [ ] Markup list initializer
+  - [ ] Optional chaining
+  - [ ] Optional chaining base placeholder
   - [ ] Member
-    - [ ] Possibly `?.x`
   - [ ] Index
-    - [ ] Possibly `?.[k]`
   - [ ] Call
-    - [ ] Possibly `?.()`
   - [ ] This literal
   - [ ] String literal
   - [ ] Null literal

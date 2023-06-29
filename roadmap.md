@@ -8,7 +8,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
 - [ ] **VioletDoc:** Apply doc comments to enum variants.
 - [ ] **VioletDoc:** Omit interface implementor methods and overrides if they have no attached doc comment.
 - [ ] **Code generation:** Remember that an expression's result may have been wrapped into a `ConversionValue` by the type checker, so access it carefully during codegen.
-- [ ] **Code generation:** Empty programs that, for example, contain include directives whose inner statement sequence is empty or consist of other empty include directives, should not generate any activation and not be evaluated.
+- [ ] **Code generation:** Remember that an `in` operator may be `not in` (inverted).
 - [ ] **Code generation:** An expression whose associated symbol is a constant value should not be evaluated or processed at runtime. `exp.semanticSymbol.isConstantValue`.
 - [ ] **Code generation:** Since the operator proxies for all numeric types is defined in the semantic model core and not in the standard built-in sources, the generated code should not be based on any proxy definition for them; the purpose of this is to avoid polluting the sources of the standard built-in objects. All of the following unary and binary operators are supported for all numeric types: `+ - ~ < > <= >= + - * / % ** << >> >>> & ^ |`
 - [ ] **Code generation:** Don't forget to implement the string proxy operators (`+ < > <= >=`).

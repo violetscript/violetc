@@ -1310,7 +1310,7 @@ public partial class Verifier
             return exp.SemanticSymbol;
         }
         var inc = EnumConstHelpers.Includes(flagsType.NumericType, @base.EnumConstValue, k.EnumConstValue);
-        exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(inc);
+        exp.SemanticSymbol = m_ModelCore.Factory.BooleanConstantValue(exp.NotIn ? !inc : inc);
         exp.SemanticConstantExpResolved = true;
         return exp.SemanticSymbol;
     } // binary expression ("in")

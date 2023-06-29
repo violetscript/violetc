@@ -379,13 +379,21 @@ public class UnaryExpression : Expression {
 ///
 public class BinaryExpression : Expression {
     public Operator Operator;
+
+    /// <summary>
+    /// Indicates the `not in` operator when
+    /// `this.Operator == Operator.In`.
+    /// </summary>
+    public bool NotIn;
+
     public Expression Left;
     public Expression Right;
 
-    public BinaryExpression(Operator op, Expression l, Expression r) : base() {
+    public BinaryExpression(Operator op, Expression l, Expression r, bool notIn = false) : base() {
         Operator = op;
         Left = l;
         Right = r;
+        NotIn = notIn;
     }
 
     public override List<Symbol> GetTypeTestFrames()
