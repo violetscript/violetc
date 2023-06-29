@@ -235,6 +235,9 @@ public final class ByteArray implements IDataInput, IDataOutput {
         }
     }
 
+    proxy native function equals(a: ByteArray, b: ByteArray): Boolean;
+    proxy native function notEquals(a: ByteArray, b: ByteArray): Boolean;
+
     /**
      * Indicates number of bytes. If reassigned to a higher value,
      * it has no effect.
@@ -250,6 +253,29 @@ public final class ByteArray implements IDataInput, IDataOutput {
 
     public native function get bytesAvailable(): Int;
     public native function get hasBytesAvailable(): Boolean;
+
+    /**
+     * Clears the array, resetting its `length` and position
+     * to zero. `keepCapacity` is `false` by default.
+     */
+    public native function clear(keepCapacity: Boolean = false): void;
+
+    public function values(): Generator.<Byte> {
+        for (var i: Int = 0; i < this.length; ++i) {
+            yield this[i];
+        }
+    }
+
+    public native function readFloat(): Number;
+    public native function readDouble(): Number;
+    public native function readByte(): Byte;
+    public native function readSignedByte(): Int;
+    public native function readShort(): Short;
+    public native function readUnsignedShort(): Int;
+    public native function readInt(): Int;
+    public native function readUnsignedInt(): Long;
+    public native function readLong(): Long;
+    public native function readUnsignedLong(): BigInt;
 }
 
 public enum Endian {
@@ -266,6 +292,65 @@ public interface IDataInput {
 
     function get bytesAvailable(): Int;
     function get hasBytesAvailable(): Boolean;
+
+    /**
+     * Reads single-precision floating point.
+     * @throws {IOError}
+     */
+    function readFloat(): Number;
+
+    /**
+     * Reads double-precision floating point.
+     * @throws {IOError}
+     */
+    function readDouble(): Number;
+
+    /**
+     * Reads unsigned byte.
+     * @throws {IOError}
+     */
+    function readByte(): Byte;
+
+    /**
+     * @throws {IOError}
+     */
+    function readSignedByte(): Int;
+
+    /**
+     * Reads signed short.
+     * @throws {IOError}
+     */
+    function readShort(): Short;
+
+    /**
+     * Reads unsigned short.
+     * @throws {IOError}
+     */
+    function readUnsignedShort(): Int;
+
+    /**
+     * Reads signed integer.
+     * @throws {IOError}
+     */
+    function readInt(): Int;
+
+    /**
+     * Reads unsigned integer.
+     * @throws {IOError}
+     */
+    function readUnsignedInt(): Long;
+
+    /**
+     * Reads signed long.
+     * @throws {IOError}
+     */
+    function readLong(): Long;
+
+    /**
+     * Reads unsigned long.
+     * @throws {IOError}
+     */
+    function readUnsignedLong(): BigInt;
 }
 
 /**
@@ -274,7 +359,4 @@ public interface IDataInput {
 public interface IDataOutput {
     function get endian(): Endian;
     function set endian(value);
-
-    function get bytesAvailable(): Int;
-    function get hasBytesAvailable(): Boolean;
 }

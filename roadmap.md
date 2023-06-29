@@ -6,6 +6,7 @@ Some of the notes in this document apply to verification and bytecode or code ge
   - [ ] VioletDoc comments applied to record fields from a record alias contribute `@field` tags to the alias (`@field {x} d`). It will also work for subfields.
 - [ ] **VioletDoc:** When generating documentation for built-ins, the `global` reference (which is the top-level package) has to be documented manually, since it is not defined by any source.
 - [ ] **VioletDoc:** Apply doc comments to enum variants.
+- [ ] **VioletDoc:** Omit interface implementor methods and overrides if they have no attached doc comment.
 - [ ] **Code generation:** Remember that an expression's result may have been wrapped into a `ConversionValue` by the type checker, so access it carefully during codegen.
 - [ ] **Code generation:** Empty programs that, for example, contain include directives whose inner statement sequence is empty or consist of other empty include directives, should not generate any activation and not be evaluated.
 - [ ] **Code generation:** An expression whose associated symbol is a constant value should not be evaluated or processed at runtime. `exp.semanticSymbol.isConstantValue`.
