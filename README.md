@@ -13,8 +13,8 @@ Current goals:
   - [ ] Reflect
   - [ ] Math
 - VioletDoc HTML generated docs
-- Standard objects implementation in C++ (many things will be unimplemented too at first, probably `Intl`...)
-- Transpile to C++
+- Standard objects implementation in a systems language (many things will be unimplemented too at first, probably `Intl` and some of `Temporal`...)
+- Compile to either .wasm or C++
 
 Future goals:
 
@@ -37,6 +37,6 @@ violetc index
 
 ## Codegen Goal
 
-C++.
+Either WebAssembly or C++.
 
-[Ideas noted.](cpp-target.md)
+[Ideas noted for C++.](cpp-target.md)
