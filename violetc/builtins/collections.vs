@@ -276,6 +276,17 @@ public final class ByteArray implements IDataInput, IDataOutput {
     public native function readUnsignedInt(): Long;
     public native function readLong(): Long;
     public native function readUnsignedLong(): BigInt;
+
+    public native function writeFloat(value: Number): void;
+    public native function writeDouble(value: Number): void;
+    public native function writeByte(value: Byte): void;
+    public native function writeSignedByte(value: Int): void;
+    public native function writeShort(value: Short): void;
+    public native function writeUnsignedShort(value: Int): void;
+    public native function writeInt(value: Int): void;
+    public native function writeUnsignedInt(value: Long): void;
+    public native function writeLong(value: Long): void;
+    public native function writeUnsignedLong(value: BigInt): void;
 }
 
 public enum Endian {
@@ -359,4 +370,64 @@ public interface IDataInput {
 public interface IDataOutput {
     function get endian(): Endian;
     function set endian(value);
+
+    /**
+     * Writes single-precision floating point.
+     * @throws {IOError}
+     */
+    function writeFloat(value: Number): void;
+
+    /**
+     * Writes double-precision floating point.
+     * @throws {IOError}
+     */
+    function writeDouble(value: Number): void;
+
+    /**
+     * Writes unsigned byte.
+     * @throws {IOError}
+     */
+    function writeByte(value: Byte): void;
+
+    /**
+     * Writes signed byte.
+     * @throws {IOError}
+     */
+    function writeSignedByte(value: Int): void;
+
+    /**
+     * Writes signed short.
+     * @throws {IOError}
+     */
+    function writeShort(value: Short): void;
+
+    /**
+     * Writes unsigned short.
+     * @throws {IOError}
+     */
+    function writeUnsignedShort(value: Int): void;
+
+    /**
+     * Writes signed integer.
+     * @throws {IOError}
+     */
+    function writeInt(value: Int): void;
+
+    /**
+     * Writes unsigned integer.
+     * @throws {IOError}
+     */
+    function writeUnsignedInt(value: Long): void;
+
+    /**
+     * Writes signed long.
+     * @throws {IOError}
+     */
+    function writeLong(value: Long): void;
+
+    /**
+     * Writes unsigned long.
+     * @throws {IOError}
+     */
+    function writeUnsignedLong(value: BigInt): void;
 }
