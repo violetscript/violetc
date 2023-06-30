@@ -13,6 +13,7 @@ Current goals:
 - VioletDoc HTML generated docs
   - Use Markdig for compiling the Markdown: https://github.com/xoofx/markdig
 - Standard objects implementation in a systems language
+  - [ ] Update `FFI(memorySize)` of native non-final classes. It will be usually `constructorPointer + basePointer`.
 - Compile to .wasm
 
 Future goals:

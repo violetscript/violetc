@@ -63,5 +63,20 @@ public final class NullType {
  */
 public final class ArrayType {
     public native function get elementType(): Class;
-    public native function set elementType(value);
+}
+
+/**
+ * A type-meta object describing a class type.
+ */
+public final class ClassType {
+    /**
+     * Instance properties, not including methods.
+     */
+    public native function get properties(): [Binding];
+}
+
+/**
+ * A type-meta object describing an enum type.
+ */
+public final class EnumType {
 }
