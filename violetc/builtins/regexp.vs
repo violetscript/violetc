@@ -71,9 +71,15 @@ public final class RegExp implements ITextPattern {
     public native function get global(): Boolean;
     public native function get ignoreCase(): Boolean;
     public native function get multiline(): Boolean;
-    public native function get ignoreWhitespace(): Boolean;
     public native function get sticky(): Boolean;
     public native function get hasIndices(): Boolean;
+
+    /**
+     * The `x` flag. If the `x` flag was specified, any whitespace,
+     * lines and comments in the form `# ...` will be ignored
+     * in the source pattern. This flag is used for readability.
+     */
+    public native function get ignoreWhitespace(): Boolean;
 
     public native function exec(input: String): TextMatch?;
 

@@ -11,6 +11,7 @@ Current goals:
   - [ ] Reflect
   - [ ] Math
 - VioletDoc HTML generated docs
+  - Use Markdig for compiling the Markdown: https://github.com/xoofx/markdig
 - Standard objects implementation in a systems language
 - Compile to .wasm
 
