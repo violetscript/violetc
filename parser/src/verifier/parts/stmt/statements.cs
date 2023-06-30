@@ -202,7 +202,8 @@ public partial class Verifier
 
     private void VerifySuperStatement(Ast.SuperStatement stmt)
     {
-        var constructorDefinition = m_Frame.FindClassFrame();
+        var enclosingClass = m_Frame.FindClassFrame().TypeFromFrame;
+        var constructorDefinition = enclosingClass.SuperType.InheritConstructorDefinition();
         VerifyFunctionCall(stmt.ArgumentsList, stmt.Span.Value, constructorDefinition.StaticType);
     } // super statement
 

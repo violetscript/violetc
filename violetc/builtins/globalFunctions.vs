@@ -13,6 +13,15 @@ public native function decodeURI(string: String): String;
 public native function encodeURIComponent(string: String): String;
 public native function decodeURIComponent(string: String): String;
 
+/**
+ * @throws {AssertionError}
+ */
 public native function assert(test: Boolean, failMessage: String? = null): void;
+/**
+ * @throws {AssertionError}
+ */
 public native function assertEqual(left: *, right: *, failMessage: String? = null): void;
+/**
+ * @throws {AssertionError}
+ */
 public native function assertNotEqual(left: *, right: *, failMessage: String? = null): void;
