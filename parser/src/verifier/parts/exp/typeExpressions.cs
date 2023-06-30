@@ -347,7 +347,9 @@ public partial class Verifier
             exp.SemanticResolved = true;
             return exp.SemanticSymbol;
         }
-        if (!(@base is Type) || @base.TypeParameters == null)
+        var baseIsGenericTypeAlias = @base is Alias && @base.AliasToSymbol is Type && @base.TypeParameters != null;
+        var baseIsTypeOrGenericTypeAlias = @base is Type || baseIsGenericTypeAlias;
+        if (!baseIsTypeOrGenericTypeAlias || @base.TypeParameters == null)
         {
             // VerifyError: base is not a generic type
             if (@base is Type)
