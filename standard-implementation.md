@@ -1,8 +1,14 @@
 # Standard Objects Implementation
 
-## DontInit
+## IMPORTANT: DontInit
 
-Never forget to add the `DontInit` decorator to native classes.
+**IMPORTANT:** Never forget to add the `DontInit` decorator to native classes.
+
+This may be not necessary for some specific types though as codegen can be specialized for native classes, but that's not really necessary. `Map`s, structural records, flags and user types will work fine for object initialiser.
+
+## IMPORTANT: FFI
+
+**IMPORTANT:** Everytime the memory size of a non-final native class changes, update its `FFI` decorator to reflect it, otherwise it may corrupt the object and cause anything of wrong.
 
 ## RegExp
 
