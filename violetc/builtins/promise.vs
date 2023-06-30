@@ -1,5 +1,6 @@
 package;
 
+[DontInit]
 public final class Promise.<T> {
     public native function Promise(resolve: (value: T) => void, reject: (reason: *) => void);
     public native static function all(iterable: Iterable.<Promise.<T>>): Promise.<[T]>;

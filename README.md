@@ -7,9 +7,9 @@
 Current goals:
 
 - Planning basic standard objects:
-  - [ ] Errors
   - [ ] Reflect
   - [ ] Math
+  - [ ] Observable
 - VioletDoc HTML generated docs
   - Use Markdig for compiling the Markdown: https://github.com/xoofx/markdig
 - Standard objects implementation in a systems language

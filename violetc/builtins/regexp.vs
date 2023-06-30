@@ -11,36 +11,48 @@ public interface ITextPattern {
     function split(input: String): [String];
 }
 
+[DontInit]
 public class TextMatch {
-    public var index: Int;
-    public var input: String;
+    public native function TextMatch();
+
+    public native function get index(): Int;
+    public native function set index(value);
+
+    public native function get input(): String;
+    public native function set input(value);
 
     /**
      * Entire match string.
      */
-    public var match: String;
+    public native function get match(): String;
+    public native function set match(value);
 
     /**
      * Match capture strings.
      */
-    public var captures: [String] = [];
+    public native function get captures(): [String];
+    public native function set captures(value);
 
     /**
      * Named capturing groups.
      */
-    public var groups: Map.<String, String>?;
+    public native function get groups(): Map.<String, String>?;
+    public native function set groups(value);
 
     /**
      * Array where each entry represents the bounds
      * of a substring match. The first element represents
      * bounds of the entire match.
      */
-    public var indices: [{start: Int, end: Int}]?;
+    public native function get indices(): [TextMatchBounds]?;
+    public native function set indices(value);
 
     proxy function getIndex(index: Int): String (
         index == 0 ? this.match : index < 0 ? '' : (this.captures[index - 1] ?? '')!
     );
 }
+
+public type TextMatchBounds = {start: Int, end: Int};
 
 /**
  * Regular expression for matching Code Point text patterns.
@@ -54,6 +66,7 @@ public class TextMatch {
  * - `y`: `sticky`
  * - `d`: `hasIndices`
  */
+[DontInit]
 public final class RegExp implements ITextPattern {
     /**
      * @throws {SyntaxError}

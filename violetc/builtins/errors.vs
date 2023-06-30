@@ -1,5 +1,6 @@
 package;
 
+[DontInit]
 public class Error {
     public native function Error(message: String = '', options: ErrorOptions? = null);
 
@@ -36,6 +37,41 @@ public class AssertionError extends Error {
     public function AssertionError(message: String = '', options: ErrorOptions? = null) {
         super(message, options);
         this.name = 'AssertionError';
+    }
+}
+
+public class RangeError extends Error {
+    public function RangeError(message: String = '', options: ErrorOptions? = null) {
+        super(message, options);
+        this.name = 'RangeError';
+    }
+}
+
+public class ReferenceError extends Error {
+    public function ReferenceError(message: String = '', options: ErrorOptions? = null) {
+        super(message, options);
+        this.name = 'ReferenceError';
+    }
+}
+
+public class SyntaxError extends Error {
+    public function SyntaxError(message: String = '', options: ErrorOptions? = null) {
+        super(message, options);
+        this.name = 'SyntaxError';
+    }
+}
+
+public class TypeError extends Error {
+    public function TypeError(message: String = '', options: ErrorOptions? = null) {
+        super(message, options);
+        this.name = 'TypeError';
+    }
+}
+
+public class URIError extends Error {
+    public function URIError(message: String = '', options: ErrorOptions? = null) {
+        super(message, options);
+        this.name = 'URIError';
     }
 }
 

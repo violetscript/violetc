@@ -1,5 +1,9 @@
 # Standard Objects Implementation
 
+## DontInit
+
+Never forget to add the `DontInit` decorator to native classes.
+
 ## RegExp
 
 - Based on Unicode Code Points

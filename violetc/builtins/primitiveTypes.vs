@@ -1,6 +1,6 @@
 package;
 
-[Value]
+[Value, DontInit]
 public class Number {
     public static const POSITIVE_INFINITY: Number = Infinity;
     public static const NEGATIVE_INFINITY: Number = -Infinity;
@@ -40,7 +40,7 @@ public class Number {
     }
 }
 
-[Value]
+[Value, DontInit]
 public class Decimal {
     public native function Decimal(argument: *);
 
@@ -64,7 +64,7 @@ public class Decimal {
     }
 }
 
-[Value]
+[Value, DontInit]
 public class Byte {
     public static const MIN_VALUE: Byte = 0;
     public static const MAX_VALUE: Byte = 0xFF;
@@ -103,7 +103,7 @@ public class Byte {
     }
 }
 
-[Value]
+[Value, DontInit]
 public class Short {
     public static const MIN_VALUE: Short = -0x80_00;
     public static const MAX_VALUE: Short = 0x7F_FF;
@@ -142,7 +142,7 @@ public class Short {
     }
 }
 
-[Value]
+[Value, DontInit]
 public class Int {
     public static const MIN_VALUE: Int = -0x80_00_00_00;
     public static const MAX_VALUE: Int = 0x7F_FF_FF_FF;
@@ -185,7 +185,7 @@ public class Int {
     }
 }
 
-[Value]
+[Value, DontInit]
 public class Long {
     public static const MIN_VALUE: Long;
     public static const MAX_VALUE: Long;
@@ -212,7 +212,7 @@ public class Long {
     }
 }
 
-[Value]
+[Value, DontInit]
 public class BigInt {
     public native function BigInt(argument: *);
 
@@ -240,7 +240,7 @@ public class BigInt {
  * The `String` type represents a sequence of UTF-16
  * Code Units.
  */
-[Value]
+[Value, DontInit]
 public class String {
     public native function String(argument: *);
 
@@ -291,9 +291,7 @@ public class String {
     );
 
     public native function charAt(index: Int): String;
-
     public native function charCodeAt(index: Int): Int;
-
     public native function codePointAt(index: Int): Int;
 
     public function concat(...strings: [String]): String (
@@ -301,7 +299,7 @@ public class String {
     );
 
     public function repeat(count: Int): String (
-        Array.<String>.from(Int.range(0, Int.max(0, count)).map.<String>(_ => this)).join('')
+        Array.<String>.from(Int.range(0, Math.max(0, count)).map.<String>(_ => this)).join('')
     );
 
     public native function replace(pattern: String | ITextPattern, replacement: TextReplacement): String;
@@ -313,7 +311,6 @@ public class String {
     public native function replaceAll(pattern: String | ITextPattern, replacement: TextReplacement): String;
 
     public native function match(pattern: ITextPattern): TextMatch?;
-
     public native function matchAll(pattern: ITextPattern): Iterator.<TextMatch>;
 
     /**
@@ -327,28 +324,23 @@ public class String {
     public native function split(pattern: String | ITextPattern): [String];
 
     public native function indexOf(substring: String, startIndex: Int? = null): Int;
-
     public native function lastIndexOf(substring: String, startIndex: Int? = null): Int;
 
     public native function trim(): String;
-
     public native function trimLeft(): String;
-
     public native function trimRight(): String;
 
     public native function startsWith(str: String): Boolean;
-
     public native function endsWith(str: String): Boolean;
 
     public native function slice(from: Int, to: Int? = null): String;
-
     public native function substr(from: Int, length: Int? = null): String;
-
     public native function substring(from: Int, to: Int? = null): String;
 }
 
 public type TextReplacement = String | (match: TextMatch) => String;
 
+[DontInit]
 public final class CodePointIterator implements Iterator.<Int> {
     public native function CodePointIterator(string: String);
 
@@ -393,6 +385,7 @@ public final class CodePointIterator implements Iterator.<Int> {
     public native function clone(): CodePointIterator;
 }
 
+[DontInit]
 public final class RightCodePointIterator implements Iterator.<Int> {
     public native function RightCodePointIterator(string: String);
 
@@ -438,7 +431,7 @@ public final class RightCodePointIterator implements Iterator.<Int> {
     public native function clone(): RightCodePointIterator;
 }
 
-[Value]
+[Value, DontInit]
 public class Boolean {
     public native function Boolean(argument: *);
 

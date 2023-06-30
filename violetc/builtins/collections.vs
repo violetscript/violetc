@@ -37,6 +37,7 @@ public interface Iterator.<T> extends Iterable.<T> {
     }
 }
 
+[DontInit]
 public final class Generator.<T> implements Iterator.<T> {
     function iterator(): Iterator.<T> {
         return this;
@@ -45,6 +46,7 @@ public final class Generator.<T> implements Iterator.<T> {
     public native function next(): {done: Boolean, value?: T};
 }
 
+[DontInit]
 public final class Array.<T> implements Iterable.<T> {
     public static native function from(argument: Iterable.<T>): [T];
 
@@ -226,6 +228,7 @@ public final class Array.<T> implements Iterable.<T> {
  * Byte order is determined by the `endian` property,
  * which is `'littleEndian'` by default.
  */
+[DontInit]
 public final class ByteArray implements IDataInput, IDataOutput, Iterable.<Byte> {
     public native function ByteArray();
     public static native function from(argument: Iterable.<Byte>): ByteArray;
@@ -516,6 +519,7 @@ public final class Map.<K, V> implements Iterable.<[K, V]> {
  * Holds key-value pairs and remembers the original insertion
  * order of the keys. The key is a weak reference.
  */
+[DontInit]
 public final class WeakMap.<K, V> implements Iterable.<[K, V]> {
     public native function WeakMap(entries: Iterable.<[K, V]>? = null);
     public native function iterator(): Iterator.<[K, V]>;
@@ -534,6 +538,7 @@ public final class WeakMap.<K, V> implements Iterable.<[K, V]> {
  * Holds key-value pairs and remembers the original insertion
  * order of the keys.
  */
+[DontInit]
 public final class Set.<T> implements Iterable.<T> {
     public native function Set(values: Iterable.<T>? = null);
     public native function iterator(): Iterator.<T>;
@@ -572,6 +577,7 @@ public final class Set.<T> implements Iterable.<T> {
  * Holds key-value pairs and remembers the original insertion
  * order of the keys.
  */
+[DontInit]
 public final class WeakSet.<T> implements Iterable.<T> {
     public native function WeakSet(values: Iterable.<T>? = null);
     public native function iterator(): Iterator.<T>;
