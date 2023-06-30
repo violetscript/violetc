@@ -7,7 +7,7 @@
 Current goals:
 
 - Planning basic standard objects:
-  - [ ] Reflect
+  - [ ] Reflect (finishing type meta-objects)
   - [ ] Math
   - [ ] Observable
 - VioletDoc HTML generated docs
