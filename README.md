@@ -7,7 +7,8 @@
 Current goals:
 
 - Planning basic standard objects:
-  - [ ] Promise
+  - [x] Promise
+    - [ ] Found type checker miss on generic type alias. Fix it.
   - [ ] Errors
   - [ ] Reflect
   - [ ] Math

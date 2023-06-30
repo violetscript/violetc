@@ -60,6 +60,9 @@ public final class RegExp implements ITextPattern {
      */
     public native function RegExp(pattern: String, flags: String = '');
 
+    // VioletScript's flags enums aren't used here so that
+    // the API looks closer to JavaScript.
+
     public native function get source(): String;
     public native function get flags(): String;
     public native function get lastIndex(): Int;
