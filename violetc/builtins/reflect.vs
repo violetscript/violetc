@@ -79,4 +79,8 @@ public final class ClassType {
  * A type-meta object describing an enum type.
  */
 public final class EnumType {
+    /**
+     * Maps user-friendly strings to numeric values.
+     */
+    public native function get variants(): Map.<String, *>;
 }
