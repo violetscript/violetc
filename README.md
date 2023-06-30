@@ -7,7 +7,6 @@
 Current goals:
 
 - Planning basic standard objects:
-  - [ ] Regex
   - [ ] Promise
   - [ ] Errors
   - [ ] Reflect
@@ -37,6 +36,10 @@ violetc index
 
 ## Codegen Goal
 
-WebAssembly. I think it will be complicated.
+WebAssembly.
 
-[Ideas noted.](wasm-target.md)
+[Ideas noted.](./wasm-target.md)
+
+## Standard Objects Implementation
+
+[Ideas noted.](./standard-implementation)

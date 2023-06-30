@@ -302,7 +302,7 @@ public final class ByteArray implements IDataInput, IDataOutput, Iterable.<Byte>
     public native function slice(from: Int, to: Int? = null): ByteArray;
 }
 
-public enum Endian {
+public enum Endian wraps Int {
     LITTLE_ENDIAN;
     BIG_ENDIAN;
 }

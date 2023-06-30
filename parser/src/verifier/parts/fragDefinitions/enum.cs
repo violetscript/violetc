@@ -44,8 +44,8 @@ public partial class Verifier
             : m_Frame.Properties;
         Symbol type = null;
 
-        var wrapsType = defn.NumericType != null ? VerifyTypeExp(defn.NumericType) : m_ModelCore.NumberType;
-        wrapsType ??= m_ModelCore.NumberType;
+        var wrapsType = defn.NumericType != null ? VerifyTypeExp(defn.NumericType) : m_ModelCore.IntType;
+        wrapsType ??= m_ModelCore.IntType;
 
         var previousDuplicate = outputProps[defn.Id.Name];
         if (previousDuplicate != null)

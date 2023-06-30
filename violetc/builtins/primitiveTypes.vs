@@ -3,17 +3,13 @@ package;
 [Value]
 public class Number {
     public static const POSITIVE_INFINITY: Number = Infinity;
-
     public static const NEGATIVE_INFINITY: Number = -Infinity;
-
     public static const MIN_VALUE: Number;
-
     public static const MAX_VALUE: Number;
 
     public native function Number(argument: *);
 
     public native override function toString(radix: Int? = null): String;
-
     public native function toExponential(fractionDigits: Int? = null): String;
 
     /**
@@ -71,7 +67,6 @@ public class Decimal {
 [Value]
 public class Byte {
     public static const MIN_VALUE: Byte = 0;
-
     public static const MAX_VALUE: Byte = 0xFF;
 
     public native function Byte(argument: *);
@@ -111,7 +106,6 @@ public class Byte {
 [Value]
 public class Short {
     public static const MIN_VALUE: Short = -0x80_00;
-
     public static const MAX_VALUE: Short = 0x7F_FF;
 
     public native function Short(argument: *);
@@ -151,7 +145,6 @@ public class Short {
 [Value]
 public class Int {
     public static const MIN_VALUE: Int = -0x80_00_00_00;
-
     public static const MAX_VALUE: Int = 0x7F_FF_FF_FF;
 
     public native function Int(argument: *);
@@ -195,7 +188,6 @@ public class Int {
 [Value]
 public class Long {
     public static const MIN_VALUE: Long;
-
     public static const MAX_VALUE: Long;
 
     public native function Long(argument: *);
@@ -312,24 +304,23 @@ public class String {
         Array.<String>.from(Int.range(0, Int.max(0, count)).map.<String>(_ => this)).join('')
     );
 
-    public native function replace(pattern: String | ITextPattern, replacement: String | (match: TextMatch) => String): String;
+    public native function replace(pattern: String | ITextPattern, replacement: TextReplacement): String;
 
     /**
      * @throws {TypeError} If the `pattern` is a regex that does not have
      * the global (`g`) flag set.
      */
-    public native function replaceAll(pattern: String | ITextPattern, replacement: String | (match: TextMatch) => String): String;
+    public native function replaceAll(pattern: String | ITextPattern, replacement: TextReplacement): String;
 
     public native function match(pattern: ITextPattern): TextMatch?;
 
-    public function matchAll(pattern: ITextPattern): Iterator.<TextMatch> {
-        for (;;) {
-            const match = this.match(pattern);
-            if (match != null) {
-                yield match!;
-            }
-        }
-    }
+    public native function matchAll(pattern: ITextPattern): Iterator.<TextMatch>;
+
+    /**
+     * Searches for a matching pattern, returning the index of the
+     * first match. If not found, returns `-1`.
+     */
+    public native function search(pattern: ITextPattern): Int;
 
     public native function reverse(): String;
 
@@ -355,6 +346,8 @@ public class String {
 
     public native function substring(from: Int, to: Int? = null): String;
 }
+
+public type TextReplacement = String | (match: TextMatch) => String;
 
 public final class CodePointIterator implements Iterator.<Int> {
     public native function CodePointIterator(string: String);
