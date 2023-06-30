@@ -14,7 +14,7 @@ Current goals:
   - Use Markdig for compiling the Markdown: https://github.com/xoofx/markdig
 - Standard objects implementation in a systems language
   - [ ] Update `FFI(typeId)` of most native classes (0 and 1 are already used for `undefined` and `null`), including `Object`, primitives and most things.
-  - [ ] Update `FFI(memorySize)` of native non-final classes. It will be usually `constructorPointer + basePointer`.
+  - [ ] Update `FFI(memorySize)` of native non-final classes. It will be usually `constructorPointer + basePointer` for a _root_ supertype, **_but_** `basePointer` for a non-root supertype (that is, constructor pointer belongs to root supertype).
     - [ ] `TextMatch`
     - [ ] `Error`
       - [ ] `AggregateError`

@@ -11,7 +11,7 @@ This may be not necessary for some specific types though as codegen can be speci
 - **IMPORTANT:** Pointers in native non-final classes must be stored as Rust `u64` in memory because of different platforms.
 - **IMPORTANT:** Every `FFI(memorySize)` must account for the `constructor` property from `Object`, which is at offset 0. It is a pointer (in Rust's `u64`).
 - **IMPORTANT:** Everytime the memory size of a non-final native class changes, update its `FFI(memorySize)` decorator to reflect it, otherwise it may corrupt the object and cause anything of wrong. That usually won't happen because classes will internally wrap their fields into a heap object. It should usually be like `constructorUint64Pointer + base1Uint64Pointer + ...baseNUint64Pointer + currentBaseUint64Pointer`.
-- **IMPORTANT:** To avoid having to change `FFI`, wrap the object base fields into a heap object internally (thus the base will be constructor + po).
+- **IMPORTANT:** To avoid having to change `FFI`, wrap the object base fields into a heap object internally.
 
 ## RegExp
 
