@@ -283,6 +283,8 @@ public final class ByteArray implements IDataInput, IDataOutput, Iterable.<Byte>
     public native function readUnsignedInt(): Long;
     public native function readLong(): Long;
     public native function readUnsignedLong(): BigInt;
+    public native function readUTF8(length: Int): String;
+    public native function readBytes(length: Int): ByteArray;
 
     public native function writeFloat(value: Number): void;
     public native function writeDouble(value: Number): void;
@@ -294,6 +296,10 @@ public final class ByteArray implements IDataInput, IDataOutput, Iterable.<Byte>
     public native function writeUnsignedInt(value: Long): void;
     public native function writeLong(value: Long): void;
     public native function writeUnsignedLong(value: BigInt): void;
+    public native function writeUTF8(string: String): void;
+    public native function writeBytes(bytes: ByteArray): void;
+
+    public native function slice(from: Int, to: Int? = null): ByteArray;
 }
 
 public enum Endian {
@@ -369,6 +375,16 @@ public interface IDataInput {
      * @throws {IOError}
      */
     function readUnsignedLong(): BigInt;
+
+    /**
+     * @throws {IOError}
+     */
+    function readUTF8(length: Int): String;
+
+    /**
+     * @throws {IOError}
+     */
+    function readBytes(length: Int): ByteArray;
 }
 
 /**
@@ -437,6 +453,16 @@ public interface IDataOutput {
      * @throws {IOError}
      */
     function writeUnsignedLong(value: BigInt): void;
+
+    /**
+     * @throws {IOError}
+     */
+    function writeUTF8(string: String): void;
+
+    /**
+     * @throws {IOError}
+     */
+    function writeBytes(bytes: ByteArray): void;
 }
 
 /**
