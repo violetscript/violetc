@@ -563,6 +563,14 @@ public partial class Verifier
         ||  exp.Operator == Operator.Negate
         ||  exp.Operator == Operator.BitwiseNot)
         {
+            // unary operator of the any type (*)
+            if (operand.StaticType == this.m_ModelCore.AnyType)
+            {
+                exp.SemanticSymbol = this.m_ModelCore.Factory.Value(this.m_ModelCore.AnyType);
+                exp.SemanticExpResolved = true;
+                return exp.SemanticSymbol;
+            }
+
             var proxy = InheritedProxies.Find(operand.StaticType, exp.Operator);
             if (proxy == null)
             {
@@ -739,10 +747,20 @@ public partial class Verifier
             exp.SemanticExpResolved = true;
             return exp.SemanticSymbol;
         }
+
+        // binary operator of the any type (*)
+        if (left.StaticType == this.m_ModelCore.AnyType)
+        {
+            LimitExpType(exp.Right, this.m_ModelCore.AnyType);
+            exp.SemanticSymbol = m_ModelCore.Factory.Value(this.m_ModelCore.AnyType);
+            exp.SemanticExpResolved = true;
+            return exp.SemanticSymbol;
+        }
+
         var proxy = InheritedProxies.Find(left.StaticType, exp.Operator);
         if (proxy == null)
         {
-            VerifyError(null, 178, exp.Span.Value, new DiagnosticArguments {["t"] = left.StaticType, ["op"] = Operator.In});
+            VerifyError(null, 178, exp.Span.Value, new DiagnosticArguments {["t"] = left.StaticType, ["op"] = exp.Operator});
             VerifyExpAsValue(exp.Right);
             exp.SemanticSymbol = null;
             exp.SemanticExpResolved = true;

@@ -13,3 +13,10 @@ Use https://github.com/RyanLamansky/dotnet-webassembly to write the .wasm binary
 ## .wasm Imports
 
 - Q: https://github.com/WebAssembly/design/issues/1481
+
+## Class Inheritance
+
+- _Native classes:_ Inheriting a native class requires super constructor to only receive the previously allocated object. This is not all though: how much has to be allocated? And what will be the offset of the subtype fields? Well, this will be done specifically through the `[FFI]` decorator. Find some good syntax for expressing memory layout. Maybe `[FFI]` can just specify the size of the native class, so that subclasses use memory after that size.
+  - _Known native non-final classes:_
+    - `TextMatch`
+    - `Error`
