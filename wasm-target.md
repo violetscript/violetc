@@ -16,7 +16,23 @@ Use https://github.com/RyanLamansky/dotnet-webassembly to write the .wasm binary
 
 ## Class Inheritance
 
-- _Native classes:_ Inheriting a native class requires super constructor to only receive the previously allocated object. `FFI(memorySize)` determines the memory size for the base. Fields from subclasses use memory after that memory size.
-  - _Known native non-final classes:_
-    - `TextMatch`
-    - `Error`
+- _Native classes:_
+  - Inheriting a native non-final class requires super constructor to only receive the previously allocated object. `FFI(memorySize = n)` determines the memory size for the base. Fields from subclasses use memory after that memory size.
+  - Native non-final classes, when constructed via `new`, will be similiar to a C `malloc` taking only its memory size and invoking its initialiser.
+
+## Class Identifiers
+
+Every type will have an _unique_ internal number id. Use `FFI(typeId = n)` for that.
+
+Derive the following initially:
+
+- 0 = undefined
+- 1 = null
+
+An exception must be thrown if it's a duplicate number. Types will get an id automatically, using a sorted counter for efficiency.
+
+It's not yet confirmed if needed, but certain generic types such as array, may need a pre-assigned id. For example, for unions and dynamic contexts, although some implemented interfaces may already help on their usage.
+
+## Ids of Arrays and Other Generic Types
+
+If needed in the future, collect the id number of instantiations of generic types such as array and register them in the runtime statically, in case the runtime needs these.
