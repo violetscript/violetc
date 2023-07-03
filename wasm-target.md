@@ -14,11 +14,14 @@ Use https://github.com/RyanLamansky/dotnet-webassembly to write the .wasm binary
 
 - Q: https://github.com/WebAssembly/design/issues/1481
 
-## Class Inheritance
+## Classes
 
+- It's not clear what is a native class. Address that question. Is it a class that includes definitiosn with `native` or add the same modifier to classes?
+- `nativeSize` is inferred for non-native classes.
 - _Native classes:_
-  - Inheriting a native non-final class requires super constructor to only receive the previously allocated object. `FFI(memorySize = n)` determines the memory size for the internal fields of the enclosing class (it covers the exact type, not the supertypes). Fields from subclasses use memory after that memory size plus `memorySize` of other supertypes (including `Object`).
-  - Native non-final classes, when constructed via `new`, will be similiar to a C `malloc` taking its FFI `memorySize` plus FFI `memorySize` from supertypes (including `Object`) and invoking its initialiser (usually it should invoke its supertype initialisers by itself too).
+  - Inheriting a native non-final class requires super constructor to only receive the previously allocated object.
+  - `FFI(memorySize = n)` determines the memory size for the internal fields of the enclosing class (it covers the exact type, not the supertypes). Fields from subclasses use memory after that memory size plus `memorySize` of other supertypes (including `Object`).
+- `new C1`, will be similiar to a C `malloc` taking the FFI `memorySize` (if the class is not native, `memorySize` is inferred) plus the FFI `memorySize` from supertypes (including `Object` if `C1` is not object) of `C1` and invoking its initialiser.
 
 ## Class Identifiers
 

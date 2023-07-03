@@ -6,6 +6,9 @@
 
 Current goals:
 
+- Improvements:
+  - [ ] Add a verify error if a native class doesn't specify its `memorySize`.
+  - [ ] Address what are "native" classes. `native` methods exist, but wouldn't it make sense to add the `native` modifier to a class too?
 - Planning basic standard objects:
   - [ ] Reflect (finishing type meta-objects)
   - [ ] Math
@@ -14,15 +17,14 @@ Current goals:
   - Use Markdig for compiling the Markdown: https://github.com/xoofx/markdig
 - Standard objects implementation in a systems language
   - [ ] Update `FFI(typeId)` of most native classes (0 and 1 are already used for `undefined` and `null`), including `Object`, primitives and most things.
-  - [ ] Update `FFI(memorySize)` of native non-final classes. It will be usually 8 (pointer expressed as `u64`, that refers to a Rust `Box`).
+  - [ ] Update `FFI(memorySize)` of _**all**_ standard object classes (whether `final` or not). It will be usually 8 (pointer expressed as `u64`, that refers to a Rust `Box`).
     - [x] Object
-    - [ ] `TextMatch`
-    - [ ] `Error`
-      - [ ] `AggregateError`
+    - [ ] Everything else
 - Compile to .wasm
 
 Future goals:
 
+- Bindings Generation
 - Package Manager
 - Language Server Protocol
 - Use with Godot Engine
