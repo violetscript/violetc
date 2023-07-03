@@ -17,8 +17,8 @@ Use https://github.com/RyanLamansky/dotnet-webassembly to write the .wasm binary
 ## Class Inheritance
 
 - _Native classes:_
-  - Inheriting a native non-final class requires super constructor to only receive the previously allocated object. `FFI(memorySize = n)` determines the memory size for the base. Fields from subclasses use memory after that memory size.
-  - Native non-final classes, when constructed via `new`, will be similiar to a C `malloc` taking only its memory size and invoking its initialiser.
+  - Inheriting a native non-final class requires super constructor to only receive the previously allocated object. `FFI(memorySize = n)` determines the memory size for the internal fields of the enclosing class (it covers the exact type, not the supertypes). Fields from subclasses use memory after that memory size plus `memorySize` of other supertypes (including `Object`).
+  - Native non-final classes, when constructed via `new`, will be similiar to a C `malloc` taking its FFI `memorySize` plus FFI `memorySize` from supertypes (including `Object`) and invoking its initialiser (usually it should invoke its supertype initialisers by itself too).
 
 ## Class Identifiers
 

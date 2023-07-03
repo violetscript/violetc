@@ -9,8 +9,9 @@ This may be not necessary for some specific types though as codegen can be speci
 ## IMPORTANT: FFI
 
 - **IMPORTANT:** Pointers in native non-final classes must be stored as Rust `u64` in memory because of different platforms.
-- **IMPORTANT:** Every `FFI(memorySize)` must account for the `constructor` property from `Object`, which is at offset 0. It is a pointer (in Rust's `u64`).
-- **IMPORTANT:** Everytime the memory size of a non-final native class changes, update its `FFI(memorySize)` decorator to reflect it, otherwise it may corrupt the object and cause anything of wrong. That usually won't happen because classes will internally wrap their fields into a heap object. It should usually be like `constructorUint64Pointer + base1Uint64Pointer + ...baseNUint64Pointer + currentBaseUint64Pointer`.
+- **IMPORTANT:** Non-final native classes must specify `FFI(memorySize)`. `Object` already specifies a pointer (`u64`) at the offset 0 for the `constructor` property, so they've to be implemented taking that into consideration.
+  - `FFI(memorySize)` specifies the bytes used by the _exact_ type; bytes from supertypes are specified by themselves. This is useful to avoid breaking. As clarified in this document, `Object` already specifies 8 bytes for the `constructor` property.
+- **IMPORTANT:** Everytime the memory size of a non-final native class changes, update its `FFI(memorySize)` decorator to reflect it, otherwise it may corrupt the object and cause anything of wrong. That usually won't happen because classes will internally wrap their fields into a heap object.
 - **IMPORTANT:** To avoid having to change `FFI`, wrap the object base fields into a heap object internally.
 
 ## RegExp
