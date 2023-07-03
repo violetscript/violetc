@@ -9,6 +9,7 @@ Current goals:
 - Improvements:
   - [ ] Add a verify error if a native class doesn't specify its `memorySize`.
   - [ ] Address what are "native" classes. `native` methods exist, but wouldn't it make sense to add the `native` modifier to a class too?
+    - Idea: if a class contains any `native` method, getter or setter, it is native; if a class contains the `native` modifier, it is native. It should be easy to allow this `native` modifier! In that case, document it too.
 - Planning basic standard objects:
   - [ ] Reflect (finishing type meta-objects)
   - [ ] Math
