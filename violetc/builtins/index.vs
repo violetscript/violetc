@@ -9,6 +9,7 @@ include './promise';
 include './errors';
 include './math';
 include './reflect';
+include './markup';
 include './observable';
 include './intl';
 include './temporal';
