@@ -19,3 +19,9 @@ violetc index
 
 - Extending or implementing a generic type before it's defined may cause a .NET exception due to how the compiler resolves types. In the moment just define them in an order that makes sense.
 - Type arguments are not inferred (`C.<T>` vs `C` or `fn.<T>()` vs `fn()`).
+
+## License
+
+VioletScript and this compiler belong to [@hydroper](https://hydroper.github.io).
+
+[MPL](https://www.mozilla.org/en-US/MPL/2.0)
