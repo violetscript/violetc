@@ -2,7 +2,7 @@
 
 Some of the notes in this document apply to verification and bytecode or code generation.
 
-- [ ] **VioletDoc:** Allow `[lexicalItemName]` (or <code>[\`s\`]</code>) shortcut link references, similiar to Rust (and `[customName][lexicalItemName]`). For now, due to using an existing Markdown parser without simple custom processors for these shortcuts, this will use a regex that keeps three-backticks blocks as are (to avoid replacing brackets inside them) and passes a processor over brackets that aren't preceded by a backslash (even if that backslash belongs to another escape, that doesn't matter).
+- [ ] **VioletDoc:** Allow `[lexicalItemName]` (or <code>[\`s\`]</code>) shortcut link references, similiar to Rust (and `[customName][lexicalItemName]`).
 - [ ] **VioletDoc:** In the verifier, for valid annotatable definitions, parse VioletDoc comments for the items. For efficiency, I guess the parser could attach any detected `/** */` comments to the annotatable definitions so that the list of comments doesn't need to be iterated for matching span.
   - [ ] VioletDoc comments applied to record fields from a record alias contribute `@field` tags to the alias (`@field {x} d`). It will also work for subfields.
 - [ ] **VioletDoc:** When generating documentation for built-ins, the `global` reference (which is the top-level package) has to be documented manually, since it is not defined by any source.
