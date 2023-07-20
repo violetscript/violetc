@@ -876,7 +876,8 @@ public class AnnotatableDefinition : Statement {
     public Visibility SemanticVisibility {
         get => this.AccessModifier == AnnotatableDefinitionAccessModifier.Public ? Visibility.Public
             :  this.AccessModifier == AnnotatableDefinitionAccessModifier.Private ? Visibility.Private
-            :  this.AccessModifier == AnnotatableDefinitionAccessModifier.Protected ? Visibility.Protected : Visibility.Internal;
+            :  this.AccessModifier == AnnotatableDefinitionAccessModifier.Protected ? Visibility.Protected
+            :  this.AccessModifier == AnnotatableDefinitionAccessModifier.Internal ? Visibility.Internal : Visibility.Public;
     }
 
     public bool HasAllowAttribute(string allowed) =>
