@@ -1665,7 +1665,7 @@ internal class ParserBackend {
 
     private Ast.AnnotatableDefinition FinishAnnotatableDefinition(Ast.AnnotatableDefinition node, DefinitionAttributes attribs) {
         node.Modifiers = attribs.Modifiers;
-        node.AccessModifier = attribs.AccessModifier;
+        node.AccessModifier = attribs.AccessModifier ?? AnnotatableDefinitionAccessModifier.Public;
         if (attribs.Decorators != null) {
             // separate Metadata
             var d = attribs.Decorators
