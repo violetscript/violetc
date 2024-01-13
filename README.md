@@ -22,6 +22,6 @@ violetc index
 
 ## License
 
-VioletScript and this compiler belong to [@hydroper](https://hydroper.github.io).
+VioletScript and this compiler belong to [@hydroper](https://org-hydroper.vercel.app).
 
-[MPL](https://www.mozilla.org/en-US/MPL/2.0)
+[Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0)
